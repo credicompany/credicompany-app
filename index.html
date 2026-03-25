@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Simulador de Créditos - Credicompany</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #22c55e;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #16a34a;
+    }
+
+    .resultado {
+      margin-top: 20px;
+      background: #020617;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>Simulador de Créditos</h2>
+
+  <input type="number" id="monto" placeholder="Monto">
+  <input type="number" id="tasa" placeholder="Tasa (%)">
+  <input type="number" id="plazo" placeholder="Plazo (meses)">
+
+  <button onclick="simular()">Calcular</button>
+
+  <div class="resultado" id="resultado"></div>
+</div>
+
+<script>
+function simular() {
+  let monto = parseFloat(document.getElementById("monto").value);
+  let tasa = parseFloat(document.getElementById("tasa").value) / 100;
+  let plazo = parseInt(document.getElementById("plazo").value);
+
+  let saldo = monto;
+  let html = "";
+
+  for (let i = 1; i <= plazo; i++) {
+    let interes = saldo * tasa;
+    let capital = monto / plazo;
+    saldo -= capital;
+
+    html += `
+      <p>
+        <b>Cuota ${i}</b><br>
+        Interés: ${interes.toFixed(2)}<br>
+        Capital: ${capital.toFixed(2)}<br>
+        Saldo: ${saldo.toFixed(2)}
+      </p>
+    `;
+  }
+
+  document.getElementById("resultado").innerHTML = html;
+}
+
+// Service Worker
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<script>
+
+function simular() {
+
+let monto = parseFloat(document.getElementById("monto").value);
+let tasa = parseFloat(document.getElementById("tasa").value) / 100;
+let plazo = parseInt(document.getElementById("plazo").value);
+let tipo = document.getElementById("tipo").value;
+
+// Ajustar tasa según tipo
+if (tipo === "diario") {
+    tasa = tasa / 30;
+} else if (tipo === "semanal") {
+    tasa = tasa / 4;
+} else if (tipo === "quincenal") {
+    tasa = tasa / 2;
+}
+
+// 🔥 SISTEMA FRANCÉS (CUOTA FIJA)
+let i = tasa;
+let n = plazo;
+
+let cuota = monto * (i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
+
+let saldo = monto;
+let html = "";
+
+for (let k = 1; k <= n; k++) {
+
+    let interes = saldo * i;
+    let capital = cuota - interes;
+
+    saldo -= capital;
+
+    html += `
+    <p>
+    <b>Cuota ${k}</b><br>
+    Cuota: S/ ${cuota.toFixed(2)}<br>
+    Interés: S/ ${interes.toFixed(2)}<br>
+    Capital: S/ ${capital.toFixed(2)}<br>
+    Saldo: S/ ${saldo.toFixed(2)}
+    </p>
+    `;
+}
+
+document.getElementById("resultado").innerHTML = html;
+
+}
+
+// Service Worker
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+}
+
+</script

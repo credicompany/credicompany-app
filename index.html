@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Simulador de Créditos - Credicompany</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f4f6f9;
+}
+
+/* 🔥 HEADER BANCARIO */
+.header {
+    background: #0a3a63;
+    padding: 20px;
+    text-align: center;
+}
+
+.logo {
+    width: 220px;
+}
+
+/* CONTENIDO */
+.container {
+    margin-top: -40px;
+    display: flex;
+    justify-content: center;
+}
+
+/* TARJETA */
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    width: 360px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+/* INPUTS */
+input, select, button {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+/* BOTÓN */
+button {
+    background: #007bff;
+    color: white;
+    border: none;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+/* TABLA */
+table {
+    width: 100%;
+    margin-top: 15px;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+th {
+    background: #0a3a63;
+    color: white;
+}
+
+th, td {
+    padding: 6px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔥 HEADER -->
+<div class="header">
+    <img src="LOGO-FONDO-AZUL.png" class="logo">
+</div>
+
+<div class="container">
+<div class="card">
+
+<h2>Simulador de Crédito</h2>
+
+<label>Tipo de crédito</label>
+<select id="tipo">
+<option value="diario">Diario</option>
+<option value="semanal">Semanal</option>
+<option value="quincenal">Quincenal</option>
+<option value="mensual">Mensual</option>
+</select>
+
+<label>Monto (S/)</label>
+<input type="number" id="monto">
+
+<label>Tasa (%)</label>
+<input type="number" id="tasa">
+
+<label>Plazo</label>
+<input type="number" id="plazo">
+
+<button onclick="simular()">Calcular</button>
+
+<div id="resultado"></div>
+
+</div>
+</div>
+
+<script>
+
+function simular() {
+
+let monto = parseFloat(document.getElementById("monto").value);
+let tasaBase = parseFloat(document.getElementById("tasa").value) / 100;
+let plazo = parseInt(document.getElementById("plazo").value);
+let tipo = document.getElementById("tipo").value;
+
+// Ajuste de tasa
+let tasa;
+
+switch(tipo) {
+    case "diario": tasa = tasaBase / 30; break;
+    case "semanal": tasa = tasaBase / 4; break;
+    case "quincenal": tasa = tasaBase / 2; break;
+    case "mensual": tasa = tasaBase; break;
+}
+
+// Sistema francés
+let i = tasa;
+let n = plazo;
+
+let cuota = monto * (i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
+
+let saldo = monto;
+
+let html = `
+<table>
+<tr>
+<th>Cuota</th>
+<th>Interés</th>
+<th>Capital</th>
+<th>Cuota</th>
+<th>Saldo</th>
+</tr>
+`;
+
+for (let k = 1; k <= n; k++) {
+
+    let interes = saldo * i;
+    let capital = cuota - interes;
+    saldo -= capital;
+
+    html += `
+    <tr>
+    <td>${k}</td>
+    <td>${interes.toFixed(2)}</td>
+    <td>${capital.toFixed(2)}</td>
+    <td>${cuota.toFixed(2)}</td>
+    <td>${saldo.toFixed(2)}</td>
+    </tr>
+    `;
+}
+
+html += `</table>`;
+
+document.getElementById("resultado").innerHTML = html;
+
+}
+
+</script>
+
+</body>
+</html>

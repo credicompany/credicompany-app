@@ -1,0 +1,15 @@
+{
+"name": "Credicompany",
+"short_name": "CrediApp",
+"start_url": ".",
+"display": "standalone",
+"background_color": "#0a3a63",
+"theme_color": "#0a3a63",
+"icons": [
+{
+"src": "https://i.postimg.cc/HksdW7gW/LOGO-FONDO-AZUL.png",
+"sizes": "512x512",
+"type": "image/png"
+}
+]
+}

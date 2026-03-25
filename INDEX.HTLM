@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Simulador de Créditos - Credicompany</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="manifest" href="manifest.json">
+
+<style>
+body {
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
+    padding: 20px;
+}
+
+.container {
+    max-width: 400px;
+    margin: auto;
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+input, select, button {
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+}
+
+button {
+    background: #22c55e;
+    color: white;
+    border: none;
+}
+
+.resultado {
+    margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>Simulador de Créditos</h2>
+
+<input type="number" id="monto" placeholder="Monto">
+
+<input type="number" id="tasa" placeholder="Tasa (%)">
+
+<input type="number" id="plazo" placeholder="Número de cuotas">
+
+<select id="frecuencia">
+    <option value="1">Diario</option>
+    <option value="7">Semanal</option>
+    <option value="15">Quincenal</option>
+    <option value="30">Mensual</option>
+</select>
+
+<button onclick="calcular()">Calcular</button>
+
+<div class="resultado" id="resultado"></div>
+
+</div>
+
+<script>
+
+function calcular() {
+
+let monto = parseFloat(document.getElementById("monto").value);
+let tasa = parseFloat(document.getElementById("tasa").value) / 100;
+let plazo = parseInt(document.getElementById("plazo").value);
+let frecuencia = parseInt(document.getElementById("frecuencia").value);
+
+let cuota = (monto * tasa) / (1 - Math.pow(1 + tasa, -plazo));
+
+let saldo = monto;
+let html = "";
+
+for (let i = 1; i <= plazo; i++) {
+
+    let interes = saldo * tasa;
+    let capital = cuota - interes;
+    saldo -= capital;
+
+    html += `
+    <p>
+    <b>Cuota ${i}</b><br>
+    Interés: ${interes.toFixed(2)}<br>
+    Capital: ${capital.toFixed(2)}<br>
+    Saldo: ${saldo.toFixed(2)}
+    </p>
+    `;
+}
+
+document.getElementById("resultado").innerHTML = html;
+
+}
+
+// Service Worker
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+}
+
+</script>
+
+</body>
+</html>

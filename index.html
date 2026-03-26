@@ -2,64 +2,63 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Simulador de Créditos - Credicompany</title>
+<title>Credicompany App</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a3a63">
 
 <style>
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: Arial;
     background: #0a3a63;
 }
 
-/* CONTENEDOR */
 .container {
     text-align: center;
-    padding-top: 30px;
+    padding-top: 20px;
 }
 
-/* 🔥 LOGO GRANDE FUNCIONANDO */
 .logo {
-    width: 420px;
-    max-width: 90%;
-    display: block;
-    margin: 0 auto 25px;
+    width: 220px;
+    margin-bottom: 10px;
 }
 
-/* TARJETA */
 .card {
-    background: #ffffff;
-    padding: 25px;
-    border-radius: 12px;
-    width: 360px;
-    margin: 0 auto;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 320px;
+    margin: auto;
 }
 
-/* INPUTS */
 input, select, button {
     width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border-radius: 6px;
+    padding: 10px;
+    margin: 6px 0;
+    border-radius: 5px;
     border: 1px solid #ccc;
 }
 
-/* BOTÓN */
 button {
     background: #28a745;
     color: white;
     border: none;
     font-weight: bold;
-    cursor: pointer;
 }
 
-/* TABLA */
+#resumen {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
 table {
     width: 100%;
-    margin-top: 15px;
-    border-collapse: collapse;
+    margin-top: 10px;
     font-size: 12px;
+    border-collapse: collapse;
 }
 
 th {
@@ -68,9 +67,8 @@ th {
 }
 
 th, td {
-    padding: 6px;
     border: 1px solid #ddd;
-    text-align: center;
+    padding: 5px;
 }
 </style>
 </head>
@@ -79,14 +77,12 @@ th, td {
 
 <div class="container">
 
-<!-- ✅ LOGO CORREGIDO -->
 <img src="logo.png" class="logo">
 
 <div class="card">
 
-<h2>Simulador de Crédito</h2>
+<h3>Simulador de Crédito</h3>
 
-<label>Tipo de crédito</label>
 <select id="tipo">
 <option value="diario">Diario</option>
 <option value="semanal">Semanal</option>
@@ -94,24 +90,19 @@ th, td {
 <option value="mensual">Mensual</option>
 </select>
 
-<label>Monto (S/)</label>
-<input type="number" id="monto">
-
-<label>Tasa (%)</label>
-<input type="number" id="tasa">
-
-<label>Plazo</label>
-<input type="number" id="plazo">
+<input type="number" id="monto" placeholder="Monto (S/)">
+<input type="number" id="tasa" placeholder="Tasa (%)">
+<input type="number" id="plazo" placeholder="Plazo">
 
 <button onclick="simular()">Calcular</button>
 
+<div id="resumen"></div>
 <div id="resultado"></div>
 
 </div>
 </div>
 
 <script>
-
 function simular() {
 
 let monto = parseFloat(document.getElementById("monto").value);
@@ -119,61 +110,68 @@ let tasaBase = parseFloat(document.getElementById("tasa").value) / 100;
 let plazo = parseInt(document.getElementById("plazo").value);
 let tipo = document.getElementById("tipo").value;
 
-// Ajuste de tasa según tipo
-let tasa;
+if (!monto || !tasaBase || !plazo) {
+    alert("Completa los datos");
+    return;
+}
 
-switch(tipo) {
-    case "diario": tasa = tasaBase / 30; break;
-    case "semanal": tasa = tasaBase / 4; break;
-    case "quincenal": tasa = tasaBase / 2; break;
+// ajustar tasa
+let tasa;
+switch(tipo){
+    case "diario": tasa = tasaBase/30; break;
+    case "semanal": tasa = tasaBase/4; break;
+    case "quincenal": tasa = tasaBase/2; break;
     case "mensual": tasa = tasaBase; break;
 }
 
-// Sistema francés (cuota fija)
+// cuota fija
 let i = tasa;
 let n = plazo;
 
-let cuota = monto * (i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
+let cuota = monto * (i * Math.pow(1+i,n)) / (Math.pow(1+i,n)-1);
 
 let saldo = monto;
 
-let html = `
-<table>
-<tr>
-<th>Cuota</th>
-<th>Interés</th>
-<th>Capital</th>
-<th>Cuota</th>
-<th>Saldo</th>
-</tr>
-`;
+let totalPagar = cuota * n;
+let totalInteres = totalPagar - monto;
 
-for (let k = 1; k <= n; k++) {
+// resumen
+document.getElementById("resumen").innerHTML =
+`Cuota: S/ ${cuota.toFixed(2)}<br>
+Total: S/ ${totalPagar.toFixed(2)}<br>
+Interés: S/ ${totalInteres.toFixed(2)}`;
 
-    let interes = saldo * i;
+// tabla
+let html = "<table><tr><th>#</th><th>Interés</th><th>Capital</th><th>Cuota</th><th>Saldo</th></tr>";
+
+for(let k=1;k<=n;k++){
+    let interes = saldo*i;
     let capital = cuota - interes;
-
     saldo -= capital;
 
-    html += `
-    <tr>
+    html += `<tr>
     <td>${k}</td>
     <td>${interes.toFixed(2)}</td>
     <td>${capital.toFixed(2)}</td>
     <td>${cuota.toFixed(2)}</td>
     <td>${saldo.toFixed(2)}</td>
-    </tr>
-    `;
+    </tr>`;
 }
 
-html += `</table>`;
+html += "</table>";
 
 document.getElementById("resultado").innerHTML = html;
 
 }
+</script>
 
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/service-worker.js");
+  });
+}
 </script>
 
 </body>
 </html>
-I LOVE PISHTA

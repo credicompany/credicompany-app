@@ -48,6 +48,13 @@ button {
     font-weight: bold;
 }
 
+/* BOTÓN INSTALAR */
+#instalarApp {
+    background: #007bff;
+    display: none;
+}
+
+/* RESUMEN */
 #resumen {
     margin-top: 10px;
     font-weight: bold;
@@ -96,6 +103,9 @@ th, td {
 
 <button onclick="simular()">Calcular</button>
 
+<!-- 🔥 BOTÓN INSTALAR -->
+<button id="instalarApp">Instalar App</button>
+
 <div id="resumen"></div>
 <div id="resultado"></div>
 
@@ -115,7 +125,7 @@ if (!monto || !tasaBase || !plazo) {
     return;
 }
 
-// ajustar tasa
+// ajuste de tasa
 let tasa;
 switch(tipo){
     case "diario": tasa = tasaBase/30; break;
@@ -124,7 +134,7 @@ switch(tipo){
     case "mensual": tasa = tasaBase; break;
 }
 
-// cuota fija
+// sistema francés
 let i = tasa;
 let n = plazo;
 
@@ -165,12 +175,30 @@ document.getElementById("resultado").innerHTML = html;
 }
 </script>
 
+<!-- 🔥 SERVICE WORKER -->
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("/service-worker.js");
   });
 }
+</script>
+
+<!-- 🔥 BOTÓN INSTALAR -->
+<script>
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('instalarApp').style.display = 'block';
+});
+
+document.getElementById('instalarApp').addEventListener('click', () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+  }
+});
 </script>
 
 </body>

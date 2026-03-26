@@ -1,7 +1,9 @@
-self.addEventListener("install", e => {
-    e.waitUntil(
-        caches.open("credicompany").then(cache => {
-            return cache.addAll(["./"]);
-        })
-    );
+self.addEventListener("install", (event) => {
+  self.skipWaiting();
 });
+
+self.addEventListener("activate", (event) => {
+  return self.clients.claim();
+});
+
+self.addEventListener("fetch", (event) => {});

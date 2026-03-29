@@ -1,7 +1,7 @@
 {
   "name": "Credicompany",
   "short_name": "CrediApp",
-  "start_url": "index.html?v=2",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#0a3a63",
   "theme_color": "#0a3a63",

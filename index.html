@@ -13,19 +13,16 @@ background:#0a2f5c;
 color:white;
 }
 
-/* HEADER */
 .header{
 padding:20px;
 font-size:20px;
 font-weight:bold;
 }
 
-/* CONTENEDOR */
 .container{
 padding:15px;
 }
 
-/* TARJETAS */
 .card{
 background:white;
 color:#333;
@@ -35,7 +32,6 @@ margin-bottom:15px;
 box-shadow:0 8px 20px rgba(0,0,0,0.2);
 }
 
-/* INPUTS */
 input,select{
 width:100%;
 padding:14px;
@@ -45,7 +41,6 @@ border-radius:12px;
 background:#f2f4f7;
 }
 
-/* BOTONES */
 button{
 width:100%;
 padding:14px;
@@ -57,7 +52,6 @@ color:white;
 font-weight:bold;
 }
 
-/* MENU */
 .menu{
 position:fixed;
 bottom:0;
@@ -86,7 +80,6 @@ padding:10px;
 border-radius:10px;
 margin-top:10px;
 }
-
 </style>
 </head>
 
@@ -113,15 +106,18 @@ margin-top:10px;
 <div id="simulador" class="card">
 <h3>Simulador</h3>
 
+<input id="monto" placeholder="Monto">
+
+<input id="tea" placeholder="TEA % (Ej: 120)">
+
+<input id="plazo" placeholder="Cuotas">
+
 <select id="frecuencia">
 <option value="diario">Diario</option>
 <option value="semanal">Semanal</option>
 <option value="quincenal">Quincenal</option>
 <option value="mensual">Mensual</option>
 </select>
-
-<input id="monto" placeholder="Monto">
-<input id="plazo" placeholder="Cuotas">
 
 <button onclick="calcular()">Calcular</button>
 
@@ -152,7 +148,7 @@ margin-top:10px;
 </div>
 
 <!-- MENU -->
-<div class="menu" id="menu">
+<div class="menu">
 <button onclick="mostrar('simulador')">Simular</button>
 <button onclick="mostrar('registro')">Registrar</button>
 <button onclick="mostrar('clientes')">Clientes</button>
@@ -168,11 +164,11 @@ if(user.value=="admin" && pass.value=="1234"){
 loginDiv.classList.add("hidden");
 appDiv.classList.remove("hidden");
 }else{
-alert("Datos incorrectos");
+alert("Error");
 }
 }
 
-// NAVEGACIÓN
+// NAV
 function mostrar(p){
 simulador.classList.add("hidden");
 registro.classList.add("hidden");
@@ -180,34 +176,38 @@ clientes.classList.add("hidden");
 
 if(p=="simulador") simulador.classList.remove("hidden");
 if(p=="registro") registro.classList.remove("hidden");
-if(p=="clientes") {
+if(p=="clientes"){
 clientes.classList.remove("hidden");
 mostrarClientes();
 }
 }
 
-// SIMULADOR
-let simulacion = {};
+// SIMULADOR CON TEA
+let simulacion={};
 
 function calcular(){
 
 let m=parseFloat(monto.value);
+let tea=parseFloat(teaInput.value)/100;
 let n=parseInt(plazo.value);
 let f=frecuencia.value;
 
-let tasa=0;
+let i;
 
-if(f=="diario") tasa=0.20;
-if(f=="semanal") tasa=0.18;
-if(f=="quincenal") tasa=0.16;
-if(f=="mensual") tasa=0.14;
+if(f=="diario") i=Math.pow(1+tea,1/360)-1;
+if(f=="semanal") i=Math.pow(1+tea,1/52)-1;
+if(f=="quincenal") i=Math.pow(1+tea,1/24)-1;
+if(f=="mensual") i=Math.pow(1+tea,1/12)-1;
 
-let interes=m*tasa;
-let total=m+interes;
-let cuota=total/n;
+// fórmula financiera correcta
+let cuota = m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
+
+let total=cuota*n;
+let interes=total-m;
 
 resultado.innerHTML=`
 Monto: S/ ${m}<br>
+TEA: ${(tea*100).toFixed(2)}%<br>
 Interés: S/ ${interes.toFixed(2)}<br>
 Total: S/ ${total.toFixed(2)}<br>
 Cuota: S/ ${cuota.toFixed(2)}
@@ -225,8 +225,7 @@ total:total
 function enviarWhatsApp(){
 if(!simulacion.monto) return alert("Primero calcula");
 
-let texto=`Hola 👋
-Simulación Credicompany:
+let texto=`Simulación Credicompany:
 
 Monto: S/ ${simulacion.monto}
 Cuota: S/ ${simulacion.cuota.toFixed(2)}
@@ -237,7 +236,7 @@ Total: S/ ${simulacion.total.toFixed(2)}
 window.open("https://wa.me/?text="+encodeURIComponent(texto));
 }
 
-// GUARDAR CLIENTE
+// GUARDAR
 function guardarCliente(){
 
 let data=JSON.parse(localStorage.getItem("clientes"))||[];
@@ -252,12 +251,12 @@ cuota:simulacion.cuota
 
 localStorage.setItem("clientes",JSON.stringify(data));
 
-alert("Cliente guardado");
+alert("Guardado");
 
 mostrarClientes();
 }
 
-// MOSTRAR CLIENTES
+// MOSTRAR
 function mostrarClientes(){
 
 let data=JSON.parse(localStorage.getItem("clientes"))||[];
@@ -266,7 +265,7 @@ let html="";
 
 data.forEach(c=>{
 html+=`
-<div style="margin-bottom:10px;">
+<div>
 <b>${c.nombre}</b><br>
 Monto: ${c.monto}<br>
 Cuota: ${c.cuota.toFixed(2)}
@@ -284,8 +283,10 @@ const simulador=document.getElementById("simulador");
 const registro=document.getElementById("registro");
 const clientes=document.getElementById("clientes");
 
+const teaInput=document.getElementById("tea");
+
 </script>
 
 </body>
 </html>
-🔥 AHORA SÍ ESTÁS E
+Compromiso y Honestidad, crecemos juntos...

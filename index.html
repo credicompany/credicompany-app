@@ -7,9 +7,9 @@
 
 <style>
 body{font-family:Arial;margin:0;background:#0a3a63;color:white;text-align:center;}
-.container{padding:20px;}
+.container{padding:15px;}
 .card{background:white;color:black;border-radius:15px;padding:15px;margin:10px;}
-input,button{width:100%;padding:10px;margin:5px 0;border-radius:8px;border:1px solid #ccc;}
+input,select,button{width:100%;padding:10px;margin:5px 0;border-radius:8px;border:1px solid #ccc;}
 button{background:#28a745;color:white;font-weight:bold;}
 .hidden{display:none;}
 </style>
@@ -32,20 +32,40 @@ button{background:#28a745;color:white;font-weight:bold;}
 <!-- APP -->
 <div id="app" class="hidden">
 
+<!-- SIMULADOR -->
+<div class="card">
+<h3>Simulador de Crédito</h3>
+
+<select id="frecuencia">
+<option>Diario</option>
+<option selected>Semanal</option>
+<option>Quincenal</option>
+<option>Mensual</option>
+</select>
+
+<input id="monto" placeholder="Monto">
+<input id="tasa" placeholder="Tasa %" value="21">
+<input id="plazo" placeholder="Cuotas">
+
+<button onclick="calcular()">Calcular</button>
+
+<div id="resumen"></div>
+</div>
+
+<!-- REGISTRO -->
 <div class="card">
 <h3>Registrar Cliente</h3>
 
 <input id="dni" placeholder="DNI">
 <input id="nombre" placeholder="Nombre">
 <input id="telefono" placeholder="Teléfono">
-<input id="monto" placeholder="Monto">
 
 <button onclick="guardarCliente()">Guardar Cliente</button>
-
 </div>
 
+<!-- LISTA -->
 <div class="card">
-<h3>Clientes Registrados</h3>
+<h3>Clientes</h3>
 <div id="lista"></div>
 </div>
 
@@ -55,85 +75,124 @@ button{background:#28a745;color:white;font-weight:bold;}
 
 <script>
 
-// USUARIOS
+// LOGIN
 const usuarios = [
 {user:"admin",pass:"1234"},
 {user:"asesor1",pass:"1234"}
 ];
 
-let asesorActivo = "";
+let asesorActivo="";
 
-// LOGIN
 function login(){
-let u = usuario.value;
-let c = clave.value;
+let u=usuario.value;
+let c=clave.value;
 
-let valido = usuarios.find(x=>x.user===u && x.pass===c);
+let ok=usuarios.find(x=>x.user===u && x.pass===c);
 
-if(valido){
-asesorActivo = u;
+if(ok){
+asesorActivo=u;
 loginDiv.classList.add("hidden");
 appDiv.classList.remove("hidden");
 mostrarClientes();
 }else{
-alert("Datos incorrectos");
+alert("Error");
 }
+}
+
+// SIMULADOR
+let ultimaSimulacion={};
+
+function calcular(){
+
+let m=parseFloat(montoInput.value);
+let TEM=parseFloat(tasaInput.value)/100;
+let n=parseInt(plazoInput.value);
+let f=frecuencia.value;
+
+let i;
+
+if(f==="Diario") i=Math.pow(1+TEM,1/30)-1;
+if(f==="Semanal") i=Math.pow(1+TEM,1/4)-1;
+if(f==="Quincenal") i=Math.pow(1+TEM,1/2)-1;
+if(f==="Mensual") i=TEM;
+
+let cuota=m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
+
+let total=cuota*n;
+
+resumen.innerHTML=`
+Cuota: ${cuota.toFixed(2)}<br>
+Total: ${total.toFixed(2)}
+`;
+
+ultimaSimulacion={
+monto:m,
+cuota:cuota.toFixed(2),
+total:total.toFixed(2)
+};
 }
 
 // GUARDAR CLIENTE
 function guardarCliente(){
 
-let cliente = {
-dni: dni.value,
-nombre: nombre.value,
-telefono: telefono.value,
-monto: monto.value,
-asesor: asesorActivo
+let cliente={
+dni:dni.value,
+nombre:nombre.value,
+telefono:telefono.value,
+monto:ultimaSimulacion.monto,
+cuota:ultimaSimulacion.cuota,
+total:ultimaSimulacion.total,
+asesor:asesorActivo
 };
 
-let data = JSON.parse(localStorage.getItem("clientes")) || [];
+let data=JSON.parse(localStorage.getItem("clientes"))||[];
 
 data.push(cliente);
 
-localStorage.setItem("clientes", JSON.stringify(data));
+localStorage.setItem("clientes",JSON.stringify(data));
 
-alert("Cliente guardado");
+alert("Guardado");
 
 mostrarClientes();
-
 }
 
-// MOSTRAR CLIENTES
+// MOSTRAR
 function mostrarClientes(){
 
-let data = JSON.parse(localStorage.getItem("clientes")) || [];
+let data=JSON.parse(localStorage.getItem("clientes"))||[];
 
-let filtrado = data.filter(x=>x.asesor===asesorActivo);
+let filtro=data.filter(x=>x.asesor===asesorActivo);
 
-let html = "";
+let html="";
 
-filtrado.forEach(c=>{
-html += `
+filtro.forEach(c=>{
+html+=`
 <div style="border-bottom:1px solid #ccc;padding:5px">
 <b>${c.nombre}</b><br>
-DNI: ${c.dni}<br>
-Monto: ${c.monto}
+Monto: ${c.monto}<br>
+Cuota: ${c.cuota}
 </div>`;
 });
 
-lista.innerHTML = html;
+lista.innerHTML=html;
 }
 
-// referencias
-const loginDiv = document.getElementById("login");
-const appDiv = document.getElementById("app");
-const usuario = document.getElementById("usuario");
-const clave = document.getElementById("clave");
-const dni = document.getElementById("dni");
-const nombre = document.getElementById("nombre");
-const telefono = document.getElementById("telefono");
-const monto = document.getElementById("monto");
-const lista = document.getElementById("lista");
+// refs
+const loginDiv=document.getElementById("login");
+const appDiv=document.getElementById("app");
+const usuario=document.getElementById("usuario");
+const clave=document.getElementById("clave");
+
+const montoInput=document.getElementById("monto");
+const tasaInput=document.getElementById("tasa");
+const plazoInput=document.getElementById("plazo");
+const frecuencia=document.getElementById("frecuencia");
+const resumen=document.getElementById("resumen");
+
+const dni=document.getElementById("dni");
+const nombre=document.getElementById("nombre");
+const telefono=document.getElementById("telefono");
+const lista=document.getElementById("lista");
 
 </script>
 

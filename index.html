@@ -107,7 +107,7 @@ margin-top:10px;
 <h3>Simulador</h3>
 
 <label>Producto</label>
-<select id="frecuencia" onchange="actualizarTEA()">
+<select id="frecuencia">
 <option value="diario">Diario</option>
 <option value="semanal">Semanal</option>
 <option value="quincenal">Quincenal</option>
@@ -115,10 +115,10 @@ margin-top:10px;
 </select>
 
 <label>TEA (%)</label>
-<input id="tea" readonly>
+<input id="tea" placeholder="Ej: 120">
 
 <input id="monto" placeholder="Monto">
-<input id="plazo" placeholder="Cuotas">
+<input id="plazo" placeholder="N° cuotas">
 
 <button onclick="calcular()">Calcular</button>
 
@@ -164,7 +164,6 @@ function login(){
 if(user.value=="admin" && pass.value=="1234"){
 loginDiv.classList.add("hidden");
 appDiv.classList.remove("hidden");
-actualizarTEA();
 }else{
 alert("Error");
 }
@@ -184,19 +183,7 @@ mostrarClientes();
 }
 }
 
-// TEA AUTOMÁTICA
-function actualizarTEA(){
-
-let f = frecuencia.value;
-
-if(f=="diario") tea.value = 180;
-if(f=="semanal") tea.value = 120;
-if(f=="quincenal") tea.value = 90;
-if(f=="mensual") tea.value = 60;
-
-}
-
-// SIMULADOR CORRECTO
+// SIMULADOR INTELIGENTE
 let simulacion={};
 
 function calcular(){
@@ -206,8 +193,8 @@ let teaValor=parseFloat(tea.value)/100;
 let n=parseInt(plazo.value);
 let f=frecuencia.value;
 
-if(!m || !n){
-alert("Completa datos");
+if(!m || !n || !teaValor){
+alert("Completa todos los datos");
 return;
 }
 
@@ -238,7 +225,7 @@ if(f=="mensual"){
 resultado.innerHTML=`
 <b>Producto:</b> ${f}<br>
 <b>Monto:</b> S/ ${m}<br>
-<b>TEA:</b> ${tea.value}%<br>
+<b>TEA:</b> ${(teaValor*100).toFixed(2)}%<br>
 <b>Interés:</b> S/ ${interes.toFixed(2)}<br>
 <b>Total:</b> S/ ${total.toFixed(2)}<br>
 <b>Cuota:</b> S/ ${cuota.toFixed(2)}
@@ -314,8 +301,6 @@ const appDiv=document.getElementById("app");
 const simulador=document.getElementById("simulador");
 const registro=document.getElementById("registro");
 const clientes=document.getElementById("clientes");
-
-const tea=document.getElementById("tea");
 
 </script>
 

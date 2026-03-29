@@ -73,6 +73,14 @@ th,td{
     border:1px solid #ccc;
     padding:5px;
 }
+
+.resumen{
+    background:#fff;
+    padding:10px;
+    border-radius:10px;
+    margin-top:10px;
+    font-weight:bold;
+}
 </style>
 </head>
 
@@ -113,9 +121,9 @@ th,td{
 <button onclick="simular()">Calcular</button>
 <button onclick="guardar()">Guardar</button>
 
-<button id="instalar">📲 Instalar App</button>
+<button id="instalar" onclick="instalarApp()">📲 Instalar App</button>
 
-<div id="resumen"></div>
+<div id="resumen" class="resumen"></div>
 <div id="resultado"></div>
 
 </div>
@@ -131,7 +139,7 @@ th,td{
 
 <script>
 
-// USUARIOS
+// 🔐 USUARIOS
 const usuarios = [
 {user:"admin", pass:"1234"},
 {user:"asesor1", pass:"1234"},
@@ -142,7 +150,6 @@ let usuarioActivo = "";
 
 // LOGIN
 function login(){
-
 let u = document.getElementById("usuario").value;
 let c = document.getElementById("clave").value;
 
@@ -176,19 +183,17 @@ alert("Completa datos");
 return;
 }
 
-// 🔥 AJUSTE DE TASA
 let tasa;
 switch(tipo){
 case "diario": tasa = tasaBase/30; break;
 case "semanal": tasa = tasaBase/4; break;
-case "quincenal": tasa = tasaBase/2; break; // ✅ NUEVO
+case "quincenal": tasa = tasaBase/2; break;
 case "mensual": tasa = tasaBase; break;
 }
 
 let i = tasa;
 let n = plazo;
 
-// CUOTA
 let cuota = monto * (i * Math.pow(1+i,n)) / (Math.pow(1+i,n)-1);
 
 let saldo = monto;
@@ -197,7 +202,6 @@ let totalInteres = 0;
 let html = "<table><tr><th>#</th><th>Interés</th><th>Capital</th><th>Cuota</th><th>Saldo</th></tr>";
 
 for(let k=1;k<=n;k++){
-
 let interes = saldo*i;
 let capital = cuota - interes;
 
@@ -220,9 +224,9 @@ document.getElementById("resultado").innerHTML = html;
 let totalPagar = cuota * n;
 
 document.getElementById("resumen").innerHTML = `
-Cuota: ${cuota.toFixed(2)}<br>
-Intereses: ${totalInteres.toFixed(2)}<br>
-Total: ${totalPagar.toFixed(2)}
+Cuota: S/ ${cuota.toFixed(2)} <br>
+Intereses: S/ ${totalInteres.toFixed(2)} <br>
+Total: S/ ${totalPagar.toFixed(2)}
 `;
 
 ultima = {
@@ -236,23 +240,16 @@ usuario: usuarioActivo
 
 // GUARDAR
 function guardar(){
-
 let data = JSON.parse(localStorage.getItem("creditos")) || [];
-
 data.push(ultima);
-
 localStorage.setItem("creditos", JSON.stringify(data));
-
 alert("Guardado");
-
 cargarHistorial();
 }
 
 // HISTORIAL
 function cargarHistorial(){
-
 let data = JSON.parse(localStorage.getItem("creditos")) || [];
-
 let filtrado = data.filter(x => x.usuario === usuarioActivo);
 
 let html = "";
@@ -269,12 +266,12 @@ Total: ${d.total}
 document.getElementById("historial").innerHTML = html;
 }
 
-// SERVICE WORKER
+// 🔥 SERVICE WORKER
 if ("serviceWorker" in navigator) {
-navigator.serviceWorker.register("service-worker.js?ver=5");
+navigator.serviceWorker.register("service-worker.js?v=10");
 }
 
-// INSTALAR
+// 🔥 INSTALAR APP
 let deferredPrompt;
 
 window.addEventListener("beforeinstallprompt", (e) => {
@@ -283,9 +280,11 @@ deferredPrompt = e;
 document.getElementById("instalar").style.display = "block";
 });
 
-document.getElementById("instalar").addEventListener("click", () => {
-if (deferredPrompt) deferredPrompt.prompt();
-});
+function instalarApp(){
+if(deferredPrompt){
+deferredPrompt.prompt();
+}
+}
 
 </script>
 

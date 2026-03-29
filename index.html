@@ -34,19 +34,19 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 
 input,select{
 width:100%;
-padding:14px;
+padding:12px;
 margin-top:10px;
 border:none;
-border-radius:12px;
+border-radius:10px;
 background:#f2f4f7;
 }
 
 button{
 width:100%;
-padding:14px;
+padding:12px;
 margin-top:10px;
 border:none;
-border-radius:12px;
+border-radius:10px;
 background:#00c853;
 color:white;
 font-weight:bold;
@@ -79,6 +79,19 @@ background:#f4f4f4;
 padding:10px;
 border-radius:10px;
 margin-top:10px;
+}
+
+table{
+width:100%;
+margin-top:10px;
+border-collapse:collapse;
+font-size:12px;
+}
+
+th,td{
+border:1px solid #ccc;
+padding:5px;
+text-align:center;
 }
 </style>
 </head>
@@ -114,8 +127,8 @@ margin-top:10px;
 <option value="mensual">Mensual</option>
 </select>
 
-<label>Tasa (%)</label>
-<input id="tasa" placeholder="Ej: 20">
+<label>Tasa (TEA %)</label>
+<input id="tasa" placeholder="Ej: 21">
 
 <input id="monto" placeholder="Monto">
 <input id="plazo" placeholder="N° cuotas">
@@ -123,6 +136,7 @@ margin-top:10px;
 <button onclick="calcular()">Calcular</button>
 
 <div id="resultado" class="result"></div>
+<div id="tabla"></div>
 
 <button onclick="enviarWhatsApp()">📲 Enviar WhatsApp</button>
 
@@ -183,61 +197,73 @@ mostrarClientes();
 }
 }
 
-// SIMULADOR
+// SIMULADOR COMPLETO
 let simulacion={};
 
 function calcular(){
 
 let m=parseFloat(monto.value);
-let tasaValor=parseFloat(tasa.value)/100;
+let tea=parseFloat(tasa.value)/100;
 let n=parseInt(plazo.value);
 let f=frecuencia.value;
 
-if(!m || !n || !tasaValor){
-alert("Completa todos los datos");
+if(!m || !tea || !n){
+alert("Completa datos");
 return;
 }
 
-let interes, total, cuota;
+// CONVERSIÓN SEGÚN PRODUCTO
+let i;
 
-// AJUSTE DE TASA SEGÚN PRODUCTO
-let tasaPeriodo;
+if(f=="diario") i = Math.pow(1+tea,1/360)-1;
+if(f=="semanal") i = Math.pow(1+tea,1/52)-1;
+if(f=="quincenal") i = Math.pow(1+tea,1/24)-1;
+if(f=="mensual") i = Math.pow(1+tea,1/12)-1;
 
-if(f=="diario") tasaPeriodo = tasaValor/30;
-if(f=="semanal") tasaPeriodo = tasaValor/4;
-if(f=="quincenal") tasaPeriodo = tasaValor/2;
-if(f=="mensual") tasaPeriodo = tasaValor;
+// CUOTA
+let cuota = m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
 
-// CALCULO
-if(f=="mensual"){
+let saldo = m;
+let totalInteres = 0;
 
-    let i = tasaPeriodo;
+let html = "<table>";
+html += "<tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
 
-    cuota = m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
-    total = cuota*n;
-    interes = total - m;
+for(let k=1; k<=n; k++){
 
-}else{
+let interes = saldo * i;
+let capital = cuota - interes;
+saldo -= capital;
 
-    interes = m * tasaPeriodo * n;
-    total = m + interes;
-    cuota = total / n;
+totalInteres += interes;
+
+html += `<tr>
+<td>${k}</td>
+<td>${cuota.toFixed(2)}</td>
+<td>${interes.toFixed(2)}</td>
+<td>${capital.toFixed(2)}</td>
+<td>${saldo.toFixed(2)}</td>
+</tr>`;
 
 }
 
-resultado.innerHTML=`
+html += "</table>";
+
+resultado.innerHTML = `
 <b>Producto:</b> ${f}<br>
 <b>Monto:</b> S/ ${m}<br>
-<b>Tasa:</b> ${(tasaValor*100).toFixed(2)}%<br>
-<b>Interés:</b> S/ ${interes.toFixed(2)}<br>
-<b>Total:</b> S/ ${total.toFixed(2)}<br>
-<b>Cuota:</b> S/ ${cuota.toFixed(2)}
+<b>Tasa:</b> ${(tea*100).toFixed(2)}%<br>
+<b>Cuota:</b> S/ ${cuota.toFixed(2)}<br>
+<b>Total interés:</b> S/ ${totalInteres.toFixed(2)}<br>
+<b>Total:</b> S/ ${(cuota*n).toFixed(2)}
 `;
+
+tabla.innerHTML = html;
 
 simulacion={
 monto:m,
 cuota:cuota,
-total:total
+total:(cuota*n)
 };
 
 }

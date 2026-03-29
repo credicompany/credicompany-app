@@ -144,39 +144,165 @@ for(let k=1;k<=n;k++){
     <td>${cuota.toFixed(2)}</td>
     <td>${saldo.toFixed(2)}</td>
     </tr>`;
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Credicompany</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0a3a63;
+}
+
+.container{
+    text-align:center;
+    padding-top:20px;
+}
+
+.logo{
+    width:200px;
+}
+
+.card{
+    background:#eaeaea;
+    padding:20px;
+    border-radius:15px;
+    width:90%;
+    max-width:350px;
+    margin:auto;
+}
+
+input,select,button{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border-radius:8px;
+    border:1px solid #ccc;
+}
+
+button{
+    background:#28a745;
+    color:white;
+    font-weight:bold;
+}
+
+table{
+    width:100%;
+    margin-top:10px;
+    font-size:12px;
+    border-collapse:collapse;
+}
+
+th{
+    background:#0a3a63;
+    color:white;
+}
+
+th,td{
+    border:1px solid #ccc;
+    padding:5px;
+}
+
+#resumen{
+    margin-top:10px;
+    font-weight:bold;
+    font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<img src="logo.png" class="logo">
+
+<div class="card">
+
+<h3>Simulador de Crédito</h3>
+
+<select id="tipo">
+<option value="diario">Diario</option>
+<option value="semanal" selected>Semanal</option>
+<option value="quincenal">Quincenal</option>
+<option value="mensual">Mensual</option>
+</select>
+
+<input type="number" id="monto" value="1000" placeholder="Monto (S/)">
+<input type="number" id="tasa" value="21" placeholder="Tasa (%)">
+<input type="number" id="plazo" value="12" placeholder="Plazo">
+
+<button onclick="simular()">Calcular</button>
+
+<div id="resumen"></div>
+<div id="resultado"></div>
+
+</div>
+</div>
+
+<script>
+function simular(){
+
+let monto = parseFloat(document.getElementById("monto").value);
+let tasaBase = parseFloat(document.getElementById("tasa").value)/100;
+let plazo = parseInt(document.getElementById("plazo").value);
+let tipo = document.getElementById("tipo").value;
+
+let tasa;
+switch(tipo){
+    case "diario": tasa = tasaBase/30; break;
+    case "semanal": tasa = tasaBase/4; break;
+    case "quincenal": tasa = tasaBase/2; break;
+    case "mensual": tasa = tasaBase; break;
+}
+
+let i = tasa;
+let n = plazo;
+
+// CUOTA FIJA
+let cuota = monto * (i * Math.pow(1+i,n)) / (Math.pow(1+i,n)-1);
+
+let saldo = monto;
+let totalInteres = 0;
+
+let html = "<table><tr><th>#</th><th>Interés</th><th>Capital</th><th>Cuota</th><th>Saldo</th></tr>";
+
+for(let k=1;k<=n;k++){
+    let interes = saldo*i;
+    let capital = cuota - interes;
+
+    totalInteres += interes;
+
+    saldo -= capital;
+
+    html += `<tr>
+    <td>${k}</td>
+    <td>${interes.toFixed(2)}</td>
+    <td>${capital.toFixed(2)}</td>
+    <td>${cuota.toFixed(2)}</td>
+    <td>${saldo.toFixed(2)}</td>
+    </tr>`;
 }
 
 html += "</table>";
 
 document.getElementById("resultado").innerHTML = html;
 
+// RESUMEN
+let totalPagar = cuota * n;
+
+document.getElementById("resumen").innerHTML = `
+Cuota: S/ ${cuota.toFixed(2)} <br>
+Total Intereses: S/ ${totalInteres.toFixed(2)} <br>
+Total a Pagar: S/ ${totalPagar.toFixed(2)}
+`;
+
 }
-</script>
-
-<!-- SERVICE WORKER -->
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js?v=2");
-}
-</script>
-
-<!-- INSTALAR APP -->
-<script>
-let deferredPrompt;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById('instalarApp').style.display = 'block';
-});
-
-document.getElementById('instalarApp').addEventListener('click', () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-  }
-});
 </script>
 
 </body>
-</html
-
+</html>

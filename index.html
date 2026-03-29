@@ -13,12 +13,19 @@ background:#0a2f5c;
 color:white;
 }
 
+/* HEADER CON LOGO */
 .header{
-padding:20px;
-font-size:20px;
-font-weight:bold;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:25px 0;
 }
 
+.header img{
+width:180px;
+}
+
+/* CONTENIDO */
 .container{ padding:15px; }
 
 .card{
@@ -86,7 +93,7 @@ font-size:12px;
 
 th,td{
 border:1px solid #ccc;
-padding:5px;
+padding:6px;
 text-align:center;
 }
 </style>
@@ -94,7 +101,10 @@ text-align:center;
 
 <body>
 
-<div class="header">Credicompany</div>
+<!-- LOGO -->
+<div class="header">
+<img src="logo.png">
+</div>
 
 <!-- LOGIN -->
 <div id="login" class="container">
@@ -115,7 +125,6 @@ text-align:center;
 <div id="simulador" class="card">
 <h3>Simulador</h3>
 
-<label>Producto</label>
 <select id="frecuencia">
 <option>Diario</option>
 <option selected>Semanal</option>
@@ -123,9 +132,7 @@ text-align:center;
 <option>Mensual</option>
 </select>
 
-<label>Tasa (%)</label>
-<input id="tasa" placeholder="Ej: 21">
-
+<input id="tasa" placeholder="Tasa (%)">
 <input id="monto" placeholder="Monto">
 <input id="plazo" placeholder="N° cuotas">
 
@@ -175,11 +182,11 @@ if(user.value=="admin" && pass.value=="1234"){
 loginDiv.classList.add("hidden");
 appDiv.classList.remove("hidden");
 }else{
-alert("Error");
+alert("Usuario o clave incorrecta");
 }
 }
 
-// NAV
+// NAVEGACIÓN
 function mostrar(p){
 simulador.classList.add("hidden");
 registro.classList.add("hidden");
@@ -193,7 +200,7 @@ mostrarClientes();
 }
 }
 
-// SIMULADOR (TU LÓGICA EXACTA)
+// SIMULADOR
 let ultimaSimulacion={};
 
 function calcular(){
@@ -204,7 +211,7 @@ let n=parseInt(plazo.value);
 let f=frecuencia.value;
 
 if(!m || !TEM || !n){
-alert("Completa datos");
+alert("Completa los datos");
 return;
 }
 
@@ -215,18 +222,16 @@ if(f=="Semanal") i=Math.pow(1+TEM,1/4)-1;
 if(f=="Quincenal") i=Math.pow(1+TEM,1/2)-1;
 if(f=="Mensual") i=TEM;
 
-// CUOTA
+// SISTEMA FRANCÉS (CORRECTO)
 let cuota=m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
 let total=cuota*n;
 
 // CRONOGRAMA
 let saldo=m;
-
 let html="<table>";
 html+="<tr><th>#</th><th>Interés</th><th>Capital</th><th>Cuota</th><th>Saldo</th></tr>";
 
 for(let k=1;k<=n;k++){
-
 let interes=saldo*i;
 let capital=cuota-interes;
 saldo-=capital;
@@ -238,8 +243,7 @@ html+=`
 <td>${capital.toFixed(2)}</td>
 <td>${cuota.toFixed(2)}</td>
 <td>${saldo.toFixed(2)}</td>
-</tr>
-`;
+</tr>`;
 }
 
 html+="</table>";
@@ -312,7 +316,7 @@ Cuota: ${c.cuota.toFixed(2)}
 lista.innerHTML=html;
 }
 
-// refs
+// REFERENCIAS
 const loginDiv=document.getElementById("login");
 const appDiv=document.getElementById("app");
 
@@ -324,4 +328,4 @@ const clientes=document.getElementById("clientes");
 
 </body>
 </html>
-Compromiso y honradez, crecemos juntos...
+Compromiso y Honradez, crecemos juntos...

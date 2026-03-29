@@ -5,7 +5,7 @@
 <title>Credicompany</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest-v2.json">
 <meta name="theme-color" content="#0a3a63">
 
 <style>
@@ -18,7 +18,7 @@ body{
 
 .logo{
     width:180px;
-    margin-top:40px;
+    margin-top:30px;
 }
 
 .card{
@@ -26,11 +26,11 @@ body{
     padding:20px;
     border-radius:15px;
     width:90%;
-    max-width:350px;
+    max-width:380px;
     margin:20px auto;
 }
 
-input,button{
+input, select, button{
     width:100%;
     padding:10px;
     margin:6px 0;
@@ -52,6 +52,18 @@ button{
 .hidden{
     display:none;
 }
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+}
+
+th, td{
+    border:1px solid #ccc;
+    padding:5px;
+    font-size:12px;
+}
 </style>
 </head>
 
@@ -60,7 +72,7 @@ button{
 <img src="logo.png" class="logo">
 
 <div class="card">
-<h3>Bienvenido a Credicompany</h3>
+<h3>Credicompany</h3>
 
 <button id="instalar" onclick="instalarApp()">📲 Instalar App</button>
 
@@ -68,36 +80,54 @@ button{
 </div>
 
 <div id="login" class="card hidden">
-<h3>Ingreso Asesor</h3>
+<h3>Login Asesor</h3>
 <input id="usuario" placeholder="Usuario">
 <input id="clave" type="password" placeholder="Clave">
 <button onclick="login()">Entrar</button>
 </div>
 
+<div id="app" class="card hidden">
+<h3>Simulador de Crédito</h3>
+
+<select id="frecuencia">
+<option>Diario</option>
+<option selected>Semanal</option>
+<option>Quincenal</option>
+<option>Mensual</option>
+</select>
+
+<input id="monto" placeholder="Monto" value="1000">
+<input id="tasa" placeholder="Tasa %" value="21">
+<input id="plazo" placeholder="Cuotas" value="8">
+
+<button onclick="calcular()">Calcular</button>
+
+<div id="resumen"></div>
+<table id="tabla"></table>
+
+</div>
+
 <script>
 
-// 🔥 SERVICE WORKER
+// 🔥 SERVICE WORKER NUEVO
 if ("serviceWorker" in navigator) {
-navigator.serviceWorker.register("service-worker.js?v=50");
+navigator.serviceWorker.register("sw-v2.js?v=2");
 }
 
-// 🔥 INSTALACIÓN REAL
+// 🔥 INSTALACIÓN
 let deferredPrompt;
 
 window.addEventListener("beforeinstallprompt", (e) => {
 e.preventDefault();
 deferredPrompt = e;
-
-// 👉 SOLO AQUÍ mostramos el botón
 document.getElementById("instalar").style.display = "block";
 });
 
-// BOTÓN INSTALAR
 function instalarApp(){
 if(deferredPrompt){
 deferredPrompt.prompt();
 }else{
-alert("La instalación aún no está lista, espera unos segundos...");
+alert("Espera unos segundos y vuelve a intentar");
 }
 }
 
@@ -111,10 +141,49 @@ let u = document.getElementById("usuario").value;
 let c = document.getElementById("clave").value;
 
 if(u==="admin" && c==="1234"){
-alert("Ingreso correcto");
+document.getElementById("login").classList.add("hidden");
+document.getElementById("app").classList.remove("hidden");
 }else{
 alert("Datos incorrectos");
 }
+}
+
+// CALCULO
+function calcular(){
+
+let monto = parseFloat(document.getElementById("monto").value);
+let tasa = parseFloat(document.getElementById("tasa").value)/100;
+let n = parseInt(document.getElementById("plazo").value);
+
+let cuota = monto * (tasa*Math.pow(1+tasa,n))/(Math.pow(1+tasa,n)-1);
+
+let saldo = monto;
+let totalInteres = 0;
+
+let html = "<tr><th>#</th><th>Interés</th><th>Capital</th><th>Cuota</th><th>Saldo</th></tr>";
+
+for(let i=1;i<=n;i++){
+let interes = saldo*tasa;
+let capital = cuota - interes;
+saldo -= capital;
+totalInteres += interes;
+
+html += `<tr>
+<td>${i}</td>
+<td>${interes.toFixed(2)}</td>
+<td>${capital.toFixed(2)}</td>
+<td>${cuota.toFixed(2)}</td>
+<td>${saldo.toFixed(2)}</td>
+</tr>`;
+}
+
+document.getElementById("tabla").innerHTML = html;
+
+document.getElementById("resumen").innerHTML = `
+Cuota: ${cuota.toFixed(2)} <br>
+Intereses: ${totalInteres.toFixed(2)} <br>
+Total: ${(monto+totalInteres).toFixed(2)}
+`;
 }
 
 </script>

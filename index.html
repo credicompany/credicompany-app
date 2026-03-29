@@ -5,6 +5,9 @@
 <title>Credicompany</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a3a63">
+
 <style>
 body{
     margin:0;
@@ -30,40 +33,19 @@ body{
     margin:auto;
 }
 
-input,select,button{
+button{
     width:100%;
     padding:12px;
     margin:8px 0;
     border-radius:8px;
-    border:1px solid #ccc;
-}
-
-button{
-    background:#28a745;
-    color:white;
+    border:none;
     font-weight:bold;
 }
 
-table{
-    width:100%;
-    margin-top:10px;
-    font-size:12px;
-    border-collapse:collapse;
-}
-
-th{
-    background:#0a3a63;
+#instalar{
+    background:#007bff;
     color:white;
-}
-
-th,td{
-    border:1px solid #ccc;
-    padding:5px;
-}
-
-#resumen{
-    margin-top:10px;
-    font-weight:bold;
+    display:none;
 }
 </style>
 </head>
@@ -76,97 +58,35 @@ th,td{
 
 <div class="card">
 
-<h3>Simulador de Crédito</h3>
+<h3>Credicompany App</h3>
 
-<select id="tipo">
-<option value="diario">Diario</option>
-<option value="semanal" selected>Semanal</option>
-<option value="quincenal">Quincenal</option>
-<option value="mensual">Mensual</option>
-</select>
-
-<input type="number" id="monto" value="1000">
-<input type="number" id="tasa" value="21">
-<input type="number" id="plazo" value="8">
-
-<button onclick="simular()">Calcular</button>
-
-<div id="resumen"></div>
-<div id="resultado"></div>
+<button id="instalar">📲 Instalar App</button>
 
 </div>
 </div>
 
 <script>
-function simular(){
 
-let monto = Number(document.getElementById("monto").value);
-let tasaBase = Number(document.getElementById("tasa").value)/100;
-let plazo = Number(document.getElementById("plazo").value);
-let tipo = document.getElementById("tipo").value;
-
-// VALIDACIÓN
-if(!monto || !tasaBase || !plazo){
-    alert("Completa correctamente los datos");
-    return;
+// SERVICE WORKER
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js");
 }
 
-// AJUSTE DE TASA
-let tasa;
-switch(tipo){
-    case "diario": tasa = tasaBase/30; break;
-    case "semanal": tasa = tasaBase/4; break;
-    case "quincenal": tasa = tasaBase/2; break;
-    case "mensual": tasa = tasaBase; break;
-}
+// INSTALAR APP
+let deferredPrompt;
 
-let i = tasa;
-let n = plazo;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById("instalar").style.display = "block";
+});
 
-// VALIDACIÓN EXTRA
-if(i <= 0 || n <= 0){
-    alert("Valores inválidos");
-    return;
-}
+document.getElementById("instalar").addEventListener("click", () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+  }
+});
 
-// CUOTA
-let cuota = monto * (i * Math.pow(1+i,n)) / (Math.pow(1+i,n)-1);
-
-let saldo = monto;
-let totalInteres = 0;
-
-let html = "<table><tr><th>#</th><th>Interés</th><th>Capital</th><th>Cuota</th><th>Saldo</th></tr>";
-
-for(let k=1;k<=n;k++){
-    let interes = saldo*i;
-    let capital = cuota - interes;
-
-    totalInteres += interes;
-    saldo -= capital;
-
-    html += `<tr>
-    <td>${k}</td>
-    <td>${interes.toFixed(2)}</td>
-    <td>${capital.toFixed(2)}</td>
-    <td>${cuota.toFixed(2)}</td>
-    <td>${saldo.toFixed(2)}</td>
-    </tr>`;
-}
-
-html += "</table>";
-
-document.getElementById("resultado").innerHTML = html;
-
-// RESUMEN
-let totalPagar = cuota * n;
-
-document.getElementById("resumen").innerHTML = `
-Cuota: S/ ${cuota.toFixed(2)} <br>
-Total Intereses: S/ ${totalInteres.toFixed(2)} <br>
-Total a Pagar: S/ ${totalPagar.toFixed(2)}
-`;
-
-}
 </script>
 
 </body>

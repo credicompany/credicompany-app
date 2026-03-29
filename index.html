@@ -114,8 +114,8 @@ margin-top:10px;
 <option value="mensual">Mensual</option>
 </select>
 
-<label>TEA (%)</label>
-<input id="tea" placeholder="Ej: 120">
+<label>Tasa (%)</label>
+<input id="tasa" placeholder="Ej: 20">
 
 <input id="monto" placeholder="Monto">
 <input id="plazo" placeholder="N° cuotas">
@@ -183,38 +183,41 @@ mostrarClientes();
 }
 }
 
-// SIMULADOR INTELIGENTE
+// SIMULADOR
 let simulacion={};
 
 function calcular(){
 
 let m=parseFloat(monto.value);
-let teaValor=parseFloat(tea.value)/100;
+let tasaValor=parseFloat(tasa.value)/100;
 let n=parseInt(plazo.value);
 let f=frecuencia.value;
 
-if(!m || !n || !teaValor){
+if(!m || !n || !tasaValor){
 alert("Completa todos los datos");
 return;
 }
 
 let interes, total, cuota;
 
+// AJUSTE DE TASA SEGÚN PRODUCTO
+let tasaPeriodo;
+
+if(f=="diario") tasaPeriodo = tasaValor/30;
+if(f=="semanal") tasaPeriodo = tasaValor/4;
+if(f=="quincenal") tasaPeriodo = tasaValor/2;
+if(f=="mensual") tasaPeriodo = tasaValor;
+
+// CALCULO
 if(f=="mensual"){
 
-    let i=Math.pow(1+teaValor,1/12)-1;
+    let i = tasaPeriodo;
 
     cuota = m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
-    total=cuota*n;
-    interes=total-m;
+    total = cuota*n;
+    interes = total - m;
 
 }else{
-
-    let tasaPeriodo;
-
-    if(f=="diario") tasaPeriodo = teaValor/360;
-    if(f=="semanal") tasaPeriodo = teaValor/52;
-    if(f=="quincenal") tasaPeriodo = teaValor/24;
 
     interes = m * tasaPeriodo * n;
     total = m + interes;
@@ -225,7 +228,7 @@ if(f=="mensual"){
 resultado.innerHTML=`
 <b>Producto:</b> ${f}<br>
 <b>Monto:</b> S/ ${m}<br>
-<b>TEA:</b> ${(teaValor*100).toFixed(2)}%<br>
+<b>Tasa:</b> ${(tasaValor*100).toFixed(2)}%<br>
 <b>Interés:</b> S/ ${interes.toFixed(2)}<br>
 <b>Total:</b> S/ ${total.toFixed(2)}<br>
 <b>Cuota:</b> S/ ${cuota.toFixed(2)}
@@ -255,7 +258,7 @@ Total: S/ ${simulacion.total.toFixed(2)}
 window.open("https://wa.me/?text="+encodeURIComponent(texto));
 }
 
-// GUARDAR CLIENTE
+// CLIENTES
 function guardarCliente(){
 
 let data=JSON.parse(localStorage.getItem("clientes"))||[];
@@ -275,7 +278,6 @@ alert("Cliente guardado");
 mostrarClientes();
 }
 
-// MOSTRAR CLIENTES
 function mostrarClientes(){
 
 let data=JSON.parse(localStorage.getItem("clientes"))||[];

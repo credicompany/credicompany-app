@@ -127,7 +127,7 @@ text-align:center;
 <option value="mensual">Mensual</option>
 </select>
 
-<label>Tasa (TEA %)</label>
+<label>Tasa (%)</label>
 <input id="tasa" placeholder="Ej: 21">
 
 <input id="monto" placeholder="Monto">
@@ -197,73 +197,65 @@ mostrarClientes();
 }
 }
 
-// SIMULADOR COMPLETO
+// SIMULADOR (MODELO ORIGINAL CORRECTO)
 let simulacion={};
 
 function calcular(){
 
 let m=parseFloat(monto.value);
-let tea=parseFloat(tasa.value)/100;
+let tasaValor=parseFloat(tasa.value)/100;
 let n=parseInt(plazo.value);
-let f=frecuencia.value;
 
-if(!m || !tea || !n){
+if(!m || !tasaValor || !n){
 alert("Completa datos");
 return;
 }
 
-// CONVERSIÓN SEGÚN PRODUCTO
-let i;
+// CUOTA DIRECTA (TU MODELO ORIGINAL)
+let total = m + (m * tasaValor);
+let cuota = total / n;
 
-if(f=="diario") i = Math.pow(1+tea,1/360)-1;
-if(f=="semanal") i = Math.pow(1+tea,1/52)-1;
-if(f=="quincenal") i = Math.pow(1+tea,1/24)-1;
-if(f=="mensual") i = Math.pow(1+tea,1/12)-1;
-
-// CUOTA
-let cuota = m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
-
+// CRONOGRAMA
 let saldo = m;
-let totalInteres = 0;
+let interesTotal = total - m;
 
-let html = "<table>";
-html += "<tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
+let interesCuota = interesTotal / n;
+let capitalCuota = m / n;
 
-for(let k=1; k<=n; k++){
+let html="<table>";
+html+="<tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
 
-let interes = saldo * i;
-let capital = cuota - interes;
-saldo -= capital;
+for(let i=1;i<=n;i++){
 
-totalInteres += interes;
+saldo -= capitalCuota;
 
-html += `<tr>
-<td>${k}</td>
+html+=`
+<tr>
+<td>${i}</td>
 <td>${cuota.toFixed(2)}</td>
-<td>${interes.toFixed(2)}</td>
-<td>${capital.toFixed(2)}</td>
+<td>${interesCuota.toFixed(2)}</td>
+<td>${capitalCuota.toFixed(2)}</td>
 <td>${saldo.toFixed(2)}</td>
-</tr>`;
+</tr>
+`;
 
 }
 
-html += "</table>";
+html+="</table>";
 
-resultado.innerHTML = `
-<b>Producto:</b> ${f}<br>
+resultado.innerHTML=`
 <b>Monto:</b> S/ ${m}<br>
-<b>Tasa:</b> ${(tea*100).toFixed(2)}%<br>
-<b>Cuota:</b> S/ ${cuota.toFixed(2)}<br>
-<b>Total interés:</b> S/ ${totalInteres.toFixed(2)}<br>
-<b>Total:</b> S/ ${(cuota*n).toFixed(2)}
+<b>Tasa:</b> ${(tasaValor*100).toFixed(2)}%<br>
+<b>Total:</b> S/ ${total.toFixed(2)}<br>
+<b>Cuota:</b> S/ ${cuota.toFixed(2)}
 `;
 
-tabla.innerHTML = html;
+tabla.innerHTML=html;
 
 simulacion={
 monto:m,
 cuota:cuota,
-total:(cuota*n)
+total:total
 };
 
 }
@@ -274,7 +266,6 @@ if(!simulacion.monto) return alert("Primero calcula");
 
 let texto=`Simulación Credicompany:
 
-Producto: ${frecuencia.value}
 Monto: S/ ${simulacion.monto}
 Cuota: S/ ${simulacion.cuota.toFixed(2)}
 Total: S/ ${simulacion.total.toFixed(2)}

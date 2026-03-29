@@ -9,61 +9,15 @@
 <meta name="theme-color" content="#0a3a63">
 
 <style>
-body{
-    margin:0;
-    font-family:Arial;
-    background:#0a3a63;
-    text-align:center;
-}
-
-.logo{
-    width:180px;
-    margin-top:30px;
-}
-
-.card{
-    background:#eaeaea;
-    padding:20px;
-    border-radius:15px;
-    width:90%;
-    max-width:380px;
-    margin:20px auto;
-}
-
-input, select, button{
-    width:100%;
-    padding:10px;
-    margin:6px 0;
-    border-radius:8px;
-    border:1px solid #ccc;
-}
-
-button{
-    background:#28a745;
-    color:white;
-    font-weight:bold;
-}
-
-#instalar{
-    background:#007bff;
-    display:none;
-}
-
-.hidden{
-    display:none;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:10px;
-}
-
-th, td{
-    border:1px solid #ccc;
-    padding:5px;
-    font-size:12px;
-}
+body{margin:0;font-family:Arial;background:#0a3a63;text-align:center;}
+.logo{width:180px;margin-top:30px;}
+.card{background:#eaeaea;padding:20px;border-radius:15px;width:90%;max-width:380px;margin:20px auto;}
+input,select,button{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #ccc;}
+button{background:#28a745;color:white;font-weight:bold;}
+#instalar{background:#007bff;display:none;}
+.hidden{display:none;}
+table{width:100%;border-collapse:collapse;margin-top:10px;}
+th,td{border:1px solid #ccc;padding:5px;font-size:12px;}
 </style>
 </head>
 
@@ -73,14 +27,12 @@ th, td{
 
 <div class="card">
 <h3>Credicompany</h3>
-
 <button id="instalar" onclick="instalarApp()">📲 Instalar App</button>
-
 <button onclick="mostrarLogin()">Ingresar</button>
 </div>
 
 <div id="login" class="card hidden">
-<h3>Login Asesor</h3>
+<h3>Login</h3>
 <input id="usuario" placeholder="Usuario">
 <input id="clave" type="password" placeholder="Clave">
 <button onclick="login()">Entrar</button>
@@ -96,39 +48,33 @@ th, td{
 <option>Mensual</option>
 </select>
 
-<input id="monto" placeholder="Monto" value="1000">
-<input id="tasa" placeholder="Tasa %" value="21">
-<input id="plazo" placeholder="Cuotas" value="8">
+<input id="monto" value="1000">
+<input id="tasa" value="21">
+<input id="plazo" value="8">
 
 <button onclick="calcular()">Calcular</button>
 
 <div id="resumen"></div>
 <table id="tabla"></table>
-
 </div>
 
 <script>
 
-// 🔥 SERVICE WORKER NUEVO
+// SERVICE WORKER
 if ("serviceWorker" in navigator) {
-navigator.serviceWorker.register("sw-v2.js?v=2");
+navigator.serviceWorker.register("sw-v2.js?v=3");
 }
 
-// 🔥 INSTALACIÓN
+// INSTALAR
 let deferredPrompt;
-
-window.addEventListener("beforeinstallprompt", (e) => {
+window.addEventListener("beforeinstallprompt",(e)=>{
 e.preventDefault();
-deferredPrompt = e;
-document.getElementById("instalar").style.display = "block";
+deferredPrompt=e;
+document.getElementById("instalar").style.display="block";
 });
 
 function instalarApp(){
-if(deferredPrompt){
-deferredPrompt.prompt();
-}else{
-alert("Espera unos segundos y vuelve a intentar");
-}
+if(deferredPrompt){deferredPrompt.prompt();}
 }
 
 // LOGIN
@@ -137,38 +83,43 @@ document.getElementById("login").classList.remove("hidden");
 }
 
 function login(){
-let u = document.getElementById("usuario").value;
-let c = document.getElementById("clave").value;
-
-if(u==="admin" && c==="1234"){
-document.getElementById("login").classList.add("hidden");
-document.getElementById("app").classList.remove("hidden");
-}else{
-alert("Datos incorrectos");
+if(usuario.value==="admin" && clave.value==="1234"){
+loginDiv.classList.add("hidden");
+app.classList.remove("hidden");
 }
 }
 
-// CALCULO
+// 🔥 CALCULO CORRECTO
 function calcular(){
 
-let monto = parseFloat(document.getElementById("monto").value);
-let tasa = parseFloat(document.getElementById("tasa").value)/100;
-let n = parseInt(document.getElementById("plazo").value);
+let monto = parseFloat(montoInput.value);
+let tasa = parseFloat(tasaInput.value)/100;
+let n = parseInt(plazoInput.value);
+let freq = frecuencia.value;
 
-let cuota = monto * (tasa*Math.pow(1+tasa,n))/(Math.pow(1+tasa,n)-1);
+// 🔥 CONVERSIÓN DE TASA
+let tasaPeriodo;
+
+if(freq==="Diario") tasaPeriodo = tasa/30;
+if(freq==="Semanal") tasaPeriodo = tasa/4;
+if(freq==="Quincenal") tasaPeriodo = tasa/2;
+if(freq==="Mensual") tasaPeriodo = tasa;
+
+// CUOTA
+let cuota = monto * (tasaPeriodo*Math.pow(1+tasaPeriodo,n))/(Math.pow(1+tasaPeriodo,n)-1);
 
 let saldo = monto;
-let totalInteres = 0;
+let totalInteres=0;
 
-let html = "<tr><th>#</th><th>Interés</th><th>Capital</th><th>Cuota</th><th>Saldo</th></tr>";
+let html="<tr><th>#</th><th>Interés</th><th>Capital</th><th>Cuota</th><th>Saldo</th></tr>";
 
 for(let i=1;i<=n;i++){
-let interes = saldo*tasa;
+let interes = saldo*tasaPeriodo;
 let capital = cuota - interes;
 saldo -= capital;
 totalInteres += interes;
 
-html += `<tr>
+html+=`<tr>
 <td>${i}</td>
 <td>${interes.toFixed(2)}</td>
 <td>${capital.toFixed(2)}</td>
@@ -177,14 +128,27 @@ html += `<tr>
 </tr>`;
 }
 
-document.getElementById("tabla").innerHTML = html;
+tabla.innerHTML = html;
 
-document.getElementById("resumen").innerHTML = `
-Cuota: ${cuota.toFixed(2)} <br>
-Intereses: ${totalInteres.toFixed(2)} <br>
+resumen.innerHTML = `
+Cuota: ${cuota.toFixed(2)}<br>
+Intereses: ${totalInteres.toFixed(2)}<br>
 Total: ${(monto+totalInteres).toFixed(2)}
 `;
+
 }
+
+// referencias
+const montoInput = document.getElementById("monto");
+const tasaInput = document.getElementById("tasa");
+const plazoInput = document.getElementById("plazo");
+const frecuencia = document.getElementById("frecuencia");
+const tabla = document.getElementById("tabla");
+const resumen = document.getElementById("resumen");
+const loginDiv = document.getElementById("login");
+const app = document.getElementById("app");
+const usuario = document.getElementById("usuario");
+const clave = document.getElementById("clave");
 
 </script>
 

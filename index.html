@@ -5,150 +5,135 @@
 <title>Credicompany</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="manifest" href="manifest-v2.json">
-<meta name="theme-color" content="#0a3a63">
-
 <style>
-body{margin:0;font-family:Arial;background:#0a3a63;text-align:center;}
-.logo{width:180px;margin-top:30px;}
-.card{background:#eaeaea;padding:20px;border-radius:15px;width:90%;max-width:380px;margin:20px auto;}
-input,select,button{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #ccc;}
+body{font-family:Arial;margin:0;background:#0a3a63;color:white;text-align:center;}
+.container{padding:20px;}
+.card{background:white;color:black;border-radius:15px;padding:15px;margin:10px;}
+input,button{width:100%;padding:10px;margin:5px 0;border-radius:8px;border:1px solid #ccc;}
 button{background:#28a745;color:white;font-weight:bold;}
-#instalar{background:#007bff;display:none;}
 .hidden{display:none;}
-table{width:100%;border-collapse:collapse;margin-top:10px;}
-th,td{border:1px solid #ccc;padding:5px;font-size:12px;}
 </style>
 </head>
 
 <body>
 
-<img src="logo.png" class="logo">
+<div class="container">
 
-<div class="card">
-<h3>Credicompany</h3>
-<button id="instalar" onclick="instalarApp()">📲 Instalar App</button>
-<button onclick="mostrarLogin()">Ingresar</button>
-</div>
+<h2>Credicompany</h2>
 
-<div id="login" class="card hidden">
-<h3>Login</h3>
+<!-- LOGIN -->
+<div id="login" class="card">
+<h3>Ingreso Asesor</h3>
 <input id="usuario" placeholder="Usuario">
 <input id="clave" type="password" placeholder="Clave">
-<button onclick="login()">Entrar</button>
+<button onclick="login()">Ingresar</button>
 </div>
 
-<div id="app" class="card hidden">
-<h3>Simulador de Crédito</h3>
+<!-- APP -->
+<div id="app" class="hidden">
 
-<select id="frecuencia">
-<option>Diario</option>
-<option selected>Semanal</option>
-<option>Quincenal</option>
-<option>Mensual</option>
-</select>
+<div class="card">
+<h3>Registrar Cliente</h3>
 
-<input id="monto" value="1000">
-<input id="tasa" value="21">
-<input id="plazo" value="8">
+<input id="dni" placeholder="DNI">
+<input id="nombre" placeholder="Nombre">
+<input id="telefono" placeholder="Teléfono">
+<input id="monto" placeholder="Monto">
 
-<button onclick="calcular()">Calcular</button>
+<button onclick="guardarCliente()">Guardar Cliente</button>
 
-<div id="resumen"></div>
-<table id="tabla"></table>
+</div>
+
+<div class="card">
+<h3>Clientes Registrados</h3>
+<div id="lista"></div>
+</div>
+
+</div>
+
 </div>
 
 <script>
 
-// SERVICE WORKER
-if ("serviceWorker" in navigator) {
-navigator.serviceWorker.register("sw-v2.js?v=3");
-}
+// USUARIOS
+const usuarios = [
+{user:"admin",pass:"1234"},
+{user:"asesor1",pass:"1234"}
+];
 
-// INSTALAR
-let deferredPrompt;
-window.addEventListener("beforeinstallprompt",(e)=>{
-e.preventDefault();
-deferredPrompt=e;
-document.getElementById("instalar").style.display="block";
-});
-
-function instalarApp(){
-if(deferredPrompt){deferredPrompt.prompt();}
-}
+let asesorActivo = "";
 
 // LOGIN
-function mostrarLogin(){
-document.getElementById("login").classList.remove("hidden");
-}
-
 function login(){
-if(usuario.value==="admin" && clave.value==="1234"){
+let u = usuario.value;
+let c = clave.value;
+
+let valido = usuarios.find(x=>x.user===u && x.pass===c);
+
+if(valido){
+asesorActivo = u;
 loginDiv.classList.add("hidden");
-app.classList.remove("hidden");
+appDiv.classList.remove("hidden");
+mostrarClientes();
+}else{
+alert("Datos incorrectos");
 }
 }
 
-// 🔥 CALCULO CORRECTO
-function calcular(){
+// GUARDAR CLIENTE
+function guardarCliente(){
 
-let monto = parseFloat(montoInput.value);
-let tasa = parseFloat(tasaInput.value)/100;
-let n = parseInt(plazoInput.value);
-let freq = frecuencia.value;
+let cliente = {
+dni: dni.value,
+nombre: nombre.value,
+telefono: telefono.value,
+monto: monto.value,
+asesor: asesorActivo
+};
 
-// 🔥 CONVERSIÓN DE TASA
-let tasaPeriodo;
+let data = JSON.parse(localStorage.getItem("clientes")) || [];
 
-if(freq==="Diario") tasaPeriodo = tasa/30;
-if(freq==="Semanal") tasaPeriodo = tasa/4;
-if(freq==="Quincenal") tasaPeriodo = tasa/2;
-if(freq==="Mensual") tasaPeriodo = tasa;
+data.push(cliente);
 
-// CUOTA
-let cuota = monto * (tasaPeriodo*Math.pow(1+tasaPeriodo,n))/(Math.pow(1+tasaPeriodo,n)-1);
+localStorage.setItem("clientes", JSON.stringify(data));
 
-let saldo = monto;
-let totalInteres=0;
+alert("Cliente guardado");
 
-let html="<tr><th>#</th><th>Interés</th><th>Capital</th><th>Cuota</th><th>Saldo</th></tr>";
+mostrarClientes();
 
-for(let i=1;i<=n;i++){
-let interes = saldo*tasaPeriodo;
-let capital = cuota - interes;
-saldo -= capital;
-totalInteres += interes;
-
-html+=`<tr>
-<td>${i}</td>
-<td>${interes.toFixed(2)}</td>
-<td>${capital.toFixed(2)}</td>
-<td>${cuota.toFixed(2)}</td>
-<td>${saldo.toFixed(2)}</td>
-</tr>`;
 }
 
-tabla.innerHTML = html;
+// MOSTRAR CLIENTES
+function mostrarClientes(){
 
-resumen.innerHTML = `
-Cuota: ${cuota.toFixed(2)}<br>
-Intereses: ${totalInteres.toFixed(2)}<br>
-Total: ${(monto+totalInteres).toFixed(2)}
-`;
+let data = JSON.parse(localStorage.getItem("clientes")) || [];
 
+let filtrado = data.filter(x=>x.asesor===asesorActivo);
+
+let html = "";
+
+filtrado.forEach(c=>{
+html += `
+<div style="border-bottom:1px solid #ccc;padding:5px">
+<b>${c.nombre}</b><br>
+DNI: ${c.dni}<br>
+Monto: ${c.monto}
+</div>`;
+});
+
+lista.innerHTML = html;
 }
 
 // referencias
-const montoInput = document.getElementById("monto");
-const tasaInput = document.getElementById("tasa");
-const plazoInput = document.getElementById("plazo");
-const frecuencia = document.getElementById("frecuencia");
-const tabla = document.getElementById("tabla");
-const resumen = document.getElementById("resumen");
 const loginDiv = document.getElementById("login");
-const app = document.getElementById("app");
+const appDiv = document.getElementById("app");
 const usuario = document.getElementById("usuario");
 const clave = document.getElementById("clave");
+const dni = document.getElementById("dni");
+const nombre = document.getElementById("nombre");
+const telefono = document.getElementById("telefono");
+const monto = document.getElementById("monto");
+const lista = document.getElementById("lista");
 
 </script>
 

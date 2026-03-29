@@ -46,6 +46,7 @@ button{
 
 #instalar{
     background:#007bff;
+    display:none;
 }
 
 .hidden{
@@ -58,7 +59,6 @@ button{
 
 <img src="logo.png" class="logo">
 
-<!-- PANTALLA INICIAL -->
 <div class="card">
 <h3>Bienvenido a Credicompany</h3>
 
@@ -67,7 +67,6 @@ button{
 <button onclick="mostrarLogin()">Ingresar</button>
 </div>
 
-<!-- LOGIN -->
 <div id="login" class="card hidden">
 <h3>Ingreso Asesor</h3>
 <input id="usuario" placeholder="Usuario">
@@ -77,28 +76,20 @@ button{
 
 <script>
 
-// SERVICE WORKER
+// 🔥 SERVICE WORKER
 if ("serviceWorker" in navigator) {
-navigator.serviceWorker.register("service-worker.js?v=30");
+navigator.serviceWorker.register("service-worker.js?v=50");
 }
 
-// INSTALACIÓN
+// 🔥 INSTALACIÓN REAL
 let deferredPrompt;
 
 window.addEventListener("beforeinstallprompt", (e) => {
 e.preventDefault();
 deferredPrompt = e;
 
-// Mostrar botón inmediatamente
+// 👉 SOLO AQUÍ mostramos el botón
 document.getElementById("instalar").style.display = "block";
-
-// 🔥 AUTO INTENTO
-setTimeout(() => {
-if(deferredPrompt){
-deferredPrompt.prompt();
-}
-}, 5000);
-
 });
 
 // BOTÓN INSTALAR
@@ -106,16 +97,15 @@ function instalarApp(){
 if(deferredPrompt){
 deferredPrompt.prompt();
 }else{
-alert("Espera unos segundos o usa Chrome");
+alert("La instalación aún no está lista, espera unos segundos...");
 }
 }
 
-// MOSTRAR LOGIN
+// LOGIN
 function mostrarLogin(){
 document.getElementById("login").classList.remove("hidden");
 }
 
-// LOGIN
 function login(){
 let u = document.getElementById("usuario").value;
 let c = document.getElementById("clave").value;

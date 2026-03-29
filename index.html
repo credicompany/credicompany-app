@@ -2,152 +2,6 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Credicompany App</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link rel="manifest" href="manifest.json?v=2">
-<meta name="theme-color" content="#0a3a63">
-
-<style>
-body {
-    margin: 0;
-    font-family: Arial;
-    background: #0a3a63;
-}
-
-.container {
-    text-align: center;
-    padding-top: 20px;
-}
-
-.logo {
-    width: 180px;
-    margin-bottom: 10px;
-}
-
-.card {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    width: 320px;
-    margin: auto;
-}
-
-input, select, button {
-    width: 100%;
-    padding: 10px;
-    margin: 6px 0;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-button {
-    background: #28a745;
-    color: white;
-    border: none;
-    font-weight: bold;
-}
-
-#instalarApp {
-    background: #007bff;
-    display: none;
-}
-
-table {
-    width: 100%;
-    margin-top: 10px;
-    font-size: 12px;
-    border-collapse: collapse;
-}
-
-th {
-    background: #0a3a63;
-    color: white;
-}
-
-th, td {
-    border: 1px solid #ddd;
-    padding: 5px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<img src="logo.png" class="logo">
-
-<div class="card">
-
-<h3>Simulador de Crédito</h3>
-
-<select id="tipo">
-<option value="diario">Diario</option>
-<option value="semanal">Semanal</option>
-<option value="quincenal">Quincenal</option>
-<option value="mensual">Mensual</option>
-</select>
-
-<input type="number" id="monto" placeholder="Monto (S/)">
-<input type="number" id="tasa" placeholder="Tasa (%)">
-<input type="number" id="plazo" placeholder="Plazo">
-
-<button onclick="simular()">Calcular</button>
-
-<button id="instalarApp">Instalar App</button>
-
-<div id="resultado"></div>
-
-</div>
-</div>
-
-<script>
-function simular() {
-
-let monto = parseFloat(document.getElementById("monto").value);
-let tasaBase = parseFloat(document.getElementById("tasa").value) / 100;
-let plazo = parseInt(document.getElementById("plazo").value);
-let tipo = document.getElementById("tipo").value;
-
-if (!monto || !tasaBase || !plazo) {
-    alert("Completa los datos");
-    return;
-}
-
-let tasa;
-switch(tipo){
-    case "diario": tasa = tasaBase/30; break;
-    case "semanal": tasa = tasaBase/4; break;
-    case "quincenal": tasa = tasaBase/2; break;
-    case "mensual": tasa = tasaBase; break;
-}
-
-let i = tasa;
-let n = plazo;
-
-let cuota = monto * (i * Math.pow(1+i,n)) / (Math.pow(1+i,n)-1);
-
-let saldo = monto;
-
-let html = "<table><tr><th>#</th><th>Interés</th><th>Capital</th><th>Cuota</th><th>Saldo</th></tr>";
-
-for(let k=1;k<=n;k++){
-    let interes = saldo*i;
-    let capital = cuota - interes;
-    saldo -= capital;
-
-    html += `<tr>
-    <td>${k}</td>
-    <td>${interes.toFixed(2)}</td>
-    <td>${capital.toFixed(2)}</td>
-    <td>${cuota.toFixed(2)}</td>
-    <td>${saldo.toFixed(2)}</td>
-    </tr>`;
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
 <title>Credicompany</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -210,7 +64,6 @@ th,td{
 #resumen{
     margin-top:10px;
     font-weight:bold;
-    font-size:14px;
 }
 </style>
 </head>
@@ -232,9 +85,9 @@ th,td{
 <option value="mensual">Mensual</option>
 </select>
 
-<input type="number" id="monto" value="1000" placeholder="Monto (S/)">
-<input type="number" id="tasa" value="21" placeholder="Tasa (%)">
-<input type="number" id="plazo" value="12" placeholder="Plazo">
+<input type="number" id="monto" value="1000">
+<input type="number" id="tasa" value="21">
+<input type="number" id="plazo" value="8">
 
 <button onclick="simular()">Calcular</button>
 
@@ -247,11 +100,18 @@ th,td{
 <script>
 function simular(){
 
-let monto = parseFloat(document.getElementById("monto").value);
-let tasaBase = parseFloat(document.getElementById("tasa").value)/100;
-let plazo = parseInt(document.getElementById("plazo").value);
+let monto = Number(document.getElementById("monto").value);
+let tasaBase = Number(document.getElementById("tasa").value)/100;
+let plazo = Number(document.getElementById("plazo").value);
 let tipo = document.getElementById("tipo").value;
 
+// VALIDACIÓN
+if(!monto || !tasaBase || !plazo){
+    alert("Completa correctamente los datos");
+    return;
+}
+
+// AJUSTE DE TASA
 let tasa;
 switch(tipo){
     case "diario": tasa = tasaBase/30; break;
@@ -263,7 +123,13 @@ switch(tipo){
 let i = tasa;
 let n = plazo;
 
-// CUOTA FIJA
+// VALIDACIÓN EXTRA
+if(i <= 0 || n <= 0){
+    alert("Valores inválidos");
+    return;
+}
+
+// CUOTA
 let cuota = monto * (i * Math.pow(1+i,n)) / (Math.pow(1+i,n)-1);
 
 let saldo = monto;
@@ -276,7 +142,6 @@ for(let k=1;k<=n;k++){
     let capital = cuota - interes;
 
     totalInteres += interes;
-
     saldo -= capital;
 
     html += `<tr>

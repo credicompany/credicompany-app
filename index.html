@@ -53,6 +53,14 @@ button{
     display:none;
 }
 
+.resumen{
+    background:#fff;
+    padding:10px;
+    border-radius:10px;
+    margin-top:10px;
+    font-weight:bold;
+}
+
 table{
     width:100%;
     margin-top:10px;
@@ -93,9 +101,9 @@ th,td{
 <input type="number" id="plazo" value="8">
 
 <button onclick="simular()">Calcular</button>
-
 <button id="instalar">📲 Instalar App</button>
 
+<div id="resumen" class="resumen"></div>
 <div id="resultado"></div>
 
 </div>
@@ -103,7 +111,6 @@ th,td{
 
 <script>
 
-// 🔹 SIMULADOR
 function simular(){
 
 let monto = Number(document.getElementById("monto").value);
@@ -111,8 +118,13 @@ let tasaBase = Number(document.getElementById("tasa").value)/100;
 let plazo = Number(document.getElementById("plazo").value);
 let tipo = document.getElementById("tipo").value;
 
-let tasa;
+if(!monto || !tasaBase || !plazo){
+    alert("Completa los datos");
+    return;
+}
 
+// 🔥 CONVERSIÓN DE TASA CORRECTA
+let tasa;
 switch(tipo){
 case "diario": tasa = tasaBase/30; break;
 case "semanal": tasa = tasaBase/4; break;
@@ -122,9 +134,11 @@ case "mensual": tasa = tasaBase; break;
 let i = tasa;
 let n = plazo;
 
+// 🔥 CUOTA FIJA (SISTEMA FRANCÉS)
 let cuota = monto * (i * Math.pow(1+i,n)) / (Math.pow(1+i,n)-1);
 
 let saldo = monto;
+let totalInteres = 0;
 
 let html = "<table><tr><th>#</th><th>Interés</th><th>Capital</th><th>Cuota</th><th>Saldo</th></tr>";
 
@@ -133,28 +147,38 @@ for(let k=1;k<=n;k++){
 let interes = saldo*i;
 let capital = cuota - interes;
 
+totalInteres += interes;
 saldo -= capital;
 
 html += `<tr>
 <td>${k}</td>
-<td>${interes.toFixed(2)}</td>
-<td>${capital.toFixed(2)}</td>
-<td>${cuota.toFixed(2)}</td>
-<td>${saldo.toFixed(2)}</td>
+<td>S/ ${interes.toFixed(2)}</td>
+<td>S/ ${capital.toFixed(2)}</td>
+<td>S/ ${cuota.toFixed(2)}</td>
+<td>S/ ${saldo.toFixed(2)}</td>
 </tr>`;
 }
 
 html += "</table>";
 
 document.getElementById("resultado").innerHTML = html;
+
+// 🔥 RESUMEN (LO QUE TE FALTABA)
+let totalPagar = cuota * n;
+
+document.getElementById("resumen").innerHTML = `
+Cuota fija: S/ ${cuota.toFixed(2)} <br>
+Total intereses: S/ ${totalInteres.toFixed(2)} <br>
+Total a pagar: S/ ${totalPagar.toFixed(2)}
+`;
 }
 
-// 🔹 SERVICE WORKER SIN CACHE (IMPORTANTE)
+// SERVICE WORKER
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js?ver=2");
+  navigator.serviceWorker.register("service-worker.js?ver=3");
 }
 
-// 🔹 INSTALAR APP
+// INSTALAR APP
 let deferredPrompt;
 
 window.addEventListener("beforeinstallprompt", (e) => {
@@ -164,9 +188,7 @@ window.addEventListener("beforeinstallprompt", (e) => {
 });
 
 document.getElementById("instalar").addEventListener("click", () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-  }
+  if (deferredPrompt) deferredPrompt.prompt();
 });
 
 </script>

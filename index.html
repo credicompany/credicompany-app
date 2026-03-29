@@ -58,7 +58,7 @@ button{
 
 <img src="logo.png" class="logo">
 
-<!-- INSTALAR PRIMERO -->
+<!-- PANTALLA INICIAL -->
 <div class="card">
 <h3>Bienvenido a Credicompany</h3>
 
@@ -79,7 +79,7 @@ button{
 
 // SERVICE WORKER
 if ("serviceWorker" in navigator) {
-navigator.serviceWorker.register("service-worker.js?v=20");
+navigator.serviceWorker.register("service-worker.js?v=30");
 }
 
 // INSTALACIÓN
@@ -88,13 +88,25 @@ let deferredPrompt;
 window.addEventListener("beforeinstallprompt", (e) => {
 e.preventDefault();
 deferredPrompt = e;
+
+// Mostrar botón inmediatamente
+document.getElementById("instalar").style.display = "block";
+
+// 🔥 AUTO INTENTO
+setTimeout(() => {
+if(deferredPrompt){
+deferredPrompt.prompt();
+}
+}, 5000);
+
 });
 
+// BOTÓN INSTALAR
 function instalarApp(){
 if(deferredPrompt){
 deferredPrompt.prompt();
 }else{
-alert("Usa Chrome y espera unos segundos");
+alert("Espera unos segundos o usa Chrome");
 }
 }
 
@@ -103,9 +115,8 @@ function mostrarLogin(){
 document.getElementById("login").classList.remove("hidden");
 }
 
-// LOGIN SIMPLE
+// LOGIN
 function login(){
-
 let u = document.getElementById("usuario").value;
 let c = document.getElementById("clave").value;
 
@@ -114,8 +125,8 @@ alert("Ingreso correcto");
 }else{
 alert("Datos incorrectos");
 }
-
 }
+
 </script>
 
 </body>

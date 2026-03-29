@@ -131,7 +131,7 @@ text-align:center;
 
 <button onclick="calcular()">Calcular</button>
 
-<div id="resultado" class="result"></div>
+<div id="resumen" class="result"></div>
 <div id="tabla"></div>
 
 <button onclick="enviarWhatsApp()">📲 Enviar WhatsApp</button>
@@ -179,7 +179,7 @@ alert("Error");
 }
 }
 
-// NAVEGACIÓN
+// NAV
 function mostrar(p){
 simulador.classList.add("hidden");
 registro.classList.add("hidden");
@@ -193,61 +193,65 @@ mostrarClientes();
 }
 }
 
-// SIMULADOR (INTERÉS COMPUESTO REAL)
-let simulacion={};
+// SIMULADOR (TU LÓGICA EXACTA)
+let ultimaSimulacion={};
 
 function calcular(){
 
 let m=parseFloat(monto.value);
-let tasa=parseFloat(document.getElementById("tasa").value)/100;
+let TEM=parseFloat(tasa.value)/100;
 let n=parseInt(plazo.value);
+let f=frecuencia.value;
 
-if(!m || !tasa || !n){
+if(!m || !TEM || !n){
 alert("Completa datos");
 return;
 }
 
-// 🔥 TU MODELO REAL
-let tasaPeriodo = tasa / n;
-let total = m * Math.pow(1 + tasaPeriodo, n);
-let cuota = total / n;
+let i;
+
+if(f=="Diario") i=Math.pow(1+TEM,1/30)-1;
+if(f=="Semanal") i=Math.pow(1+TEM,1/4)-1;
+if(f=="Quincenal") i=Math.pow(1+TEM,1/2)-1;
+if(f=="Mensual") i=TEM;
+
+// CUOTA
+let cuota=m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
+let total=cuota*n;
 
 // CRONOGRAMA
-let capitalCuota = m / n;
-let saldo = m;
+let saldo=m;
 
 let html="<table>";
-html+="<tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
+html+="<tr><th>#</th><th>Interés</th><th>Capital</th><th>Cuota</th><th>Saldo</th></tr>";
 
-for(let i=1;i<=n;i++){
+for(let k=1;k<=n;k++){
 
-let interes = cuota - capitalCuota;
-saldo -= capitalCuota;
+let interes=saldo*i;
+let capital=cuota-interes;
+saldo-=capital;
 
 html+=`
 <tr>
-<td>${i}</td>
-<td>${cuota.toFixed(2)}</td>
+<td>${k}</td>
 <td>${interes.toFixed(2)}</td>
-<td>${capitalCuota.toFixed(2)}</td>
+<td>${capital.toFixed(2)}</td>
+<td>${cuota.toFixed(2)}</td>
 <td>${saldo.toFixed(2)}</td>
 </tr>
 `;
-
 }
 
 html+="</table>";
 
-resultado.innerHTML=`
-<b>Monto:</b> S/ ${m}<br>
-<b>Tasa:</b> ${(tasa*100).toFixed(2)}%<br>
-<b>Total:</b> S/ ${total.toFixed(2)}<br>
-<b>Cuota:</b> S/ ${cuota.toFixed(2)}
+resumen.innerHTML=`
+Cuota: S/ ${cuota.toFixed(2)}<br>
+Total: S/ ${total.toFixed(2)}
 `;
 
 tabla.innerHTML=html;
 
-simulacion={
+ultimaSimulacion={
 monto:m,
 cuota:cuota,
 total:total
@@ -257,20 +261,20 @@ total:total
 
 // WHATSAPP
 function enviarWhatsApp(){
-if(!simulacion.monto) return alert("Primero calcula");
+if(!ultimaSimulacion.monto) return alert("Primero calcula");
 
 let texto=`Simulación Credicompany:
 
-Monto: S/ ${simulacion.monto}
-Cuota: S/ ${simulacion.cuota.toFixed(2)}
-Total: S/ ${simulacion.total.toFixed(2)}
+Monto: S/ ${ultimaSimulacion.monto}
+Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
+Total: S/ ${ultimaSimulacion.total.toFixed(2)}
 
 ¿Desea continuar?`;
 
 window.open("https://wa.me/?text="+encodeURIComponent(texto));
 }
 
-// GUARDAR CLIENTE
+// CLIENTES
 function guardarCliente(){
 
 let data=JSON.parse(localStorage.getItem("clientes"))||[];
@@ -279,8 +283,8 @@ data.push({
 dni:dni.value,
 nombre:nombre.value,
 telefono:telefono.value,
-monto:simulacion.monto,
-cuota:simulacion.cuota
+monto:ultimaSimulacion.monto,
+cuota:ultimaSimulacion.cuota
 });
 
 localStorage.setItem("clientes",JSON.stringify(data));
@@ -290,7 +294,6 @@ alert("Cliente guardado");
 mostrarClientes();
 }
 
-// MOSTRAR CLIENTES
 function mostrarClientes(){
 
 let data=JSON.parse(localStorage.getItem("clientes"))||[];

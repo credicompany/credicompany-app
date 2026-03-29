@@ -21,7 +21,7 @@ body{
 }
 
 .logo{
-    width:200px;
+    width:180px;
     margin-bottom:10px;
 }
 
@@ -36,8 +36,8 @@ body{
 
 input,select,button{
     width:100%;
-    padding:12px;
-    margin:8px 0;
+    padding:10px;
+    margin:6px 0;
     border-radius:8px;
     border:1px solid #ccc;
 }
@@ -53,12 +53,8 @@ button{
     display:none;
 }
 
-.resumen{
-    background:#fff;
-    padding:10px;
-    border-radius:10px;
-    margin-top:10px;
-    font-weight:bold;
+.hidden{
+    display:none;
 }
 
 table{
@@ -86,30 +82,86 @@ th,td{
 
 <img src="logo.png" class="logo">
 
+<!-- LOGIN -->
+<div id="login" class="card">
+<h3>Ingreso Asesor</h3>
+<input id="usuario" placeholder="Usuario">
+<input id="clave" type="password" placeholder="Clave">
+<button onclick="login()">Ingresar</button>
+</div>
+
+<!-- SISTEMA -->
+<div id="app" class="hidden">
+
 <div class="card">
 
 <h3>Simulador de Crédito</h3>
 
+<input id="cliente" placeholder="Nombre cliente">
+
 <select id="tipo">
 <option value="diario">Diario</option>
-<option value="semanal" selected>Semanal</option>
+<option value="semanal">Semanal</option>
 <option value="mensual">Mensual</option>
 </select>
 
-<input type="number" id="monto" value="1000">
-<input type="number" id="tasa" value="21">
-<input type="number" id="plazo" value="8">
+<input type="number" id="monto" placeholder="Monto">
+<input type="number" id="tasa" placeholder="Tasa %">
+<input type="number" id="plazo" placeholder="Plazo">
 
 <button onclick="simular()">Calcular</button>
+<button onclick="guardar()">Guardar</button>
+
 <button id="instalar">📲 Instalar App</button>
 
-<div id="resumen" class="resumen"></div>
+<div id="resumen"></div>
 <div id="resultado"></div>
 
 </div>
+
+<div class="card">
+<h3>Historial</h3>
+<div id="historial"></div>
+</div>
+
+</div>
+
 </div>
 
 <script>
+
+// 🔐 USUARIOS
+const usuarios = [
+{user:"admin", pass:"1234"},
+{user:"asesor1", pass:"1234"},
+{user:"asesor2", pass:"1234"}
+];
+
+let usuarioActivo = "";
+
+// LOGIN
+function login(){
+
+let u = document.getElementById("usuario").value;
+let c = document.getElementById("clave").value;
+
+let valido = usuarios.find(x => x.user === u && x.pass === c);
+
+if(valido){
+usuarioActivo = u;
+
+document.getElementById("login").classList.add("hidden");
+document.getElementById("app").classList.remove("hidden");
+
+cargarHistorial();
+
+}else{
+alert("Usuario o clave incorrecta");
+}
+}
+
+// SIMULADOR
+let ultima = {};
 
 function simular(){
 
@@ -119,11 +171,10 @@ let plazo = Number(document.getElementById("plazo").value);
 let tipo = document.getElementById("tipo").value;
 
 if(!monto || !tasaBase || !plazo){
-    alert("Completa los datos");
-    return;
+alert("Completa datos");
+return;
 }
 
-// 🔥 CONVERSIÓN DE TASA CORRECTA
 let tasa;
 switch(tipo){
 case "diario": tasa = tasaBase/30; break;
@@ -134,7 +185,6 @@ case "mensual": tasa = tasaBase; break;
 let i = tasa;
 let n = plazo;
 
-// 🔥 CUOTA FIJA (SISTEMA FRANCÉS)
 let cuota = monto * (i * Math.pow(1+i,n)) / (Math.pow(1+i,n)-1);
 
 let saldo = monto;
@@ -152,10 +202,10 @@ saldo -= capital;
 
 html += `<tr>
 <td>${k}</td>
-<td>S/ ${interes.toFixed(2)}</td>
-<td>S/ ${capital.toFixed(2)}</td>
-<td>S/ ${cuota.toFixed(2)}</td>
-<td>S/ ${saldo.toFixed(2)}</td>
+<td>${interes.toFixed(2)}</td>
+<td>${capital.toFixed(2)}</td>
+<td>${cuota.toFixed(2)}</td>
+<td>${saldo.toFixed(2)}</td>
 </tr>`;
 }
 
@@ -163,32 +213,74 @@ html += "</table>";
 
 document.getElementById("resultado").innerHTML = html;
 
-// 🔥 RESUMEN (LO QUE TE FALTABA)
 let totalPagar = cuota * n;
 
 document.getElementById("resumen").innerHTML = `
-Cuota fija: S/ ${cuota.toFixed(2)} <br>
-Total intereses: S/ ${totalInteres.toFixed(2)} <br>
-Total a pagar: S/ ${totalPagar.toFixed(2)}
+Cuota: ${cuota.toFixed(2)}<br>
+Intereses: ${totalInteres.toFixed(2)}<br>
+Total: ${totalPagar.toFixed(2)}
 `;
+
+ultima = {
+cliente: document.getElementById("cliente").value,
+cuota: cuota.toFixed(2),
+total: totalPagar.toFixed(2),
+usuario: usuarioActivo
+};
+
+}
+
+// GUARDAR
+function guardar(){
+
+let data = JSON.parse(localStorage.getItem("creditos")) || [];
+
+data.push(ultima);
+
+localStorage.setItem("creditos", JSON.stringify(data));
+
+alert("Guardado");
+
+cargarHistorial();
+}
+
+// HISTORIAL POR ASESOR
+function cargarHistorial(){
+
+let data = JSON.parse(localStorage.getItem("creditos")) || [];
+
+let filtrado = data.filter(x => x.usuario === usuarioActivo);
+
+let html = "";
+
+filtrado.forEach(d=>{
+html += `
+<div style="border-bottom:1px solid #ccc;padding:5px">
+<b>${d.cliente}</b><br>
+Cuota: ${d.cuota}<br>
+Total: ${d.total}
+</div>`;
+});
+
+document.getElementById("historial").innerHTML = html;
 }
 
 // SERVICE WORKER
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js?ver=3");
+navigator.serviceWorker.register("service-worker.js?ver=4");
 }
 
-// INSTALAR APP
+// INSTALAR
 let deferredPrompt;
 
 window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById("instalar").style.display = "block";
+e.preventDefault();
+deferredPrompt = e;
+document.getElementById("instalar").style.display = "block";
 });
 
 document.getElementById("instalar").addEventListener("click", () => {
-  if (deferredPrompt) deferredPrompt.prompt();
+if (deferredPrompt) deferredPrompt.prompt();
 });
 
 </script>

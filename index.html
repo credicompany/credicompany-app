@@ -19,9 +19,7 @@ font-size:20px;
 font-weight:bold;
 }
 
-.container{
-padding:15px;
-}
+.container{ padding:15px; }
 
 .card{
 background:white;
@@ -36,8 +34,8 @@ input,select{
 width:100%;
 padding:12px;
 margin-top:10px;
-border:none;
 border-radius:10px;
+border:none;
 background:#f2f4f7;
 }
 
@@ -70,15 +68,13 @@ color:#0a2f5c;
 font-weight:bold;
 }
 
-.hidden{
-display:none;
-}
+.hidden{ display:none; }
 
 .result{
 background:#f4f4f4;
 padding:10px;
-border-radius:10px;
 margin-top:10px;
+border-radius:10px;
 }
 
 table{
@@ -121,10 +117,10 @@ text-align:center;
 
 <label>Producto</label>
 <select id="frecuencia">
-<option value="diario">Diario</option>
-<option value="semanal">Semanal</option>
-<option value="quincenal">Quincenal</option>
-<option value="mensual">Mensual</option>
+<option>Diario</option>
+<option selected>Semanal</option>
+<option>Quincenal</option>
+<option>Mensual</option>
 </select>
 
 <label>Tasa (%)</label>
@@ -143,7 +139,7 @@ text-align:center;
 </div>
 
 <!-- REGISTRO -->
-<div id="registro" class="card">
+<div id="registro" class="card hidden">
 <h3>Registrar Cliente</h3>
 
 <input id="dni" placeholder="DNI">
@@ -155,7 +151,7 @@ text-align:center;
 </div>
 
 <!-- CLIENTES -->
-<div id="clientes" class="card">
+<div id="clientes" class="card hidden">
 <h3>Clientes</h3>
 <div id="lista"></div>
 </div>
@@ -183,7 +179,7 @@ alert("Error");
 }
 }
 
-// NAV
+// NAVEGACIÓN
 function mostrar(p){
 simulador.classList.add("hidden");
 registro.classList.add("hidden");
@@ -197,43 +193,42 @@ mostrarClientes();
 }
 }
 
-// SIMULADOR (MODELO ORIGINAL CORRECTO)
+// SIMULADOR (INTERÉS COMPUESTO REAL)
 let simulacion={};
 
 function calcular(){
 
 let m=parseFloat(monto.value);
-let tasaValor=parseFloat(tasa.value)/100;
+let tasa=parseFloat(document.getElementById("tasa").value)/100;
 let n=parseInt(plazo.value);
 
-if(!m || !tasaValor || !n){
+if(!m || !tasa || !n){
 alert("Completa datos");
 return;
 }
 
-// CUOTA DIRECTA (TU MODELO ORIGINAL)
-let total = m + (m * tasaValor);
+// 🔥 TU MODELO REAL
+let tasaPeriodo = tasa / n;
+let total = m * Math.pow(1 + tasaPeriodo, n);
 let cuota = total / n;
 
 // CRONOGRAMA
-let saldo = m;
-let interesTotal = total - m;
-
-let interesCuota = interesTotal / n;
 let capitalCuota = m / n;
+let saldo = m;
 
 let html="<table>";
 html+="<tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
 
 for(let i=1;i<=n;i++){
 
+let interes = cuota - capitalCuota;
 saldo -= capitalCuota;
 
 html+=`
 <tr>
 <td>${i}</td>
 <td>${cuota.toFixed(2)}</td>
-<td>${interesCuota.toFixed(2)}</td>
+<td>${interes.toFixed(2)}</td>
 <td>${capitalCuota.toFixed(2)}</td>
 <td>${saldo.toFixed(2)}</td>
 </tr>
@@ -245,7 +240,7 @@ html+="</table>";
 
 resultado.innerHTML=`
 <b>Monto:</b> S/ ${m}<br>
-<b>Tasa:</b> ${(tasaValor*100).toFixed(2)}%<br>
+<b>Tasa:</b> ${(tasa*100).toFixed(2)}%<br>
 <b>Total:</b> S/ ${total.toFixed(2)}<br>
 <b>Cuota:</b> S/ ${cuota.toFixed(2)}
 `;
@@ -275,7 +270,7 @@ Total: S/ ${simulacion.total.toFixed(2)}
 window.open("https://wa.me/?text="+encodeURIComponent(texto));
 }
 
-// CLIENTES
+// GUARDAR CLIENTE
 function guardarCliente(){
 
 let data=JSON.parse(localStorage.getItem("clientes"))||[];
@@ -295,6 +290,7 @@ alert("Cliente guardado");
 mostrarClientes();
 }
 
+// MOSTRAR CLIENTES
 function mostrarClientes(){
 
 let data=JSON.parse(localStorage.getItem("clientes"))||[];
@@ -325,4 +321,4 @@ const clientes=document.getElementById("clientes");
 
 </body>
 </html>
-Compromiso y Honestidad, crecemos juntos...
+Compromiso y honradez, crecemos juntos...

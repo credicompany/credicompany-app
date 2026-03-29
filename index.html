@@ -2,61 +2,89 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Credicompany</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credicompany</title>
 
 <style>
-
 body{
-font-family: 'Segoe UI', sans-serif;
 margin:0;
+font-family:'Segoe UI',sans-serif;
 background:#0a2f5c;
 color:white;
 }
 
-.container{
+/* HEADER */
+.header{
 padding:20px;
-}
-
-.card{
-background:white;
-color:#1a1a1a;
-border-radius:20px;
-padding:20px;
-margin:15px 0;
-box-shadow:0 10px 25px rgba(0,0,0,0.2);
-}
-
-input,select{
-width:100%;
-padding:14px;
-margin:8px 0;
-border-radius:12px;
-border:none;
-background:#f1f3f6;
-font-size:16px;
-}
-
-button{
-width:100%;
-padding:15px;
-border-radius:12px;
-border:none;
-background:#00c853;
-color:white;
-font-size:16px;
+font-size:20px;
 font-weight:bold;
 }
 
-.item{
-background:#f9f9f9;
+/* CONTENEDOR */
+.container{
+padding:15px;
+}
+
+/* TARJETAS */
+.card{
+background:white;
+color:#333;
+border-radius:20px;
+padding:20px;
+margin-bottom:15px;
+box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* INPUTS */
+input,select{
+width:100%;
+padding:14px;
+margin-top:10px;
+border:none;
+border-radius:12px;
+background:#f2f4f7;
+}
+
+/* BOTONES */
+button{
+width:100%;
+padding:14px;
+margin-top:10px;
+border:none;
+border-radius:12px;
+background:#00c853;
+color:white;
+font-weight:bold;
+}
+
+/* MENU */
+.menu{
+position:fixed;
+bottom:0;
+width:100%;
+background:white;
+display:flex;
+justify-content:space-around;
 padding:10px;
-border-radius:10px;
-margin-bottom:10px;
+border-top-left-radius:20px;
+border-top-right-radius:20px;
+}
+
+.menu button{
+background:none;
+color:#0a2f5c;
+font-weight:bold;
 }
 
 .hidden{
 display:none;
+}
+
+.result{
+background:#f4f4f4;
+padding:10px;
+border-radius:10px;
+margin-top:10px;
 }
 
 </style>
@@ -64,44 +92,47 @@ display:none;
 
 <body>
 
-<div class="container">
-
-<h2 style="text-align:left;">Hola 👋</h2>
-<p style="text-align:left;">Bienvenido a Credicompany</p>
+<div class="header">Credicompany</div>
 
 <!-- LOGIN -->
-<div id="login" class="card">
+<div id="login" class="container">
+<div class="card">
 <h3>Ingreso Asesor</h3>
-<input id="usuario" placeholder="Usuario">
-<input id="clave" type="password" placeholder="Clave">
+<input id="user" placeholder="Usuario">
+<input id="pass" type="password" placeholder="Clave">
 <button onclick="login()">Ingresar</button>
+</div>
 </div>
 
 <!-- APP -->
 <div id="app" class="hidden">
 
+<div class="container">
+
 <!-- SIMULADOR -->
-<div class="card">
-<h3>Simulador de Crédito</h3>
+<div id="simulador" class="card">
+<h3>Simulador</h3>
 
 <select id="frecuencia">
-<option>Diario</option>
-<option selected>Semanal</option>
-<option>Quincenal</option>
-<option>Mensual</option>
+<option value="diario">Diario</option>
+<option value="semanal">Semanal</option>
+<option value="quincenal">Quincenal</option>
+<option value="mensual">Mensual</option>
 </select>
 
 <input id="monto" placeholder="Monto">
-<input id="tasa" placeholder="Tasa %" value="21">
 <input id="plazo" placeholder="Cuotas">
 
 <button onclick="calcular()">Calcular</button>
 
-<div id="resumen"></div>
+<div id="resultado" class="result"></div>
+
+<button onclick="enviarWhatsApp()">📲 Enviar WhatsApp</button>
+
 </div>
 
 <!-- REGISTRO -->
-<div class="card">
+<div id="registro" class="card">
 <h3>Registrar Cliente</h3>
 
 <input id="dni" placeholder="DNI">
@@ -109,99 +140,115 @@ display:none;
 <input id="telefono" placeholder="Teléfono">
 
 <button onclick="guardarCliente()">Guardar Cliente</button>
+
 </div>
 
-<!-- LISTA -->
-<div class="card">
+<!-- CLIENTES -->
+<div id="clientes" class="card">
 <h3>Clientes</h3>
 <div id="lista"></div>
 </div>
 
 </div>
 
+<!-- MENU -->
+<div class="menu" id="menu">
+<button onclick="mostrar('simulador')">Simular</button>
+<button onclick="mostrar('registro')">Registrar</button>
+<button onclick="mostrar('clientes')">Clientes</button>
+</div>
+
 </div>
 
 <script>
 
-// USUARIOS
-const usuarios = [
-{user:"admin",pass:"1234"},
-{user:"asesor1",pass:"1234"}
-];
-
-let asesorActivo="";
-
 // LOGIN
 function login(){
-let u=usuario.value;
-let c=clave.value;
-
-let ok=usuarios.find(x=>x.user===u && x.pass===c);
-
-if(ok){
-asesorActivo=u;
+if(user.value=="admin" && pass.value=="1234"){
 loginDiv.classList.add("hidden");
 appDiv.classList.remove("hidden");
-mostrarClientes();
 }else{
 alert("Datos incorrectos");
 }
 }
 
+// NAVEGACIÓN
+function mostrar(p){
+simulador.classList.add("hidden");
+registro.classList.add("hidden");
+clientes.classList.add("hidden");
+
+if(p=="simulador") simulador.classList.remove("hidden");
+if(p=="registro") registro.classList.remove("hidden");
+if(p=="clientes") {
+clientes.classList.remove("hidden");
+mostrarClientes();
+}
+}
+
 // SIMULADOR
-let ultimaSimulacion={};
+let simulacion = {};
 
 function calcular(){
 
-let m=parseFloat(montoInput.value);
-let TEM=parseFloat(tasaInput.value)/100;
-let n=parseInt(plazoInput.value);
+let m=parseFloat(monto.value);
+let n=parseInt(plazo.value);
 let f=frecuencia.value;
 
-let i;
+let tasa=0;
 
-if(f==="Diario") i=Math.pow(1+TEM,1/30)-1;
-if(f==="Semanal") i=Math.pow(1+TEM,1/4)-1;
-if(f==="Quincenal") i=Math.pow(1+TEM,1/2)-1;
-if(f==="Mensual") i=TEM;
+if(f=="diario") tasa=0.20;
+if(f=="semanal") tasa=0.18;
+if(f=="quincenal") tasa=0.16;
+if(f=="mensual") tasa=0.14;
 
-let cuota=m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
+let interes=m*tasa;
+let total=m+interes;
+let cuota=total/n;
 
-let total=cuota*n;
-
-resumen.innerHTML=`
-<br><b>Cuota:</b> S/ ${cuota.toFixed(2)}<br>
-<b>Total:</b> S/ ${total.toFixed(2)}
+resultado.innerHTML=`
+Monto: S/ ${m}<br>
+Interés: S/ ${interes.toFixed(2)}<br>
+Total: S/ ${total.toFixed(2)}<br>
+Cuota: S/ ${cuota.toFixed(2)}
 `;
 
-ultimaSimulacion={
+simulacion={
 monto:m,
-cuota:cuota.toFixed(2),
-total:total.toFixed(2)
+cuota:cuota,
+total:total
 };
+
+}
+
+// WHATSAPP
+function enviarWhatsApp(){
+if(!simulacion.monto) return alert("Primero calcula");
+
+let texto=`Hola 👋
+Simulación Credicompany:
+
+Monto: S/ ${simulacion.monto}
+Cuota: S/ ${simulacion.cuota.toFixed(2)}
+Total: S/ ${simulacion.total.toFixed(2)}
+
+¿Desea continuar?`;
+
+window.open("https://wa.me/?text="+encodeURIComponent(texto));
 }
 
 // GUARDAR CLIENTE
 function guardarCliente(){
 
-if(!ultimaSimulacion.monto){
-alert("Primero calcula el crédito");
-return;
-}
+let data=JSON.parse(localStorage.getItem("clientes"))||[];
 
-let cliente={
+data.push({
 dni:dni.value,
 nombre:nombre.value,
 telefono:telefono.value,
-monto:ultimaSimulacion.monto,
-cuota:ultimaSimulacion.cuota,
-total:ultimaSimulacion.total,
-asesor:asesorActivo
-};
-
-let data=JSON.parse(localStorage.getItem("clientes"))||[];
-
-data.push(cliente);
+monto:simulacion.monto,
+cuota:simulacion.cuota
+});
 
 localStorage.setItem("clientes",JSON.stringify(data));
 
@@ -215,41 +262,30 @@ function mostrarClientes(){
 
 let data=JSON.parse(localStorage.getItem("clientes"))||[];
 
-let filtro=data.filter(x=>x.asesor===asesorActivo);
-
 let html="";
 
-filtro.forEach(c=>{
+data.forEach(c=>{
 html+=`
-<div class="item">
+<div style="margin-bottom:10px;">
 <b>${c.nombre}</b><br>
-Monto: S/ ${c.monto}<br>
-Cuota: S/ ${c.cuota}
+Monto: ${c.monto}<br>
+Cuota: ${c.cuota.toFixed(2)}
 </div>`;
 });
 
 lista.innerHTML=html;
 }
 
-// REFERENCIAS
+// refs
 const loginDiv=document.getElementById("login");
 const appDiv=document.getElementById("app");
 
-const usuario=document.getElementById("usuario");
-const clave=document.getElementById("clave");
-
-const montoInput=document.getElementById("monto");
-const tasaInput=document.getElementById("tasa");
-const plazoInput=document.getElementById("plazo");
-const frecuencia=document.getElementById("frecuencia");
-const resumen=document.getElementById("resumen");
-
-const dni=document.getElementById("dni");
-const nombre=document.getElementById("nombre");
-const telefono=document.getElementById("telefono");
-const lista=document.getElementById("lista");
+const simulador=document.getElementById("simulador");
+const registro=document.getElementById("registro");
+const clientes=document.getElementById("clientes");
 
 </script>
 
 </body>
 </html>
+🔥 AHORA SÍ ESTÁS E

@@ -90,7 +90,7 @@ th,td{
 <button onclick="login()">Ingresar</button>
 </div>
 
-<!-- SISTEMA -->
+<!-- APP -->
 <div id="app" class="hidden">
 
 <div class="card">
@@ -102,6 +102,7 @@ th,td{
 <select id="tipo">
 <option value="diario">Diario</option>
 <option value="semanal">Semanal</option>
+<option value="quincenal">Quincenal</option>
 <option value="mensual">Mensual</option>
 </select>
 
@@ -130,7 +131,7 @@ th,td{
 
 <script>
 
-// 🔐 USUARIOS
+// USUARIOS
 const usuarios = [
 {user:"admin", pass:"1234"},
 {user:"asesor1", pass:"1234"},
@@ -175,16 +176,19 @@ alert("Completa datos");
 return;
 }
 
+// 🔥 AJUSTE DE TASA
 let tasa;
 switch(tipo){
 case "diario": tasa = tasaBase/30; break;
 case "semanal": tasa = tasaBase/4; break;
+case "quincenal": tasa = tasaBase/2; break; // ✅ NUEVO
 case "mensual": tasa = tasaBase; break;
 }
 
 let i = tasa;
 let n = plazo;
 
+// CUOTA
 let cuota = monto * (i * Math.pow(1+i,n)) / (Math.pow(1+i,n)-1);
 
 let saldo = monto;
@@ -244,7 +248,7 @@ alert("Guardado");
 cargarHistorial();
 }
 
-// HISTORIAL POR ASESOR
+// HISTORIAL
 function cargarHistorial(){
 
 let data = JSON.parse(localStorage.getItem("creditos")) || [];
@@ -267,7 +271,7 @@ document.getElementById("historial").innerHTML = html;
 
 // SERVICE WORKER
 if ("serviceWorker" in navigator) {
-navigator.serviceWorker.register("service-worker.js?ver=4");
+navigator.serviceWorker.register("service-worker.js?ver=5");
 }
 
 // INSTALAR

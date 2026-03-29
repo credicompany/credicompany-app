@@ -106,18 +106,19 @@ margin-top:10px;
 <div id="simulador" class="card">
 <h3>Simulador</h3>
 
-<input id="monto" placeholder="Monto">
-
-<input id="tea" placeholder="TEA % (Ej: 120)">
-
-<input id="plazo" placeholder="Cuotas">
-
-<select id="frecuencia">
+<label>Producto</label>
+<select id="frecuencia" onchange="actualizarTEA()">
 <option value="diario">Diario</option>
 <option value="semanal">Semanal</option>
 <option value="quincenal">Quincenal</option>
 <option value="mensual">Mensual</option>
 </select>
+
+<label>TEA (%)</label>
+<input id="tea" readonly>
+
+<input id="monto" placeholder="Monto">
+<input id="plazo" placeholder="Cuotas">
 
 <button onclick="calcular()">Calcular</button>
 
@@ -163,6 +164,7 @@ function login(){
 if(user.value=="admin" && pass.value=="1234"){
 loginDiv.classList.add("hidden");
 appDiv.classList.remove("hidden");
+actualizarTEA();
 }else{
 alert("Error");
 }
@@ -182,35 +184,64 @@ mostrarClientes();
 }
 }
 
-// SIMULADOR CON TEA
+// TEA AUTOMÁTICA
+function actualizarTEA(){
+
+let f = frecuencia.value;
+
+if(f=="diario") tea.value = 180;
+if(f=="semanal") tea.value = 120;
+if(f=="quincenal") tea.value = 90;
+if(f=="mensual") tea.value = 60;
+
+}
+
+// SIMULADOR CORRECTO
 let simulacion={};
 
 function calcular(){
 
 let m=parseFloat(monto.value);
-let tea=parseFloat(teaInput.value)/100;
+let teaValor=parseFloat(tea.value)/100;
 let n=parseInt(plazo.value);
 let f=frecuencia.value;
 
-let i;
+if(!m || !n){
+alert("Completa datos");
+return;
+}
 
-if(f=="diario") i=Math.pow(1+tea,1/360)-1;
-if(f=="semanal") i=Math.pow(1+tea,1/52)-1;
-if(f=="quincenal") i=Math.pow(1+tea,1/24)-1;
-if(f=="mensual") i=Math.pow(1+tea,1/12)-1;
+let interes, total, cuota;
 
-// fórmula financiera correcta
-let cuota = m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
+if(f=="mensual"){
 
-let total=cuota*n;
-let interes=total-m;
+    let i=Math.pow(1+teaValor,1/12)-1;
+
+    cuota = m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
+    total=cuota*n;
+    interes=total-m;
+
+}else{
+
+    let tasaPeriodo;
+
+    if(f=="diario") tasaPeriodo = teaValor/360;
+    if(f=="semanal") tasaPeriodo = teaValor/52;
+    if(f=="quincenal") tasaPeriodo = teaValor/24;
+
+    interes = m * tasaPeriodo * n;
+    total = m + interes;
+    cuota = total / n;
+
+}
 
 resultado.innerHTML=`
-Monto: S/ ${m}<br>
-TEA: ${(tea*100).toFixed(2)}%<br>
-Interés: S/ ${interes.toFixed(2)}<br>
-Total: S/ ${total.toFixed(2)}<br>
-Cuota: S/ ${cuota.toFixed(2)}
+<b>Producto:</b> ${f}<br>
+<b>Monto:</b> S/ ${m}<br>
+<b>TEA:</b> ${tea.value}%<br>
+<b>Interés:</b> S/ ${interes.toFixed(2)}<br>
+<b>Total:</b> S/ ${total.toFixed(2)}<br>
+<b>Cuota:</b> S/ ${cuota.toFixed(2)}
 `;
 
 simulacion={
@@ -227,6 +258,7 @@ if(!simulacion.monto) return alert("Primero calcula");
 
 let texto=`Simulación Credicompany:
 
+Producto: ${frecuencia.value}
 Monto: S/ ${simulacion.monto}
 Cuota: S/ ${simulacion.cuota.toFixed(2)}
 Total: S/ ${simulacion.total.toFixed(2)}
@@ -236,7 +268,7 @@ Total: S/ ${simulacion.total.toFixed(2)}
 window.open("https://wa.me/?text="+encodeURIComponent(texto));
 }
 
-// GUARDAR
+// GUARDAR CLIENTE
 function guardarCliente(){
 
 let data=JSON.parse(localStorage.getItem("clientes"))||[];
@@ -251,12 +283,12 @@ cuota:simulacion.cuota
 
 localStorage.setItem("clientes",JSON.stringify(data));
 
-alert("Guardado");
+alert("Cliente guardado");
 
 mostrarClientes();
 }
 
-// MOSTRAR
+// MOSTRAR CLIENTES
 function mostrarClientes(){
 
 let data=JSON.parse(localStorage.getItem("clientes"))||[];
@@ -265,7 +297,7 @@ let html="";
 
 data.forEach(c=>{
 html+=`
-<div>
+<div style="margin-bottom:10px;">
 <b>${c.nombre}</b><br>
 Monto: ${c.monto}<br>
 Cuota: ${c.cuota.toFixed(2)}
@@ -283,7 +315,7 @@ const simulador=document.getElementById("simulador");
 const registro=document.getElementById("registro");
 const clientes=document.getElementById("clientes");
 
-const teaInput=document.getElementById("tea");
+const tea=document.getElementById("tea");
 
 </script>
 

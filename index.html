@@ -13,19 +13,13 @@ background:#0a2f5c;
 color:white;
 }
 
-/* HEADER CON LOGO */
 .header{
 display:flex;
 justify-content:center;
-align-items:center;
-padding:25px 0;
+padding:20px;
 }
+.header img{ width:180px; }
 
-.header img{
-width:180px;
-}
-
-/* CONTENIDO */
 .container{ padding:15px; }
 
 .card{
@@ -101,7 +95,6 @@ text-align:center;
 
 <body>
 
-<!-- LOGO -->
 <div class="header">
 <img src="logo.png">
 </div>
@@ -141,26 +134,26 @@ text-align:center;
 <div id="resumen" class="result"></div>
 <div id="tabla"></div>
 
-<button onclick="enviarWhatsApp()">📲 Enviar WhatsApp</button>
+<button onclick="registrarVenta()">💰 Registrar como venta</button>
 
 </div>
 
-<!-- REGISTRO -->
-<div id="registro" class="card hidden">
-<h3>Registrar Cliente</h3>
+<!-- METAS -->
+<div id="metas" class="card hidden">
+<h3>Metas de Asesores</h3>
 
-<input id="dni" placeholder="DNI">
-<input id="nombre" placeholder="Nombre">
-<input id="telefono" placeholder="Teléfono">
+<input id="asesorNombre" placeholder="Nombre asesor">
+<input id="metaMonto" placeholder="Meta mensual">
 
-<button onclick="guardarCliente()">Guardar Cliente</button>
+<button onclick="guardarMeta()">Guardar Meta</button>
 
+<div id="listaMetas"></div>
 </div>
 
-<!-- CLIENTES -->
-<div id="clientes" class="card hidden">
-<h3>Clientes</h3>
-<div id="lista"></div>
+<!-- RANKING -->
+<div id="ranking" class="card hidden">
+<h3>Ranking de Asesores</h3>
+<div id="listaRanking"></div>
 </div>
 
 </div>
@@ -168,36 +161,34 @@ text-align:center;
 <!-- MENU -->
 <div class="menu">
 <button onclick="mostrar('simulador')">Simular</button>
-<button onclick="mostrar('registro')">Registrar</button>
-<button onclick="mostrar('clientes')">Clientes</button>
+<button onclick="mostrar('metas')">Metas</button>
+<button onclick="mostrar('ranking')">Ranking</button>
 </div>
 
 </div>
 
 <script>
 
+let usuarioActual="";
+
 // LOGIN
 function login(){
-if(user.value=="admin" && pass.value=="1234"){
+if(user.value && pass.value){
+usuarioActual=user.value;
 loginDiv.classList.add("hidden");
 appDiv.classList.remove("hidden");
-}else{
-alert("Usuario o clave incorrecta");
 }
 }
 
-// NAVEGACIÓN
+// NAV
 function mostrar(p){
 simulador.classList.add("hidden");
-registro.classList.add("hidden");
-clientes.classList.add("hidden");
+metas.classList.add("hidden");
+ranking.classList.add("hidden");
 
 if(p=="simulador") simulador.classList.remove("hidden");
-if(p=="registro") registro.classList.remove("hidden");
-if(p=="clientes"){
-clientes.classList.remove("hidden");
-mostrarClientes();
-}
+if(p=="metas"){ metas.classList.remove("hidden"); verMetas(); }
+if(p=="ranking"){ ranking.classList.remove("hidden"); verRanking(); }
 }
 
 // SIMULADOR
@@ -210,11 +201,6 @@ let TEM=parseFloat(tasa.value)/100;
 let n=parseInt(plazo.value);
 let f=frecuencia.value;
 
-if(!m || !TEM || !n){
-alert("Completa los datos");
-return;
-}
-
 let i;
 
 if(f=="Diario") i=Math.pow(1+TEM,1/30)-1;
@@ -222,110 +208,94 @@ if(f=="Semanal") i=Math.pow(1+TEM,1/4)-1;
 if(f=="Quincenal") i=Math.pow(1+TEM,1/2)-1;
 if(f=="Mensual") i=TEM;
 
-// SISTEMA FRANCÉS (CORRECTO)
 let cuota=m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
 let total=cuota*n;
 
-// CRONOGRAMA
-let saldo=m;
-let html="<table>";
-html+="<tr><th>#</th><th>Interés</th><th>Capital</th><th>Cuota</th><th>Saldo</th></tr>";
-
-for(let k=1;k<=n;k++){
-let interes=saldo*i;
-let capital=cuota-interes;
-saldo-=capital;
-
-html+=`
-<tr>
-<td>${k}</td>
-<td>${interes.toFixed(2)}</td>
-<td>${capital.toFixed(2)}</td>
-<td>${cuota.toFixed(2)}</td>
-<td>${saldo.toFixed(2)}</td>
-</tr>`;
-}
-
-html+="</table>";
-
-resumen.innerHTML=`
-Cuota: S/ ${cuota.toFixed(2)}<br>
-Total: S/ ${total.toFixed(2)}
-`;
-
-tabla.innerHTML=html;
+resumen.innerHTML=`Cuota: S/ ${cuota.toFixed(2)}<br>Total: S/ ${total.toFixed(2)}`;
 
 ultimaSimulacion={
 monto:m,
-cuota:cuota,
 total:total
 };
-
 }
 
-// WHATSAPP
-function enviarWhatsApp(){
-if(!ultimaSimulacion.monto) return alert("Primero calcula");
+// REGISTRAR VENTA
+function registrarVenta(){
 
-let texto=`Simulación Credicompany:
+if(!ultimaSimulacion.monto) return alert("Simula primero");
 
-Monto: S/ ${ultimaSimulacion.monto}
-Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
-Total: S/ ${ultimaSimulacion.total.toFixed(2)}
+let ventas=JSON.parse(localStorage.getItem("ventas"))||[];
 
-¿Desea continuar?`;
-
-window.open("https://wa.me/?text="+encodeURIComponent(texto));
-}
-
-// CLIENTES
-function guardarCliente(){
-
-let data=JSON.parse(localStorage.getItem("clientes"))||[];
-
-data.push({
-dni:dni.value,
-nombre:nombre.value,
-telefono:telefono.value,
-monto:ultimaSimulacion.monto,
-cuota:ultimaSimulacion.cuota
+ventas.push({
+asesor:usuarioActual,
+monto:ultimaSimulacion.monto
 });
 
-localStorage.setItem("clientes",JSON.stringify(data));
+localStorage.setItem("ventas",JSON.stringify(ventas));
 
-alert("Cliente guardado");
-
-mostrarClientes();
+alert("Venta registrada");
 }
 
-function mostrarClientes(){
+// METAS
+function guardarMeta(){
 
-let data=JSON.parse(localStorage.getItem("clientes"))||[];
+let metas=JSON.parse(localStorage.getItem("metas"))||[];
+
+metas.push({
+asesor:asesorNombre.value,
+meta:parseFloat(metaMonto.value)
+});
+
+localStorage.setItem("metas",JSON.stringify(metas));
+
+verMetas();
+}
+
+function verMetas(){
+
+let metas=JSON.parse(localStorage.getItem("metas"))||[];
 
 let html="";
 
-data.forEach(c=>{
-html+=`
-<div style="margin-bottom:10px;">
-<b>${c.nombre}</b><br>
-Monto: ${c.monto}<br>
-Cuota: ${c.cuota.toFixed(2)}
-</div>`;
+metas.forEach(m=>{
+html+=`<div>${m.asesor} - Meta: ${m.meta}</div>`;
 });
 
-lista.innerHTML=html;
+listaMetas.innerHTML=html;
 }
 
-// REFERENCIAS
+// RANKING
+function verRanking(){
+
+let ventas=JSON.parse(localStorage.getItem("ventas"))||[];
+let resumen={};
+
+ventas.forEach(v=>{
+if(!resumen[v.asesor]) resumen[v.asesor]=0;
+resumen[v.asesor]+=v.monto;
+});
+
+let html="";
+
+Object.entries(resumen)
+.sort((a,b)=>b[1]-a[1])
+.forEach(r=>{
+html+=`<div>${r[0]} - S/ ${r[1]}</div>`;
+});
+
+listaRanking.innerHTML=html;
+}
+
+// refs
 const loginDiv=document.getElementById("login");
 const appDiv=document.getElementById("app");
 
 const simulador=document.getElementById("simulador");
-const registro=document.getElementById("registro");
-const clientes=document.getElementById("clientes");
+const metas=document.getElementById("metas");
+const ranking=document.getElementById("ranking");
 
 </script>
 
 </body>
 </html>
-Compromiso y Honradez, crecemos juntos...
+Compromiso y honradez, crecemos juntos...

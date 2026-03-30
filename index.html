@@ -7,325 +7,238 @@
 
 <style>
 body{
-margin:0;
-font-family:'Segoe UI',sans-serif;
-background:#0a2f5c;
-color:white;
+  margin:0;
+  font-family: Arial;
+  background:#123B63;
+  color:#333;
 }
 
-/* HEADER CON LOGO */
 .header{
-display:flex;
-justify-content:center;
-align-items:center;
-padding:25px 0;
+  text-align:center;
+  padding:20px;
+  color:white;
 }
 
 .header img{
-width:180px;
+  width:120px;
 }
-
-/* CONTENIDO */
-.container{ padding:15px; }
 
 .card{
-background:white;
-color:#333;
-border-radius:20px;
-padding:20px;
-margin-bottom:15px;
-box-shadow:0 8px 20px rgba(0,0,0,0.2);
+  background:#f2f2f2;
+  margin:15px;
+  padding:20px;
+  border-radius:15px;
 }
 
-input,select{
-width:100%;
-padding:12px;
-margin-top:10px;
-border-radius:10px;
-border:none;
-background:#f2f4f7;
+input, select{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border-radius:10px;
+  border:none;
 }
 
 button{
-width:100%;
-padding:12px;
-margin-top:10px;
-border:none;
-border-radius:10px;
-background:#00c853;
-color:white;
-font-weight:bold;
-}
-
-.menu{
-position:fixed;
-bottom:0;
-width:100%;
-background:white;
-display:flex;
-justify-content:space-around;
-padding:10px;
-border-top-left-radius:20px;
-border-top-right-radius:20px;
-}
-
-.menu button{
-background:none;
-color:#0a2f5c;
-font-weight:bold;
-}
-
-.hidden{ display:none; }
-
-.result{
-background:#f4f4f4;
-padding:10px;
-margin-top:10px;
-border-radius:10px;
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:#10c251;
+  color:white;
+  font-size:16px;
 }
 
 table{
-width:100%;
-margin-top:10px;
-border-collapse:collapse;
-font-size:12px;
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
 }
 
-th,td{
-border:1px solid #ccc;
-padding:6px;
-text-align:center;
+th{
+  background:#123B63;
+  color:white;
+  padding:8px;
+}
+
+td{
+  padding:6px;
+  text-align:center;
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOGO -->
 <div class="header">
-<img src="logo.png">
+  <img src="logo.png">
 </div>
 
 <!-- LOGIN -->
-<div id="login" class="container">
-<div class="card">
-<h3>Ingreso Asesor</h3>
-<input id="user" placeholder="Usuario">
-<input id="pass" type="password" placeholder="Clave">
-<button onclick="login()">Ingresar</button>
-</div>
+<div class="card" id="loginDiv">
+  <h3>Ingreso Asesor</h3>
+  <input id="usuario" placeholder="Usuario">
+  <input id="clave" placeholder="Clave" type="password">
+  <button onclick="login()">Ingresar</button>
 </div>
 
 <!-- APP -->
-<div id="app" class="hidden">
+<div id="app" style="display:none">
 
-<div class="container">
-
-<!-- SIMULADOR -->
-<div id="simulador" class="card">
-<h3>Simulador</h3>
+<div class="card">
+<h3>Simulador de Crédito</h3>
 
 <select id="frecuencia">
 <option>Diario</option>
-<option selected>Semanal</option>
+<option>Semanal</option>
 <option>Quincenal</option>
 <option>Mensual</option>
 </select>
 
-<input id="tasa" placeholder="Tasa (%)">
 <input id="monto" placeholder="Monto">
+<input id="tasa" placeholder="Tasa (%)">
 <input id="plazo" placeholder="N° cuotas">
 
 <button onclick="calcular()">Calcular</button>
 
-<div id="resumen" class="result"></div>
-<div id="tabla"></div>
+<div id="resultado"></div>
 
-<button onclick="enviarWhatsApp()">📲 Enviar WhatsApp</button>
-
-</div>
-
-<!-- REGISTRO -->
-<div id="registro" class="card hidden">
-<h3>Registrar Cliente</h3>
-
-<input id="dni" placeholder="DNI">
-<input id="nombre" placeholder="Nombre">
-<input id="telefono" placeholder="Teléfono">
-
-<button onclick="guardarCliente()">Guardar Cliente</button>
+<table id="tabla"></table>
 
 </div>
 
-<!-- CLIENTES -->
-<div id="clientes" class="card hidden">
-<h3>Clientes</h3>
-<div id="lista"></div>
+<div class="card">
+<h3>Cartera</h3>
+<div id="cartera"></div>
 </div>
 
 </div>
 
-<!-- MENU -->
-<div class="menu">
-<button onclick="mostrar('simulador')">Simular</button>
-<button onclick="mostrar('registro')">Registrar</button>
-<button onclick="mostrar('clientes')">Clientes</button>
-</div>
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
 
-</div>
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB5G2MyTkYZT0b7RMfLoBegcfAY4-ewdkc",
+  authDomain: "credicompany-88693.firebaseapp.com",
+  projectId: "credicompany-88693",
+  storageBucket: "credicompany-88693.firebasestorage.app",
+  messagingSenderId: "890359636696",
+  appId: "1:890359636696:web:ed8b77c84bd85f5a212dad",
+  measurementId: "G-KQTDXKKX37"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.db = db;
+
+</script>
 
 <script>
 
-// LOGIN
+// LOGIN SIMPLE
 function login(){
-if(user.value=="admin" && pass.value=="1234"){
-loginDiv.classList.add("hidden");
-appDiv.classList.remove("hidden");
-}else{
-alert("Usuario o clave incorrecta");
-}
-}
+  let u = document.getElementById("usuario").value;
+  let c = document.getElementById("clave").value;
 
-// NAVEGACIÓN
-function mostrar(p){
-simulador.classList.add("hidden");
-registro.classList.add("hidden");
-clientes.classList.add("hidden");
-
-if(p=="simulador") simulador.classList.remove("hidden");
-if(p=="registro") registro.classList.remove("hidden");
-if(p=="clientes"){
-clientes.classList.remove("hidden");
-mostrarClientes();
-}
+  if(u && c){
+    document.getElementById("loginDiv").style.display="none";
+    document.getElementById("app").style.display="block";
+    cargarCartera(u);
+  }else{
+    alert("Ingrese datos");
+  }
 }
 
-// SIMULADOR
-let ultimaSimulacion={};
-
+// SIMULADOR PRO
 function calcular(){
 
-let m=parseFloat(monto.value);
-let TEM=parseFloat(tasa.value)/100;
-let n=parseInt(plazo.value);
-let f=frecuencia.value;
-
-if(!m || !TEM || !n){
-alert("Completa los datos");
-return;
-}
+let m = parseFloat(document.getElementById("monto").value);
+let tasa = parseFloat(document.getElementById("tasa").value)/100;
+let n = parseInt(document.getElementById("plazo").value);
+let f = document.getElementById("frecuencia").value;
 
 let i;
 
-if(f=="Diario") i=Math.pow(1+TEM,1/30)-1;
-if(f=="Semanal") i=Math.pow(1+TEM,1/4)-1;
-if(f=="Quincenal") i=Math.pow(1+TEM,1/2)-1;
-if(f=="Mensual") i=TEM;
+// CONVERSIÓN CORRECTA
+if(f=="Diario") i = Math.pow(1+tasa,1/30)-1;
+if(f=="Semanal") i = Math.pow(1+tasa,1/4)-1;
+if(f=="Quincenal") i = Math.pow(1+tasa,1/2)-1;
+if(f=="Mensual") i = tasa;
 
-// SISTEMA FRANCÉS (CORRECTO)
-let cuota=m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
-let total=cuota*n;
+// CUOTA (FRANCÉS)
+let cuota = m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
 
-// CRONOGRAMA
-let saldo=m;
-let html="<table>";
-html+="<tr><th>#</th><th>Interés</th><th>Capital</th><th>Cuota</th><th>Saldo</th></tr>";
+let saldo = m;
+
+let tabla = "<tr><th>#</th><th>Interés</th><th>Capital</th><th>Cuota</th><th>Saldo</th></tr>";
+
+let totalInteres=0;
 
 for(let k=1;k<=n;k++){
-let interes=saldo*i;
-let capital=cuota-interes;
-saldo-=capital;
+  let interes = saldo*i;
+  let capital = cuota - interes;
+  saldo -= capital;
 
-html+=`
-<tr>
-<td>${k}</td>
-<td>${interes.toFixed(2)}</td>
-<td>${capital.toFixed(2)}</td>
-<td>${cuota.toFixed(2)}</td>
-<td>${saldo.toFixed(2)}</td>
-</tr>`;
+  totalInteres += interes;
+
+  tabla += `<tr>
+  <td>${k}</td>
+  <td>${interes.toFixed(2)}</td>
+  <td>${capital.toFixed(2)}</td>
+  <td>${cuota.toFixed(2)}</td>
+  <td>${saldo.toFixed(2)}</td>
+  </tr>`;
 }
 
-html+="</table>";
+document.getElementById("tabla").innerHTML = tabla;
 
-resumen.innerHTML=`
-Cuota: S/ ${cuota.toFixed(2)}<br>
-Total: S/ ${total.toFixed(2)}
+document.getElementById("resultado").innerHTML = `
+Interés total: S/ ${totalInteres.toFixed(2)}<br>
+Total a pagar: S/ ${(cuota*n).toFixed(2)}<br>
+Cuota: S/ ${cuota.toFixed(2)}
 `;
 
-tabla.innerHTML=html;
-
-ultimaSimulacion={
-monto:m,
-cuota:cuota,
-total:total
-};
-
 }
 
-// WHATSAPP
-function enviarWhatsApp(){
-if(!ultimaSimulacion.monto) return alert("Primero calcula");
+// FIREBASE CARTERA
+async function cargarCartera(usuario){
 
-let texto=`Simulación Credicompany:
+let contenedor = document.getElementById("cartera");
+contenedor.innerHTML="Cargando...";
 
-Monto: S/ ${ultimaSimulacion.monto}
-Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
-Total: S/ ${ultimaSimulacion.total.toFixed(2)}
-
-¿Desea continuar?`;
-
-window.open("https://wa.me/?text="+encodeURIComponent(texto));
-}
-
-// CLIENTES
-function guardarCliente(){
-
-let data=JSON.parse(localStorage.getItem("clientes"))||[];
-
-data.push({
-dni:dni.value,
-nombre:nombre.value,
-telefono:telefono.value,
-monto:ultimaSimulacion.monto,
-cuota:ultimaSimulacion.cuota
-});
-
-localStorage.setItem("clientes",JSON.stringify(data));
-
-alert("Cliente guardado");
-
-mostrarClientes();
-}
-
-function mostrarClientes(){
-
-let data=JSON.parse(localStorage.getItem("clientes"))||[];
+const querySnapshot = await window.db.collection("clientes").get();
 
 let html="";
 
-data.forEach(c=>{
-html+=`
-<div style="margin-bottom:10px;">
-<b>${c.nombre}</b><br>
-Monto: ${c.monto}<br>
-Cuota: ${c.cuota.toFixed(2)}
-</div>`;
+querySnapshot.forEach((doc) => {
+  let d = doc.data();
+
+  if(d.asesor == usuario){
+
+    html += `
+    <div style="margin-bottom:10px">
+    <b>${d.nombre}</b><br>
+    Estado: ${d.estado}<br>
+    Saldo: S/ ${d.saldo}
+    </div>
+    `;
+  }
+
 });
 
-lista.innerHTML=html;
+contenedor.innerHTML = html || "Sin clientes";
+
 }
-
-// REFERENCIAS
-const loginDiv=document.getElementById("login");
-const appDiv=document.getElementById("app");
-
-const simulador=document.getElementById("simulador");
-const registro=document.getElementById("registro");
-const clientes=document.getElementById("clientes");
 
 </script>
 
 </body>
 </html>
-Compromiso y honradez, crecemos juntos..
+Compromiso y honradez, crecemos juntos
+..

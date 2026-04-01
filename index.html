@@ -67,7 +67,6 @@ text-align:center;
 border-bottom:1px solid #ddd;
 }
 
-/* 🔥 mejora visual */
 .card img{
 width:100%;
 border-radius:12px;
@@ -130,7 +129,6 @@ color:#123B63;
 <div id="resultado"></div>
 <table id="tabla"></table>
 
-<!-- 🔥 NUEVO -->
 <button onclick="enviarPago()">📲 Enviar simulación + pago</button>
 
 </div>
@@ -197,13 +195,13 @@ let ultimaSimulacion={};
 
 // LOGIN
 function login(){
-let u = usuario.value;
-let c = clave.value;
+let u = document.getElementById("usuario").value;
+let c = document.getElementById("clave").value;
 
 if(u && c){
 usuarioActual = u;
-loginDiv.style.display="none";
-app.style.display="block";
+document.getElementById("loginDiv").style.display="none";
+document.getElementById("app").style.display="block";
 cargarCartera();
 }else{
 alert("Ingrese datos");
@@ -212,35 +210,40 @@ alert("Ingrese datos");
 
 // NAV
 function mostrar(p){
-simulador.style.display="none";
-pagos.style.display="none";
-cartera.style.display="none";
+document.getElementById("simulador").style.display="none";
+document.getElementById("pagos").style.display="none";
+document.getElementById("cartera").style.display="none";
 
-if(p=="simulador") simulador.style.display="block";
-if(p=="pagos") pagos.style.display="block";
+if(p=="simulador") document.getElementById("simulador").style.display="block";
+if(p=="pagos") document.getElementById("pagos").style.display="block";
 if(p=="cartera"){
-cartera.style.display="block";
+document.getElementById("cartera").style.display="block";
 cargarCartera();
 }
 }
 
-// SIMULADOR (TU LÓGICA)
+// ✅ SIMULADOR CORREGIDO
 function calcular(){
 
-let m = parseFloat(monto.value);
-let tasa = parseFloat(tasa.value)/100;
-let n = parseInt(plazo.value);
+let montoVal = parseFloat(document.getElementById("monto").value);
+let tasaVal = parseFloat(document.getElementById("tasa").value)/100;
+let plazoVal = parseInt(document.getElementById("plazo").value);
 
-let i = tasa / n;
+if(!montoVal || !tasaVal || !plazoVal){
+alert("Completa todos los datos");
+return;
+}
 
-let cuota = m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
+let i = tasaVal / plazoVal;
 
-let saldo = m;
+let cuota = montoVal*(i*Math.pow(1+i,plazoVal))/(Math.pow(1+i,plazoVal)-1);
+
+let saldo = montoVal;
 let totalInteres=0;
 
 let tablaHTML = "<tr><th>#</th><th>Interés</th><th>Capital</th><th>Cuota</th><th>Saldo</th></tr>";
 
-for(let k=1;k<=n;k++){
+for(let k=1;k<=plazoVal;k++){
 let interes = saldo*i;
 let capital = cuota - interes;
 saldo -= capital;
@@ -256,21 +259,22 @@ tablaHTML += `<tr>
 </tr>`;
 }
 
-tabla.innerHTML = tablaHTML;
+document.getElementById("tabla").innerHTML = tablaHTML;
 
-resultado.innerHTML = `
+document.getElementById("resultado").innerHTML = `
 Interés: S/ ${totalInteres.toFixed(2)}<br>
-Total: S/ ${(cuota*n).toFixed(2)}<br>
+Total: S/ ${(cuota*plazoVal).toFixed(2)}<br>
 Cuota: S/ ${cuota.toFixed(2)}
 `;
 
 ultimaSimulacion={
-monto:m,
+monto:montoVal,
 cuota:cuota
 };
+
 }
 
-// 🔥 WHATSAPP NUEVO
+// WHATSAPP
 function enviarPago(){
 
 if(!ultimaSimulacion.monto){
@@ -280,12 +284,10 @@ return;
 
 let mensaje = `💳 CREDICOMPANY
 
-📌 Simulación:
+Monto: S/ ${ultimaSimulacion.monto}
+Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
 
-💰 Monto: S/ ${ultimaSimulacion.monto}
-💵 Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
-
-📲 Pagos:
+Pagos:
 BBVA / BCP / Yape
 
 Enviar comprobante luego del pago.
@@ -294,14 +296,13 @@ Crecemos juntos`;
 window.open("https://wa.me/?text="+encodeURIComponent(mensaje));
 }
 
-// 🔥 FIREBASE CORREGIDO
+// FIREBASE
 async function cargarCartera(){
 
 let contenedor = document.getElementById("lista");
 contenedor.innerHTML="Cargando...";
 
 try{
-
 const snapshot = await getDocs(collection(window.db,"clientes"));
 
 let html="";
@@ -310,28 +311,24 @@ snapshot.forEach(doc=>{
 let d = doc.data();
 
 if(d.asesor == usuarioActual){
-
 html+=`
 <div>
 <b>${d.nombre}</b><br>
 Estado: ${d.estado}<br>
 Saldo: S/ ${d.saldo}
-</div><hr>
-`;
+</div><hr>`;
 }
 });
 
 contenedor.innerHTML = html || "Sin clientes";
 
 }catch(e){
-contenedor.innerHTML = "Error cargando datos";
-console.error(e);
+contenedor.innerHTML="Error cargando";
 }
-
 }
 
 </script>
 
 </body>
 </html>
-Compromiso y Honradez, crecemos juntos...
+Compromiso y honradez, crecemos juntos...

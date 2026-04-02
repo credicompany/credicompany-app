@@ -16,38 +16,46 @@ body{
 /* HEADER */
 .header{
   text-align:center;
-  padding:20px 15px 10px;
+  padding:20px;
 }
 
-.header h2{
-  margin:0;
-  font-size:22px;
-  letter-spacing:1px;
+/* CONTENEDOR */
+.container{
+  padding:15px;
 }
 
-/* CARD PRINCIPAL */
+/* CARD */
 .card{
   background:#ffffff;
   color:#333;
   margin:20px;
-  padding:25px 20px;
-  border-radius:18px;
+  padding:20px;
+  border-radius:15px;
   text-align:center;
-  box-shadow:0 6px 18px rgba(0,0,0,0.25);
+  box-shadow:0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* INPUT */
+input{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border-radius:10px;
+  border:1px solid #ccc;
 }
 
 /* TITULOS */
 .title{
-  font-size:20px;
+  font-size:18px;
   font-weight:bold;
-  margin-bottom:8px;
+  margin-bottom:10px;
   color:#123B63;
 }
 
 .subtitle{
   font-size:14px;
-  color:#777;
-  margin-bottom:18px;
+  color:#666;
+  margin-bottom:15px;
 }
 
 /* QR */
@@ -55,49 +63,28 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
-  margin-bottom:15px;
+  padding:10px;
 }
 
 .qr-section img{
-  width:230px;
-  height:230px;
+  width:220px;
+  height:220px;
   object-fit:cover;
-  border-radius:14px;
-  background:#fff;
-  padding:8px;
-  box-shadow:0 6px 15px rgba(0,0,0,0.25);
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.2);
   cursor:pointer;
-  transition:0.3s;
-}
-
-.qr-section img:hover{
-  transform:scale(1.05);
 }
 
 /* BOTÓN */
 .btn{
-  margin-top:10px;
+  margin-top:15px;
   background:#123B63;
   color:white;
   padding:12px;
   border:none;
-  border-radius:12px;
-  font-size:15px;
+  border-radius:10px;
+  font-size:14px;
   width:100%;
-  font-weight:bold;
-  box-shadow:0 3px 10px rgba(0,0,0,0.3);
-}
-
-.btn:active{
-  transform:scale(0.97);
-}
-
-/* FOOTER */
-.footer{
-  text-align:center;
-  font-size:12px;
-  margin-top:10px;
-  opacity:0.7;
 }
 
 /* MODAL */
@@ -116,37 +103,67 @@ body{
 .modal img{
   width:90%;
   max-width:400px;
-  border-radius:12px;
+  border-radius:10px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  <h2>CREDICOMPANY</h2>
-</div>
-
-<div class="card">
-  <div class="title">Pago con QR</div>
-  <div class="subtitle">Escanea y paga con cualquier billetera</div>
-
-  <div class="qr-section">
-    <img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg" onclick="verQR()">
+<!-- LOGIN -->
+<div id="login" class="container">
+  <div class="header">
+    <h2>CREDICOMPANY</h2>
   </div>
 
-  <button class="btn" onclick="pago()">Ya realicé el pago</button>
+  <div class="card">
+    <div class="title">Ingreso al sistema</div>
+
+    <input type="text" id="usuario" placeholder="Usuario">
+    <input type="password" id="clave" placeholder="Contraseña">
+
+    <button class="btn" onclick="login()">Ingresar</button>
+  </div>
 </div>
 
-<div class="footer">
-  © 2026 Credicompany
+<!-- APP -->
+<div id="app" style="display:none;">
+
+  <div class="header">
+    <h2>CREDICOMPANY</h2>
+  </div>
+
+  <div class="card">
+    <div class="title">Pago con QR</div>
+    <div class="subtitle">Escanea y paga con cualquier billetera</div>
+
+    <div class="qr-section">
+      <img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg" onclick="verQR()">
+    </div>
+
+    <button class="btn" onclick="pago()">Ya realicé el pago</button>
+  </div>
+
 </div>
 
+<!-- MODAL -->
 <div id="modal" class="modal">
   <img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg">
 </div>
 
 <script>
+function login(){
+  let user = document.getElementById("usuario").value;
+  let pass = document.getElementById("clave").value;
+
+  if(user === "admin" && pass === "1234"){
+    document.getElementById("login").style.display="none";
+    document.getElementById("app").style.display="block";
+  }else{
+    alert("Usuario o contraseña incorrectos");
+  }
+}
+
 function pago(){
   alert("Pago registrado. Validando...");
 }

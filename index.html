@@ -14,7 +14,6 @@ color:white;
 }
 
 .header{text-align:center;padding:20px;}
-.header img{width:150px;}
 
 .card{
 background:#f2f2f2;
@@ -38,10 +37,9 @@ padding:14px;
 margin-top:10px;
 border:none;
 border-radius:12px;
-background: linear-gradient(135deg,#10c251,#0a9e44);
+background:#10c251;
 color:white;
 font-weight:bold;
-box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 .card img{
@@ -64,7 +62,6 @@ padding:10px;
 .menu button{
 background:none;
 color:#123B63;
-box-shadow:none;
 }
 </style>
 </head>
@@ -73,7 +70,7 @@ box-shadow:none;
 
 <div class="header">
 <h2>Credicompany</h2>
-<p id="titulo">Crecemos juntos.</p>
+<p>Crecemos juntos.</p>
 </div>
 
 <!-- LOGIN -->
@@ -93,7 +90,7 @@ box-shadow:none;
 <h3>Simulador</h3>
 
 <input id="monto" placeholder="Monto">
-<input id="tasa" placeholder="Tasa mensual (%)">
+<input id="tasa" placeholder="Tasa (%)">
 <input id="plazo" placeholder="Cuotas">
 
 <button onclick="calcular()">Calcular</button>
@@ -130,83 +127,71 @@ box-shadow:none;
 
 <script>
 
-let ultimaSimulacion={};
-
-// LOGIN VALIDADO
+// LOGIN CORREGIDO
 function login(){
-let u = usuario.value.trim();
-let c = clave.value.trim();
 
-if(u === "asesor1" && c === "1234"){
-    loginDiv.style.display="none";
-    app.style.display="block";
-}else{
-    alert("Usuario o clave incorrectos");
+let user = document.getElementById("usuario").value;
+let pass = document.getElementById("clave").value;
+
+if(!user || !pass){
+alert("Completa todos los campos");
+return;
 }
+
+if(user === "admin" && pass === "1234"){
+document.getElementById("loginDiv").style.display="none";
+document.getElementById("app").style.display="block";
+}else{
+alert("Usuario o clave incorrectos");
+}
+
 }
 
 // CAMBIO DE PANTALLA
 function mostrar(p){
-simulador.style.display="none";
-pagos.style.display="none";
+document.getElementById("simulador").style.display="none";
+document.getElementById("pagos").style.display="none";
 document.getElementById(p).style.display="block";
-
-titulo.innerText =
-p === "simulador" ? "Simulación de crédito" : "Medios de pago";
 }
 
-// SIMULADOR PROFESIONAL
+// SIMULADOR
+let ultimaSimulacion={};
+
 function calcular(){
 
-let m=parseFloat(monto.value);
-let t=parseFloat(tasa.value)/100;
-let n=parseInt(plazo.value);
+let m=parseFloat(document.getElementById("monto").value);
+let t=parseFloat(document.getElementById("tasa").value)/100;
+let n=parseInt(document.getElementById("plazo").value);
 
 if(!m || !t || !n){
-    resultado.innerHTML = "⚠ Complete todos los campos correctamente";
-    return;
+alert("Completa todos los datos");
+return;
 }
 
-let i = t;
+let i = Math.pow(1+t,1/4)-1;
 
 let cuota = m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
-let total = cuota * n;
-let interes = total - m;
 
-resultado.innerHTML = `
-✅ Simulación correcta<br><br>
-Cuota: <b>S/ ${cuota.toFixed(2)}</b><br>
-Total a pagar: S/ ${total.toFixed(2)}<br>
-Interés: S/ ${interes.toFixed(2)}
+document.getElementById("resultado").innerHTML = `
+Interés correcto aplicado ✔<br>
+Cuota: S/ ${cuota.toFixed(2)}
 `;
 
-ultimaSimulacion = {
-monto:m,
-cuota:cuota,
-total:total,
-interes:interes
-};
-
-// GUARDAR HISTORIAL
-let historial = JSON.parse(localStorage.getItem("simulaciones")) || [];
-historial.push(ultimaSimulacion);
-localStorage.setItem("simulaciones", JSON.stringify(historial));
-
+ultimaSimulacion = {monto:m,cuota:cuota};
 }
 
 // ENVIAR SIMULACIÓN
 function enviarPago(){
 
 if(!ultimaSimulacion.monto){
-alert("Primero realiza una simulación");
+alert("Primero calcula la simulación");
 return;
 }
 
-let msg = `💳 *CREDICOMPANY*
+let msg = `💳 Credicompany
 
 Monto: S/ ${ultimaSimulacion.monto}
 Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
-Total: S/ ${ultimaSimulacion.total.toFixed(2)}
 
 Seleccione medio de pago`;
 
@@ -230,7 +215,7 @@ if(tipo=="Yape"){
 linkQR="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg";
 }
 
-let mensaje = `💳 *CREDICOMPANY*
+let mensaje = `💳 Credicompany
 
 Pago vía ${tipo}
 

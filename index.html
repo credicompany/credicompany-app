@@ -8,53 +8,45 @@
 <style>
 body{
 margin:0;
-font-family:'Segoe UI',sans-serif;
-background:#0a2f5c;
+font-family:Arial;
+background:#123B63;
 color:white;
 }
 
-/* HEADER */
-.header{
-display:flex;
-justify-content:center;
-align-items:center;
-padding:25px 0;
-}
-
-.header img{
-width:180px;
-}
-
-/* CONTENIDO */
-.container{ padding:15px; }
+.header{text-align:center;padding:20px;}
 
 .card{
-background:white;
+background:#f2f2f2;
 color:#333;
-border-radius:20px;
+margin:15px;
 padding:20px;
-margin-bottom:15px;
-box-shadow:0 8px 20px rgba(0,0,0,0.2);
+border-radius:15px;
 }
 
-input,select{
+input{
 width:100%;
 padding:12px;
 margin-top:10px;
 border-radius:10px;
 border:none;
-background:#f2f4f7;
 }
 
 button{
 width:100%;
-padding:12px;
+padding:14px;
 margin-top:10px;
 border:none;
-border-radius:10px;
-background:#00c853;
+border-radius:12px;
+background:#10c251;
 color:white;
 font-weight:bold;
+}
+
+.card img{
+width:100%;
+border-radius:12px;
+margin-bottom:15px;
+cursor:pointer;
 }
 
 .menu{
@@ -65,64 +57,11 @@ background:white;
 display:flex;
 justify-content:space-around;
 padding:10px;
-border-top-left-radius:20px;
-border-top-right-radius:20px;
 }
 
 .menu button{
 background:none;
-color:#0a2f5c;
-font-weight:bold;
-}
-
-.hidden{ display:none; }
-
-.result{
-background:#f4f4f4;
-padding:10px;
-margin-top:10px;
-border-radius:10px;
-}
-
-table{
-width:100%;
-margin-top:10px;
-border-collapse:collapse;
-font-size:12px;
-}
-
-th,td{
-border:1px solid #ccc;
-padding:6px;
-text-align:center;
-}
-
-/* QR */
-.qr-img{
-width:220px;
-display:block;
-margin:auto;
-border-radius:12px;
-cursor:pointer;
-}
-
-/* MODAL */
-.modal{
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.9);
-justify-content:center;
-align-items:center;
-}
-
-.modal img{
-width:90%;
-max-width:400px;
-border-radius:12px;
+color:#123B63;
 }
 </style>
 </head>
@@ -130,71 +69,55 @@ border-radius:12px;
 <body>
 
 <div class="header">
-<img src="logo.png">
+<h2>Credicompany</h2>
+<p>Crecemos juntos.</p>
 </div>
 
 <!-- LOGIN -->
-<div id="login" class="container">
-<div class="card">
+<div id="loginDiv" class="card">
 <h3>Ingreso Asesor</h3>
-<input id="user" placeholder="Usuario">
-<input id="pass" type="password" placeholder="Clave">
-<button onclick="login()">Ingresar</button>
-</div>
+<input id="usuario" placeholder="Usuario">
+<input id="clave" type="password" placeholder="Clave">
+<button id="btnLogin">Ingresar</button>
 </div>
 
 <!-- APP -->
-<div id="app" class="hidden">
-
-<div class="container">
+<div id="app" style="display:none">
 
 <!-- SIMULADOR -->
 <div id="simulador" class="card">
+
 <h3>Simulador</h3>
 
-<select id="frecuencia">
-<option>Diario</option>
-<option selected>Semanal</option>
-<option>Quincenal</option>
-<option>Mensual</option>
-</select>
-
-<input id="tasa" placeholder="Tasa (%)">
 <input id="monto" placeholder="Monto">
-<input id="plazo" placeholder="N° cuotas">
+<input id="tasa" placeholder="Tasa (%)">
+<input id="plazo" placeholder="Cuotas">
 
 <button onclick="calcular()">Calcular</button>
 
-<div id="resumen" class="result"></div>
-<div id="tabla"></div>
+<div id="resultado"></div>
 
-<button onclick="enviarWhatsApp()">📲 Enviar WhatsApp</button>
+<button onclick="enviarPago()">📲 Enviar simulación</button>
+
 </div>
 
-<!-- REGISTRO -->
-<div id="registro" class="card hidden">
-<h3>Registrar Cliente</h3>
+<!-- PAGOS -->
+<div id="pagos" class="card" style="display:none">
 
-<input id="dni" placeholder="DNI">
-<input id="nombre" placeholder="Nombre">
-<input id="telefono" placeholder="Teléfono">
+<h3>💳 Medios de Pago</h3>
 
-<button onclick="guardarCliente()">Guardar Cliente</button>
-</div>
+<h4>Cuenta Recaudadora</h4>
+<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg" onclick="enviarQR('PRINCIPAL')">
 
-<!-- CLIENTES -->
-<div id="clientes" class="card hidden">
-<h3>Clientes</h3>
-<div id="lista"></div>
-</div>
+<h4>BBVA</h4>
+<img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg" onclick="enviarQR('BBVA')">
 
-<!-- QR NUEVO -->
-<div id="qr" class="card hidden">
-<h3>Pago con QR</h3>
+<h4>BCP</h4>
+<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg" onclick="enviarQR('BCP')">
 
-<img class="qr-img" src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg" onclick="verQR()">
+<h4>Yape</h4>
+<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg" onclick="enviarQR('Yape')">
 
-<button onclick="pago()">Ya realicé el pago</button>
 </div>
 
 </div>
@@ -202,168 +125,119 @@ border-radius:12px;
 <!-- MENU -->
 <div class="menu">
 <button onclick="mostrar('simulador')">Simular</button>
-<button onclick="mostrar('registro')">Registrar</button>
-<button onclick="mostrar('clientes')">Clientes</button>
-<button onclick="mostrar('qr')">Pagar</button>
-</div>
-
-</div>
-
-<!-- MODAL -->
-<div id="modal" class="modal">
-<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg">
+<button onclick="mostrar('pagos')">Pagos</button>
 </div>
 
 <script>
 
-// LOGIN
-function login(){
-if(user.value.trim()=="admin" && pass.value.trim()=="1234"){
-loginDiv.classList.add("hidden");
-appDiv.classList.remove("hidden");
+// LOGIN SEGURO (COMPATIBLE CON APPSGEYSER)
+document.addEventListener("DOMContentLoaded", function(){
+
+document.getElementById("btnLogin").addEventListener("click", function(){
+
+let user = document.getElementById("usuario").value.trim();
+let pass = document.getElementById("clave").value.trim();
+
+if(!user || !pass){
+alert("Completa todos los campos");
+return;
+}
+
+if(user === "admin" && pass === "1234"){
+document.getElementById("loginDiv").style.display="none";
+document.getElementById("app").style.display="block";
 }else{
-alert("Usuario o clave incorrecta");
-}
+alert("Usuario o clave incorrectos");
 }
 
-// NAVEGACIÓN
+});
+
+});
+
+// CAMBIO DE PANTALLA
 function mostrar(p){
-simulador.classList.add("hidden");
-registro.classList.add("hidden");
-clientes.classList.add("hidden");
-qr.classList.add("hidden");
-
-if(p=="simulador") simulador.classList.remove("hidden");
-if(p=="registro") registro.classList.remove("hidden");
-if(p=="clientes"){
-clientes.classList.remove("hidden");
-mostrarClientes();
-}
-if(p=="qr") qr.classList.remove("hidden");
+document.getElementById("simulador").style.display="none";
+document.getElementById("pagos").style.display="none";
+document.getElementById(p).style.display="block";
 }
 
 // SIMULADOR
 let ultimaSimulacion={};
 
 function calcular(){
-let m=parseFloat(monto.value);
-let TEM=parseFloat(tasa.value)/100;
-let n=parseInt(plazo.value);
-let f=frecuencia.value;
 
-if(!m || !TEM || !n){
-alert("Completa los datos");
+let m=parseFloat(document.getElementById("monto").value);
+let t=parseFloat(document.getElementById("tasa").value)/100;
+let n=parseInt(document.getElementById("plazo").value);
+
+if(!m || !t || !n){
+alert("Completa todos los datos");
 return;
 }
 
-let i;
+let i = Math.pow(1+t,1/4)-1;
 
-if(f=="Diario") i=Math.pow(1+TEM,1/30)-1;
-if(f=="Semanal") i=Math.pow(1+TEM,1/4)-1;
-if(f=="Quincenal") i=Math.pow(1+TEM,1/2)-1;
-if(f=="Mensual") i=TEM;
+let cuota = m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
 
-let cuota=m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
-let total=cuota*n;
+document.getElementById("resultado").innerHTML = `
+Interés correcto aplicado ✔<br>
+Cuota: S/ ${cuota.toFixed(2)}
+`;
 
-let saldo=m;
-let html="<table>";
-html+="<tr><th>#</th><th>Interés</th><th>Capital</th><th>Cuota</th><th>Saldo</th></tr>";
-
-for(let k=1;k<=n;k++){
-let interes=saldo*i;
-let capital=cuota-interes;
-saldo-=capital;
-
-html+=`
-<tr>
-<td>${k}</td>
-<td>${interes.toFixed(2)}</td>
-<td>${capital.toFixed(2)}</td>
-<td>${cuota.toFixed(2)}</td>
-<td>${saldo.toFixed(2)}</td>
-</tr>`;
+ultimaSimulacion = {monto:m,cuota:cuota};
 }
 
-html+="</table>";
+// ENVIAR SIMULACIÓN
+function enviarPago(){
 
-resumen.innerHTML=`Cuota: S/ ${cuota.toFixed(2)}<br>Total: S/ ${total.toFixed(2)}`;
-tabla.innerHTML=html;
-
-ultimaSimulacion={monto:m,cuota:cuota,total:total};
+if(!ultimaSimulacion.monto){
+alert("Primero calcula la simulación");
+return;
 }
 
-// WHATSAPP
-function enviarWhatsApp(){
-if(!ultimaSimulacion.monto) return alert("Primero calcula");
-
-let texto=`Simulación Credicompany:
+let msg = `💳 Credicompany
 
 Monto: S/ ${ultimaSimulacion.monto}
 Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
-Total: S/ ${ultimaSimulacion.total.toFixed(2)}
 
-¿Desea continuar?`;
+Seleccione medio de pago`;
 
-window.open("https://wa.me/?text="+encodeURIComponent(texto));
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
 }
 
-// CLIENTES
-function guardarCliente(){
-let data=JSON.parse(localStorage.getItem("clientes"))||[];
+// ENVIAR QR
+function enviarQR(tipo){
 
-data.push({
-dni:dni.value,
-nombre:nombre.value,
-telefono:telefono.value,
-monto:ultimaSimulacion.monto,
-cuota:ultimaSimulacion.cuota
-});
+let linkQR="";
 
-localStorage.setItem("clientes",JSON.stringify(data));
-
-alert("Cliente guardado");
-mostrarClientes();
+if(tipo=="PRINCIPAL"){
+linkQR="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg";
 }
 
-function mostrarClientes(){
-let data=JSON.parse(localStorage.getItem("clientes"))||[];
-let html="";
-
-data.forEach(c=>{
-html+=`
-<div style="margin-bottom:10px;">
-<b>${c.nombre}</b><br>
-Monto: ${c.monto}<br>
-Cuota: ${c.cuota.toFixed(2)}
-</div>`;
-});
-
-lista.innerHTML=html;
+if(tipo=="BBVA"){
+linkQR="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg";
 }
 
-// QR
-function verQR(){
-modal.style.display="flex";
+if(tipo=="BCP"){
+linkQR="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg";
 }
 
-modal.onclick=function(){
-modal.style.display="none";
+if(tipo=="Yape"){
+linkQR="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg";
 }
 
-function pago(){
-alert("Pago registrado. Validando...");
+let mensaje = `💳 Credicompany
+
+Pago vía ${tipo}
+
+Escanea aquí:
+${linkQR}
+
+Enviar comprobante luego del pago`;
+
+window.open("https://wa.me/?text="+encodeURIComponent(mensaje));
+
 }
-
-// REFERENCIAS
-const loginDiv=document.getElementById("login");
-const appDiv=document.getElementById("app");
-
-const simulador=document.getElementById("simulador");
-const registro=document.getElementById("registro");
-const clientes=document.getElementById("clientes");
-const qr=document.getElementById("qr");
-const modal=document.getElementById("modal");
 
 </script>
 

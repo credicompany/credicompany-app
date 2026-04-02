@@ -120,7 +120,7 @@ color:#123B63;
 
 <!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
-<h3>💳 Medios de Pago</h3>
+<h3>💳 Pagos</h3>
 
 <h4>BBVA</h4>
 <img src="bbva_qr.jpg">
@@ -145,7 +145,7 @@ color:#123B63;
 
 let ultimaSimulacion={};
 
-// LOGIN
+// LOGIN SIMPLE
 function login(){
 let u = usuario.value;
 let c = clave.value;
@@ -223,7 +223,7 @@ plazo:n
 
 }
 
-// 🔥 WHATSAPP CON LINKS DE QR
+// 🔥 WHATSAPP PRO
 function enviarPago(){
 
 if(!ultimaSimulacion.monto){
@@ -231,27 +231,21 @@ alert("Primero simula");
 return;
 }
 
-// 🔥 REEMPLAZA ESTOS LINKS POR LOS TUYOS
-let qrBBVA = "https://i.postimg.cc/xxxx/bbva_qr.jpg";
-let qrYape = "https://i.postimg.cc/xxxx/yape_qr.jpg";
-
 let mensaje = `💳 *CREDICOMPANY*
 
-📌 Simulación:
+📌 Simulación aprobada:
 
 💰 Monto: S/ ${ultimaSimulacion.monto}
 💵 Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
-📆 Plazo: ${ultimaSimulacion.plazo}
+📆 Plazo: ${ultimaSimulacion.plazo} cuotas
 
-💳 MEDIOS DE PAGO:
+💳 *MEDIOS DE PAGO:*
 
-🏦 BBVA:
-${qrBBVA}
+🏦 BBVA / BCP  
+📲 Yape  
 
-📱 Yape:
-${qrYape}
+📸 Adjunta tu comprobante luego del pago.
 
-📸 Enviar comprobante luego del pago.
 *Crecemos juntos*`;
 
 window.open("https://wa.me/?text="+encodeURIComponent(mensaje));

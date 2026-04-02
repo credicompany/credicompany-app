@@ -13,29 +13,27 @@ background:#123B63;
 color:white;
 }
 
-/* HEADER SOLO LOGO */
 .header{
 display:flex;
 justify-content:center;
 align-items:center;
-padding:30px 10px 10px 10px;
+padding:30px 10px;
 }
 
 .header img{
-width:180px; /* 🔥 LOGO MÁS GRANDE */
+width:180px;
 }
 
-/* TARJETAS */
 .card{
 background:#f2f2f2;
 color:#333;
 margin:15px;
 padding:20px;
 border-radius:15px;
-margin-top:40px; /* 🔥 BAJA EL LOGIN */
+margin-top:30px;
 }
 
-input{
+input, select{
 width:100%;
 padding:12px;
 margin-top:10px;
@@ -74,44 +72,43 @@ padding:10px;
 .menu button{
 background:none;
 color:#123B63;
+font-weight:bold;
 }
 </style>
 </head>
 
 <body>
 
-<!-- SOLO LOGO -->
 <div class="header">
 <img src="logo.png">
 </div>
 
-<!-- LOGIN -->
-<div id="loginDiv" class="card">
-<h3>Ingreso Asesor</h3>
-<input id="usuario" placeholder="Usuario">
-<input id="clave" type="password" placeholder="Clave">
-<button id="btnLogin">Ingresar</button>
-</div>
-
-<!-- APP -->
-<div id="app" style="display:none">
-
+<!-- SIMULADOR -->
 <div id="simulador" class="card">
 
 <h3>Simulador</h3>
 
+<select id="producto" onchange="configurarProducto()">
+<option value="">Seleccione producto</option>
+<option value="diario">Diario</option>
+<option value="semanal">Semanal</option>
+<option value="quincenal">Quincenal</option>
+<option value="mensual">Mensual</option>
+</select>
+
 <input id="monto" placeholder="Monto">
-<input id="tasa" placeholder="Tasa (%)">
-<input id="plazo" placeholder="Cuotas">
+<input id="tasa" placeholder="Tasa (%) anual">
+<input id="plazo" placeholder="Número de cuotas">
 
 <button onclick="calcular()">Calcular</button>
 
 <div id="resultado"></div>
 
-<button onclick="enviarPago()">📲 Enviar simulación</button>
+<button onclick="enviar()">📲 Enviar simulación</button>
 
 </div>
 
+<!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
 
 <h3>💳 Medios de Pago</h3>
@@ -130,8 +127,6 @@ color:#123B63;
 
 </div>
 
-</div>
-
 <!-- MENU -->
 <div class="menu">
 <button onclick="mostrar('simulador')">Simular</button>
@@ -140,100 +135,109 @@ color:#123B63;
 
 <script>
 
-// LOGIN
-document.addEventListener("DOMContentLoaded", function(){
+let ultimaSimulacion = {};
+let periodos = 12;
 
-document.getElementById("btnLogin").addEventListener("click", function(){
-
-let user = document.getElementById("usuario").value.trim();
-let pass = document.getElementById("clave").value.trim();
-
-if(!user || !pass){
-alert("Completa todos los campos");
-return;
-}
-
-if(user === "admin" && pass === "1234"){
-document.getElementById("loginDiv").style.display="none";
-document.getElementById("app").style.display="block";
-}else{
-alert("Usuario o clave incorrectos");
-}
-
-});
-
-});
-
-// NAVEGACIÓN
+// CAMBIO DE PANTALLA
 function mostrar(p){
 document.getElementById("simulador").style.display="none";
 document.getElementById("pagos").style.display="none";
 document.getElementById(p).style.display="block";
 }
 
-// SIMULADOR
-let ultimaSimulacion={};
+// CONFIGURACIÓN PRODUCTO
+function configurarProducto(){
 
+let p = document.getElementById("producto").value;
+let tasa = document.getElementById("tasa");
+
+if(p=="diario"){
+tasa.value = 120;
+periodos = 360;
+}
+
+if(p=="semanal"){
+tasa.value = 80;
+periodos = 52;
+}
+
+if(p=="quincenal"){
+tasa.value = 60;
+periodos = 24;
+}
+
+if(p=="mensual"){
+tasa.value = 40;
+periodos = 12;
+}
+
+}
+
+// CÁLCULO
 function calcular(){
 
-let m=parseFloat(document.getElementById("monto").value);
-let t=parseFloat(document.getElementById("tasa").value)/100;
-let n=parseInt(document.getElementById("plazo").value);
+let m = parseFloat(document.getElementById("monto").value);
+let t = parseFloat(document.getElementById("tasa").value)/100;
+let n = parseInt(document.getElementById("plazo").value);
+let producto = document.getElementById("producto").value;
 
-if(!m || !t || !n){
+if(!m || !t || !n || !producto){
 alert("Completa todos los datos");
 return;
 }
 
-let i = Math.pow(1+t,1/4)-1;
+let i = Math.pow(1+t,1/periodos)-1;
 
 let cuota = m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
 
 document.getElementById("resultado").innerHTML = `
-Interés correcto aplicado ✔<br>
+Producto: ${producto.toUpperCase()}<br>
 Cuota: S/ ${cuota.toFixed(2)}
 `;
 
-ultimaSimulacion = {monto:m,cuota:cuota};
+ultimaSimulacion = {producto, monto:m, cuota:cuota};
+
 }
 
-// WHATSAPP
-function enviarPago(){
+// WHATSAPP SIMULACIÓN
+function enviar(){
 
 if(!ultimaSimulacion.monto){
-alert("Primero calcula la simulación");
+alert("Primero calcula");
 return;
 }
 
 let msg = `💳 Credicompany
 
+Producto: ${ultimaSimulacion.producto}
 Monto: S/ ${ultimaSimulacion.monto}
 Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
 
 Seleccione medio de pago`;
 
 window.open("https://wa.me/?text="+encodeURIComponent(msg));
+
 }
 
-// QR
+// WHATSAPP QR
 function enviarQR(tipo){
 
-let linkQR="";
+let link="";
 
 if(tipo=="PRINCIPAL"){
-linkQR="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg";
+link="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg";
 }
 
 if(tipo=="BBVA"){
-linkQR="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg";
+link="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg";
 }
 
 if(tipo=="BCP"){
-linkQR="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg";
+link="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg";
 }
 
 if(tipo=="Yape"){
-linkQR="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg";
+link="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg";
 }
 
 let mensaje = `💳 Credicompany
@@ -241,9 +245,9 @@ let mensaje = `💳 Credicompany
 Pago vía ${tipo}
 
 Escanea aquí:
-${linkQR}
+${link}
 
-Enviar comprobante luego del pago`;
+Enviar comprobante`;
 
 window.open("https://wa.me/?text="+encodeURIComponent(mensaje));
 

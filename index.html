@@ -43,20 +43,11 @@ color:white;
 font-weight:bold;
 }
 
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:15px;
-font-size:12px;
-}
-
-th{background:#123B63;color:white;padding:6px;}
-td{padding:5px;text-align:center;border-bottom:1px solid #ddd;}
-
 .card img{
 width:100%;
 border-radius:12px;
 margin-bottom:10px;
+cursor:pointer;
 }
 
 .menu{
@@ -99,38 +90,32 @@ color:#123B63;
 <h3>Simulador</h3>
 
 <select id="frecuencia">
-<option>Diario</option>
-<option selected>Semanal</option>
-<option>Quincenal</option>
-<option>Mensual</option>
+<option>Semanal</option>
 </select>
 
 <input id="monto" placeholder="Monto">
 <input id="tasa" placeholder="Tasa (%)">
-<input id="plazo" placeholder="N° cuotas">
+<input id="plazo" placeholder="Cuotas">
 
 <button onclick="calcular()">Calcular</button>
 
 <div id="resultado"></div>
-<table id="tabla"></table>
 
-<button onclick="enviarPago()">📲 Enviar por WhatsApp</button>
+<button onclick="enviarPago()">📲 Enviar simulación</button>
 
 </div>
 
 <!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
-<h3>💳 Pagos</h3>
+
+<h3>💳 Selecciona medio de pago</h3>
 
 <h4>BBVA</h4>
-<img src="bbva_qr.jpg">
-<img src="bbva_datos.jpg">
-
-<h4>BCP</h4>
-<img src="bcp_datos.png">
+<img src="bbva_qr.jpg" onclick="enviarQR('BBVA')">
 
 <h4>Yape</h4>
-<img src="yape_qr.jpg">
+<img src="yape_qr.jpg" onclick="enviarQR('Yape')">
+
 </div>
 
 </div>
@@ -145,16 +130,11 @@ color:#123B63;
 
 let ultimaSimulacion={};
 
-// LOGIN SIMPLE
+// LOGIN
 function login(){
-let u = usuario.value;
-let c = clave.value;
-
-if(u && c){
+if(usuario.value && clave.value){
 loginDiv.style.display="none";
 app.style.display="block";
-}else{
-alert("Ingrese datos");
 }
 }
 
@@ -168,85 +148,55 @@ document.getElementById(p).style.display="block";
 // SIMULADOR
 function calcular(){
 
-let m = parseFloat(monto.value);
-let t = parseFloat(tasa.value)/100;
-let n = parseInt(plazo.value);
-let f = frecuencia.value;
+let m=parseFloat(monto.value);
+let t=parseFloat(tasa.value)/100;
+let n=parseInt(plazo.value);
 
-if(!m || !t || !n){
-alert("Completa datos");
-return;
-}
+let i=Math.pow(1+t,1/4)-1;
 
-let i;
+let cuota=m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
 
-if(f=="Diario") i = Math.pow(1+t,1/30)-1;
-if(f=="Semanal") i = Math.pow(1+t,1/4)-1;
-if(f=="Quincenal") i = Math.pow(1+t,1/2)-1;
-if(f=="Mensual") i = t;
+resultado.innerHTML=`Cuota: S/ ${cuota.toFixed(2)}`;
 
-let cuota = m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
-
-let saldo=m;
-let totalInteres=0;
-
-let html="<tr><th>#</th><th>Interés</th><th>Capital</th><th>Cuota</th><th>Saldo</th></tr>";
-
-for(let k=1;k<=n;k++){
-let interes=saldo*i;
-let capital=cuota-interes;
-saldo-=capital;
-totalInteres+=interes;
-
-html+=`<tr>
-<td>${k}</td>
-<td>${interes.toFixed(2)}</td>
-<td>${capital.toFixed(2)}</td>
-<td>${cuota.toFixed(2)}</td>
-<td>${saldo.toFixed(2)}</td>
-</tr>`;
-}
-
-tabla.innerHTML=html;
-
-resultado.innerHTML=`
-Interés: S/ ${totalInteres.toFixed(2)}<br>
-Total: S/ ${(cuota*n).toFixed(2)}<br>
-Cuota: S/ ${cuota.toFixed(2)}
-`;
-
-ultimaSimulacion={
-monto:m,
-cuota:cuota,
-plazo:n
-};
+ultimaSimulacion={monto:m,cuota:cuota};
 
 }
 
-// 🔥 WHATSAPP PRO
+// 🔥 ENVÍO SIMULACIÓN
 function enviarPago(){
 
-if(!ultimaSimulacion.monto){
-alert("Primero simula");
-return;
+let msg=`💳 Credicompany
+
+Monto: S/ ${ultimaSimulacion.monto}
+Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
+
+Seleccione medio de pago`;
+
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
 }
 
-let mensaje = `💳 *CREDICOMPANY*
+// 🔥 ENVÍO QR SEGÚN CLICK
+function enviarQR(tipo){
 
-📌 Simulación aprobada:
+let linkQR="";
 
-💰 Monto: S/ ${ultimaSimulacion.monto}
-💵 Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
-📆 Plazo: ${ultimaSimulacion.plazo} cuotas
+// 👉 CAMBIA ESTOS LINKS
+if(tipo=="BBVA"){
+linkQR="https://i.postimg.cc/abcd/bbva_qr.jpg";
+}
 
-💳 *MEDIOS DE PAGO:*
+if(tipo=="Yape"){
+linkQR="https://i.postimg.cc/abcd/yape_qr.jpg";
+}
 
-🏦 BBVA / BCP  
-📲 Yape  
+let mensaje=`💳 Credicompany
 
-📸 Adjunta tu comprobante luego del pago.
+Pago vía ${tipo}
 
-*Crecemos juntos*`;
+Escanea aquí:
+${linkQR}
+
+Enviar comprobante luego del pago`;
 
 window.open("https://wa.me/?text="+encodeURIComponent(mensaje));
 

@@ -7,61 +7,116 @@
 
 <style>
 body{
-margin:0;
-font-family:Arial;
-background:#123B63;
-color:white;
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#123B63;
+  color:white;
 }
 
-.header{text-align:center;padding:20px;}
+/* HEADER */
+.header{
+  text-align:center;
+  padding:20px 15px 10px;
+}
 
+.header h2{
+  margin:0;
+  font-size:22px;
+  letter-spacing:1px;
+}
+
+/* CARD PRINCIPAL */
 .card{
-background:#f2f2f2;
-color:#333;
-margin:15px;
-padding:20px;
-border-radius:15px;
+  background:#ffffff;
+  color:#333;
+  margin:20px;
+  padding:25px 20px;
+  border-radius:18px;
+  text-align:center;
+  box-shadow:0 6px 18px rgba(0,0,0,0.25);
 }
 
-input{
-width:100%;
-padding:12px;
-margin-top:10px;
-border-radius:10px;
-border:none;
+/* TITULOS */
+.title{
+  font-size:20px;
+  font-weight:bold;
+  margin-bottom:8px;
+  color:#123B63;
 }
 
-button{
-width:100%;
-padding:14px;
-margin-top:10px;
-border:none;
-border-radius:12px;
-background:#10c251;
-color:white;
-font-weight:bold;
+.subtitle{
+  font-size:14px;
+  color:#777;
+  margin-bottom:18px;
 }
 
-.card img{
-width:100%;
-border-radius:12px;
-margin-bottom:15px;
-cursor:pointer;
+/* QR */
+.qr-section{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-bottom:15px;
 }
 
-.menu{
-position:fixed;
-bottom:0;
-width:100%;
-background:white;
-display:flex;
-justify-content:space-around;
-padding:10px;
+.qr-section img{
+  width:230px;
+  height:230px;
+  object-fit:cover;
+  border-radius:14px;
+  background:#fff;
+  padding:8px;
+  box-shadow:0 6px 15px rgba(0,0,0,0.25);
+  cursor:pointer;
+  transition:0.3s;
 }
 
-.menu button{
-background:none;
-color:#123B63;
+.qr-section img:hover{
+  transform:scale(1.05);
+}
+
+/* BOTÓN */
+.btn{
+  margin-top:10px;
+  background:#123B63;
+  color:white;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  font-size:15px;
+  width:100%;
+  font-weight:bold;
+  box-shadow:0 3px 10px rgba(0,0,0,0.3);
+}
+
+.btn:active{
+  transform:scale(0.97);
+}
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  font-size:12px;
+  margin-top:10px;
+  opacity:0.7;
+}
+
+/* MODAL */
+.modal{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.9);
+  justify-content:center;
+  align-items:center;
+}
+
+.modal img{
+  width:90%;
+  max-width:400px;
+  border-radius:12px;
 }
 </style>
 </head>
@@ -69,172 +124,40 @@ color:#123B63;
 <body>
 
 <div class="header">
-<h2>Credicompany</h2>
-<p>Crecemos juntos.</p>
+  <h2>CREDICOMPANY</h2>
 </div>
 
-<!-- LOGIN -->
-<div id="loginDiv" class="card">
-<h3>Ingreso Asesor</h3>
-<input id="usuario" placeholder="Usuario">
-<input id="clave" type="password" placeholder="Clave">
-<button onclick="login()">Ingresar</button>
+<div class="card">
+  <div class="title">Pago con QR</div>
+  <div class="subtitle">Escanea y paga con cualquier billetera</div>
+
+  <div class="qr-section">
+    <img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg" onclick="verQR()">
+  </div>
+
+  <button class="btn" onclick="pago()">Ya realicé el pago</button>
 </div>
 
-<!-- APP -->
-<div id="app" style="display:none">
-
-<!-- SIMULADOR -->
-<div id="simulador" class="card">
-
-<h3>Simulador</h3>
-
-<input id="monto" placeholder="Monto">
-<input id="tasa" placeholder="Tasa (%)">
-<input id="plazo" placeholder="Cuotas">
-
-<button onclick="calcular()">Calcular</button>
-
-<div id="resultado"></div>
-
-<button onclick="enviarPago()">📲 Enviar simulación</button>
-
+<div class="footer">
+  © 2026 Credicompany
 </div>
 
-<!-- PAGOS -->
-<div id="pagos" class="card" style="display:none">
-
-<h3>💳 Medios de Pago</h3>
-
-<h4>Cuenta Recaudadora</h4>
-<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg" onclick="enviarQR('PRINCIPAL')">
-
-<h4>BBVA</h4>
-<img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg" onclick="enviarQR('BBVA')">
-
-<h4>BCP</h4>
-<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg" onclick="enviarQR('BCP')">
-
-<h4>Yape</h4>
-<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg" onclick="enviarQR('Yape')">
-
-</div>
-
-</div>
-
-<!-- MENU -->
-<div class="menu">
-<button onclick="mostrar('simulador')">Simular</button>
-<button onclick="mostrar('pagos')">Pagos</button>
+<div id="modal" class="modal">
+  <img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg">
 </div>
 
 <script>
-
-// LOGIN
-function login(){
-
-let user = document.getElementById("usuario").value;
-let pass = document.getElementById("clave").value;
-
-if(!user || !pass){
-alert("Completa todos los campos");
-return;
+function pago(){
+  alert("Pago registrado. Validando...");
 }
 
-if(user === "admin" && pass === "1234"){
-document.getElementById("loginDiv").style.display="none";
-document.getElementById("app").style.display="block";
-}else{
-alert("Usuario o clave incorrectos");
+function verQR(){
+  document.getElementById("modal").style.display="flex";
 }
 
+document.getElementById("modal").onclick = function(){
+  this.style.display="none";
 }
-
-// CAMBIO DE PANTALLA
-function mostrar(p){
-document.getElementById("simulador").style.display="none";
-document.getElementById("pagos").style.display="none";
-document.getElementById(p).style.display="block";
-}
-
-// SIMULADOR
-let ultimaSimulacion={};
-
-function calcular(){
-
-let m=parseFloat(document.getElementById("monto").value);
-let t=parseFloat(document.getElementById("tasa").value)/100;
-let n=parseInt(document.getElementById("plazo").value);
-
-if(!m || !t || !n){
-alert("Completa todos los datos");
-return;
-}
-
-let i = Math.pow(1+t,1/4)-1;
-
-let cuota = m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
-
-document.getElementById("resultado").innerHTML = `
-Interés correcto aplicado ✔<br>
-Cuota: S/ ${cuota.toFixed(2)}
-`;
-
-ultimaSimulacion = {monto:m,cuota:cuota};
-}
-
-// ENVIAR SIMULACIÓN
-function enviarPago(){
-
-if(!ultimaSimulacion.monto){
-alert("Primero calcula la simulación");
-return;
-}
-
-let msg = `💳 Credicompany
-
-Monto: S/ ${ultimaSimulacion.monto}
-Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
-
-Seleccione medio de pago`;
-
-window.open("https://wa.me/?text="+encodeURIComponent(msg));
-}
-
-// ENVIAR QR
-function enviarQR(tipo){
-
-let linkQR="";
-
-if(tipo=="PRINCIPAL"){
-linkQR="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg";
-}
-
-if(tipo=="BBVA"){
-linkQR="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg";
-}
-
-if(tipo=="BCP"){
-linkQR="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg";
-}
-
-if(tipo=="Yape"){
-linkQR="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg";
-}
-
-let mensaje = `💳 Credicompany
-
-Pago vía ${tipo}
-
-Escanea aquí:
-${linkQR}
-
-Enviar comprobante luego del pago`;
-
-window.open("https://wa.me/?text="+encodeURIComponent(mensaje));
-
-}
-
 </script>
 
 </body>

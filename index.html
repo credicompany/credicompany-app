@@ -13,16 +13,33 @@ background:#123B63;
 color:white;
 }
 
+/* HEADER LIMPIO Y CENTRADO */
 .header{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+padding:20px 10px;
 text-align:center;
-padding:20px;
 }
 
 .header img{
-width:140px;
-margin-bottom:10px;
+width:120px;
+margin-bottom:8px;
 }
 
+.header h2{
+margin:0;
+font-size:22px;
+}
+
+.header p{
+margin:2px 0 0 0;
+font-size:14px;
+opacity:0.9;
+}
+
+/* TARJETAS */
 .card{
 background:#f2f2f2;
 color:#333;
@@ -76,14 +93,11 @@ color:#123B63;
 
 <body>
 
+<!-- ✅ ÚNICO HEADER -->
 <div class="header">
-
-<!-- ✅ LOGO LOCAL -->
 <img src="logo.png">
-
 <h2>Credicompany</h2>
 <p>Crecemos juntos.</p>
-
 </div>
 
 <!-- LOGIN -->
@@ -133,6 +147,7 @@ color:#123B63;
 
 </div>
 
+<!-- MENU -->
 <div class="menu">
 <button onclick="mostrar('simulador')">Simular</button>
 <button onclick="mostrar('pagos')">Pagos</button>
@@ -140,6 +155,7 @@ color:#123B63;
 
 <script>
 
+// LOGIN
 document.addEventListener("DOMContentLoaded", function(){
 
 document.getElementById("btnLogin").addEventListener("click", function(){
@@ -163,12 +179,14 @@ alert("Usuario o clave incorrectos");
 
 });
 
+// NAVEGACIÓN
 function mostrar(p){
 document.getElementById("simulador").style.display="none";
 document.getElementById("pagos").style.display="none";
 document.getElementById(p).style.display="block";
 }
 
+// SIMULADOR
 let ultimaSimulacion={};
 
 function calcular(){
@@ -194,6 +212,7 @@ Cuota: S/ ${cuota.toFixed(2)}
 ultimaSimulacion = {monto:m,cuota:cuota};
 }
 
+// WHATSAPP SIMULACIÓN
 function enviarPago(){
 
 if(!ultimaSimulacion.monto){
@@ -211,6 +230,7 @@ Seleccione medio de pago`;
 window.open("https://wa.me/?text="+encodeURIComponent(msg));
 }
 
+// QR
 function enviarQR(tipo){
 
 let linkQR="";

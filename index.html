@@ -24,7 +24,7 @@ padding:20px;
 border-radius:15px;
 }
 
-input,select{
+input{
 width:100%;
 padding:12px;
 margin-top:10px;
@@ -38,15 +38,16 @@ padding:14px;
 margin-top:10px;
 border:none;
 border-radius:12px;
-background:#10c251;
+background: linear-gradient(135deg,#10c251,#0a9e44);
 color:white;
 font-weight:bold;
+box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 .card img{
 width:100%;
 border-radius:12px;
-margin-bottom:10px;
+margin-bottom:15px;
 cursor:pointer;
 }
 
@@ -63,6 +64,7 @@ padding:10px;
 .menu button{
 background:none;
 color:#123B63;
+box-shadow:none;
 }
 </style>
 </head>
@@ -70,7 +72,8 @@ color:#123B63;
 <body>
 
 <div class="header">
-<img src="logo.png">
+<h2>Credicompany</h2>
+<p id="titulo">Crecemos juntos.</p>
 </div>
 
 <!-- LOGIN -->
@@ -89,12 +92,8 @@ color:#123B63;
 
 <h3>Simulador</h3>
 
-<select id="frecuencia">
-<option>Semanal</option>
-</select>
-
 <input id="monto" placeholder="Monto">
-<input id="tasa" placeholder="Tasa (%)">
+<input id="tasa" placeholder="Tasa mensual (%)">
 <input id="plazo" placeholder="Cuotas">
 
 <button onclick="calcular()">Calcular</button>
@@ -108,13 +107,16 @@ color:#123B63;
 <!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
 
-<h3>💳 Selecciona medio de pago</h3>
+<h3>💳 Medios de Pago</h3>
 
 <h4>BBVA</h4>
-<img src="bbva_qr.jpg" onclick="enviarQR('BBVA')">
+<img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg" onclick="enviarQR('BBVA')">
+
+<h4>BCP</h4>
+<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg" onclick="enviarQR('BCP')">
 
 <h4>Yape</h4>
-<img src="yape_qr.jpg" onclick="enviarQR('Yape')">
+<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg" onclick="enviarQR('Yape')">
 
 </div>
 
@@ -130,66 +132,105 @@ color:#123B63;
 
 let ultimaSimulacion={};
 
-// LOGIN
+// LOGIN VALIDADO
 function login(){
-if(usuario.value && clave.value){
-loginDiv.style.display="none";
-app.style.display="block";
+let u = usuario.value.trim();
+let c = clave.value.trim();
+
+if(u === "asesor1" && c === "1234"){
+    loginDiv.style.display="none";
+    app.style.display="block";
+}else{
+    alert("Usuario o clave incorrectos");
 }
 }
 
-// NAV
+// CAMBIO DE PANTALLA
 function mostrar(p){
 simulador.style.display="none";
 pagos.style.display="none";
 document.getElementById(p).style.display="block";
+
+titulo.innerText =
+p === "simulador" ? "Simulación de crédito" : "Medios de pago";
 }
 
-// SIMULADOR
+// SIMULADOR PROFESIONAL
 function calcular(){
 
 let m=parseFloat(monto.value);
 let t=parseFloat(tasa.value)/100;
 let n=parseInt(plazo.value);
 
-let i=Math.pow(1+t,1/4)-1;
+if(!m || !t || !n){
+    resultado.innerHTML = "⚠ Complete todos los campos correctamente";
+    return;
+}
 
-let cuota=m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
+let i = t;
 
-resultado.innerHTML=`Cuota: S/ ${cuota.toFixed(2)}`;
+let cuota = m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
+let total = cuota * n;
+let interes = total - m;
 
-ultimaSimulacion={monto:m,cuota:cuota};
+resultado.innerHTML = `
+✅ Simulación correcta<br><br>
+Cuota: <b>S/ ${cuota.toFixed(2)}</b><br>
+Total a pagar: S/ ${total.toFixed(2)}<br>
+Interés: S/ ${interes.toFixed(2)}
+`;
+
+ultimaSimulacion = {
+monto:m,
+cuota:cuota,
+total:total,
+interes:interes
+};
+
+// GUARDAR HISTORIAL
+let historial = JSON.parse(localStorage.getItem("simulaciones")) || [];
+historial.push(ultimaSimulacion);
+localStorage.setItem("simulaciones", JSON.stringify(historial));
 
 }
 
-// 🔥 ENVÍO SIMULACIÓN
+// ENVIAR SIMULACIÓN
 function enviarPago(){
 
-let msg=`💳 Credicompany
+if(!ultimaSimulacion.monto){
+alert("Primero realiza una simulación");
+return;
+}
+
+let msg = `💳 *CREDICOMPANY*
 
 Monto: S/ ${ultimaSimulacion.monto}
 Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
+Total: S/ ${ultimaSimulacion.total.toFixed(2)}
 
 Seleccione medio de pago`;
 
 window.open("https://wa.me/?text="+encodeURIComponent(msg));
 }
 
-// 🔥 ENVÍO QR SEGÚN CLICK
+// ENVIAR QR
 function enviarQR(tipo){
 
 let linkQR="";
 
-// 👉 CAMBIA ESTOS LINKS
 if(tipo=="BBVA"){
-linkQR="https://i.postimg.cc/abcd/bbva_qr.jpg";
+linkQR="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg";
+}
+
+if(tipo=="BCP"){
+linkQR="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg";
 }
 
 if(tipo=="Yape"){
-linkQR="https://i.postimg.cc/abcd/yape_qr.jpg";
+linkQR="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg";
 }
 
-let mensaje=`💳 Credicompany
+let mensaje = `💳 *CREDICOMPANY*
 
 Pago vía ${tipo}
 

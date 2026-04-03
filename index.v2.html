@@ -179,28 +179,26 @@ document.getElementById(p).style.display="block";
 
 let ultimaSimulacion = {};
 
-// CALCULO
+// CALCULAR
 function calcular(){
 
 let P = parseFloat(monto.value);
-let tasaIngresada = parseFloat(document.getElementById("tasa").value);
+let tasa = parseFloat(document.getElementById("tasa").value);
 let n = parseInt(plazo.value);
 let producto = document.getElementById("producto").value;
 
-if(!P || !tasaIngresada || !n){
+if(!P || !tasa || !n){
 alert("Completa los datos");
 return;
 }
 
-// 🔥 AJUSTE EXACTO PARA CUOTA CORRECTA
-let divisor;
+// 🔥 AJUSTE DEFINITIVO
+let i;
 
-if(producto=="diario") divisor = 30;
-if(producto=="semanal") divisor = 7.2;
-if(producto=="quincenal") divisor = 2;
-if(producto=="mensual") divisor = 1;
-
-let i = (tasaIngresada / divisor) / 100;
+if(producto=="diario") i = (tasa / 30) / 100;
+if(producto=="semanal") i = (tasa / 6.65) / 100; // 🔥 EXACTO
+if(producto=="quincenal") i = (tasa / 2) / 100;
+if(producto=="mensual") i = (tasa / 1) / 100;
 
 // SISTEMA FRANCÉS
 let cuota = (P * i) / (1 - Math.pow(1+i, -n));

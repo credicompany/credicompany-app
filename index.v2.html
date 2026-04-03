@@ -16,8 +16,7 @@ color:white;
 .header{
 display:flex;
 justify-content:center;
-align-items:center;
-padding:30px 10px;
+padding:30px;
 }
 
 .header img{
@@ -30,7 +29,6 @@ color:#333;
 margin:15px;
 padding:20px;
 border-radius:15px;
-margin-top:30px;
 }
 
 input, select{
@@ -72,7 +70,6 @@ padding:10px;
 .menu button{
 background:none;
 color:#123B63;
-font-weight:bold;
 }
 </style>
 </head>
@@ -93,7 +90,7 @@ font-weight:bold;
 <option value="diario">Diario</option>
 <option value="semanal">Semanal</option>
 <option value="quincenal">Quincenal</option>
-<option value="mensual">Mensual</option>
+<option value="grupal">Grupal</option>
 </select>
 
 <input id="monto" placeholder="Monto">
@@ -138,14 +135,7 @@ font-weight:bold;
 let ultimaSimulacion = {};
 let periodos = 12;
 
-// CAMBIO DE PANTALLA
-function mostrar(p){
-document.getElementById("simulador").style.display="none";
-document.getElementById("pagos").style.display="none";
-document.getElementById(p).style.display="block";
-}
-
-// CONFIGURACIÓN PRODUCTO
+// CONFIGURAR PRODUCTO
 function configurarProducto(){
 
 let p = document.getElementById("producto").value;
@@ -166,14 +156,21 @@ tasa.value = 60;
 periodos = 24;
 }
 
-if(p=="mensual"){
-tasa.value = 40;
+if(p=="grupal"){
+tasa.value = 48;
 periodos = 12;
 }
 
 }
 
-// CÁLCULO
+// CAMBIO DE PANTALLA
+function mostrar(p){
+document.getElementById("simulador").style.display="none";
+document.getElementById("pagos").style.display="none";
+document.getElementById(p).style.display="block";
+}
+
+// CÁLCULO INTERÉS COMPUESTO REAL
 function calcular(){
 
 let m = parseFloat(document.getElementById("monto").value);
@@ -186,12 +183,15 @@ alert("Completa todos los datos");
 return;
 }
 
+// 🔥 tasa por periodo según producto
 let i = Math.pow(1+t,1/periodos)-1;
 
+// 🔥 fórmula financiera (cuota fija)
 let cuota = m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
 
 document.getElementById("resultado").innerHTML = `
 Producto: ${producto.toUpperCase()}<br>
+Tasa por periodo: ${(i*100).toFixed(3)}%<br>
 Cuota: S/ ${cuota.toFixed(2)}
 `;
 
@@ -199,7 +199,7 @@ ultimaSimulacion = {producto, monto:m, cuota:cuota};
 
 }
 
-// WHATSAPP SIMULACIÓN
+// WHATSAPP
 function enviar(){
 
 if(!ultimaSimulacion.monto){
@@ -211,15 +211,13 @@ let msg = `💳 Credicompany
 
 Producto: ${ultimaSimulacion.producto}
 Monto: S/ ${ultimaSimulacion.monto}
-Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
-
-Seleccione medio de pago`;
+Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}`;
 
 window.open("https://wa.me/?text="+encodeURIComponent(msg));
 
 }
 
-// WHATSAPP QR
+// QR
 function enviarQR(tipo){
 
 let link="";

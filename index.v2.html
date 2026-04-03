@@ -63,20 +63,12 @@ margin-top:10px;
 width:50%;
 }
 
-.resultados{
-margin-top:10px;
-}
-
 .resultado-item{
 background:#fff;
 padding:10px;
 margin-top:5px;
 border-radius:10px;
 cursor:pointer;
-}
-
-.resultado-item:hover{
-background:#eaeaea;
 }
 
 table{
@@ -116,7 +108,7 @@ text-align:center;
 
 <input id="cliente" placeholder="Nombre">
 <input id="apellidos" placeholder="Apellidos">
-<input id="dni" placeholder="DNI">
+<input id="dni" placeholder="DNI / Nombre / Apellido">
 
 <select id="producto">
 <option value="diario">Diario</option>
@@ -140,7 +132,7 @@ text-align:center;
 <button class="btn-azul" onclick="filtrar()">🔍 Filtrar</button>
 </div>
 
-<div id="listaResultados" class="resultados"></div>
+<div id="listaResultados"></div>
 
 </div>
 
@@ -179,9 +171,9 @@ listaResultados.innerHTML="";
 // CALCULAR
 function calcular(){
 
-let nombre = cliente.value;
-let ape = apellidos.value;
-let doc = dni.value;
+let nombre = cliente.value.trim();
+let ape = apellidos.value.trim();
+let doc = dni.value.trim();
 
 let P = parseFloat(monto.value);
 let tasaInput = parseFloat(tasa.value);
@@ -247,28 +239,34 @@ cronograma.innerHTML = tabla;
 
 }
 
-// FILTRO AVANZADO
+// FILTRO CORREGIDO
 function filtrar(){
 
-let texto = dni.value.toLowerCase();
+let texto = dni.value.trim().toLowerCase();
 
 if(!texto){
-alert("Ingrese dato a buscar");
+alert("Ingrese DNI, nombre o apellido");
 return;
 }
 
 let data = JSON.parse(localStorage.getItem("clientes") || "[]");
 
-let resultados = data.filter(c =>
-c.dni.includes(texto) ||
-c.nombre.toLowerCase().includes(texto) ||
-c.apellidos.toLowerCase().includes(texto)
-);
+let resultados = data.filter(c => {
+
+let dniStr = (c.dni || "").toString().toLowerCase();
+let nombreStr = (c.nombre || "").toLowerCase();
+let apeStr = (c.apellidos || "").toLowerCase();
+
+return dniStr.includes(texto) ||
+       nombreStr.includes(texto) ||
+       apeStr.includes(texto);
+
+});
 
 let html = "";
 
-if(resultados.length==0){
-html = "No encontrado";
+if(resultados.length === 0){
+html = "<div>No encontrado</div>";
 }
 
 resultados.forEach(c=>{
@@ -276,12 +274,10 @@ html += `
 <div class="resultado-item" onclick="seleccionarCliente('${c.nombre}','${c.apellidos}','${c.dni}','${c.monto}')">
 <b>${c.nombre} ${c.apellidos}</b><br>
 DNI: ${c.dni}
-</div>
-`;
+</div>`;
 });
 
 listaResultados.innerHTML = html;
-
 }
 
 // SELECCIONAR

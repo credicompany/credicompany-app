@@ -111,8 +111,7 @@ font-weight:bold;
 
 <h3>Simulador</h3>
 
-<select id="producto" onchange="configurarProducto()">
-<option value="">Seleccione producto</option>
+<select id="producto">
 <option value="diario">Diario</option>
 <option value="semanal">Semanal</option>
 <option value="quincenal">Quincenal</option>
@@ -120,7 +119,7 @@ font-weight:bold;
 </select>
 
 <input id="monto" placeholder="Monto">
-<input id="tasa" placeholder="Tasa por periodo (%)">
+<input id="tasa" placeholder="Tasa (%)">
 <input id="plazo" placeholder="Número de cuotas">
 
 <button onclick="calcular()">Calcular</button>
@@ -176,19 +175,6 @@ alert("Usuario o clave incorrectos");
 
 });
 
-// CONFIGURAR PRODUCTO
-function configurarProducto(){
-
-let p = document.getElementById("producto").value;
-let tasa = document.getElementById("tasa");
-
-if(p=="diario") tasa.value = 1;
-if(p=="semanal") tasa.value = 5;
-if(p=="quincenal") tasa.value = 10;
-if(p=="grupal") tasa.value = 20;
-
-}
-
 // CAMBIO DE PANTALLA
 function mostrar(p){
 document.getElementById("simulador").style.display="none";
@@ -196,23 +182,35 @@ document.getElementById("pagos").style.display="none";
 document.getElementById(p).style.display="block";
 }
 
-// SISTEMA FRANCÉS
+// SIMULADOR
 let ultimaSimulacion = {};
 
 function calcular(){
 
 let P = parseFloat(document.getElementById("monto").value);
-let i = parseFloat(document.getElementById("tasa").value)/100;
+let tasa = parseFloat(document.getElementById("tasa").value);
 let n = parseInt(document.getElementById("plazo").value);
 let producto = document.getElementById("producto").value;
 
-if(!P || !i || !n || !producto){
-alert("Completa todos los datos");
+if(!P || !tasa || !n){
+alert("Completa los datos");
 return;
 }
 
+// 🔥 TASA LÓGICA (LA QUE PEDISTE)
+let divisor;
+
+if(producto=="diario") divisor = 30;
+if(producto=="semanal") divisor = 7;
+if(producto=="quincenal") divisor = 2;
+if(producto=="grupal") divisor = 1;
+
+let i = (tasa / divisor) / 100;
+
+// SISTEMA FRANCÉS
 let cuota = (P * i) / (1 - Math.pow(1+i, -n));
 
+// CRONOGRAMA
 let saldo = P;
 let tabla = "<table><tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
 
@@ -259,9 +257,7 @@ let msg = `💳 Credicompany
 
 Producto: ${ultimaSimulacion.producto}
 Monto: S/ ${ultimaSimulacion.monto}
-Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
-
-Sistema Francés`;
+Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}`;
 
 window.open("https://wa.me/?text="+encodeURIComponent(msg));
 

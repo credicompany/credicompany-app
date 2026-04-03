@@ -78,6 +78,19 @@ cursor:pointer;
 .resultado-item:hover{
 background:#eaeaea;
 }
+
+table{
+width:100%;
+margin-top:10px;
+border-collapse:collapse;
+font-size:12px;
+}
+
+th, td{
+border:1px solid #ccc;
+padding:6px;
+text-align:center;
+}
 </style>
 </head>
 
@@ -127,7 +140,6 @@ background:#eaeaea;
 <button class="btn-azul" onclick="filtrar()">🔍 Filtrar</button>
 </div>
 
-<!-- RESULTADOS FILTRO -->
 <div id="listaResultados" class="resultados"></div>
 
 </div>
@@ -195,7 +207,7 @@ Producto: ${producto.toUpperCase()}<br>
 Cuota: S/ ${cuota.toFixed(2)}
 `;
 
-ultimaSimulacion = {P, cuota, n, producto};
+ultimaSimulacion = {P, cuota, n, producto, i};
 
 // GUARDAR
 let data = JSON.parse(localStorage.getItem("clientes") || "[]");
@@ -205,10 +217,33 @@ nombre,
 apellidos:ape,
 dni:doc,
 monto:P,
-cuota:cuota.toFixed(2)
+cuota:cuota.toFixed(2),
+fecha:new Date().toLocaleDateString()
 });
 
 localStorage.setItem("clientes", JSON.stringify(data));
+
+// CRONOGRAMA (3)
+let saldo = P;
+let tabla = "<table><tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
+
+for(let k=1;k<=Math.min(3,n);k++){
+let interes = saldo*i;
+let capital = cuota - interes;
+saldo -= capital;
+
+tabla += `<tr>
+<td>${k}</td>
+<td>${cuota.toFixed(2)}</td>
+<td>${interes.toFixed(2)}</td>
+<td>${capital.toFixed(2)}</td>
+<td>${saldo.toFixed(2)}</td>
+</tr>`;
+}
+
+tabla += "</table>";
+
+cronograma.innerHTML = tabla;
 
 }
 

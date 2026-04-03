@@ -6,12 +6,7 @@
 <title>Credicompany</title>
 
 <style>
-body{
-margin:0;
-font-family:Arial;
-background:#123B63;
-color:white;
-}
+body{margin:0;font-family:Arial;background:#123B63;color:white;}
 
 .header{
 display:flex;
@@ -55,11 +50,6 @@ border-radius:12px;
 background:#10c251;
 color:white;
 font-weight:bold;
-}
-
-.secundario{
-background:#123B63;
-color:white;
 }
 
 .card img{
@@ -141,9 +131,8 @@ font-weight:bold;
 
 <div id="resultado"></div>
 
-<button onclick="verCronograma()" class="secundario">📊 Ver cronograma</button>
-
-<div id="cronograma" style="display:none"></div>
+<!-- 🔥 CRONOGRAMA AUTOMÁTICO (3 FILAS) -->
+<div id="cronograma"></div>
 
 <button onclick="enviar()">📲 Enviar simulación</button>
 
@@ -183,11 +172,8 @@ let asesor = "";
 
 // LOGIN
 function login(){
-let u = usuario.value;
-let c = clave.value;
-
-if(u=="admin" && c=="1234"){
-asesor = u;
+if(usuario.value=="admin" && clave.value=="1234"){
+asesor = usuario.value;
 nombreAsesor.innerText = asesor;
 loginDiv.style.display="none";
 app.style.display="block";
@@ -231,26 +217,20 @@ Cuota: S/ ${cuota.toFixed(2)}
 `;
 
 ultimaSimulacion = {P, cuota, n, producto, i};
-}
 
-// CRONOGRAMA
-function verCronograma(){
-
-cronograma.style.display="block";
-
-let saldo = ultimaSimulacion.P;
-let i = ultimaSimulacion.i;
-
+// 🔥 SOLO 3 CUOTAS
+let saldo = P;
 let tabla = "<table><tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
 
-for(let k=1;k<=ultimaSimulacion.n;k++){
+for(let k=1;k<=Math.min(3,n);k++){
+
 let interes = saldo*i;
-let capital = ultimaSimulacion.cuota - interes;
+let capital = cuota - interes;
 saldo -= capital;
 
 tabla += `<tr>
 <td>${k}</td>
-<td>${ultimaSimulacion.cuota.toFixed(2)}</td>
+<td>${cuota.toFixed(2)}</td>
 <td>${interes.toFixed(2)}</td>
 <td>${capital.toFixed(2)}</td>
 <td>${saldo.toFixed(2)}</td>
@@ -260,12 +240,18 @@ tabla += `<tr>
 tabla += "</table>";
 
 cronograma.innerHTML = tabla;
+
 }
 
-// WHATSAPP SIMULACIÓN
+// WHATSAPP
 function enviar(){
 
 let clienteNombre = cliente.value;
+
+if(!clienteNombre){
+alert("Ingrese nombre del cliente");
+return;
+}
 
 let msg = `📌 Simulación
 
@@ -280,7 +266,7 @@ let msg = `📌 Simulación
 window.open("https://wa.me/?text="+encodeURIComponent(msg));
 }
 
-// WHATSAPP QR
+// QR
 function enviarQR(tipo){
 
 let link="";
@@ -290,16 +276,7 @@ if(tipo=="BBVA") link="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-
 if(tipo=="BCP") link="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg";
 if(tipo=="Yape") link="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg";
 
-let mensaje = `💳 Credicompany
-
-Pago vía ${tipo}
-
-Escanea aquí:
-${link}
-
-Enviar comprobante`;
-
-window.open("https://wa.me/?text="+encodeURIComponent(mensaje));
+window.open("https://wa.me/?text="+encodeURIComponent(`Pago vía ${tipo}\n${link}`));
 }
 
 </script>

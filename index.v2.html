@@ -52,6 +52,11 @@ color:white;
 font-weight:bold;
 }
 
+.secundario{
+background:#999;
+color:white;
+}
+
 .card img{
 width:100%;
 border-radius:12px;
@@ -128,6 +133,9 @@ font-weight:bold;
 
 <button onclick="calcular()">Calcular</button>
 
+<!-- 🔥 NUEVO BOTÓN -->
+<button onclick="limpiar()" class="secundario">🔄 Nuevo / Limpiar</button>
+
 <div id="resultado"></div>
 <div id="cronograma"></div>
 
@@ -185,7 +193,7 @@ alert("Datos incorrectos");
 }
 }
 
-// CAMBIO PANTALLA
+// CAMBIO
 function mostrar(p){
 simulador.style.display="none";
 pagos.style.display="none";
@@ -193,10 +201,21 @@ historial.style.display="none";
 document.getElementById(p).style.display="block";
 }
 
-// HISTORIAL
 function mostrarHistorial(){
 mostrar("historial");
 cargarClientes();
+}
+
+// 🔥 LIMPIAR
+function limpiar(){
+cliente.value="";
+apellidos.value="";
+dni.value="";
+monto.value="";
+tasa.value="";
+plazo.value="";
+resultado.innerHTML="";
+cronograma.innerHTML="";
 }
 
 // CALCULAR
@@ -232,9 +251,8 @@ Cuota: S/ ${cuota.toFixed(2)}
 
 ultimaSimulacion = {P, cuota, n, producto, i};
 
-// 🔥 GUARDAR CLIENTE
+// GUARDAR
 let data = JSON.parse(localStorage.getItem("clientes") || "[]");
-
 data.push({
 nombre,
 apellidos:ape,
@@ -243,10 +261,9 @@ monto:P,
 cuota:cuota.toFixed(2),
 fecha:new Date().toLocaleDateString()
 });
-
 localStorage.setItem("clientes", JSON.stringify(data));
 
-// CRONOGRAMA 3 CUOTAS
+// CRONOGRAMA
 let saldo = P;
 let tabla = "<table><tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
 
@@ -269,30 +286,29 @@ cronograma.innerHTML = tabla;
 
 }
 
-// MOSTRAR CLIENTES
+// HISTORIAL
 function cargarClientes(){
-
 let data = JSON.parse(localStorage.getItem("clientes") || "[]");
-
-let html = "";
-
+let html="";
 data.reverse().forEach(c=>{
-html += `
-<div style="background:#fff;padding:10px;margin-top:10px;border-radius:10px;">
+html += `<div style="background:#fff;padding:10px;margin-top:10px;border-radius:10px;">
 <b>${c.nombre} ${c.apellidos}</b><br>
 DNI: ${c.dni}<br>
 Monto: S/ ${c.monto}<br>
 Cuota: S/ ${c.cuota}<br>
 Fecha: ${c.fecha}
-</div>
-`;
+</div>`;
 });
-
 listaClientes.innerHTML = html;
 }
 
 // WHATSAPP
 function enviar(){
+
+if(!ultimaSimulacion.P){
+alert("Primero calcula");
+return;
+}
 
 let msg = `📌 Simulación
 

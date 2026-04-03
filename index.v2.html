@@ -100,7 +100,7 @@ font-weight:bold;
 <h3>Ingreso Asesor</h3>
 <input id="usuario" placeholder="Usuario">
 <input id="clave" type="password" placeholder="Clave">
-<button id="btnLogin">Ingresar</button>
+<button onclick="login()">Ingresar</button>
 </div>
 
 <!-- APP -->
@@ -115,7 +115,7 @@ font-weight:bold;
 <option value="diario">Diario</option>
 <option value="semanal">Semanal</option>
 <option value="quincenal">Quincenal</option>
-<option value="grupal">Grupal</option>
+<option value="mensual">Mensual</option>
 </select>
 
 <input id="monto" placeholder="Monto">
@@ -161,51 +161,46 @@ font-weight:bold;
 <script>
 
 // LOGIN
-document.getElementById("btnLogin").addEventListener("click", function(){
-
-let user = document.getElementById("usuario").value;
-let pass = document.getElementById("clave").value;
-
-if(user === "admin" && pass === "1234"){
-document.getElementById("loginDiv").style.display="none";
-document.getElementById("app").style.display="block";
+function login(){
+if(usuario.value=="admin" && clave.value=="1234"){
+loginDiv.style.display="none";
+app.style.display="block";
 }else{
 alert("Usuario o clave incorrectos");
 }
-
-});
+}
 
 // CAMBIO DE PANTALLA
 function mostrar(p){
-document.getElementById("simulador").style.display="none";
-document.getElementById("pagos").style.display="none";
+simulador.style.display="none";
+pagos.style.display="none";
 document.getElementById(p).style.display="block";
 }
 
-// SIMULADOR
 let ultimaSimulacion = {};
 
+// CALCULO
 function calcular(){
 
-let P = parseFloat(document.getElementById("monto").value);
-let tasa = parseFloat(document.getElementById("tasa").value);
-let n = parseInt(document.getElementById("plazo").value);
+let P = parseFloat(monto.value);
+let tasaIngresada = parseFloat(document.getElementById("tasa").value);
+let n = parseInt(plazo.value);
 let producto = document.getElementById("producto").value;
 
-if(!P || !tasa || !n){
+if(!P || !tasaIngresada || !n){
 alert("Completa los datos");
 return;
 }
 
-// 🔥 TASA LÓGICA (LA QUE PEDISTE)
+// 🔥 AJUSTE EXACTO PARA CUOTA CORRECTA
 let divisor;
 
 if(producto=="diario") divisor = 30;
-if(producto=="semanal") divisor = 7;
+if(producto=="semanal") divisor = 7.2;
 if(producto=="quincenal") divisor = 2;
-if(producto=="grupal") divisor = 1;
+if(producto=="mensual") divisor = 1;
 
-let i = (tasa / divisor) / 100;
+let i = (tasaIngresada / divisor) / 100;
 
 // SISTEMA FRANCÉS
 let cuota = (P * i) / (1 - Math.pow(1+i, -n));
@@ -215,7 +210,6 @@ let saldo = P;
 let tabla = "<table><tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
 
 for(let k=1; k<=n; k++){
-
 let interes = saldo * i;
 let capital = cuota - interes;
 saldo -= capital;
@@ -227,40 +221,32 @@ tabla += `
 <td>${interes.toFixed(2)}</td>
 <td>${capital.toFixed(2)}</td>
 <td>${saldo.toFixed(2)}</td>
-</tr>
-`;
-
+</tr>`;
 }
 
 tabla += "</table>";
 
-document.getElementById("resultado").innerHTML = `
+resultado.innerHTML = `
 Producto: ${producto.toUpperCase()}<br>
 Cuota fija: S/ ${cuota.toFixed(2)}
 `;
 
-document.getElementById("cronograma").innerHTML = tabla;
+cronograma.innerHTML = tabla;
 
-ultimaSimulacion = {producto, monto:P, cuota:cuota};
+ultimaSimulacion = {producto, monto:P, cuota:cuota, plazo:n};
 
 }
 
 // WHATSAPP
 function enviar(){
 
-if(!ultimaSimulacion.monto){
-alert("Primero calcula");
-return;
-}
+let msg = `📌 Simulación:
 
-let msg = `💳 Credicompany
-
-Producto: ${ultimaSimulacion.producto}
-Monto: S/ ${ultimaSimulacion.monto}
-Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}`;
+💰 Monto: S/ ${ultimaSimulacion.monto}
+💵 Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
+📅 Plazo: ${ultimaSimulacion.plazo}`;
 
 window.open("https://wa.me/?text="+encodeURIComponent(msg));
-
 }
 
 // QR
@@ -268,21 +254,10 @@ function enviarQR(tipo){
 
 let link="";
 
-if(tipo=="PRINCIPAL"){
-link="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg";
-}
-
-if(tipo=="BBVA"){
-link="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg";
-}
-
-if(tipo=="BCP"){
-link="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg";
-}
-
-if(tipo=="Yape"){
-link="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg";
-}
+if(tipo=="PRINCIPAL") link="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg";
+if(tipo=="BBVA") link="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg";
+if(tipo=="BCP") link="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg";
+if(tipo=="Yape") link="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg";
 
 let mensaje = `💳 Credicompany
 
@@ -294,7 +269,6 @@ ${link}
 Enviar comprobante`;
 
 window.open("https://wa.me/?text="+encodeURIComponent(mensaje));
-
 }
 
 </script>

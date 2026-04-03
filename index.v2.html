@@ -1,1 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credicompany</title>
 
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:#123B63;
+color:white;
+}
+
+.header{
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:20px;
+}
+
+.header img{width:180px;}
+
+.asesor{
+font-size:14px;
+margin-top:5px;
+opacity:0.8;
+}
+
+.card{
+background:#f2f2f2;
+color:#333;
+margin:15px;
+padding:20px;
+border-radius:15px;
+}
+
+h3{text-align:center;}
+
+input, select{
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:10px;
+border:none;
+}
+
+button{
+width:100%;
+padding:14px;
+margin-top:10px;
+border:none;
+border-radius:12px;
+background:#10c251;
+color:white;
+font-weight:bold;
+}
+
+.secundario{
+background:#123B63;
+color:white;
+}
+
+.card img{
+width:100%;
+border-radius:12px;
+margin-top:10px;
+cursor:pointer;
+}
+
+table{
+width:100%;
+margin-top:10px;
+border-collapse:collapse;
+font-size:12px;
+}
+
+th, td{
+border:1px solid #ccc;
+padding:6px;
+text-align:center;
+}
+
+.menu{
+position:fixed;
+bottom:0;
+width:100%;
+background:white;
+display:flex;
+justify-content:space-around;
+padding:10px;
+}
+
+.menu button{
+background:none;
+color:#123B63;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+<img src="logo.png">
+<div class="asesor">Asesor: <span id="nombreAsesor">-</span></div>
+</div>
+
+<!-- LOGIN -->
+<div id="loginDiv" class="card">
+<h3>Ingreso Asesor</h3>
+<input id="usuario" placeholder="Usuario">
+<input id="clave" type="password" placeholder="Clave">
+<button onclick="login()">Ingresar</button>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+
+<!-- SIMULADOR -->
+<div id="simulador" class="card">
+
+<h3>Simulador</h3>
+
+<input id="cliente" placeholder="Nombre del cliente">
+
+<select id="producto">
+<option value="diario">Diario</option>
+<option value="semanal">Semanal</option>
+<option value="quincenal">Quincenal</option>
+<option value="mensual">Mensual</option>
+</select>
+
+<input id="monto" placeholder="Monto">
+<input id="tasa" placeholder="Tasa (%)">
+<input id="plazo" placeholder="Número de cuotas">
+
+<button onclick="calcular()">Calcular</button>
+
+<div id="resultado"></div>
+
+<button onclick="verCronograma()" class="secundario">📊 Ver cronograma</button>
+
+<div id="cronograma" style="display:none"></div>
+
+<button onclick="enviar()">📲 Enviar simulación</button>
+
+</div>
+
+<!-- PAGOS -->
+<div id="pagos" class="card" style="display:none">
+
+<h3>💳 Medios de Pago</h3>
+
+<h4>Cuenta Principal</h4>
+<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg" onclick="enviarQR('Principal')">
+
+<h4>BBVA</h4>
+<img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg" onclick="enviarQR('BBVA')">
+
+<h4>BCP</h4>
+<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg" onclick="enviarQR('BCP')">
+
+<h4>Yape</h4>
+<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg" onclick="enviarQR('Yape')">
+
+</div>
+
+</div>
+
+<!-- MENU -->
+<div class="menu">
+<button onclick="mostrar('simulador')">Simular</button>
+<button onclick="mostrar('pagos')">Pagos</button>
+</div>
+
+<script>
+
+let ultimaSimulacion = {};
+let asesor = "";
+
+// LOGIN
+function login(){
+let u = usuario.value;
+let c = clave.value;
+
+if(u=="admin" && c=="1234"){
+asesor = u;
+nombreAsesor.innerText = asesor;
+loginDiv.style.display="none";
+app.style.display="block";
+}else{
+alert("Datos incorrectos");
+}
+}
+
+// CAMBIO PANTALLA
+function mostrar(p){
+simulador.style.display="none";
+pagos.style.display="none";
+document.getElementById(p).style.display="block";
+}
+
+// CALCULAR
+function calcular(){
+
+let P = parseFloat(monto.value);
+let tasaInput = parseFloat(tasa.value);
+let n = parseInt(plazo.value);
+let producto = producto.value;
+
+if(!P || !tasaInput || !n){
+alert("Completa los datos");
+return;
+}
+
+let i;
+
+if(producto=="diario") i = (tasaInput/30)/100;
+if(producto=="semanal") i = (tasaInput/4)/100;
+if(producto=="quincenal") i = (tasaInput/2)/100;
+if(producto=="mensual") i = (tasaInput)/100;
+
+let cuota = (P*i)/(1-Math.pow(1+i,-n));
+
+resultado.innerHTML = `
+Producto: ${producto.toUpperCase()}<br>
+Cuota: S/ ${cuota.toFixed(2)}
+`;
+
+ultimaSimulacion = {P, cuota, n, producto, i};
+}
+
+// CRONOGRAMA
+function verCronograma(){
+
+cronograma.style.display="block";
+
+let saldo = ultimaSimulacion.P;
+let i = ultimaSimulacion.i;
+
+let tabla = "<table><tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
+
+for(let k=1;k<=ultimaSimulacion.n;k++){
+let interes = saldo*i;
+let capital = ultimaSimulacion.cuota - interes;
+saldo -= capital;
+
+tabla += `<tr>
+<td>${k}</td>
+<td>${ultimaSimulacion.cuota.toFixed(2)}</td>
+<td>${interes.toFixed(2)}</td>
+<td>${capital.toFixed(2)}</td>
+<td>${saldo.toFixed(2)}</td>
+</tr>`;
+}
+
+tabla += "</table>";
+
+cronograma.innerHTML = tabla;
+}
+
+// WHATSAPP SIMULACIÓN
+function enviar(){
+
+let clienteNombre = cliente.value;
+
+let msg = `📌 Simulación
+
+👤 Cliente: ${clienteNombre}
+👨‍💼 Asesor: ${asesor}
+
+💰 Monto: S/ ${ultimaSimulacion.P}
+💵 Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
+📅 Plazo: ${ultimaSimulacion.n}
+📊 Producto: ${ultimaSimulacion.producto}`;
+
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
+}
+
+// WHATSAPP QR
+function enviarQR(tipo){
+
+let link="";
+
+if(tipo=="Principal") link="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg";
+if(tipo=="BBVA") link="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg";
+if(tipo=="BCP") link="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg";
+if(tipo=="Yape") link="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg";
+
+let mensaje = `💳 Credicompany
+
+Pago vía ${tipo}
+
+Escanea aquí:
+${link}
+
+Enviar comprobante`;
+
+window.open("https://wa.me/?text="+encodeURIComponent(mensaje));
+}
+
+</script>
+
+</body>
+</html>

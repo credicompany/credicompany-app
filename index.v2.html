@@ -42,55 +42,41 @@ border:none;
 }
 
 button{
-width:100%;
 padding:14px;
-margin-top:10px;
 border:none;
 border-radius:12px;
-background:#10c251;
 color:white;
 font-weight:bold;
-}
-
-.secundario{
-background:#999;
-color:white;
-}
-
-.card img{
 width:100%;
-border-radius:12px;
+}
+
+.btn-verde{background:#10c251;}
+.btn-azul{background:#123B63;}
+
+.fila{
+display:flex;
+gap:10px;
 margin-top:10px;
+}
+
+.fila button{
+width:50%;
+}
+
+.resultados{
+margin-top:10px;
+}
+
+.resultado-item{
+background:#fff;
+padding:10px;
+margin-top:5px;
+border-radius:10px;
 cursor:pointer;
 }
 
-table{
-width:100%;
-margin-top:10px;
-border-collapse:collapse;
-font-size:12px;
-}
-
-th, td{
-border:1px solid #ccc;
-padding:6px;
-text-align:center;
-}
-
-.menu{
-position:fixed;
-bottom:0;
-width:100%;
-background:white;
-display:flex;
-justify-content:space-around;
-padding:10px;
-}
-
-.menu button{
-background:none;
-color:#123B63;
-font-weight:bold;
+.resultado-item:hover{
+background:#eaeaea;
 }
 </style>
 </head>
@@ -106,13 +92,12 @@ font-weight:bold;
 <h3>Ingreso Asesor</h3>
 <input id="usuario" placeholder="Usuario">
 <input id="clave" type="password" placeholder="Clave">
-<button onclick="login()">Ingresar</button>
+<button class="btn-verde" onclick="login()">Ingresar</button>
 </div>
 
 <div id="app" style="display:none">
 
-<!-- SIMULADOR -->
-<div id="simulador" class="card">
+<div class="card">
 
 <h3>Simulador</h3>
 
@@ -131,49 +116,22 @@ font-weight:bold;
 <input id="tasa" placeholder="Tasa (%)">
 <input id="plazo" placeholder="Número de cuotas">
 
-<button onclick="calcular()">Calcular</button>
-
-<!-- 🔥 NUEVO BOTÓN -->
-<button onclick="limpiar()" class="secundario">🔄 Nuevo / Limpiar</button>
+<button class="btn-verde" onclick="calcular()">Calcular</button>
+<button onclick="limpiar()" style="background:#999;margin-top:5px;">🔄 Nuevo</button>
 
 <div id="resultado"></div>
 <div id="cronograma"></div>
 
-<button onclick="enviar()">📲 Enviar simulación</button>
+<div class="fila">
+<button class="btn-verde" onclick="enviar()">📲 Enviar</button>
+<button class="btn-azul" onclick="filtrar()">🔍 Filtrar</button>
+</div>
+
+<!-- RESULTADOS FILTRO -->
+<div id="listaResultados" class="resultados"></div>
 
 </div>
 
-<!-- HISTORIAL -->
-<div id="historial" class="card" style="display:none">
-<h3>Clientes Guardados</h3>
-<div id="listaClientes"></div>
-</div>
-
-<!-- PAGOS -->
-<div id="pagos" class="card" style="display:none">
-
-<h3>💳 Medios de Pago</h3>
-
-<h4>Cuenta Principal</h4>
-<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg" onclick="enviarQR('Principal')">
-
-<h4>BBVA</h4>
-<img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg" onclick="enviarQR('BBVA')">
-
-<h4>BCP</h4>
-<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg" onclick="enviarQR('BCP')">
-
-<h4>Yape</h4>
-<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg" onclick="enviarQR('Yape')">
-
-</div>
-
-</div>
-
-<div class="menu">
-<button onclick="mostrar('simulador')">Simular</button>
-<button onclick="mostrarHistorial()">Clientes</button>
-<button onclick="mostrar('pagos')">Pagos</button>
 </div>
 
 <script>
@@ -193,20 +151,7 @@ alert("Datos incorrectos");
 }
 }
 
-// CAMBIO
-function mostrar(p){
-simulador.style.display="none";
-pagos.style.display="none";
-historial.style.display="none";
-document.getElementById(p).style.display="block";
-}
-
-function mostrarHistorial(){
-mostrar("historial");
-cargarClientes();
-}
-
-// 🔥 LIMPIAR
+// LIMPIAR
 function limpiar(){
 cliente.value="";
 apellidos.value="";
@@ -216,6 +161,7 @@ tasa.value="";
 plazo.value="";
 resultado.innerHTML="";
 cronograma.innerHTML="";
+listaResultados.innerHTML="";
 }
 
 // CALCULAR
@@ -249,57 +195,67 @@ Producto: ${producto.toUpperCase()}<br>
 Cuota: S/ ${cuota.toFixed(2)}
 `;
 
-ultimaSimulacion = {P, cuota, n, producto, i};
+ultimaSimulacion = {P, cuota, n, producto};
 
 // GUARDAR
 let data = JSON.parse(localStorage.getItem("clientes") || "[]");
+
 data.push({
 nombre,
 apellidos:ape,
 dni:doc,
 monto:P,
-cuota:cuota.toFixed(2),
-fecha:new Date().toLocaleDateString()
+cuota:cuota.toFixed(2)
 });
+
 localStorage.setItem("clientes", JSON.stringify(data));
 
-// CRONOGRAMA
-let saldo = P;
-let tabla = "<table><tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
-
-for(let k=1;k<=Math.min(3,n);k++){
-let interes = saldo*i;
-let capital = cuota - interes;
-saldo -= capital;
-
-tabla += `<tr>
-<td>${k}</td>
-<td>${cuota.toFixed(2)}</td>
-<td>${interes.toFixed(2)}</td>
-<td>${capital.toFixed(2)}</td>
-<td>${saldo.toFixed(2)}</td>
-</tr>`;
 }
 
-tabla += "</table>";
-cronograma.innerHTML = tabla;
+// FILTRO AVANZADO
+function filtrar(){
 
+let texto = dni.value.toLowerCase();
+
+if(!texto){
+alert("Ingrese dato a buscar");
+return;
 }
 
-// HISTORIAL
-function cargarClientes(){
 let data = JSON.parse(localStorage.getItem("clientes") || "[]");
-let html="";
-data.reverse().forEach(c=>{
-html += `<div style="background:#fff;padding:10px;margin-top:10px;border-radius:10px;">
+
+let resultados = data.filter(c =>
+c.dni.includes(texto) ||
+c.nombre.toLowerCase().includes(texto) ||
+c.apellidos.toLowerCase().includes(texto)
+);
+
+let html = "";
+
+if(resultados.length==0){
+html = "No encontrado";
+}
+
+resultados.forEach(c=>{
+html += `
+<div class="resultado-item" onclick="seleccionarCliente('${c.nombre}','${c.apellidos}','${c.dni}','${c.monto}')">
 <b>${c.nombre} ${c.apellidos}</b><br>
-DNI: ${c.dni}<br>
-Monto: S/ ${c.monto}<br>
-Cuota: S/ ${c.cuota}<br>
-Fecha: ${c.fecha}
-</div>`;
+DNI: ${c.dni}
+</div>
+`;
 });
-listaClientes.innerHTML = html;
+
+listaResultados.innerHTML = html;
+
+}
+
+// SELECCIONAR
+function seleccionarCliente(n,a,d,m){
+cliente.value = n;
+apellidos.value = a;
+dni.value = d;
+monto.value = m;
+listaResultados.innerHTML="";
 }
 
 // WHATSAPP
@@ -318,19 +274,6 @@ let msg = `📌 Simulación
 📊 Producto: ${ultimaSimulacion.producto}`;
 
 window.open("https://wa.me/?text="+encodeURIComponent(msg));
-}
-
-// QR
-function enviarQR(tipo){
-
-let link="";
-
-if(tipo=="Principal") link="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg";
-if(tipo=="BBVA") link="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg";
-if(tipo=="BCP") link="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg";
-if(tipo=="Yape") link="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg";
-
-window.open("https://wa.me/?text="+encodeURIComponent(`Pago vía ${tipo}\n${link}`));
 }
 
 </script>

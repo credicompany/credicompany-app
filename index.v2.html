@@ -106,11 +106,14 @@ font-weight:bold;
 
 <div id="app" style="display:none">
 
+<!-- SIMULADOR -->
 <div id="simulador" class="card">
 
 <h3>Simulador</h3>
 
-<input id="cliente" placeholder="Nombre del cliente">
+<input id="cliente" placeholder="Nombre">
+<input id="apellidos" placeholder="Apellidos">
+<input id="dni" placeholder="DNI">
 
 <select id="producto">
 <option value="diario">Diario</option>
@@ -132,6 +135,13 @@ font-weight:bold;
 
 </div>
 
+<!-- HISTORIAL -->
+<div id="historial" class="card" style="display:none">
+<h3>Clientes Guardados</h3>
+<div id="listaClientes"></div>
+</div>
+
+<!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
 
 <h3>💳 Medios de Pago</h3>
@@ -154,6 +164,7 @@ font-weight:bold;
 
 <div class="menu">
 <button onclick="mostrar('simulador')">Simular</button>
+<button onclick="mostrarHistorial()">Clientes</button>
 <button onclick="mostrar('pagos')">Pagos</button>
 </div>
 
@@ -174,23 +185,34 @@ alert("Datos incorrectos");
 }
 }
 
-// CAMBIO
+// CAMBIO PANTALLA
 function mostrar(p){
 simulador.style.display="none";
 pagos.style.display="none";
+historial.style.display="none";
 document.getElementById(p).style.display="block";
+}
+
+// HISTORIAL
+function mostrarHistorial(){
+mostrar("historial");
+cargarClientes();
 }
 
 // CALCULAR
 function calcular(){
+
+let nombre = cliente.value;
+let ape = apellidos.value;
+let doc = dni.value;
 
 let P = parseFloat(monto.value);
 let tasaInput = parseFloat(tasa.value);
 let n = parseInt(plazo.value);
 let producto = document.getElementById("producto").value;
 
-if(!P || !tasaInput || !n){
-alert("Completa los datos");
+if(!nombre || !ape || !doc || !P || !tasaInput || !n){
+alert("Completa todos los datos");
 return;
 }
 
@@ -210,7 +232,21 @@ Cuota: S/ ${cuota.toFixed(2)}
 
 ultimaSimulacion = {P, cuota, n, producto, i};
 
-// SOLO 3 CUOTAS
+// 🔥 GUARDAR CLIENTE
+let data = JSON.parse(localStorage.getItem("clientes") || "[]");
+
+data.push({
+nombre,
+apellidos:ape,
+dni:doc,
+monto:P,
+cuota:cuota.toFixed(2),
+fecha:new Date().toLocaleDateString()
+});
+
+localStorage.setItem("clientes", JSON.stringify(data));
+
+// CRONOGRAMA 3 CUOTAS
 let saldo = P;
 let tabla = "<table><tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
 
@@ -229,30 +265,36 @@ tabla += `<tr>
 }
 
 tabla += "</table>";
-
 cronograma.innerHTML = tabla;
 
+}
+
+// MOSTRAR CLIENTES
+function cargarClientes(){
+
+let data = JSON.parse(localStorage.getItem("clientes") || "[]");
+
+let html = "";
+
+data.reverse().forEach(c=>{
+html += `
+<div style="background:#fff;padding:10px;margin-top:10px;border-radius:10px;">
+<b>${c.nombre} ${c.apellidos}</b><br>
+DNI: ${c.dni}<br>
+Monto: S/ ${c.monto}<br>
+Cuota: S/ ${c.cuota}<br>
+Fecha: ${c.fecha}
+</div>
+`;
+});
+
+listaClientes.innerHTML = html;
 }
 
 // WHATSAPP
 function enviar(){
 
-let clienteNombre = cliente.value;
-
-if(!clienteNombre){
-alert("Ingrese cliente");
-return;
-}
-
-if(!ultimaSimulacion.P){
-alert("Primero calcula");
-return;
-}
-
 let msg = `📌 Simulación
-
-👤 Cliente: ${clienteNombre}
-👨‍💼 Asesor: ${asesor}
 
 💰 Monto: S/ ${ultimaSimulacion.P}
 💵 Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}

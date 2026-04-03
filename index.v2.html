@@ -92,13 +92,11 @@ font-weight:bold;
 
 <body>
 
-<!-- HEADER -->
 <div class="header">
 <img src="logo.png">
 <div class="asesor">Asesor: <span id="nombreAsesor">-</span></div>
 </div>
 
-<!-- LOGIN -->
 <div id="loginDiv" class="card">
 <h3>Ingreso Asesor</h3>
 <input id="usuario" placeholder="Usuario">
@@ -106,10 +104,8 @@ font-weight:bold;
 <button onclick="login()">Ingresar</button>
 </div>
 
-<!-- APP -->
 <div id="app" style="display:none">
 
-<!-- SIMULADOR -->
 <div id="simulador" class="card">
 
 <h3>Simulador</h3>
@@ -130,15 +126,12 @@ font-weight:bold;
 <button onclick="calcular()">Calcular</button>
 
 <div id="resultado"></div>
-
-<!-- 🔥 CRONOGRAMA AUTOMÁTICO (3 FILAS) -->
 <div id="cronograma"></div>
 
 <button onclick="enviar()">📲 Enviar simulación</button>
 
 </div>
 
-<!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
 
 <h3>💳 Medios de Pago</h3>
@@ -159,7 +152,6 @@ font-weight:bold;
 
 </div>
 
-<!-- MENU -->
 <div class="menu">
 <button onclick="mostrar('simulador')">Simular</button>
 <button onclick="mostrar('pagos')">Pagos</button>
@@ -182,7 +174,7 @@ alert("Datos incorrectos");
 }
 }
 
-// CAMBIO PANTALLA
+// CAMBIO
 function mostrar(p){
 simulador.style.display="none";
 pagos.style.display="none";
@@ -195,7 +187,7 @@ function calcular(){
 let P = parseFloat(monto.value);
 let tasaInput = parseFloat(tasa.value);
 let n = parseInt(plazo.value);
-let producto = producto.value;
+let producto = document.getElementById("producto").value;
 
 if(!P || !tasaInput || !n){
 alert("Completa los datos");
@@ -218,12 +210,11 @@ Cuota: S/ ${cuota.toFixed(2)}
 
 ultimaSimulacion = {P, cuota, n, producto, i};
 
-// 🔥 SOLO 3 CUOTAS
+// SOLO 3 CUOTAS
 let saldo = P;
 let tabla = "<table><tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
 
 for(let k=1;k<=Math.min(3,n);k++){
-
 let interes = saldo*i;
 let capital = cuota - interes;
 saldo -= capital;
@@ -249,7 +240,12 @@ function enviar(){
 let clienteNombre = cliente.value;
 
 if(!clienteNombre){
-alert("Ingrese nombre del cliente");
+alert("Ingrese cliente");
+return;
+}
+
+if(!ultimaSimulacion.P){
+alert("Primero calcula");
 return;
 }
 

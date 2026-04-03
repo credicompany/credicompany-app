@@ -57,6 +57,19 @@ margin-bottom:15px;
 cursor:pointer;
 }
 
+table{
+width:100%;
+margin-top:15px;
+border-collapse:collapse;
+font-size:12px;
+}
+
+th, td{
+border:1px solid #ccc;
+padding:6px;
+text-align:center;
+}
+
 .menu{
 position:fixed;
 bottom:0;
@@ -70,15 +83,28 @@ padding:10px;
 .menu button{
 background:none;
 color:#123B63;
+font-weight:bold;
 }
 </style>
 </head>
 
 <body>
 
+<!-- LOGO -->
 <div class="header">
 <img src="logo.png">
 </div>
+
+<!-- LOGIN -->
+<div id="loginDiv" class="card">
+<h3>Ingreso Asesor</h3>
+<input id="usuario" placeholder="Usuario">
+<input id="clave" type="password" placeholder="Clave">
+<button id="btnLogin">Ingresar</button>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
 
 <!-- SIMULADOR -->
 <div id="simulador" class="card">
@@ -94,12 +120,13 @@ color:#123B63;
 </select>
 
 <input id="monto" placeholder="Monto">
-<input id="tasa" placeholder="Tasa (%) anual">
+<input id="tasa" placeholder="Tasa por periodo (%)">
 <input id="plazo" placeholder="Número de cuotas">
 
 <button onclick="calcular()">Calcular</button>
 
 <div id="resultado"></div>
+<div id="cronograma"></div>
 
 <button onclick="enviar()">📲 Enviar simulación</button>
 
@@ -124,6 +151,8 @@ color:#123B63;
 
 </div>
 
+</div>
+
 <!-- MENU -->
 <div class="menu">
 <button onclick="mostrar('simulador')">Simular</button>
@@ -132,8 +161,20 @@ color:#123B63;
 
 <script>
 
-let ultimaSimulacion = {};
-let periodos = 12;
+// LOGIN
+document.getElementById("btnLogin").addEventListener("click", function(){
+
+let user = document.getElementById("usuario").value;
+let pass = document.getElementById("clave").value;
+
+if(user === "admin" && pass === "1234"){
+document.getElementById("loginDiv").style.display="none";
+document.getElementById("app").style.display="block";
+}else{
+alert("Usuario o clave incorrectos");
+}
+
+});
 
 // CONFIGURAR PRODUCTO
 function configurarProducto(){
@@ -141,25 +182,10 @@ function configurarProducto(){
 let p = document.getElementById("producto").value;
 let tasa = document.getElementById("tasa");
 
-if(p=="diario"){
-tasa.value = 120;
-periodos = 360;
-}
-
-if(p=="semanal"){
-tasa.value = 80;
-periodos = 52;
-}
-
-if(p=="quincenal"){
-tasa.value = 60;
-periodos = 24;
-}
-
-if(p=="grupal"){
-tasa.value = 48;
-periodos = 12;
-}
+if(p=="diario") tasa.value = 1;
+if(p=="semanal") tasa.value = 5;
+if(p=="quincenal") tasa.value = 10;
+if(p=="grupal") tasa.value = 20;
 
 }
 
@@ -170,32 +196,54 @@ document.getElementById("pagos").style.display="none";
 document.getElementById(p).style.display="block";
 }
 
-// CÁLCULO INTERÉS COMPUESTO REAL
+// SISTEMA FRANCÉS
+let ultimaSimulacion = {};
+
 function calcular(){
 
-let m = parseFloat(document.getElementById("monto").value);
-let t = parseFloat(document.getElementById("tasa").value)/100;
+let P = parseFloat(document.getElementById("monto").value);
+let i = parseFloat(document.getElementById("tasa").value)/100;
 let n = parseInt(document.getElementById("plazo").value);
 let producto = document.getElementById("producto").value;
 
-if(!m || !t || !n || !producto){
+if(!P || !i || !n || !producto){
 alert("Completa todos los datos");
 return;
 }
 
-// 🔥 tasa por periodo según producto
-let i = Math.pow(1+t,1/periodos)-1;
+let cuota = (P * i) / (1 - Math.pow(1+i, -n));
 
-// 🔥 fórmula financiera (cuota fija)
-let cuota = m*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);
+let saldo = P;
+let tabla = "<table><tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
+
+for(let k=1; k<=n; k++){
+
+let interes = saldo * i;
+let capital = cuota - interes;
+saldo -= capital;
+
+tabla += `
+<tr>
+<td>${k}</td>
+<td>${cuota.toFixed(2)}</td>
+<td>${interes.toFixed(2)}</td>
+<td>${capital.toFixed(2)}</td>
+<td>${saldo.toFixed(2)}</td>
+</tr>
+`;
+
+}
+
+tabla += "</table>";
 
 document.getElementById("resultado").innerHTML = `
 Producto: ${producto.toUpperCase()}<br>
-Tasa por periodo: ${(i*100).toFixed(3)}%<br>
-Cuota: S/ ${cuota.toFixed(2)}
+Cuota fija: S/ ${cuota.toFixed(2)}
 `;
 
-ultimaSimulacion = {producto, monto:m, cuota:cuota};
+document.getElementById("cronograma").innerHTML = tabla;
+
+ultimaSimulacion = {producto, monto:P, cuota:cuota};
 
 }
 
@@ -211,7 +259,9 @@ let msg = `💳 Credicompany
 
 Producto: ${ultimaSimulacion.producto}
 Monto: S/ ${ultimaSimulacion.monto}
-Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}`;
+Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
+
+Sistema Francés`;
 
 window.open("https://wa.me/?text="+encodeURIComponent(msg));
 

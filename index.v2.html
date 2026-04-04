@@ -69,8 +69,9 @@ border-radius:10px;
 color:#333;
 }
 
-.estado{padding:5px;border-radius:6px;color:white;font-size:12px;}
+.estado{padding:6px;border-radius:6px;color:white;font-size:12px;display:inline-block;margin-top:5px;}
 .ok{background:#10c251;}
+.alerta{background:#ff9800;}
 .mora{background:#e74c3c;}
 </style>
 </head>
@@ -158,11 +159,6 @@ color:#333;
 
 <input id="c_fecha" type="date">
 
-<select id="c_estado">
-<option value="ok">Al día</option>
-<option value="mora">En mora</option>
-</select>
-
 <button class="btn-verde" onclick="guardarCliente()">Guardar Cliente</button>
 
 <div id="listaClientes"></div>
@@ -221,7 +217,7 @@ alert("Lat: "+pos.coords.latitude+" Lon: "+pos.coords.longitude);
 });
 }
 
-// CALCULAR (INTERÉS COMPUESTO CORRECTO)
+// CALCULAR
 function calcular(){
 
 let P=parseFloat(monto.value);
@@ -252,7 +248,7 @@ cuota:cuota
 };
 }
 
-// ENVIAR SIMULACIÓN
+// ENVIAR
 function enviar(){
 
 if(!window.ultimaSimulacion){
@@ -269,7 +265,7 @@ Cuota: S/ ${d.cuota.toFixed(2)}`;
 location.href="https://wa.me/?text="+encodeURIComponent(msg);
 }
 
-// FILTRO → SOLO DATOS
+// FILTRO
 function filtrar(){
 
 let texto=dni.value.toLowerCase();
@@ -293,13 +289,13 @@ DNI: ${c.dni}`;
 location.href="https://wa.me/?text="+encodeURIComponent(msg);
 }
 
-// CONTROL DE PAGOS
+// PAGO
 function registrarPago(){
 
 let pagoVal=parseFloat(pago.value);
 
 if(isNaN(pagoVal)){
-alert("Ingresa monto válido");
+alert("Monto inválido");
 return;
 }
 
@@ -317,13 +313,29 @@ apellidos:c_apellidos.value,
 dni:c_dni.value,
 monto:c_monto.value,
 producto:c_producto.value,
-fecha:c_fecha.value,
-estado:c_estado.value
+fecha:c_fecha.value
 });
 
 localStorage.setItem("cartera_"+asesor,JSON.stringify(data));
 
 renderClientes();
+}
+
+// ESTADO AUTOMÁTICO
+function calcularEstado(fecha){
+
+let hoy=new Date();
+let f=new Date(fecha);
+
+let diff=(f-hoy)/(1000*60*60*24);
+
+if(diff < 0){
+return {texto:"En mora", clase:"mora"};
+}else if(diff <= 2){
+return {texto:"Por vencer", clase:"alerta"};
+}else{
+return {texto:"Al día", clase:"ok"};
+}
 }
 
 // MOSTRAR CLIENTES
@@ -335,6 +347,9 @@ let data=JSON.parse(localStorage.getItem("cartera_"+asesor)||"[]");
 lista.innerHTML="";
 
 data.forEach(c=>{
+
+let estado=calcularEstado(c.fecha);
+
 lista.innerHTML+=`
 <div class="item">
 <b>${c.nombre} ${c.apellidos}</b><br>
@@ -342,9 +357,11 @@ DNI: ${c.dni}<br>
 Monto: S/ ${c.monto}<br>
 Producto: ${c.producto}<br>
 Pago: ${c.fecha}<br>
-<span class="estado ${c.estado}">
-${c.estado==="ok"?"Al día":"En mora"}
+
+<span class="estado ${estado.clase}">
+${estado.texto}
 </span>
+
 </div>`;
 });
 }

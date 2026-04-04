@@ -12,7 +12,7 @@
 <title>Credicompany</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:100px;}
+body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}
 
 .header{display:flex;flex-direction:column;align-items:center;padding:20px;}
 .header img{width:180px;}
@@ -40,6 +40,7 @@ width:100%;
 .btn-verde{background:#10c251;}
 .btn-azul{background:#123B63;}
 .btn-rojo{background:#e74c3c;}
+.btn-naranja{background:#ff9800;}
 
 .fila{display:flex;gap:10px;margin-top:10px;}
 .fila button{width:50%;}
@@ -87,6 +88,18 @@ margin-top:10px;
 border-radius:10px;
 color:#333;
 }
+
+.estado{
+margin-top:10px;
+padding:10px;
+border-radius:10px;
+font-weight:bold;
+text-align:center;
+}
+
+.ok{background:#10c251;color:white;}
+.warn{background:#ff9800;color:white;}
+.bad{background:#e74c3c;color:white;}
 </style>
 </head>
 
@@ -139,6 +152,12 @@ color:#333;
 </div>
 
 <div id="cronograma"></div>
+
+<!-- CONTROL DE PAGOS -->
+<h3>Control de pagos</h3>
+<input id="pago" placeholder="Monto pagado">
+<button class="btn-naranja" onclick="registrarPago()">💰 Registrar pago</button>
+<div id="estadoPago"></div>
 
 </div>
 
@@ -194,13 +213,15 @@ if(p==="historial") renderHistorial();
 }
 
 function limpiar(){
-["cliente","apellidos","dni","monto","tasa","plazo"].forEach(id=>{
+["cliente","apellidos","dni","monto","tasa","plazo","pago"].forEach(id=>{
 document.getElementById(id).value="";
 });
 resultado.innerHTML="";
 cronograma.innerHTML="";
+estadoPago.innerHTML="";
 }
 
+// CALCULAR
 function calcular(){
 
 let nombre=cliente.value.trim();
@@ -226,10 +247,20 @@ resultado.innerHTML=`Producto: ${prod.toUpperCase()}<br>Cuota: S/ ${cuota.toFixe
 
 ultimaSimulacion={P,cuota,n,prod,nombre,ape,doc};
 
-let data=JSON.parse(localStorage.getItem("clientes")||"[]");
-data.push({nombre,apellidos:ape,dni:doc});
-localStorage.setItem("clientes",JSON.stringify(data));
+// guardar cliente
+let clientes=JSON.parse(localStorage.getItem("clientes")||"[]");
+if(!clientes.find(x=>x.dni===doc)){
+clientes.push({nombre,apellidos:ape,dni:doc});
+localStorage.setItem("clientes",JSON.stringify(clientes));
+}
 
+// inicializar deuda
+localStorage.setItem("deuda_"+doc,JSON.stringify({
+total:cuota*n,
+pagado:0
+}));
+
+// cronograma
 let saldo=P;
 let html="<table><tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
 
@@ -250,6 +281,37 @@ html+=`<tr>
 cronograma.innerHTML=html+"</table>";
 }
 
+// REGISTRAR PAGO
+function registrarPago(){
+
+let doc=dni.value;
+let data=JSON.parse(localStorage.getItem("deuda_"+doc));
+
+if(!data){ alert("Primero simula"); return; }
+
+let pagoVal=parseFloat(pago.value);
+if(isNaN(pagoVal)){ alert("Ingresa monto válido"); return; }
+
+data.pagado += pagoVal;
+
+localStorage.setItem("deuda_"+doc,JSON.stringify(data));
+
+let saldo=data.total - data.pagado;
+
+let estado="";
+
+if(saldo<=0){
+estado=`<div class="estado ok">CANCELADO ✔</div>`;
+}else if(data.pagado>0){
+estado=`<div class="estado warn">PENDIENTE ⚠️<br>Saldo: S/ ${saldo.toFixed(2)}</div>`;
+}else{
+estado=`<div class="estado bad">SIN PAGOS ❌</div>`;
+}
+
+estadoPago.innerHTML=estado;
+}
+
+// ENVIAR
 function enviar(){
 let d=ultimaSimulacion;
 if(!d.P){ alert("Primero calcula"); return; }
@@ -261,6 +323,7 @@ Cuota: S/ ${d.cuota.toFixed(2)}`;
 location.href="https://wa.me/?text="+encodeURIComponent(msg);
 }
 
+// FILTRAR
 function filtrar(){
 
 let texto=dni.value.toLowerCase();
@@ -282,6 +345,7 @@ DNI: ${c.dni}`;
 location.href="https://wa.me/?text="+encodeURIComponent(msg);
 }
 
+// HISTORIAL
 function renderHistorial(){
 let lista=document.getElementById("listaClientes");
 let data=JSON.parse(localStorage.getItem("clientes")||"[]");
@@ -292,10 +356,33 @@ data.forEach((c,i)=>{
 lista.innerHTML+=`
 <div class="item">
 <b>${c.nombre} ${c.apellidos}</b><br>DNI: ${c.dni}
+<div class="fila">
+<button class="btn-verde" onclick="cargar(${i})">Usar</button>
+<button class="btn-rojo" onclick="eliminar(${i})">Eliminar</button>
+</div>
 </div>`;
 });
 }
 
+function cargar(i){
+let data=JSON.parse(localStorage.getItem("clientes")||"[]");
+let c=data[i];
+
+cliente.value=c.nombre;
+apellidos.value=c.apellidos;
+dni.value=c.dni;
+
+mostrar('simulador');
+}
+
+function eliminar(i){
+let data=JSON.parse(localStorage.getItem("clientes")||"[]");
+data.splice(i,1);
+localStorage.setItem("clientes",JSON.stringify(data));
+renderHistorial();
+}
+
+// QR
 function enviarQR(tipo){
 location.href="https://wa.me/?text=Pago "+tipo;
 }

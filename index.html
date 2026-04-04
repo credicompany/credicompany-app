@@ -102,7 +102,6 @@ border-radius:10px;
 color:#333;
 }
 
-/* PAGOS */
 .pagos-container{
 display:flex;
 flex-direction:column;
@@ -208,7 +207,7 @@ border-radius:10px;
 <div id="listaClientes"></div>
 </div>
 
-<!-- PAGOS SOLO VISUAL -->
+<!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
 
 <div class="volver" onclick="volver()">← Volver</div>
@@ -216,6 +215,11 @@ border-radius:10px;
 <h3>💳 Medios de Pago</h3>
 
 <div class="pagos-container">
+
+<div class="pago-box">
+<h4>QR BBVA</h4>
+<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg">
+</div>
 
 <div class="pago-box">
 <h4>BBVA</h4>
@@ -232,11 +236,6 @@ border-radius:10px;
 <img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg">
 </div>
 
-<div class="pago-box">
-<h4>OTRO</h4>
-<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg">
-</div>
-
 </div>
 
 </div>
@@ -247,17 +246,8 @@ border-radius:10px;
 
 let simData={};
 
-document.addEventListener("keydown",function(e){
-if(e.key==="Enter"){
-login();
-}
-});
-
 function login(){
-let u=usuario.value.trim();
-let c=clave.value.trim();
-
-if(u==="admin" && c==="1234"){
+if(usuario.value==="admin" && clave.value==="1234"){
 loginDiv.style.display="none";
 dashboard.style.display="block";
 }else{
@@ -265,16 +255,14 @@ alert("Usuario incorrecto");
 }
 }
 
-function ocultarTodo(){
-simulador.style.display="none";
-clientes.style.display="none";
-pagos.style.display="none";
-}
-
 function mostrar(p){
 dashboard.style.display="none";
 app.style.display="block";
-ocultarTodo();
+
+simulador.style.display="none";
+clientes.style.display="none";
+pagos.style.display="none";
+
 document.getElementById(p).style.display="block";
 }
 
@@ -287,25 +275,23 @@ function calcular(){
 let m=parseFloat(monto.value);
 let t=parseFloat(tasa.value)/100;
 let n=parseInt(plazo.value);
-let prod=producto.value;
 
 if(isNaN(m)||isNaN(t)||isNaN(n)){
 alert("Completa datos");
 return;
 }
 
-let divisor=4;
-if(prod==="diario") divisor=30;
-if(prod==="semanal") divisor=4;
-if(prod==="quincenal") divisor=2;
-if(prod==="mensual") divisor=1;
-
-let i=t/divisor;
+let i=t/4;
 let cuota=(m*i)/(1-Math.pow(1+i,-n));
 
 resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
 
-simData={nombre:cliente.value,ape:apellidos.value,dni:dni.value,cuota:cuota};
+simData={
+nombre:cliente.value,
+ape:apellidos.value,
+dni:dni.value,
+cuota:cuota
+};
 }
 
 function enviarSimulacion(){
@@ -317,11 +303,11 @@ ${d.nombre} ${d.ape}
 DNI: ${d.dni}
 Cuota: S/ ${d.cuota.toFixed(2)}`;
 
-window.open("https://wa.me/?text="+encodeURIComponent(msg),"_blank");
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
 }
 
 function filtrar(){
-window.open("https://wa.me/?text=Filtro cliente","_blank");
+window.open("https://wa.me/?text=Filtro cliente");
 }
 
 function registrarPago(){

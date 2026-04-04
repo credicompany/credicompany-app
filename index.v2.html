@@ -42,15 +42,25 @@ width:100%;
 .btn-rojo{background:#e74c3c;}
 .btn-naranja{background:#ff9800;}
 
-.fila{display:flex;gap:10px;margin-top:10px;}
-.fila button{width:50%;}
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+margin:20px;
+}
 
-.card img{
-width:100%;
-border-radius:12px;
-margin-top:10px;
+.box{
+background:white;
+color:#123B63;
+padding:25px;
+border-radius:15px;
+text-align:center;
+font-weight:bold;
 cursor:pointer;
 }
+
+.fila{display:flex;gap:10px;margin-top:10px;}
+.fila button{width:50%;}
 
 table{
 width:100%;
@@ -63,30 +73,6 @@ th, td{
 border:1px solid #ccc;
 padding:6px;
 text-align:center;
-}
-
-.menu{
-position:fixed;
-bottom:0;
-width:100%;
-background:white;
-display:flex;
-justify-content:space-around;
-padding:10px;
-}
-
-.menu button{
-background:none;
-color:#123B63;
-font-weight:bold;
-}
-
-.item{
-background:white;
-padding:10px;
-margin-top:10px;
-border-radius:10px;
-color:#333;
 }
 
 .estado{
@@ -118,6 +104,16 @@ text-align:center;
 <button class="btn-verde" onclick="login()">Ingresar</button>
 </div>
 
+<!-- DASHBOARD -->
+<div id="dashboard" style="display:none">
+<div class="grid">
+<div class="box" onclick="mostrar('simulador')">💰 Simulación</div>
+<div class="box" onclick="mostrar('historial')">👥 Clientes</div>
+<div class="box" onclick="mostrar('pagos')">💳 Pagos</div>
+<div class="box" onclick="ubicacion()">📍 Ubicación</div>
+</div>
+</div>
+
 <!-- APP -->
 <div id="app" style="display:none">
 
@@ -128,7 +124,7 @@ text-align:center;
 
 <input id="cliente" placeholder="Nombre">
 <input id="apellidos" placeholder="Apellidos">
-<input id="dni" placeholder="DNI / Buscar cliente">
+<input id="dni" placeholder="DNI">
 
 <select id="producto">
 <option value="diario">Diario</option>
@@ -139,10 +135,10 @@ text-align:center;
 
 <input id="monto" placeholder="Monto">
 <input id="tasa" placeholder="Tasa (%)">
-<input id="plazo" placeholder="Número de cuotas">
+<input id="plazo" placeholder="Cuotas">
 
 <button class="btn-verde" onclick="calcular()">Calcular</button>
-<button onclick="limpiar()" style="background:#999;margin-top:5px;">🔄 Nuevo</button>
+<button style="background:#999;margin-top:5px;" onclick="limpiar()">🔄 Nuevo</button>
 
 <div id="resultado"></div>
 
@@ -153,7 +149,6 @@ text-align:center;
 
 <div id="cronograma"></div>
 
-<!-- CONTROL DE PAGOS -->
 <h3>Control de pagos</h3>
 <input id="pago" placeholder="Monto pagado">
 <button class="btn-naranja" onclick="registrarPago()">💰 Registrar pago</button>
@@ -163,7 +158,7 @@ text-align:center;
 
 <!-- HISTORIAL -->
 <div id="historial" class="card" style="display:none">
-<h3>Historial de Clientes</h3>
+<h3>Clientes</h3>
 <div id="listaClientes"></div>
 </div>
 
@@ -180,17 +175,11 @@ text-align:center;
 
 </div>
 
-<!-- MENU -->
-<div class="menu">
-<button onclick="mostrar('simulador')">Simular</button>
-<button onclick="mostrar('historial')">Historial</button>
-<button onclick="mostrar('pagos')">Pagos</button>
-</div>
-
 <script>
 
 let ultimaSimulacion={};
 
+// LOGIN
 function login(){
 let u=usuario.value.trim().toLowerCase();
 let c=clave.value.trim();
@@ -198,20 +187,34 @@ let c=clave.value.trim();
 if(u==="admin" && c==="1234"){
 nombreAsesor.innerText=u;
 loginDiv.style.display="none";
-app.style.display="block";
+dashboard.style.display="block";
 }else{
 alert("Usuario o clave incorrectos");
 }
 }
 
+// NAVEGAR
 function mostrar(p){
+dashboard.style.display="none";
+app.style.display="block";
+
 simulador.style.display="none";
 historial.style.display="none";
 pagos.style.display="none";
+
 document.getElementById(p).style.display="block";
+
 if(p==="historial") renderHistorial();
 }
 
+// UBICACIÓN
+function ubicacion(){
+navigator.geolocation.getCurrentPosition(pos=>{
+alert("Lat: "+pos.coords.latitude+" Lon: "+pos.coords.longitude);
+});
+}
+
+// LIMPIAR
 function limpiar(){
 ["cliente","apellidos","dni","monto","tasa","plazo","pago"].forEach(id=>{
 document.getElementById(id).value="";
@@ -254,13 +257,13 @@ clientes.push({nombre,apellidos:ape,dni:doc});
 localStorage.setItem("clientes",JSON.stringify(clientes));
 }
 
-// inicializar deuda
+// deuda
 localStorage.setItem("deuda_"+doc,JSON.stringify({
 total:cuota*n,
 pagado:0
 }));
 
-// cronograma
+// cronograma (3)
 let saldo=P;
 let html="<table><tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
 
@@ -281,7 +284,7 @@ html+=`<tr>
 cronograma.innerHTML=html+"</table>";
 }
 
-// REGISTRAR PAGO
+// PAGO
 function registrarPago(){
 
 let doc=dni.value;
@@ -290,7 +293,7 @@ let data=JSON.parse(localStorage.getItem("deuda_"+doc));
 if(!data){ alert("Primero simula"); return; }
 
 let pagoVal=parseFloat(pago.value);
-if(isNaN(pagoVal)){ alert("Ingresa monto válido"); return; }
+if(isNaN(pagoVal)){ alert("Monto inválido"); return; }
 
 data.pagado += pagoVal;
 
@@ -298,17 +301,11 @@ localStorage.setItem("deuda_"+doc,JSON.stringify(data));
 
 let saldo=data.total - data.pagado;
 
-let estado="";
-
 if(saldo<=0){
-estado=`<div class="estado ok">CANCELADO ✔</div>`;
-}else if(data.pagado>0){
-estado=`<div class="estado warn">PENDIENTE ⚠️<br>Saldo: S/ ${saldo.toFixed(2)}</div>`;
+estadoPago.innerHTML=`<div class="estado ok">CANCELADO ✔</div>`;
 }else{
-estado=`<div class="estado bad">SIN PAGOS ❌</div>`;
+estadoPago.innerHTML=`<div class="estado warn">Saldo: S/ ${saldo.toFixed(2)}</div>`;
 }
-
-estadoPago.innerHTML=estado;
 }
 
 // ENVIAR
@@ -323,7 +320,7 @@ Cuota: S/ ${d.cuota.toFixed(2)}`;
 location.href="https://wa.me/?text="+encodeURIComponent(msg);
 }
 
-// FILTRAR
+// FILTRO
 function filtrar(){
 
 let texto=dni.value.toLowerCase();
@@ -339,7 +336,8 @@ if(!c){ alert("No encontrado"); return; }
 cliente.value=c.nombre;
 apellidos.value=c.apellidos;
 
-let msg=`${c.nombre} ${c.apellidos}
+let msg=`Filtro:
+${c.nombre} ${c.apellidos}
 DNI: ${c.dni}`;
 
 location.href="https://wa.me/?text="+encodeURIComponent(msg);
@@ -354,32 +352,10 @@ lista.innerHTML="";
 
 data.forEach((c,i)=>{
 lista.innerHTML+=`
-<div class="item">
+<div style="background:white;padding:10px;margin-top:10px;border-radius:10px;">
 <b>${c.nombre} ${c.apellidos}</b><br>DNI: ${c.dni}
-<div class="fila">
-<button class="btn-verde" onclick="cargar(${i})">Usar</button>
-<button class="btn-rojo" onclick="eliminar(${i})">Eliminar</button>
-</div>
 </div>`;
 });
-}
-
-function cargar(i){
-let data=JSON.parse(localStorage.getItem("clientes")||"[]");
-let c=data[i];
-
-cliente.value=c.nombre;
-apellidos.value=c.apellidos;
-dni.value=c.dni;
-
-mostrar('simulador');
-}
-
-function eliminar(i){
-let data=JSON.parse(localStorage.getItem("clientes")||"[]");
-data.splice(i,1);
-localStorage.setItem("clientes",JSON.stringify(data));
-renderHistorial();
 }
 
 // QR

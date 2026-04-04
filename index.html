@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache">
@@ -191,11 +192,13 @@ font-size:18px;
 
 <div id="resultado"></div>
 
-<!-- NUEVOS BOTONES -->
 <div class="fila">
 <button class="btn-verde" onclick="enviarSimulacion()">📲 Simulación</button>
 <button class="btn-azul" onclick="enviarFiltro()">📤 Filtro</button>
 </div>
+
+<!-- NUEVO BOTÓN -->
+<button class="btn-naranja" onclick="limpiar()">🧹 Limpiar</button>
 
 </div>
 
@@ -335,12 +338,10 @@ let cuota=(P*i)/(1-Math.pow(1+i,-n));
 resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
 }
 
-/* NUEVAS FUNCIONES */
-
 function enviarSimulacion(){
 
 let P=monto.value;
-let t=tasa.value;
+let tipo=producto.value;
 let r=resultado.innerText;
 
 if(!r){
@@ -350,8 +351,8 @@ return;
 
 let msg=`Simulación Credicompany
 
+Producto: ${tipo}
 Monto: S/ ${P}
-Tasa: ${t}%
 ${r}`;
 
 location.href="https://wa.me/?text="+encodeURIComponent(msg);
@@ -371,6 +372,16 @@ Apellidos: ${apellidos.value}
 DNI: ${dni.value}`;
 
 location.href="https://wa.me/?text="+encodeURIComponent(msg);
+}
+
+function limpiar(){
+cliente.value="";
+apellidos.value="";
+dni.value="";
+monto.value="";
+tasa.value="";
+plazo.value="";
+resultado.innerHTML="";
 }
 
 function guardarCliente(){

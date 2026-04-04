@@ -6,8 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <meta http-equiv="Cache-Control" content="no-cache">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 
 <title>Credicompany</title>
 
@@ -73,6 +71,16 @@ color:#333;
 .ok{background:#10c251;}
 .alerta{background:#ff9800;}
 .mora{background:#e74c3c;}
+
+.volver{
+margin-bottom:10px;
+background:#123B63;
+color:white;
+padding:10px;
+border-radius:8px;
+text-align:center;
+cursor:pointer;
+}
 </style>
 </head>
 
@@ -106,6 +114,8 @@ color:#333;
 
 <!-- SIMULADOR -->
 <div id="simulador" class="card">
+
+<div class="volver" onclick="volver()">← Volver al inicio</div>
 
 <h3>Simulador</h3>
 
@@ -143,6 +153,8 @@ color:#333;
 <!-- CLIENTES -->
 <div id="clientes" class="card" style="display:none">
 
+<div class="volver" onclick="volver()">← Volver al inicio</div>
+
 <h3>Cartera de Clientes</h3>
 
 <input id="c_nombre" placeholder="Nombre">
@@ -167,6 +179,9 @@ color:#333;
 
 <!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
+
+<div class="volver" onclick="volver()">← Volver al inicio</div>
+
 <h3>💳 Medios de Pago</h3>
 
 <img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg">
@@ -209,6 +224,20 @@ document.getElementById(p).style.display="block";
 
 if(p==="clientes") renderClientes();
 }
+
+// VOLVER
+function volver(){
+app.style.display="none";
+dashboard.style.display="block";
+}
+
+// BLOQUEO BOTÓN ATRÁS (ANTI SALIDA)
+history.pushState(null, null, location.href);
+
+window.onpopstate = function () {
+volver();
+history.pushState(null, null, location.href);
+};
 
 // UBICACIÓN
 function ubicacion(){

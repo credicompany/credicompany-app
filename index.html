@@ -1,26 +1,3 @@
-<!--
-========================================
-CREDICOMPANY APP - BASE OPERATIVA
-Versión: 1.0
-Autor: Credicompany E.I.R.L.
-Propietario: Edgar Benites Díaz
-
-Descripción:
-Sistema interno para asesores:
-- Simulación de créditos
-- Gestión de clientes
-- Envío de pagos (QR)
-- Registro básico de pagos
-
-Futuras mejoras:
-- Motor de cobranza inteligente
-- Score crediticio
-- Reportes automáticos
-- Base de datos externa
-
-Fecha: 2026
-========================================
--->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -138,15 +115,14 @@ width:100%;
 max-width:320px;
 text-align:center;
 box-shadow:0 2px 6px rgba(0,0,0,0.2);
-cursor:pointer;
 }
 
 .pago-box img{
 width:100%;
-height:auto;
-max-height:320px;
+height:220px;
 object-fit:contain;
 border-radius:10px;
+background:white;
 }
 
 .pago-titulo{
@@ -210,16 +186,6 @@ color:#123B63;
 
 <div id="resultado"></div>
 
-<div class="fila">
-<button class="btn-verde" onclick="enviar()">📲 Enviar simulación</button>
-<button class="btn-azul" onclick="filtrar()">📤 Enviar Filtro</button>
-</div>
-
-<h3>Control de pagos</h3>
-<input id="pago" placeholder="Monto pagado">
-<button class="btn-naranja" onclick="registrarPago()">💰 Registrar pago</button>
-<div id="estadoPago"></div>
-
 </div>
 
 <!-- CLIENTES -->
@@ -255,23 +221,23 @@ color:#123B63;
 
 <div class="pagos-container">
 
-<div class=('BCP','https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg')">
-<div class="pago-titulo">BCP</div>
+<div class="pago-box">
+<div class="pago-titulo">QR BBVA</div>
 <img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg">
 </div>
 
-<div class="pago-box" onclick="enviarQR('BBVA','https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg')">
-<div class="pago-titulo">BBVA</div>
+<div class="pago-box">
+<div class="pago-titulo">BCP</div>
 <img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg">
 </div>
 
-<div class="pago-box" onclick="enviarQR('QR YAPE','https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg')">
-<div class="pago-titulo"> QR YAPE</div>
+<div class="pago-box">
+<div class="pago-titulo">YAPE</div>
 <img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg">
 </div>
 
-<div class="pago-box" onclick="enviarQR('QR BBVA','https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg')">
-<div class="pago-titulo">BBVA</div>
+<div class="pago-box">
+<div class="pago-titulo">TRANSFERENCIAS</div>
 <img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg">
 </div>
 
@@ -315,72 +281,65 @@ dashboard.style.display="block";
 }
 
 function calcular(){
+
 let P=parseFloat(monto.value);
 let t=parseFloat(tasa.value)/100;
 let n=parseInt(plazo.value);
+let tipo=producto.value;
 
-if(isNaN(P)||isNaN(t)||isNaN(n)){
-alert("Completa datos");
+if(!cliente.value || !apellidos.value || !dni.value){
+alert("Completa datos del cliente");
 return;
 }
 
-let i=t/4;
+if(dni.value.length !== 8){
+alert("DNI debe tener 8 dígitos");
+return;
+}
+
+if(isNaN(P)||P<=0){
+alert("Monto inválido");
+return;
+}
+
+if(isNaN(t)||t<=0){
+alert("Tasa inválida");
+return;
+}
+
+if(isNaN(n)||n<=0){
+alert("Cuotas inválidas");
+return;
+}
+
+let i=0;
+
+if(tipo==="diario") i=t/30;
+if(tipo==="semanal") i=t/4;
+if(tipo==="quincenal") i=t/2;
+if(tipo==="mensual") i=t;
+
 let cuota=(P*i)/(1-Math.pow(1+i,-n));
 
 resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
-
-window.sim={
-nombre:cliente.value,
-ape:apellidos.value,
-dni:dni.value,
-cuota:cuota
-};
-}
-
-function enviar(){
-let d=window.sim;
-if(!d){alert("Primero calcula");return;}
-
-let msg=`Simulación:
-${d.nombre} ${d.ape}
-DNI: ${d.dni}
-Cuota: S/ ${d.cuota.toFixed(2)}`;
-
-location.href="https://wa.me/?text="+encodeURIComponent(msg);
-}
-
-function filtrar(){
-let texto=dni.value.toLowerCase();
-let data=JSON.parse(localStorage.getItem("cartera_"+asesor)||"[]");
-
-let c=data.find(x=>
-(x.dni+"").includes(texto)||
-(x.nombre+"").toLowerCase().includes(texto)
-);
-
-if(!c){alert("No encontrado");return;}
-
-let msg=`Filtro:
-${c.nombre} ${c.apellidos}
-DNI: ${c.dni}`;
-
-location.href="https://wa.me/?text="+encodeURIComponent(msg);
-}
-
-function registrarPago(){
-let m=parseFloat(pago.value);
-if(isNaN(m)){alert("Ingresa pago");return;}
-estadoPago.innerHTML="Pago registrado: S/ "+m;
 }
 
 function guardarCliente(){
 let data=JSON.parse(localStorage.getItem("cartera_"+asesor)||"[]");
 
+let existe=data.find(x=>x.dni===c_dni.value);
+
+if(existe){
+alert("Cliente ya existe");
+return;
+}
+
 data.push({
 nombre:c_nombre.value,
 apellidos:c_apellidos.value,
 dni:c_dni.value,
-monto:c_monto.value
+monto:c_monto.value,
+fecha:new Date().toISOString()
 });
 
 localStorage.setItem("cartera_"+asesor,JSON.stringify(data));
@@ -401,21 +360,6 @@ DNI: ${c.dni}<br>
 Monto: S/ ${c.monto}
 </div>`;
 });
-}
-
-function enviarQR(tipo,link){
-
-let mensaje=`💳 Credicompany
-
-Puede realizar su pago vía ${tipo}
-
-Escanee el siguiente código:
-${link}
-
-Luego enviar su comprobante.`;
-
-location.href="https://wa.me/?text="+encodeURIComponent(mensaje);
-
 }
 
 </script>

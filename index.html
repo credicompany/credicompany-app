@@ -120,6 +120,7 @@ border-radius:12px;
 width:100%;
 text-align:center;
 box-shadow:0 3px 8px rgba(0,0,0,0.15);
+cursor:pointer;
 }
 
 .pago-box img{
@@ -135,6 +136,25 @@ font-weight:bold;
 margin-bottom:10px;
 color:#123B63;
 font-size:18px;
+}
+
+/* MODAL QR */
+.modal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+
+.modal img{
+width:90%;
+max-width:400px;
 }
 
 </style>
@@ -197,7 +217,6 @@ font-size:18px;
 <button class="btn-azul" onclick="enviarFiltro()">📤 Filtro</button>
 </div>
 
-<!-- NUEVO BOTÓN -->
 <button class="btn-naranja" onclick="limpiar()">🧹 Limpiar</button>
 
 </div>
@@ -235,23 +254,23 @@ font-size:18px;
 
 <div class="pagos-container">
 
-<div class="pago-box">
+<div class="pago-box" onclick="abrirQR(this)">
 <div class="pago-titulo">QR BBVA</div>
 <img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg">
 </div>
 
-<div class="pago-box">
+<div class="pago-box" onclick="abrirQR(this)">
 <div class="pago-titulo">BCP</div>
 <img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg">
 </div>
 
-<div class="pago-box">
+<div class="pago-box" onclick="abrirQR(this)">
 <div class="pago-titulo">YAPE</div>
 <img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg">
 </div>
 
-<div class="pago-box">
-<div class="pago-titulo">OTROS MEDIOS</div>
+<div class="pago-box" onclick="abrirQR(this)">
+<div class="pago-titulo">CUENTA BCP</div>
 <img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg">
 </div>
 
@@ -259,6 +278,11 @@ font-size:18px;
 
 </div>
 
+</div>
+
+<!-- MODAL QR -->
+<div id="modalQR" class="modal" onclick="cerrarQR()">
+<img id="imgQR">
 </div>
 
 <script>
@@ -382,6 +406,16 @@ monto.value="";
 tasa.value="";
 plazo.value="";
 resultado.innerHTML="";
+}
+
+function abrirQR(el){
+let img=el.querySelector("img").src;
+document.getElementById("imgQR").src=img;
+document.getElementById("modalQR").style.display="flex";
+}
+
+function cerrarQR(){
+document.getElementById("modalQR").style.display="none";
 }
 
 function guardarCliente(){

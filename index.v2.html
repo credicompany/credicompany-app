@@ -23,8 +23,6 @@ padding:20px;
 
 .header img{width:180px;}
 
-.asesor{font-size:14px;margin-top:5px;}
-
 .card{
 background:#f2f2f2;
 color:#333;
@@ -105,7 +103,7 @@ font-weight:bold;
 
 <div class="header">
 <img src="logo.png">
-<div class="asesor">Asesor: <span id="nombreAsesor">-</span></div>
+<div>Asesor: <span id="nombreAsesor">-</span></div>
 </div>
 
 <!-- LOGIN -->
@@ -130,7 +128,7 @@ font-weight:bold;
 
 <select id="producto">
 <option value="diario">Diario</option>
-<option value="semanal">Semanal</option>
+<option value="semanal" selected>Semanal</option>
 <option value="quincenal">Quincenal</option>
 <option value="mensual">Mensual</option>
 </select>
@@ -158,16 +156,9 @@ font-weight:bold;
 
 <h3>💳 Medios de Pago</h3>
 
-<h4>Cuenta Principal</h4>
 <img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg" onclick="enviarQR('Principal')">
-
-<h4>BBVA</h4>
 <img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg" onclick="enviarQR('BBVA')">
-
-<h4>BCP</h4>
 <img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg" onclick="enviarQR('BCP')">
-
-<h4>Yape</h4>
 <img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg" onclick="enviarQR('Yape')">
 
 </div>
@@ -183,83 +174,72 @@ font-weight:bold;
 <script>
 
 let ultimaSimulacion={};
-let asesor="";
 
 // LOGIN
 function login(){
-if(usuario.value=="admin" && clave.value=="1234"){
-asesor=usuario.value;
-nombreAsesor.innerText=asesor;
-loginDiv.style.display="none";
-app.style.display="block";
+let u=document.getElementById("usuario").value;
+let c=document.getElementById("clave").value;
+
+if(u==="admin" && c==="1234"){
+document.getElementById("nombreAsesor").innerText=u;
+document.getElementById("loginDiv").style.display="none";
+document.getElementById("app").style.display="block";
 }else{
 alert("Datos incorrectos");
 }
 }
 
-// CAMBIO PANTALLA
+// CAMBIO
 function mostrar(p){
-simulador.style.display="none";
-pagos.style.display="none";
+document.getElementById("simulador").style.display="none";
+document.getElementById("pagos").style.display="none";
 document.getElementById(p).style.display="block";
 }
 
 // LIMPIAR
 function limpiar(){
-cliente.value="";
-apellidos.value="";
-dni.value="";
-monto.value="";
-tasa.value="";
-plazo.value="";
-resultado.innerHTML="";
-cronograma.innerHTML="";
+["cliente","apellidos","dni","monto","tasa","plazo"].forEach(id=>{
+document.getElementById(id).value="";
+});
+document.getElementById("resultado").innerHTML="";
+document.getElementById("cronograma").innerHTML="";
 }
 
-// CALCULAR (CORREGIDO)
+// 🔥 CALCULAR DEFINITIVO
 function calcular(){
 
-let nombre=cliente.value.trim();
-let ape=apellidos.value.trim();
-let doc=dni.value.trim();
+let nombre=document.getElementById("cliente").value.trim();
+let ape=document.getElementById("apellidos").value.trim();
+let doc=document.getElementById("dni").value.trim();
 
-let P=parseFloat(monto.value.replace(",","."));
-let tasa=parseFloat(tasa.value.replace(",","."));
-let n=parseInt(plazo.value);
+let P=parseFloat(document.getElementById("monto").value);
+let tasa=parseFloat(document.getElementById("tasa").value);
+let n=parseInt(document.getElementById("plazo").value);
+let prod=document.getElementById("producto").value;
 
-if(!nombre||!ape||!doc){
-alert("Completa datos del cliente");
+if(!nombre || !ape || !doc){
+alert("Completa datos cliente");
 return;
 }
 
-if(isNaN(P)||isNaN(tasa)||isNaN(n)){
-alert("Monto, tasa y cuotas deben ser números");
+if(isNaN(P) || isNaN(tasa) || isNaN(n)){
+alert("Ingrese números válidos");
 return;
 }
 
-if(P<=0||tasa<=0||n<=0){
-alert("Valores deben ser mayores a 0");
-return;
-}
-
-let prod=producto.value;
 let i=0;
 
-if(prod=="semanal") i=(tasa/4)/100;
-if(prod=="diario") i=(tasa/30)/100;
-if(prod=="quincenal") i=(tasa/2)/100;
-if(prod=="mensual") i=(tasa)/100;
+if(prod==="semanal") i=(tasa/4)/100;
+if(prod==="diario") i=(tasa/30)/100;
+if(prod==="quincenal") i=(tasa/2)/100;
+if(prod==="mensual") i=(tasa)/100;
 
 let cuota=(P*i)/(1-Math.pow(1+i,-n));
 
-resultado.innerHTML=`Producto: ${prod.toUpperCase()}<br>Cuota: S/ ${cuota.toFixed(2)}`;
+document.getElementById("resultado").innerHTML=
+`Producto: ${prod.toUpperCase()}<br>Cuota: S/ ${cuota.toFixed(2)}`;
 
 ultimaSimulacion={P,cuota,n,prod,i};
-
-// GUARDAR CLIENTE
-let data=JSON.parse(localStorage.getItem("clientes")||"[]");
-data.push({nombre,apellidos:ape,dni:doc});
-localStorage.setItem("clientes",JSON.stringify(data));
 
 // CRONOGRAMA
 let saldo=P;
@@ -280,66 +260,49 @@ html+=`<tr>
 }
 
 html+="</table>";
-cronograma.innerHTML=html;
+document.getElementById("cronograma").innerHTML=html;
 
+// GUARDAR
+let data=JSON.parse(localStorage.getItem("clientes")||"[]");
+data.push({nombre,apellidos:ape,dni:doc});
+localStorage.setItem("clientes",JSON.stringify(data));
+
+}
+
+// ENVIAR
+function enviar(){
+if(!ultimaSimulacion.P){
+alert("Primero calcula");
+return;
+}
+window.open("https://wa.me/?text="+encodeURIComponent("Simulación lista"));
 }
 
 // FILTRAR
 function filtrar(){
 
-let texto=dni.value.trim().toLowerCase();
-
+let texto=document.getElementById("dni").value.toLowerCase();
 let data=JSON.parse(localStorage.getItem("clientes")||"[]");
 
-let cliente=data.find(c=>
-(c.dni+"").toLowerCase().includes(texto)||
-(c.nombre+"").toLowerCase().includes(texto)||
-(c.apellidos+"").toLowerCase().includes(texto)
+let c=data.find(x=>
+(x.dni+"").includes(texto)||
+(x.nombre+"").toLowerCase().includes(texto)||
+(x.apellidos+"").toLowerCase().includes(texto)
 );
 
-if(!cliente){
+if(!c){
 alert("Cliente no encontrado");
 return;
 }
 
-let msg=`👤 Cliente encontrado
-
-Nombre: ${cliente.nombre}
-Apellidos: ${cliente.apellidos}
-DNI: ${cliente.dni}`;
-
-window.open("https://wa.me/?text="+encodeURIComponent(msg));
-}
-
-// ENVIAR
-function enviar(){
-
-if(!ultimaSimulacion.P){
-alert("Primero calcula");
-return;
-}
-
-let msg=`📌 Simulación
-
-💰 Monto: S/ ${ultimaSimulacion.P}
-💵 Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
-📅 Plazo: ${ultimaSimulacion.n}
-📊 Producto: ${ultimaSimulacion.prod}`;
-
-window.open("https://wa.me/?text="+encodeURIComponent(msg));
+window.open("https://wa.me/?text="+encodeURIComponent(
+`Cliente:\n${c.nombre} ${c.apellidos}\nDNI: ${c.dni}`
+));
 }
 
 // QR
 function enviarQR(tipo){
-
-let link="";
-
-if(tipo=="Principal") link="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg";
-if(tipo=="BBVA") link="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg";
-if(tipo=="BCP") link="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg";
-if(tipo=="Yape") link="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg";
-
-window.open("https://wa.me/?text="+encodeURIComponent("Pago vía "+tipo+"\n"+link));
+window.open("https://wa.me/?text=Pago "+tipo);
 }
 
 </script>

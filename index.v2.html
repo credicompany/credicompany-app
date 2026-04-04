@@ -4,18 +4,51 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <meta http-equiv="Cache-Control" content="no-cache">
 
 <title>Credicompany</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}
+body{
+margin:0;
+font-family:Arial;
+background:#123B63;
+color:white;
+padding-bottom:120px;
+}
 
-.header{display:flex;flex-direction:column;align-items:center;padding:20px;}
+.header{
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:20px;
+}
+
 .header img{width:180px;}
 
-.card{background:#f2f2f2;color:#333;margin:15px;padding:20px;border-radius:15px;}
+.card{
+background:#f2f2f2;
+color:#333;
+margin:15px;
+padding:20px;
+border-radius:15px;
+}
+
+/* BOTÓN VOLVER */
+.volver{
+position:sticky;
+top:0;
+background:#0a2f5c;
+color:white;
+padding:14px;
+border-radius:12px;
+text-align:center;
+font-weight:bold;
+margin-bottom:15px;
+z-index:999;
+cursor:pointer;
+}
+
 h3{text-align:center;}
 
 input, select{
@@ -67,20 +100,18 @@ border-radius:10px;
 color:#333;
 }
 
-.estado{padding:6px;border-radius:6px;color:white;font-size:12px;display:inline-block;margin-top:5px;}
+.estado{
+padding:6px;
+border-radius:6px;
+color:white;
+font-size:12px;
+display:inline-block;
+margin-top:5px;
+}
+
 .ok{background:#10c251;}
 .alerta{background:#ff9800;}
 .mora{background:#e74c3c;}
-
-.volver{
-margin-bottom:10px;
-background:#123B63;
-color:white;
-padding:10px;
-border-radius:8px;
-text-align:center;
-cursor:pointer;
-}
 </style>
 </head>
 
@@ -114,7 +145,6 @@ cursor:pointer;
 
 <!-- SIMULADOR -->
 <div id="simulador" class="card">
-
 <div class="volver" onclick="volver()">← Volver al inicio</div>
 
 <h3>Simulador</h3>
@@ -152,7 +182,6 @@ cursor:pointer;
 
 <!-- CLIENTES -->
 <div id="clientes" class="card" style="display:none">
-
 <div class="volver" onclick="volver()">← Volver al inicio</div>
 
 <h3>Cartera de Clientes</h3>
@@ -160,7 +189,7 @@ cursor:pointer;
 <input id="c_nombre" placeholder="Nombre">
 <input id="c_apellidos" placeholder="Apellidos">
 <input id="c_dni" placeholder="DNI">
-<input id="c_monto" placeholder="Monto desembolsado">
+<input id="c_monto" placeholder="Monto">
 
 <select id="c_producto">
 <option>Diario</option>
@@ -179,7 +208,6 @@ cursor:pointer;
 
 <!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
-
 <div class="volver" onclick="volver()">← Volver al inicio</div>
 
 <h3>💳 Medios de Pago</h3>
@@ -198,11 +226,8 @@ let asesor="";
 
 // LOGIN
 function login(){
-let u=usuario.value.trim().toLowerCase();
-let c=clave.value.trim();
-
-if(u==="admin" && c==="1234"){
-asesor=u;
+if(usuario.value==="admin" && clave.value==="1234"){
+asesor=usuario.value;
 nombreAsesor.innerText=asesor;
 loginDiv.style.display="none";
 dashboard.style.display="block";
@@ -231,43 +256,28 @@ app.style.display="none";
 dashboard.style.display="block";
 }
 
-// BLOQUEO BOTÓN ATRÁS (ANTI SALIDA)
+// BLOQUEO BOTÓN ATRÁS
 history.pushState(null, null, location.href);
-
 window.onpopstate = function () {
 volver();
 history.pushState(null, null, location.href);
 };
 
-// UBICACIÓN
-function ubicacion(){
-navigator.geolocation.getCurrentPosition(pos=>{
-alert("Lat: "+pos.coords.latitude+" Lon: "+pos.coords.longitude);
-});
-}
-
-// CALCULAR
+// CALCULAR (FRANCÉS)
 function calcular(){
-
 let P=parseFloat(monto.value);
-let tasaVal=parseFloat(tasa.value);
+let tasa=parseFloat(tasa.value)/100;
 let n=parseInt(plazo.value);
-let prod=producto.value;
 
-if(isNaN(P)||isNaN(tasaVal)||isNaN(n)){
+if(isNaN(P)||isNaN(tasa)||isNaN(n)){
 alert("Completa los datos");
 return;
 }
 
-let i=0;
-if(prod==="semanal") i=(tasaVal/4)/100;
-if(prod==="diario") i=(tasaVal/30)/100;
-if(prod==="quincenal") i=(tasaVal/2)/100;
-if(prod==="mensual") i=(tasaVal)/100;
-
+let i=tasa/4; // semanal
 let cuota=(P*i)/(1-Math.pow(1+i,-n));
 
-resultado.innerHTML=`Cuota: S/ ${cuota.toFixed(2)}`;
+resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
 
 window.ultimaSimulacion={
 nombre:cliente.value,
@@ -277,28 +287,22 @@ cuota:cuota
 };
 }
 
-// ENVIAR
+// ENVIAR SIMULACIÓN
 function enviar(){
-
-if(!window.ultimaSimulacion){
-alert("Primero calcula");
-return;
-}
-
 let d=window.ultimaSimulacion;
+if(!d){alert("Primero calcula");return;}
 
-let msg=`Cliente: ${d.nombre} ${d.ape}
+let msg=`Simulación:
+${d.nombre} ${d.ape}
 DNI: ${d.dni}
 Cuota: S/ ${d.cuota.toFixed(2)}`;
 
 location.href="https://wa.me/?text="+encodeURIComponent(msg);
 }
 
-// FILTRO
+// FILTRO CLIENTE
 function filtrar(){
-
 let texto=dni.value.toLowerCase();
-
 let data=JSON.parse(localStorage.getItem("cartera_"+asesor)||"[]");
 
 let c=data.find(x=>
@@ -306,10 +310,7 @@ let c=data.find(x=>
 (x.nombre+"").toLowerCase().includes(texto)
 );
 
-if(!c){
-alert("No encontrado");
-return;
-}
+if(!c){alert("No encontrado");return;}
 
 let msg=`Filtro:
 ${c.nombre} ${c.apellidos}
@@ -318,22 +319,15 @@ DNI: ${c.dni}`;
 location.href="https://wa.me/?text="+encodeURIComponent(msg);
 }
 
-// PAGO
+// PAGOS
 function registrarPago(){
-
-let pagoVal=parseFloat(pago.value);
-
-if(isNaN(pagoVal)){
-alert("Monto inválido");
-return;
-}
-
-estadoPago.innerHTML=`<div class="estado ok">Pago registrado: S/ ${pagoVal}</div>`;
+let montoPago=parseFloat(pago.value);
+if(isNaN(montoPago)){alert("Ingresa pago");return;}
+estadoPago.innerHTML="Pago registrado: S/ "+montoPago;
 }
 
 // GUARDAR CLIENTE
 function guardarCliente(){
-
 let data=JSON.parse(localStorage.getItem("cartera_"+asesor)||"[]");
 
 data.push({
@@ -346,37 +340,28 @@ fecha:c_fecha.value
 });
 
 localStorage.setItem("cartera_"+asesor,JSON.stringify(data));
-
 renderClientes();
 }
 
 // ESTADO AUTOMÁTICO
 function calcularEstado(fecha){
-
 let hoy=new Date();
 let f=new Date(fecha);
-
 let diff=(f-hoy)/(1000*60*60*24);
 
-if(diff < 0){
-return {texto:"En mora", clase:"mora"};
-}else if(diff <= 2){
-return {texto:"Por vencer", clase:"alerta"};
-}else{
+if(diff < 0) return {texto:"En mora", clase:"mora"};
+if(diff <= 2) return {texto:"Por vencer", clase:"alerta"};
 return {texto:"Al día", clase:"ok"};
-}
 }
 
 // MOSTRAR CLIENTES
 function renderClientes(){
-
 let lista=document.getElementById("listaClientes");
 let data=JSON.parse(localStorage.getItem("cartera_"+asesor)||"[]");
 
 lista.innerHTML="";
 
 data.forEach(c=>{
-
 let estado=calcularEstado(c.fecha);
 
 lista.innerHTML+=`
@@ -386,13 +371,16 @@ DNI: ${c.dni}<br>
 Monto: S/ ${c.monto}<br>
 Producto: ${c.producto}<br>
 Pago: ${c.fecha}<br>
-
 <span class="estado ${estado.clase}">
 ${estado.texto}
 </span>
-
 </div>`;
 });
+}
+
+// UBICACIÓN
+function ubicacion(){
+alert("Función de ubicación en desarrollo");
 }
 
 </script>

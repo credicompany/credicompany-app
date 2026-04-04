@@ -5,8 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- 🔥 MODO SIN CACHE -->
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 
@@ -14,15 +13,30 @@
 
 <style>
 body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:100px;}
+
 .header{display:flex;flex-direction:column;align-items:center;padding:20px;}
 .header img{width:180px;}
 
 .card{background:#f2f2f2;color:#333;margin:15px;padding:20px;border-radius:15px;}
 h3{text-align:center;}
 
-input, select{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:none;}
+input, select{
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:10px;
+border:none;
+}
 
-button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;width:100%;}
+button{
+padding:14px;
+border:none;
+border-radius:12px;
+color:white;
+font-weight:bold;
+width:100%;
+}
+
 .btn-verde{background:#10c251;}
 .btn-azul{background:#123B63;}
 .btn-rojo{background:#e74c3c;}
@@ -136,7 +150,6 @@ color:#333;
 
 <!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
-
 <h3>💳 Medios de Pago</h3>
 
 <img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg" onclick="enviarQR('Principal')">
@@ -157,17 +170,8 @@ color:#333;
 
 <script>
 
-// 🔥 ANTI CACHE REAL
-if (!location.href.includes("?v=")) {
-location.href = location.href + "?v=" + Date.now();
-}
-
-// 🔄 REFRESCO CONTROLADO
-setTimeout(()=>location.reload(), 60000);
-
 let ultimaSimulacion={};
 
-// LOGIN
 function login(){
 let u=usuario.value.trim().toLowerCase();
 let c=clave.value.trim();
@@ -181,7 +185,6 @@ alert("Usuario o clave incorrectos");
 }
 }
 
-// CAMBIO
 function mostrar(p){
 simulador.style.display="none";
 historial.style.display="none";
@@ -190,7 +193,6 @@ document.getElementById(p).style.display="block";
 if(p==="historial") renderHistorial();
 }
 
-// LIMPIAR
 function limpiar(){
 ["cliente","apellidos","dni","monto","tasa","plazo"].forEach(id=>{
 document.getElementById(id).value="";
@@ -199,7 +201,6 @@ resultado.innerHTML="";
 cronograma.innerHTML="";
 }
 
-// CALCULAR
 function calcular(){
 
 let nombre=cliente.value.trim();
@@ -225,12 +226,10 @@ resultado.innerHTML=`Producto: ${prod.toUpperCase()}<br>Cuota: S/ ${cuota.toFixe
 
 ultimaSimulacion={P,cuota,n,prod,nombre,ape,doc};
 
-// guardar cliente
 let data=JSON.parse(localStorage.getItem("clientes")||"[]");
 data.push({nombre,apellidos:ape,dni:doc});
 localStorage.setItem("clientes",JSON.stringify(data));
 
-// cronograma
 let saldo=P;
 let html="<table><tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
 
@@ -251,7 +250,6 @@ html+=`<tr>
 cronograma.innerHTML=html+"</table>";
 }
 
-// ENVIAR SIMULACIÓN
 function enviar(){
 let d=ultimaSimulacion;
 if(!d.P){ alert("Primero calcula"); return; }
@@ -263,7 +261,6 @@ Cuota: S/ ${d.cuota.toFixed(2)}`;
 location.href="https://wa.me/?text="+encodeURIComponent(msg);
 }
 
-// FILTRO
 function filtrar(){
 
 let texto=dni.value.toLowerCase();
@@ -285,7 +282,6 @@ DNI: ${c.dni}`;
 location.href="https://wa.me/?text="+encodeURIComponent(msg);
 }
 
-// HISTORIAL
 function renderHistorial(){
 let lista=document.getElementById("listaClientes");
 let data=JSON.parse(localStorage.getItem("clientes")||"[]");
@@ -296,33 +292,10 @@ data.forEach((c,i)=>{
 lista.innerHTML+=`
 <div class="item">
 <b>${c.nombre} ${c.apellidos}</b><br>DNI: ${c.dni}
-<div class="fila">
-<button class="btn-verde" onclick="cargar(${i})">Usar</button>
-<button class="btn-rojo" onclick="eliminar(${i})">Eliminar</button>
-</div>
 </div>`;
 });
 }
 
-function cargar(i){
-let data=JSON.parse(localStorage.getItem("clientes")||"[]");
-let c=data[i];
-
-cliente.value=c.nombre;
-apellidos.value=c.apellidos;
-dni.value=c.dni;
-
-mostrar('simulador');
-}
-
-function eliminar(i){
-let data=JSON.parse(localStorage.getItem("clientes")||"[]");
-data.splice(i,1);
-localStorage.setItem("clientes",JSON.stringify(data));
-renderHistorial();
-}
-
-// QR
 function enviarQR(tipo){
 location.href="https://wa.me/?text=Pago "+tipo;
 }

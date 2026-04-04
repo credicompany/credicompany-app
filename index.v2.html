@@ -11,7 +11,7 @@ margin:0;
 font-family:Arial;
 background:#123B63;
 color:white;
-padding-bottom:90px;
+padding-bottom:100px;
 }
 
 .header{
@@ -22,6 +22,8 @@ padding:20px;
 }
 
 .header img{width:180px;}
+
+.asesor{font-size:14px;margin-top:5px;}
 
 .card{
 background:#f2f2f2;
@@ -53,8 +55,20 @@ width:100%;
 .btn-verde{background:#10c251;}
 .btn-azul{background:#123B63;}
 
-.fila{display:flex;gap:10px;margin-top:10px;}
+.fila{
+display:flex;
+gap:10px;
+margin-top:10px;
+}
+
 .fila button{width:50%;}
+
+.card img{
+width:100%;
+border-radius:12px;
+margin-top:10px;
+cursor:pointer;
+}
 
 table{
 width:100%;
@@ -91,9 +105,10 @@ font-weight:bold;
 
 <div class="header">
 <img src="logo.png">
-<div>Asesor: <span id="nombreAsesor">-</span></div>
+<div class="asesor">Asesor: <span id="nombreAsesor">-</span></div>
 </div>
 
+<!-- LOGIN -->
 <div id="loginDiv" class="card">
 <h3>Ingreso Asesor</h3>
 <input id="usuario" placeholder="Usuario">
@@ -101,15 +116,17 @@ font-weight:bold;
 <button class="btn-verde" onclick="login()">Ingresar</button>
 </div>
 
+<!-- APP -->
 <div id="app" style="display:none">
 
+<!-- SIMULADOR -->
 <div id="simulador" class="card">
 
 <h3>Simulador</h3>
 
 <input id="cliente" placeholder="Nombre">
 <input id="apellidos" placeholder="Apellidos">
-<input id="dni" placeholder="DNI">
+<input id="dni" placeholder="DNI / Buscar cliente">
 
 <select id="producto">
 <option value="diario">Diario</option>
@@ -120,10 +137,10 @@ font-weight:bold;
 
 <input id="monto" placeholder="Monto">
 <input id="tasa" placeholder="Tasa (%)">
-<input id="plazo" placeholder="Cuotas">
+<input id="plazo" placeholder="Número de cuotas">
 
 <button class="btn-verde" onclick="calcular()">Calcular</button>
-<button onclick="limpiar()" style="background:#999;">🔄 Nuevo</button>
+<button onclick="limpiar()" style="background:#999;margin-top:5px;">🔄 Nuevo</button>
 
 <div id="resultado"></div>
 
@@ -136,25 +153,55 @@ font-weight:bold;
 
 </div>
 
+<!-- PAGOS -->
+<div id="pagos" class="card" style="display:none">
+
+<h3>💳 Medios de Pago</h3>
+
+<h4>Cuenta Principal</h4>
+<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg" onclick="enviarQR('Principal')">
+
+<h4>BBVA</h4>
+<img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg" onclick="enviarQR('BBVA')">
+
+<h4>BCP</h4>
+<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg" onclick="enviarQR('BCP')">
+
+<h4>Yape</h4>
+<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg" onclick="enviarQR('Yape')">
+
 </div>
 
+</div>
+
+<!-- MENU -->
 <div class="menu">
 <button onclick="mostrar('simulador')">Simular</button>
+<button onclick="mostrar('pagos')">Pagos</button>
 </div>
 
 <script>
 
 let ultimaSimulacion={};
+let asesor="";
 
 // LOGIN
 function login(){
 if(usuario.value=="admin" && clave.value=="1234"){
-nombreAsesor.innerText=usuario.value;
+asesor=usuario.value;
+nombreAsesor.innerText=asesor;
 loginDiv.style.display="none";
 app.style.display="block";
 }else{
 alert("Datos incorrectos");
 }
+}
+
+// CAMBIO PANTALLA
+function mostrar(p){
+simulador.style.display="none";
+pagos.style.display="none";
+document.getElementById(p).style.display="block";
 }
 
 // LIMPIAR
@@ -169,7 +216,7 @@ resultado.innerHTML="";
 cronograma.innerHTML="";
 }
 
-// 🔥 CALCULAR CORREGIDO
+// CALCULAR (CORREGIDO)
 function calcular(){
 
 let nombre=cliente.value.trim();
@@ -180,17 +227,17 @@ let P=parseFloat(monto.value.replace(",","."));
 let tasa=parseFloat(tasa.value.replace(",","."));
 let n=parseInt(plazo.value);
 
-if(!nombre || !ape || !doc){
+if(!nombre||!ape||!doc){
 alert("Completa datos del cliente");
 return;
 }
 
-if(isNaN(P) || isNaN(tasa) || isNaN(n)){
+if(isNaN(P)||isNaN(tasa)||isNaN(n)){
 alert("Monto, tasa y cuotas deben ser números");
 return;
 }
 
-if(P<=0 || tasa<=0 || n<=0){
+if(P<=0||tasa<=0||n<=0){
 alert("Valores deben ser mayores a 0");
 return;
 }
@@ -208,6 +255,11 @@ let cuota=(P*i)/(1-Math.pow(1+i,-n));
 resultado.innerHTML=`Producto: ${prod.toUpperCase()}<br>Cuota: S/ ${cuota.toFixed(2)}`;
 
 ultimaSimulacion={P,cuota,n,prod,i};
+
+// GUARDAR CLIENTE
+let data=JSON.parse(localStorage.getItem("clientes")||"[]");
+data.push({nombre,apellidos:ape,dni:doc});
+localStorage.setItem("clientes",JSON.stringify(data));
 
 // CRONOGRAMA
 let saldo=P;
@@ -232,18 +284,62 @@ cronograma.innerHTML=html;
 
 }
 
+// FILTRAR
+function filtrar(){
+
+let texto=dni.value.trim().toLowerCase();
+
+let data=JSON.parse(localStorage.getItem("clientes")||"[]");
+
+let cliente=data.find(c=>
+(c.dni+"").toLowerCase().includes(texto)||
+(c.nombre+"").toLowerCase().includes(texto)||
+(c.apellidos+"").toLowerCase().includes(texto)
+);
+
+if(!cliente){
+alert("Cliente no encontrado");
+return;
+}
+
+let msg=`👤 Cliente encontrado
+
+Nombre: ${cliente.nombre}
+Apellidos: ${cliente.apellidos}
+DNI: ${cliente.dni}`;
+
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
+}
+
 // ENVIAR
 function enviar(){
+
 if(!ultimaSimulacion.P){
 alert("Primero calcula");
 return;
 }
-window.open("https://wa.me/?text="+encodeURIComponent("Simulación enviada"));
+
+let msg=`📌 Simulación
+
+💰 Monto: S/ ${ultimaSimulacion.P}
+💵 Cuota: S/ ${ultimaSimulacion.cuota.toFixed(2)}
+📅 Plazo: ${ultimaSimulacion.n}
+📊 Producto: ${ultimaSimulacion.prod}`;
+
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
 }
 
-// FILTRAR
-function filtrar(){
-window.open("https://wa.me/?text="+encodeURIComponent("Cliente filtrado"));
+// QR
+function enviarQR(tipo){
+
+let link="";
+
+if(tipo=="Principal") link="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg";
+if(tipo=="BBVA") link="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg";
+if(tipo=="BCP") link="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg";
+if(tipo=="Yape") link="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg";
+
+window.open("https://wa.me/?text="+encodeURIComponent("Pago vía "+tipo+"\n"+link));
 }
 
 </script>

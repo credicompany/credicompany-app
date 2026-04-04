@@ -1,8 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 🔥 MODO SIN CACHE -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
 <title>Credicompany</title>
 
 <style>
@@ -76,6 +83,7 @@ color:#333;
 <div>Asesor: <span id="nombreAsesor">-</span></div>
 </div>
 
+<!-- LOGIN -->
 <div id="loginDiv" class="card">
 <h3>Ingreso Asesor</h3>
 <input id="usuario" placeholder="Usuario">
@@ -83,8 +91,10 @@ color:#333;
 <button class="btn-verde" onclick="login()">Ingresar</button>
 </div>
 
+<!-- APP -->
 <div id="app" style="display:none">
 
+<!-- SIMULADOR -->
 <div id="simulador" class="card">
 
 <h3>Simulador</h3>
@@ -118,12 +128,15 @@ color:#333;
 
 </div>
 
+<!-- HISTORIAL -->
 <div id="historial" class="card" style="display:none">
 <h3>Historial de Clientes</h3>
 <div id="listaClientes"></div>
 </div>
 
+<!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
+
 <h3>💳 Medios de Pago</h3>
 
 <img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg" onclick="enviarQR('Principal')">
@@ -135,6 +148,7 @@ color:#333;
 
 </div>
 
+<!-- MENU -->
 <div class="menu">
 <button onclick="mostrar('simulador')">Simular</button>
 <button onclick="mostrar('historial')">Historial</button>
@@ -143,8 +157,17 @@ color:#333;
 
 <script>
 
+// 🔥 ANTI CACHE REAL
+if (!location.href.includes("?v=")) {
+location.href = location.href + "?v=" + Date.now();
+}
+
+// 🔄 REFRESCO CONTROLADO
+setTimeout(()=>location.reload(), 60000);
+
 let ultimaSimulacion={};
 
+// LOGIN
 function login(){
 let u=usuario.value.trim().toLowerCase();
 let c=clave.value.trim();
@@ -158,6 +181,7 @@ alert("Usuario o clave incorrectos");
 }
 }
 
+// CAMBIO
 function mostrar(p){
 simulador.style.display="none";
 historial.style.display="none";
@@ -166,6 +190,7 @@ document.getElementById(p).style.display="block";
 if(p==="historial") renderHistorial();
 }
 
+// LIMPIAR
 function limpiar(){
 ["cliente","apellidos","dni","monto","tasa","plazo"].forEach(id=>{
 document.getElementById(id).value="";
@@ -174,6 +199,7 @@ resultado.innerHTML="";
 cronograma.innerHTML="";
 }
 
+// CALCULAR
 function calcular(){
 
 let nombre=cliente.value.trim();
@@ -199,12 +225,33 @@ resultado.innerHTML=`Producto: ${prod.toUpperCase()}<br>Cuota: S/ ${cuota.toFixe
 
 ultimaSimulacion={P,cuota,n,prod,nombre,ape,doc};
 
+// guardar cliente
 let data=JSON.parse(localStorage.getItem("clientes")||"[]");
 data.push({nombre,apellidos:ape,dni:doc});
 localStorage.setItem("clientes",JSON.stringify(data));
 
+// cronograma
+let saldo=P;
+let html="<table><tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
+
+for(let k=1;k<=Math.min(3,n);k++){
+let interes=saldo*i;
+let capital=cuota-interes;
+saldo-=capital;
+
+html+=`<tr>
+<td>${k}</td>
+<td>${cuota.toFixed(2)}</td>
+<td>${interes.toFixed(2)}</td>
+<td>${capital.toFixed(2)}</td>
+<td>${saldo.toFixed(2)}</td>
+</tr>`;
 }
 
+cronograma.innerHTML=html+"</table>";
+}
+
+// ENVIAR SIMULACIÓN
 function enviar(){
 let d=ultimaSimulacion;
 if(!d.P){ alert("Primero calcula"); return; }
@@ -216,6 +263,7 @@ Cuota: S/ ${d.cuota.toFixed(2)}`;
 location.href="https://wa.me/?text="+encodeURIComponent(msg);
 }
 
+// FILTRO
 function filtrar(){
 
 let texto=dni.value.toLowerCase();
@@ -237,6 +285,7 @@ DNI: ${c.dni}`;
 location.href="https://wa.me/?text="+encodeURIComponent(msg);
 }
 
+// HISTORIAL
 function renderHistorial(){
 let lista=document.getElementById("listaClientes");
 let data=JSON.parse(localStorage.getItem("clientes")||"[]");
@@ -273,6 +322,7 @@ localStorage.setItem("clientes",JSON.stringify(data));
 renderHistorial();
 }
 
+// QR
 function enviarQR(tipo){
 location.href="https://wa.me/?text=Pago "+tipo;
 }

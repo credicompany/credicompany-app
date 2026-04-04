@@ -3,63 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Credicompany PRO</title>
+<title>Credicompany</title>
 
 <style>
-body{
-margin:0;
-font-family:Arial;
-background:#123B63;
-color:white;
-padding-bottom:100px;
-}
-
-.header{
-display:flex;
-flex-direction:column;
-align-items:center;
-padding:20px;
-}
-
+body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:100px;}
+.header{display:flex;flex-direction:column;align-items:center;padding:20px;}
 .header img{width:180px;}
 
-.card{
-background:#f2f2f2;
-color:#333;
-margin:15px;
-padding:20px;
-border-radius:15px;
-}
-
+.card{background:#f2f2f2;color:#333;margin:15px;padding:20px;border-radius:15px;}
 h3{text-align:center;}
 
-input, select{
-width:100%;
-padding:12px;
-margin-top:10px;
-border-radius:10px;
-border:none;
-}
+input, select{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:none;}
 
-button{
-padding:14px;
-border:none;
-border-radius:12px;
-color:white;
-font-weight:bold;
-width:100%;
-}
-
+button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;width:100%;}
 .btn-verde{background:#10c251;}
 .btn-azul{background:#123B63;}
-.btn-naranja{background:#ff8c00;}
+.btn-rojo{background:#e74c3c;}
 
-.fila{
-display:flex;
-gap:10px;
-margin-top:10px;
-}
-
+.fila{display:flex;gap:10px;margin-top:10px;}
 .fila button{width:50%;}
 
 .card img{
@@ -97,6 +58,14 @@ background:none;
 color:#123B63;
 font-weight:bold;
 }
+
+.item{
+background:white;
+padding:10px;
+margin-top:10px;
+border-radius:10px;
+color:#333;
+}
 </style>
 </head>
 
@@ -126,7 +95,6 @@ font-weight:bold;
 <input id="cliente" placeholder="Nombre">
 <input id="apellidos" placeholder="Apellidos">
 <input id="dni" placeholder="DNI / Buscar cliente">
-<input id="telefono" placeholder="Teléfono (Ej: 51999999999)">
 
 <select id="producto">
 <option value="diario">Diario</option>
@@ -149,13 +117,14 @@ font-weight:bold;
 <button class="btn-azul" onclick="filtrar()">🔍 Filtrar</button>
 </div>
 
-<!-- 🔥 SOLO AGREGADO -->
-<button class="btn-naranja" onclick="recordatorio()" style="margin-top:10px;">
-⏰ Recordatorio de pago
-</button>
-
 <div id="cronograma"></div>
 
+</div>
+
+<!-- HISTORIAL -->
+<div id="historial" class="card" style="display:none">
+<h3>Historial de Clientes</h3>
+<div id="listaClientes"></div>
 </div>
 
 <!-- PAGOS -->
@@ -175,6 +144,7 @@ font-weight:bold;
 <!-- MENU -->
 <div class="menu">
 <button onclick="mostrar('simulador')">Simular</button>
+<button onclick="mostrar('historial')">Historial</button>
 <button onclick="mostrar('pagos')">Pagos</button>
 </div>
 
@@ -184,51 +154,50 @@ let ultimaSimulacion={};
 
 // LOGIN
 function login(){
-let u=document.getElementById("usuario").value.trim().toLowerCase();
-let c=document.getElementById("clave").value.trim();
+let u=usuario.value.trim().toLowerCase();
+let c=clave.value.trim();
 
 if(u==="admin" && c==="1234"){
-document.getElementById("nombreAsesor").innerText=u;
-document.getElementById("loginDiv").style.display="none";
-document.getElementById("app").style.display="block";
+nombreAsesor.innerText=u;
+loginDiv.style.display="none";
+app.style.display="block";
 }else{
 alert("Usuario o clave incorrectos");
 }
 }
 
-// CAMBIO
+// CAMBIO PANTALLA
 function mostrar(p){
-document.getElementById("simulador").style.display="none";
-document.getElementById("pagos").style.display="none";
+simulador.style.display="none";
+historial.style.display="none";
+pagos.style.display="none";
 document.getElementById(p).style.display="block";
+
+if(p==="historial") renderHistorial();
 }
 
 // LIMPIAR
 function limpiar(){
-["cliente","apellidos","dni","telefono","monto","tasa","plazo"].forEach(id=>{
+["cliente","apellidos","dni","monto","tasa","plazo"].forEach(id=>{
 document.getElementById(id).value="";
 });
-document.getElementById("resultado").innerHTML="";
-document.getElementById("cronograma").innerHTML="";
+resultado.innerHTML="";
+cronograma.innerHTML="";
 }
 
-// CALCULAR (NO TOCADO)
+// CALCULAR
 function calcular(){
 
 let nombre=cliente.value.trim();
 let ape=apellidos.value.trim();
 let doc=dni.value.trim();
-let tel=telefono.value.trim();
 
 let P=parseFloat(monto.value);
 let tasaVal=parseFloat(tasa.value);
 let n=parseInt(plazo.value);
 let prod=producto.value;
 
-if(!nombre||!ape||!doc||!tel){
-alert("Completa todos los datos");
-return;
-}
+if(!nombre||!ape||!doc){ alert("Completa datos"); return; }
 
 let i=0;
 if(prod==="semanal") i=(tasaVal/4)/100;
@@ -240,9 +209,14 @@ let cuota=(P*i)/(1-Math.pow(1+i,-n));
 
 resultado.innerHTML=`Producto: ${prod.toUpperCase()}<br>Cuota: S/ ${cuota.toFixed(2)}`;
 
-ultimaSimulacion={P,cuota,n,prod,i,nombre,ape,doc,tel};
+ultimaSimulacion={P,cuota,n,prod,nombre,ape,doc};
 
-// CRONOGRAMA
+// guardar
+let data=JSON.parse(localStorage.getItem("clientes")||"[]");
+data.push({nombre,apellidos:ape,dni:doc});
+localStorage.setItem("clientes",JSON.stringify(data));
+
+// cronograma
 let saldo=P;
 let html="<table><tr><th>#</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Saldo</th></tr>";
 
@@ -260,35 +234,22 @@ html+=`<tr>
 </tr>`;
 }
 
-html+="</table>";
-cronograma.innerHTML=html;
-
-// GUARDAR
-let data=JSON.parse(localStorage.getItem("clientes")||"[]");
-data.push({nombre,apellidos:ape,dni:doc,telefono:tel});
-localStorage.setItem("clientes",JSON.stringify(data));
-
+cronograma.innerHTML=html+"</table>";
 }
 
 // ENVIAR
 function enviar(){
 let d=ultimaSimulacion;
-if(!d.tel){ alert("Primero calcula"); return; }
+if(!d.P){ alert("Primero calcula"); return; }
 
-let msg=`📌 Simulación Credicompany
-
-Cliente: ${d.nombre} ${d.ape}
+let msg=`Cliente: ${d.nombre} ${d.ape}
 DNI: ${d.doc}
+Cuota: S/ ${d.cuota.toFixed(2)}`;
 
-Producto: ${d.prod.toUpperCase()}
-Monto: S/ ${d.P}
-Cuota: S/ ${d.cuota.toFixed(2)}
-Cuotas: ${d.n}`;
-
-location.href=`https://wa.me/${d.tel}?text=`+encodeURIComponent(msg);
+location.href="https://wa.me/?text="+encodeURIComponent(msg);
 }
 
-// FILTRAR → CLIENTE (NO TOCADO)
+// FILTRAR
 function filtrar(){
 
 let texto=dni.value.toLowerCase();
@@ -299,41 +260,52 @@ let c=data.find(x=>
 (x.nombre+"").toLowerCase().includes(texto)
 );
 
-if(!c){
-alert("Cliente no encontrado");
-return;
-}
+if(!c){ alert("No encontrado"); return; }
 
 cliente.value=c.nombre;
 apellidos.value=c.apellidos;
-telefono.value=c.telefono;
 
 let msg=`${c.nombre} ${c.apellidos}
 DNI: ${c.dni}`;
 
-location.href=`https://wa.me/${c.telefono}?text=`+encodeURIComponent(msg);
+location.href="https://wa.me/?text="+encodeURIComponent(msg);
 }
 
-// 🔥 SOLO NUEVO (NO ROMPE NADA)
-function recordatorio(){
+// HISTORIAL
+function renderHistorial(){
+let lista=document.getElementById("listaClientes");
+let data=JSON.parse(localStorage.getItem("clientes")||"[]");
 
-let nombre=cliente.value;
-let ape=apellidos.value;
-let tel=telefono.value;
+lista.innerHTML="";
 
-if(!tel){
-alert("Ingrese o filtre cliente");
-return;
+data.forEach((c,i)=>{
+lista.innerHTML+=`
+<div class="item">
+<b>${c.nombre} ${c.apellidos}</b><br>DNI: ${c.dni}
+<div class="fila">
+<button class="btn-verde" onclick="cargar(${i})">Usar</button>
+<button class="btn-rojo" onclick="eliminar(${i})">Eliminar</button>
+</div>
+</div>`;
+});
 }
 
-let msg=`⏰ Recordatorio de pago
+function cargar(i){
+let data=JSON.parse(localStorage.getItem("clientes")||"[]");
+let c=data[i];
 
-Estimado(a) ${nombre} ${ape},
-le recordamos su pago pendiente.
+cliente.value=c.nombre;
+apellidos.value=c.apellidos;
+dni.value=c.dni;
 
-Credicompany`;
+mostrar('simulador');
+}
 
-location.href=`https://wa.me/${tel}?text=`+encodeURIComponent(msg);
+function eliminar(i){
+let data=JSON.parse(localStorage.getItem("clientes")||"[]");
+data.splice(i,1);
+localStorage.setItem("clientes",JSON.stringify(data));
+renderHistorial();
 }
 
 // QR

@@ -114,7 +114,7 @@ margin-top:5px;
 .alerta{background:#ff9800;}
 .mora{background:#e74c3c;}
 
-/* PAGOS PRO */
+/* PAGOS PROFESIONAL */
 .pagos-container{
 display:flex;
 flex-direction:column;
@@ -137,6 +137,7 @@ width:100%;
 height:220px;
 object-fit:contain;
 border-radius:10px;
+cursor:pointer;
 }
 
 .pago-titulo{
@@ -249,17 +250,17 @@ color:#123B63;
 
 <div class="pago-box">
 <div class="pago-titulo">BBVA</div>
-<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg">
+<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg" onclick="verImg(this.src)">
 </div>
 
 <div class="pago-box">
 <div class="pago-titulo">BCP</div>
-<img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg">
+<img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg" onclick="verImg(this.src)">
 </div>
 
 <div class="pago-box">
 <div class="pago-titulo">YAPE</div>
-<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg">
+<img src="https://i.postimg.cc/8CzXn1wN/yape-qr.png" onclick="verImg(this.src)">
 </div>
 
 </div>
@@ -413,6 +414,11 @@ ${estado.texto}
 </span>
 </div>`;
 });
+}
+
+function verImg(src){
+let w=window.open("");
+w.document.write("<img src='"+src+"' style='width:100%'>");
 }
 
 function ubicacion(){

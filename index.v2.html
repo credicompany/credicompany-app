@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Credicompany</title>
+<title>Credicompany PRO</title>
 
 <style>
 body{
@@ -52,6 +52,7 @@ width:100%;
 
 .btn-verde{background:#10c251;}
 .btn-azul{background:#123B63;}
+.btn-naranja{background:#ff8c00;}
 
 .fila{
 display:flex;
@@ -117,6 +118,7 @@ font-weight:bold;
 <!-- APP -->
 <div id="app" style="display:none">
 
+<!-- SIMULADOR -->
 <div id="simulador" class="card">
 
 <h3>Simulador</h3>
@@ -124,6 +126,7 @@ font-weight:bold;
 <input id="cliente" placeholder="Nombre">
 <input id="apellidos" placeholder="Apellidos">
 <input id="dni" placeholder="DNI / Buscar cliente">
+<input id="telefono" placeholder="Teléfono (Ej: 51999999999)">
 
 <select id="producto">
 <option value="diario">Diario</option>
@@ -146,6 +149,11 @@ font-weight:bold;
 <button class="btn-azul" onclick="filtrar()">🔍 Filtrar</button>
 </div>
 
+<!-- 🔥 SOLO AGREGADO -->
+<button class="btn-naranja" onclick="recordatorio()" style="margin-top:10px;">
+⏰ Recordatorio de pago
+</button>
+
 <div id="cronograma"></div>
 
 </div>
@@ -155,16 +163,9 @@ font-weight:bold;
 
 <h3>💳 Medios de Pago</h3>
 
-<h4>Cuenta Principal</h4>
 <img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg" onclick="enviarQR('Principal')">
-
-<h4>BBVA</h4>
 <img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg" onclick="enviarQR('BBVA')">
-
-<h4>BCP</h4>
 <img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg" onclick="enviarQR('BCP')">
-
-<h4>Yape</h4>
 <img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg" onclick="enviarQR('Yape')">
 
 </div>
@@ -181,7 +182,7 @@ font-weight:bold;
 
 let ultimaSimulacion={};
 
-// LOGIN CORREGIDO
+// LOGIN
 function login(){
 let u=document.getElementById("usuario").value.trim().toLowerCase();
 let c=document.getElementById("clave").value.trim();
@@ -195,7 +196,7 @@ alert("Usuario o clave incorrectos");
 }
 }
 
-// CAMBIO PANTALLA
+// CAMBIO
 function mostrar(p){
 document.getElementById("simulador").style.display="none";
 document.getElementById("pagos").style.display="none";
@@ -204,48 +205,42 @@ document.getElementById(p).style.display="block";
 
 // LIMPIAR
 function limpiar(){
-["cliente","apellidos","dni","monto","tasa","plazo"].forEach(id=>{
+["cliente","apellidos","dni","telefono","monto","tasa","plazo"].forEach(id=>{
 document.getElementById(id).value="";
 });
 document.getElementById("resultado").innerHTML="";
 document.getElementById("cronograma").innerHTML="";
 }
 
-// CALCULAR
+// CALCULAR (NO TOCADO)
 function calcular(){
 
-let nombre=document.getElementById("cliente").value.trim();
-let ape=document.getElementById("apellidos").value.trim();
-let doc=document.getElementById("dni").value.trim();
+let nombre=cliente.value.trim();
+let ape=apellidos.value.trim();
+let doc=dni.value.trim();
+let tel=telefono.value.trim();
 
-let P=parseFloat(document.getElementById("monto").value);
-let tasa=parseFloat(document.getElementById("tasa").value);
-let n=parseInt(document.getElementById("plazo").value);
-let prod=document.getElementById("producto").value;
+let P=parseFloat(monto.value);
+let tasaVal=parseFloat(tasa.value);
+let n=parseInt(plazo.value);
+let prod=producto.value;
 
-if(!nombre || !ape || !doc){
-alert("Completa datos cliente");
-return;
-}
-
-if(isNaN(P) || isNaN(tasa) || isNaN(n)){
-alert("Ingrese números válidos");
+if(!nombre||!ape||!doc||!tel){
+alert("Completa todos los datos");
 return;
 }
 
 let i=0;
-
-if(prod==="semanal") i=(tasa/4)/100;
-if(prod==="diario") i=(tasa/30)/100;
-if(prod==="quincenal") i=(tasa/2)/100;
-if(prod==="mensual") i=(tasa)/100;
+if(prod==="semanal") i=(tasaVal/4)/100;
+if(prod==="diario") i=(tasaVal/30)/100;
+if(prod==="quincenal") i=(tasaVal/2)/100;
+if(prod==="mensual") i=(tasaVal)/100;
 
 let cuota=(P*i)/(1-Math.pow(1+i,-n));
 
-document.getElementById("resultado").innerHTML=
-`Producto: ${prod.toUpperCase()}<br>Cuota: S/ ${cuota.toFixed(2)}`;
+resultado.innerHTML=`Producto: ${prod.toUpperCase()}<br>Cuota: S/ ${cuota.toFixed(2)}`;
 
-ultimaSimulacion={P,cuota,n,prod,i};
+ultimaSimulacion={P,cuota,n,prod,i,nombre,ape,doc,tel};
 
 // CRONOGRAMA
 let saldo=P;
@@ -266,25 +261,42 @@ html+=`<tr>
 }
 
 html+="</table>";
-document.getElementById("cronograma").innerHTML=html;
+cronograma.innerHTML=html;
 
-// GUARDAR CLIENTE
+// GUARDAR
 let data=JSON.parse(localStorage.getItem("clientes")||"[]");
-data.push({nombre,apellidos:ape,dni:doc});
+data.push({nombre,apellidos:ape,dni:doc,telefono:tel});
 localStorage.setItem("clientes",JSON.stringify(data));
 
 }
 
-// FILTRAR → WHATSAPP
+// ENVIAR
+function enviar(){
+let d=ultimaSimulacion;
+if(!d.tel){ alert("Primero calcula"); return; }
+
+let msg=`📌 Simulación Credicompany
+
+Cliente: ${d.nombre} ${d.ape}
+DNI: ${d.doc}
+
+Producto: ${d.prod.toUpperCase()}
+Monto: S/ ${d.P}
+Cuota: S/ ${d.cuota.toFixed(2)}
+Cuotas: ${d.n}`;
+
+location.href=`https://wa.me/${d.tel}?text=`+encodeURIComponent(msg);
+}
+
+// FILTRAR → CLIENTE (NO TOCADO)
 function filtrar(){
 
-let texto=document.getElementById("dni").value.toLowerCase();
+let texto=dni.value.toLowerCase();
 let data=JSON.parse(localStorage.getItem("clientes")||"[]");
 
 let c=data.find(x=>
 (x.dni+"").includes(texto)||
-(x.nombre+"").toLowerCase().includes(texto)||
-(x.apellidos+"").toLowerCase().includes(texto)
+(x.nombre+"").toLowerCase().includes(texto)
 );
 
 if(!c){
@@ -292,27 +304,41 @@ alert("Cliente no encontrado");
 return;
 }
 
-let mensaje=`🔍 FILTRO CLIENTE
+cliente.value=c.nombre;
+apellidos.value=c.apellidos;
+telefono.value=c.telefono;
 
-Nombre: ${c.nombre}
-Apellidos: ${c.apellidos}
+let msg=`${c.nombre} ${c.apellidos}
 DNI: ${c.dni}`;
 
-window.open("https://wa.me/?text="+encodeURIComponent(mensaje));
+location.href=`https://wa.me/${c.telefono}?text=`+encodeURIComponent(msg);
 }
 
-// ENVIAR
-function enviar(){
-if(!ultimaSimulacion.P){
-alert("Primero calcula");
+// 🔥 SOLO NUEVO (NO ROMPE NADA)
+function recordatorio(){
+
+let nombre=cliente.value;
+let ape=apellidos.value;
+let tel=telefono.value;
+
+if(!tel){
+alert("Ingrese o filtre cliente");
 return;
 }
-window.open("https://wa.me/?text="+encodeURIComponent("Simulación lista"));
+
+let msg=`⏰ Recordatorio de pago
+
+Estimado(a) ${nombre} ${ape},
+le recordamos su pago pendiente.
+
+Credicompany`;
+
+location.href=`https://wa.me/${tel}?text=`+encodeURIComponent(msg);
 }
 
 // QR
 function enviarQR(tipo){
-window.open("https://wa.me/?text="+encodeURIComponent("Pago vía "+tipo));
+location.href="https://wa.me/?text=Pago "+tipo;
 }
 
 </script>

@@ -117,7 +117,6 @@ font-weight:bold;
 <!-- APP -->
 <div id="app" style="display:none">
 
-<!-- SIMULADOR -->
 <div id="simulador" class="card">
 
 <h3>Simulador</h3>
@@ -205,7 +204,7 @@ document.getElementById("resultado").innerHTML="";
 document.getElementById("cronograma").innerHTML="";
 }
 
-// 🔥 CALCULAR DEFINITIVO
+// CALCULAR
 function calcular(){
 
 let nombre=document.getElementById("cliente").value.trim();
@@ -269,16 +268,7 @@ localStorage.setItem("clientes",JSON.stringify(data));
 
 }
 
-// ENVIAR
-function enviar(){
-if(!ultimaSimulacion.P){
-alert("Primero calcula");
-return;
-}
-window.open("https://wa.me/?text="+encodeURIComponent("Simulación lista"));
-}
-
-// FILTRAR
+// 🔥 FILTRAR MEJORADO
 function filtrar(){
 
 let texto=document.getElementById("dni").value.toLowerCase();
@@ -295,9 +285,22 @@ alert("Cliente no encontrado");
 return;
 }
 
-window.open("https://wa.me/?text="+encodeURIComponent(
-`Cliente:\n${c.nombre} ${c.apellidos}\nDNI: ${c.dni}`
-));
+let mensaje=`🔍 FILTRO CLIENTE
+
+Nombre: ${c.nombre}
+Apellidos: ${c.apellidos}
+DNI: ${c.dni}`;
+
+window.open("https://wa.me/?text="+encodeURIComponent(mensaje));
+}
+
+// ENVIAR
+function enviar(){
+if(!ultimaSimulacion.P){
+alert("Primero calcula");
+return;
+}
+window.open("https://wa.me/?text="+encodeURIComponent("Simulación lista"));
 }
 
 // QR

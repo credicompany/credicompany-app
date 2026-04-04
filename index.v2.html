@@ -155,9 +155,16 @@ font-weight:bold;
 
 <h3>💳 Medios de Pago</h3>
 
+<h4>Cuenta Principal</h4>
 <img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg" onclick="enviarQR('Principal')">
+
+<h4>BBVA</h4>
 <img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg" onclick="enviarQR('BBVA')">
+
+<h4>BCP</h4>
 <img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg" onclick="enviarQR('BCP')">
+
+<h4>Yape</h4>
 <img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg" onclick="enviarQR('Yape')">
 
 </div>
@@ -174,21 +181,21 @@ font-weight:bold;
 
 let ultimaSimulacion={};
 
-// LOGIN
+// LOGIN CORREGIDO
 function login(){
-let u=document.getElementById("usuario").value;
-let c=document.getElementById("clave").value;
+let u=document.getElementById("usuario").value.trim().toLowerCase();
+let c=document.getElementById("clave").value.trim();
 
 if(u==="admin" && c==="1234"){
 document.getElementById("nombreAsesor").innerText=u;
 document.getElementById("loginDiv").style.display="none";
 document.getElementById("app").style.display="block";
 }else{
-alert("Datos incorrectos");
+alert("Usuario o clave incorrectos");
 }
 }
 
-// CAMBIO
+// CAMBIO PANTALLA
 function mostrar(p){
 document.getElementById("simulador").style.display="none";
 document.getElementById("pagos").style.display="none";
@@ -261,14 +268,14 @@ html+=`<tr>
 html+="</table>";
 document.getElementById("cronograma").innerHTML=html;
 
-// GUARDAR
+// GUARDAR CLIENTE
 let data=JSON.parse(localStorage.getItem("clientes")||"[]");
 data.push({nombre,apellidos:ape,dni:doc});
 localStorage.setItem("clientes",JSON.stringify(data));
 
 }
 
-// 🔥 FILTRAR MEJORADO
+// FILTRAR → WHATSAPP
 function filtrar(){
 
 let texto=document.getElementById("dni").value.toLowerCase();
@@ -305,7 +312,7 @@ window.open("https://wa.me/?text="+encodeURIComponent("Simulación lista"));
 
 // QR
 function enviarQR(tipo){
-window.open("https://wa.me/?text=Pago "+tipo);
+window.open("https://wa.me/?text="+encodeURIComponent("Pago vía "+tipo));
 }
 
 </script>

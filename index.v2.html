@@ -35,7 +35,6 @@ padding:20px;
 border-radius:15px;
 }
 
-/* BOTÓN VOLVER */
 .volver{
 position:sticky;
 top:0;
@@ -100,20 +99,7 @@ border-radius:10px;
 color:#333;
 }
 
-.estado{
-padding:6px;
-border-radius:6px;
-color:white;
-font-size:12px;
-display:inline-block;
-margin-top:5px;
-}
-
-.ok{background:#10c251;}
-.alerta{background:#ff9800;}
-.mora{background:#e74c3c;}
-
-/* PAGOS PROFESIONAL */
+/* PAGOS */
 .pagos-container{
 display:flex;
 flex-direction:column;
@@ -129,6 +115,7 @@ width:100%;
 max-width:320px;
 text-align:center;
 box-shadow:0 2px 6px rgba(0,0,0,0.2);
+cursor:pointer;
 }
 
 .pago-box img{
@@ -169,7 +156,6 @@ color:#123B63;
 <div class="box" onclick="mostrar('simulador')">💰 Simulación</div>
 <div class="box" onclick="mostrar('clientes')">👥 Clientes</div>
 <div class="box" onclick="mostrar('pagos')">💳 Pagos</div>
-<div class="box" onclick="ubicacion()">📍 Ubicación</div>
 </div>
 </div>
 
@@ -246,22 +232,22 @@ color:#123B63;
 
 <div class="pagos-container">
 
-<div class="pago-box">
+<div class="pago-box" onclick="enviarQR('BBVA','https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg')">
 <div class="pago-titulo">BBVA</div>
 <img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg">
 </div>
 
-<div class="pago-box">
+<div class="pago-box" onclick="enviarQR('BCP','https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg')">
 <div class="pago-titulo">BCP</div>
 <img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg">
 </div>
 
-<div class="pago-box">
+<div class="pago-box" onclick="enviarQR('Yape','https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg')">
 <div class="pago-titulo">YAPE</div>
 <img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg">
 </div>
 
-<div class="pago-box">
+<div class="pago-box" onclick="enviarQR('Otros medios','https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg')">
 <div class="pago-titulo">OTRO</div>
 <img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg">
 </div>
@@ -319,14 +305,43 @@ let i=t/4;
 let cuota=(P*i)/(1-Math.pow(1+i,-n));
 
 resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
+
+window.sim={
+nombre:cliente.value,
+ape:apellidos.value,
+dni:dni.value,
+cuota:cuota
+};
 }
 
 function enviar(){
-location.href="https://wa.me/?text=Simulación Credicompany";
+let d=window.sim;
+if(!d){alert("Primero calcula");return;}
+
+let msg=`Simulación:
+${d.nombre} ${d.ape}
+DNI: ${d.dni}
+Cuota: S/ ${d.cuota.toFixed(2)}`;
+
+location.href="https://wa.me/?text="+encodeURIComponent(msg);
 }
 
 function filtrar(){
-location.href="https://wa.me/?text=Filtro cliente";
+let texto=dni.value.toLowerCase();
+let data=JSON.parse(localStorage.getItem("cartera_"+asesor)||"[]");
+
+let c=data.find(x=>
+(x.dni+"").includes(texto)||
+(x.nombre+"").toLowerCase().includes(texto)
+);
+
+if(!c){alert("No encontrado");return;}
+
+let msg=`Filtro:
+${c.nombre} ${c.apellidos}
+DNI: ${c.dni}`;
+
+location.href="https://wa.me/?text="+encodeURIComponent(msg);
 }
 
 function registrarPago(){
@@ -365,8 +380,19 @@ Monto: S/ ${c.monto}
 });
 }
 
-function ubicacion(){
-alert("Ubicación en desarrollo");
+function enviarQR(tipo,link){
+
+let mensaje=`💳 Credicompany
+
+Puede realizar su pago vía ${tipo}
+
+Escanee el siguiente código:
+${link}
+
+Luego enviar su comprobante.`;
+
+location.href="https://wa.me/?text="+encodeURIComponent(mensaje);
+
 }
 
 </script>

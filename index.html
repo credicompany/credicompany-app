@@ -35,12 +35,6 @@ padding:20px;
 border-radius:15px;
 }
 
-#pagos.card{
-margin:0;
-border-radius:20px 20px 0 0;
-padding:15px;
-}
-
 .volver{
 position:sticky;
 top:0;
@@ -126,7 +120,6 @@ color:#333;
 <div class="grid">
 <div class="box" onclick="mostrar('simulador')">💰 Simulación</div>
 <div class="box" onclick="mostrar('clientes')">👥 Clientes</div>
-<div class="box" onclick="mostrar('pagos')">💳 Pagos</div>
 <div class="box" onclick="enviarUbicacion()">📍 Ubicación</div>
 </div>
 </div>
@@ -167,20 +160,6 @@ color:#333;
 
 </div>
 
-<!-- CLIENTES -->
-<div id="clientes" class="card" style="display:none">
-<div class="volver" onclick="volver()">← Volver</div>
-
-<input id="c_nombre" placeholder="Nombre">
-<input id="c_apellidos" placeholder="Apellidos">
-<input id="c_dni" placeholder="DNI">
-<input id="c_monto" placeholder="Monto">
-
-<button class="btn-verde" onclick="guardarCliente()">Guardar</button>
-
-<div id="listaClientes"></div>
-</div>
-
 </div>
 
 <script>
@@ -198,7 +177,6 @@ function mostrar(p){
 dashboard.style.display="none";
 app.style.display="block";
 simulador.style.display="none";
-clientes.style.display="none";
 document.getElementById(p).style.display="block";
 }
 
@@ -214,21 +192,50 @@ let t=parseFloat(tasa.value)/100;
 let n=parseInt(plazo.value);
 
 let i=0;
+let dias=0;
 
-if(producto.value==="diario") i=t/30;
-if(producto.value==="semanal") i=t/4;
-if(producto.value==="quincenal") i=t/2;
-if(producto.value==="mensual") i=t;
+if(producto.value==="diario"){ i=t/30; dias=1; }
+if(producto.value==="semanal"){ i=t/4; dias=7; }
+if(producto.value==="quincenal"){ i=t/2; dias=15; }
+if(producto.value==="mensual"){ i=t; dias=30; }
 
 let cuota=(P*i)/(1-Math.pow(1+i,-n));
 
 resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
 
-// CRONOGRAMA
+// CRONOGRAMA COMPLETO
 let html="<h4>Cronograma:</h4>";
 
+let saldo = P;
+let fecha = new Date();
+
 for(let c=1;c<=n;c++){
-html+=`<div class="item">Cuota ${c}: S/ ${cuota.toFixed(2)}</div>`;
+
+let interes = saldo * i;
+let capital = cuota - interes;
+saldo = saldo - capital;
+
+if(saldo < 0) saldo = 0;
+
+fecha.setDate(fecha.getDate()+dias);
+
+let dia = fecha.getDate().toString().padStart(2,'0');
+let mes = (fecha.getMonth()+1).toString().padStart(2,'0');
+let anio = fecha.getFullYear();
+
+let fechaTexto = `${dia}/${mes}/${anio}`;
+
+html+=`
+<div class="item">
+<b>Cuota ${c}</b><br>
+Fecha: ${fechaTexto}<br>
+Cuota: S/ ${cuota.toFixed(2)}<br>
+Interés: S/ ${interes.toFixed(2)}<br>
+Capital: S/ ${capital.toFixed(2)}<br>
+Saldo: S/ ${saldo.toFixed(2)}
+</div>
+`;
+
 }
 
 cronograma.innerHTML=html;
@@ -257,7 +264,6 @@ cronograma.innerHTML="";
 }
 
 function enviarUbicacion(){
-
 let msg = `📍 Ubicación Asesor
 
 Asesor: ${asesor}
@@ -266,12 +272,6 @@ Por favor envía tu ubicación actual:
 (Adjuntar > Ubicación)`;
 
 window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
-
-}
-
-function guardarCliente(){
-let lista=document.getElementById("listaClientes");
-lista.innerHTML+=c_nombre.value+" "+c_apellidos.value+" - DNI:"+c_dni.value+"<br>";
 }
 
 </script>

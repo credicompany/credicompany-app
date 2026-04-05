@@ -219,12 +219,12 @@ max-width:400px;
 <div id="clientes" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
-<input id="c_nombre">
-<input id="c_apellidos">
-<input id="c_dni">
-<input id="c_monto">
+<input id="c_nombre" placeholder="Nombre">
+<input id="c_apellidos" placeholder="Apellidos">
+<input id="c_dni" placeholder="DNI">
+<input id="c_monto" placeholder="Monto">
 
-<button onclick="guardarCliente()">Guardar</button>
+<button class="btn-verde" onclick="guardarCliente()">Guardar</button>
 
 <div id="listaClientes"></div>
 </div>
@@ -329,52 +329,23 @@ function cerrarQR(){
 modalQR.style.display="none";
 }
 
-/* 🔥 UBICACIÓN MEJORADA FINAL */
+/* 🔥 UBICACIÓN MEJORADA */
 function enviarUbicacion(){
-
-if(navigator.geolocation){
-
-navigator.geolocation.getCurrentPosition(
-
-function(pos){
-
-let lat = pos.coords.latitude;
-let lon = pos.coords.longitude;
-
-let link = `https://www.google.com/maps?q=${lat},${lon}`;
 
 let msg = `📍 Ubicación Asesor
 
 Asesor: ${asesor}
-${link}`;
 
-location.href = "https://wa.me/?text=" + encodeURIComponent(msg);
+Por favor envía tu ubicación actual:
+(Adjuntar > Ubicación)`;
 
-},
-
-function(){
-window.open("https://www.google.com/maps/?q=loc","_blank");
-},
-
-{
-enableHighAccuracy:true,
-timeout:5000,
-maximumAge:0
-}
-
-);
-
-}else{
-
-window.open("https://www.google.com/maps/?q=loc","_blank");
-
-}
+window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
 
 }
 
 function guardarCliente(){
 let lista=document.getElementById("listaClientes");
-lista.innerHTML+=c_nombre.value+" "+c_apellidos.value+"<br>";
+lista.innerHTML+=c_nombre.value+" "+c_apellidos.value+" - DNI:"+c_dni.value+"<br>";
 }
 
 </script>

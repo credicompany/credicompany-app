@@ -195,6 +195,7 @@ max-width:400px;
 <select id="producto">
 <option value="diario">Diario</option>
 <option value="semanal">Semanal</option>
+<option value="quincenal">Quincenal</option>
 <option value="mensual">Mensual</option>
 </select>
 
@@ -292,11 +293,20 @@ dashboard.style.display="block";
 }
 
 function calcular(){
+
 let P=parseFloat(monto.value);
 let t=parseFloat(tasa.value)/100;
 let n=parseInt(plazo.value);
 
-let cuota=(P*t)/(1-Math.pow(1+t,-n));
+let i=0;
+
+if(producto.value==="diario") i=t/30;
+if(producto.value==="semanal") i=t/4;
+if(producto.value==="quincenal") i=t/2;
+if(producto.value==="mensual") i=t;
+
+let cuota=(P*i)/(1-Math.pow(1+i,-n));
+
 resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
 }
 
@@ -329,7 +339,6 @@ function cerrarQR(){
 modalQR.style.display="none";
 }
 
-/* 🔥 UBICACIÓN MEJORADA */
 function enviarUbicacion(){
 
 let msg = `📍 Ubicación Asesor

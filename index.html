@@ -54,8 +54,6 @@ margin-bottom:15px;
 cursor:pointer;
 }
 
-h3{text-align:center;}
-
 input, select{
 width:100%;
 padding:12px;
@@ -134,7 +132,6 @@ background:white;
 font-weight:bold;
 margin-bottom:10px;
 color:#123B63;
-font-size:18px;
 }
 
 /* MODAL QR */
@@ -168,7 +165,7 @@ max-width:400px;
 
 <!-- LOGIN -->
 <div id="loginDiv" class="card">
-<h3>Ingreso Asesor</h3>
+<h3>Ingreso</h3>
 <input id="usuario">
 <input id="clave" type="password">
 <button class="btn-verde" onclick="login()">Ingresar</button>
@@ -244,6 +241,16 @@ max-width:400px;
 </div>
 
 <div class="pago-box" onclick="abrirQR(this)">
+<div class="pago-titulo">BCP</div>
+<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image.jpg">
+</div>
+
+<div class="pago-box" onclick="abrirQR(this)">
+<div class="pago-titulo">YAPE</div>
+<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image.jpg">
+</div>
+
+<div class="pago-box" onclick="abrirQR(this)">
 <div class="pago-titulo">CUENTA BCP</div>
 <img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image.jpg">
 </div>
@@ -254,6 +261,7 @@ max-width:400px;
 
 </div>
 
+<!-- MODAL QR -->
 <div id="modalQR" class="modal" onclick="cerrarQR()">
 <img id="imgQR">
 </div>
@@ -289,17 +297,17 @@ let t=parseFloat(tasa.value)/100;
 let n=parseInt(plazo.value);
 
 let cuota=(P*t)/(1-Math.pow(1+t,-n));
-resultado.innerHTML="Cuota: "+cuota.toFixed(2);
+resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
 }
 
 function enviarSimulacion(){
-let msg=`Monto:${monto.value} Cuota:${resultado.innerText}`;
-location.href="https://wa.me/?text="+msg;
+let msg=`Producto:${producto.value} Monto:${monto.value} ${resultado.innerText}`;
+location.href="https://wa.me/?text="+encodeURIComponent(msg);
 }
 
 function enviarFiltro(){
-let msg=`${cliente.value} ${dni.value}`;
-location.href="https://wa.me/?text="+msg;
+let msg=`${cliente.value} ${apellidos.value} DNI:${dni.value}`;
+location.href="https://wa.me/?text="+encodeURIComponent(msg);
 }
 
 function limpiar(){
@@ -322,15 +330,12 @@ modalQR.style.display="none";
 }
 
 function enviarUbicacion(){
-navigator.geolocation.getCurrentPosition(pos=>{
-let link=`https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
-location.href="https://wa.me/?text="+link;
-});
+window.open("https://www.google.com/maps/?q=loc","_blank");
 }
 
 function guardarCliente(){
 let lista=document.getElementById("listaClientes");
-lista.innerHTML+=cliente.value+"<br>";
+lista.innerHTML+=c_nombre.value+" "+c_apellidos.value+"<br>";
 }
 
 </script>

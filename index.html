@@ -329,7 +329,7 @@ function cerrarQR(){
 modalQR.style.display="none";
 }
 
-/* 🔥 UBICACIÓN PRO */
+/* 🔥 UBICACIÓN MEJORADA FINAL */
 function enviarUbicacion(){
 
 if(navigator.geolocation){
@@ -346,8 +346,6 @@ let link = `https://www.google.com/maps?q=${lat},${lon}`;
 let msg = `📍 Ubicación Asesor
 
 Asesor: ${asesor}
-
-Ubicación:
 ${link}`;
 
 location.href = "https://wa.me/?text=" + encodeURIComponent(msg);
@@ -355,26 +353,23 @@ location.href = "https://wa.me/?text=" + encodeURIComponent(msg);
 },
 
 function(){
-abrirMaps();
+window.open("https://www.google.com/maps/?q=loc","_blank");
 },
 
 {
 enableHighAccuracy:true,
-timeout:8000,
+timeout:5000,
 maximumAge:0
 }
 
 );
 
 }else{
-abrirMaps();
-}
+
+window.open("https://www.google.com/maps/?q=loc","_blank");
 
 }
 
-function abrirMaps(){
-alert("No se pudo obtener GPS automático. Se abrirá Maps.");
-window.open("https://www.google.com/maps","_blank");
 }
 
 function guardarCliente(){
@@ -385,4 +380,4 @@ lista.innerHTML+=c_nombre.value+" "+c_apellidos.value+"<br>";
 </script>
 
 </body>
-  </html>
+</html>

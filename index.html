@@ -35,7 +35,6 @@ padding:20px;
 border-radius:15px;
 }
 
-/* pagos al ras */
 #pagos.card{
 margin:0;
 border-radius:20px 20px 0 0;
@@ -170,8 +169,8 @@ max-width:400px;
 <!-- LOGIN -->
 <div id="loginDiv" class="card">
 <h3>Ingreso Asesor</h3>
-<input id="usuario" placeholder="Usuario">
-<input id="clave" type="password" placeholder="Clave">
+<input id="usuario">
+<input id="clave" type="password">
 <button class="btn-verde" onclick="login()">Ingresar</button>
 </div>
 
@@ -181,6 +180,7 @@ max-width:400px;
 <div class="box" onclick="mostrar('simulador')">💰 Simulación</div>
 <div class="box" onclick="mostrar('clientes')">👥 Clientes</div>
 <div class="box" onclick="mostrar('pagos')">💳 Pagos</div>
+<div class="box" onclick="enviarUbicacion()">📍 Ubicación</div>
 </div>
 </div>
 
@@ -189,9 +189,7 @@ max-width:400px;
 
 <!-- SIMULADOR -->
 <div id="simulador" class="card">
-<div class="volver" onclick="volver()">← Volver al inicio</div>
-
-<h3>Simulador</h3>
+<div class="volver" onclick="volver()">← Volver</div>
 
 <input id="cliente" placeholder="Nombre">
 <input id="apellidos" placeholder="Apellidos">
@@ -199,13 +197,12 @@ max-width:400px;
 
 <select id="producto">
 <option value="diario">Diario</option>
-<option value="semanal" selected>Semanal</option>
-<option value="quincenal">Quincenal</option>
+<option value="semanal">Semanal</option>
 <option value="mensual">Mensual</option>
 </select>
 
 <input id="monto" placeholder="Monto">
-<input id="tasa" placeholder="Tasa (%)">
+<input id="tasa" placeholder="Tasa">
 <input id="plazo" placeholder="Cuotas">
 
 <button class="btn-verde" onclick="calcular()">Calcular</button>
@@ -213,65 +210,42 @@ max-width:400px;
 <div id="resultado"></div>
 
 <div class="fila">
-<button class="btn-verde" onclick="enviarSimulacion()">📲 Simulación</button>
-<button class="btn-azul" onclick="enviarFiltro()">📤 Filtro</button>
+<button class="btn-verde" onclick="enviarSimulacion()">Simulación</button>
+<button class="btn-azul" onclick="enviarFiltro()">Filtro</button>
 </div>
 
-<button class="btn-naranja" onclick="limpiar()">🧹 Limpiar</button>
+<button class="btn-naranja" onclick="limpiar()">Limpiar</button>
 
 </div>
 
 <!-- CLIENTES -->
 <div id="clientes" class="card" style="display:none">
-<div class="volver" onclick="volver()">← Volver al inicio</div>
+<div class="volver" onclick="volver()">← Volver</div>
 
-<h3>Cartera de Clientes</h3>
+<input id="c_nombre">
+<input id="c_apellidos">
+<input id="c_dni">
+<input id="c_monto">
 
-<input id="c_nombre" placeholder="Nombre">
-<input id="c_apellidos" placeholder="Apellidos">
-<input id="c_dni" placeholder="DNI">
-<input id="c_monto" placeholder="Monto">
-
-<select id="c_producto">
-<option>Diario</option>
-<option>Semanal</option>
-<option>Quincenal</option>
-<option>Mensual</option>
-</select>
-
-<input id="c_fecha" type="date">
-
-<button class="btn-verde" onclick="guardarCliente()">Guardar Cliente</button>
+<button onclick="guardarCliente()">Guardar</button>
 
 <div id="listaClientes"></div>
 </div>
 
 <!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
-<div class="volver" onclick="volver()">← Volver al inicio</div>
-
-<h3>💳 Medios de Pago</h3>
+<div class="volver" onclick="volver()">← Volver</div>
 
 <div class="pagos-container">
 
 <div class="pago-box" onclick="abrirQR(this)">
 <div class="pago-titulo">QR BBVA</div>
-<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg">
-</div>
-
-<div class="pago-box" onclick="abrirQR(this)">
-<div class="pago-titulo">BCP</div>
-<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg">
-</div>
-
-<div class="pago-box" onclick="abrirQR(this)">
-<div class="pago-titulo">YAPE</div>
-<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg">
+<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image.jpg">
 </div>
 
 <div class="pago-box" onclick="abrirQR(this)">
 <div class="pago-titulo">CUENTA BCP</div>
-<img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg">
+<img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image.jpg">
 </div>
 
 </div>
@@ -280,7 +254,6 @@ max-width:400px;
 
 </div>
 
-<!-- MODAL QR -->
 <div id="modalQR" class="modal" onclick="cerrarQR()">
 <img id="imgQR">
 </div>
@@ -290,27 +263,19 @@ max-width:400px;
 let asesor="";
 
 function login(){
-if(usuario.value==="admin" && clave.value==="1234"){
-asesor=usuario.value;
+asesor="admin";
 nombreAsesor.innerText=asesor;
 loginDiv.style.display="none";
 dashboard.style.display="block";
-}else{
-alert("Usuario incorrecto");
-}
 }
 
 function mostrar(p){
 dashboard.style.display="none";
 app.style.display="block";
-
 simulador.style.display="none";
 clientes.style.display="none";
 pagos.style.display="none";
-
 document.getElementById(p).style.display="block";
-
-if(p==="clientes") renderClientes();
 }
 
 function volver(){
@@ -319,83 +284,22 @@ dashboard.style.display="block";
 }
 
 function calcular(){
-
 let P=parseFloat(monto.value);
 let t=parseFloat(tasa.value)/100;
 let n=parseInt(plazo.value);
-let tipo=producto.value;
 
-if(!cliente.value || !apellidos.value || !dni.value){
-alert("Completa datos del cliente");
-return;
-}
-
-if(dni.value.length !== 8){
-alert("DNI debe tener 8 dígitos");
-return;
-}
-
-if(isNaN(P)||P<=0){
-alert("Monto inválido");
-return;
-}
-
-if(isNaN(t)||t<=0){
-alert("Tasa inválida");
-return;
-}
-
-if(isNaN(n)||n<=0){
-alert("Cuotas inválidas");
-return;
-}
-
-let i=0;
-
-if(tipo==="diario") i=t/30;
-if(tipo==="semanal") i=t/4;
-if(tipo==="quincenal") i=t/2;
-if(tipo==="mensual") i=t;
-
-let cuota=(P*i)/(1-Math.pow(1+i,-n));
-
-resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
+let cuota=(P*t)/(1-Math.pow(1+t,-n));
+resultado.innerHTML="Cuota: "+cuota.toFixed(2);
 }
 
 function enviarSimulacion(){
-
-let P=monto.value;
-let tipo=producto.value;
-let r=resultado.innerText;
-
-if(!r){
-alert("Primero calcula");
-return;
-}
-
-let msg=`Simulación Credicompany
-
-Producto: ${tipo}
-Monto: S/ ${P}
-${r}`;
-
-location.href="https://wa.me/?text="+encodeURIComponent(msg);
+let msg=`Monto:${monto.value} Cuota:${resultado.innerText}`;
+location.href="https://wa.me/?text="+msg;
 }
 
 function enviarFiltro(){
-
-if(!cliente.value || !apellidos.value || !dni.value){
-alert("Completa datos");
-return;
-}
-
-let msg=`Filtro Cliente
-
-Nombre: ${cliente.value}
-Apellidos: ${apellidos.value}
-DNI: ${dni.value}`;
-
-location.href="https://wa.me/?text="+encodeURIComponent(msg);
+let msg=`${cliente.value} ${dni.value}`;
+location.href="https://wa.me/?text="+msg;
 }
 
 function limpiar(){
@@ -409,51 +313,24 @@ resultado.innerHTML="";
 }
 
 function abrirQR(el){
-let img=el.querySelector("img").src;
-document.getElementById("imgQR").src=img;
-document.getElementById("modalQR").style.display="flex";
+imgQR.src=el.querySelector("img").src;
+modalQR.style.display="flex";
 }
 
 function cerrarQR(){
-document.getElementById("modalQR").style.display="none";
+modalQR.style.display="none";
+}
+
+function enviarUbicacion(){
+navigator.geolocation.getCurrentPosition(pos=>{
+let link=`https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
+location.href="https://wa.me/?text="+link;
+});
 }
 
 function guardarCliente(){
-let data=JSON.parse(localStorage.getItem("cartera_"+asesor)||"[]");
-
-let existe=data.find(x=>x.dni===c_dni.value);
-
-if(existe){
-alert("Cliente ya existe");
-return;
-}
-
-data.push({
-nombre:c_nombre.value,
-apellidos:c_apellidos.value,
-dni:c_dni.value,
-monto:c_monto.value,
-fecha:new Date().toISOString()
-});
-
-localStorage.setItem("cartera_"+asesor,JSON.stringify(data));
-renderClientes();
-}
-
-function renderClientes(){
 let lista=document.getElementById("listaClientes");
-let data=JSON.parse(localStorage.getItem("cartera_"+asesor)||"[]");
-
-lista.innerHTML="";
-
-data.forEach(c=>{
-lista.innerHTML+=`
-<div class="item">
-<b>${c.nombre} ${c.apellidos}</b><br>
-DNI: ${c.dni}<br>
-Monto: S/ ${c.monto}
-</div>`;
-});
+lista.innerHTML+=cliente.value+"<br>";
 }
 
 </script>

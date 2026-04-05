@@ -1,1 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache">
+
+<title>Credicompany</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#123B63;
+color:white;
+padding-bottom:120px;
+}
+
+.header{
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:20px;
+}
+
+.header img{width:180px;}
+
+.card{
+background:#f2f2f2;
+color:#333;
+margin:15px;
+padding:20px;
+border-radius:15px;
+}
+
+#pagos.card{
+margin:0;
+border-radius:20px 20px 0 0;
+padding:15px;
+}
+
+.volver{
+position:sticky;
+top:0;
+background:#0a2f5c;
+color:white;
+padding:14px;
+border-radius:12px;
+text-align:center;
+font-weight:bold;
+margin-bottom:15px;
+cursor:pointer;
+}
+
+input, select{
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:10px;
+border:none;
+}
+
+button{
+padding:14px;
+border:none;
+border-radius:12px;
+color:white;
+font-weight:bold;
+width:100%;
+}
+
+.btn-verde{background:#10c251;}
+.btn-azul{background:#123B63;}
+.btn-naranja{background:#ff9800;}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+margin:20px;
+}
+
+.box{
+background:white;
+color:#123B63;
+padding:25px;
+border-radius:15px;
+text-align:center;
+font-weight:bold;
+cursor:pointer;
+}
+
+.fila{display:flex;gap:10px;margin-top:10px;}
+.fila button{width:50%;}
+
+.item{
+background:white;
+padding:10px;
+margin-top:10px;
+border-radius:10px;
+color:#333;
+}
+
+/* PAGOS */
+.pagos-container{
+display:flex;
+flex-direction:column;
+gap:20px;
+}
+
+.pago-box{
+background:white;
+padding:10px;
+border-radius:12px;
+width:100%;
+text-align:center;
+box-shadow:0 3px 8px rgba(0,0,0,0.15);
+cursor:pointer;
+}
+
+.pago-box img{
+width:100%;
+height:260px;
+object-fit:contain;
+border-radius:10px;
+background:white;
+}
+
+.pago-titulo{
+font-weight:bold;
+margin-bottom:10px;
+color:#123B63;
+}
+
+/* MODAL QR */
+.modal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+
+.modal img{
+width:90%;
+max-width:400px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<img src="logo.png">
+<div>Asesor: <span id="nombreAsesor">-</span></div>
+</div>
+
+<!-- LOGIN -->
+<div id="loginDiv" class="card">
+<h3>Ingreso</h3>
+<input id="usuario">
+<input id="clave" type="password">
+<button class="btn-verde" onclick="login()">Ingresar</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" style="display:none">
+<div class="grid">
+<div class="box" onclick="mostrar('simulador')">💰 Simulación</div>
+<div class="box" onclick="mostrar('clientes')">👥 Clientes</div>
+<div class="box" onclick="mostrar('pagos')">💳 Pagos</div>
+<div class="box" onclick="enviarUbicacion()">📍 Ubicación</div>
+</div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+
+<!-- SIMULADOR -->
+<div id="simulador" class="card">
+<div class="volver" onclick="volver()">← Volver</div>
+
+<input id="cliente" placeholder="Nombre">
+<input id="apellidos" placeholder="Apellidos">
+<input id="dni" placeholder="DNI">
+
+<select id="producto">
+<option value="diario">Diario</option>
+<option value="semanal">Semanal</option>
+<option value="mensual">Mensual</option>
+</select>
+
+<input id="monto" placeholder="Monto">
+<input id="tasa" placeholder="Tasa">
+<input id="plazo" placeholder="Cuotas">
+
+<button class="btn-verde" onclick="calcular()">Calcular</button>
+
+<div id="resultado"></div>
+
+<div class="fila">
+<button class="btn-verde" onclick="enviarSimulacion()">Simulación</button>
+<button class="btn-azul" onclick="enviarFiltro()">Filtro</button>
+</div>
+
+<button class="btn-naranja" onclick="limpiar()">Limpiar</button>
+
+</div>
+
+<!-- CLIENTES -->
+<div id="clientes" class="card" style="display:none">
+<div class="volver" onclick="volver()">← Volver</div>
+
+<input id="c_nombre">
+<input id="c_apellidos">
+<input id="c_dni">
+<input id="c_monto">
+
+<button onclick="guardarCliente()">Guardar</button>
+
+<div id="listaClientes"></div>
+</div>
+
+<!-- PAGOS -->
+<div id="pagos" class="card" style="display:none">
+<div class="volver" onclick="volver()">← Volver</div>
+
+<div class="pagos-container">
+
+<div class="pago-box" onclick="abrirQR(this)">
+<div class="pago-titulo">QR BBVA</div>
+<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image.jpg">
+</div>
+
+<div class="pago-box" onclick="abrirQR(this)">
+<div class="pago-titulo">BCP</div>
+<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image.jpg">
+</div>
+
+<div class="pago-box" onclick="abrirQR(this)">
+<div class="pago-titulo">YAPE</div>
+<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image.jpg">
+</div>
+
+<div class="pago-box" onclick="abrirQR(this)">
+<div class="pago-titulo">CUENTA BCP</div>
+<img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image.jpg">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- MODAL QR -->
+<div id="modalQR" class="modal" onclick="cerrarQR()">
+<img id="imgQR">
+</div>
+
+<script>
+
+let asesor="";
+
+function login(){
+asesor="admin";
+nombreAsesor.innerText=asesor;
+loginDiv.style.display="none";
+dashboard.style.display="block";
+}
+
+function mostrar(p){
+dashboard.style.display="none";
+app.style.display="block";
+simulador.style.display="none";
+clientes.style.display="none";
+pagos.style.display="none";
+document.getElementById(p).style.display="block";
+}
+
+function volver(){
+app.style.display="none";
+dashboard.style.display="block";
+}
+
+function calcular(){
+let P=parseFloat(monto.value);
+let t=parseFloat(tasa.value)/100;
+let n=parseInt(plazo.value);
+
+let cuota=(P*t)/(1-Math.pow(1+t,-n));
+resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
+}
+
+function enviarSimulacion(){
+let msg=`Producto:${producto.value} Monto:${monto.value} ${resultado.innerText}`;
+location.href="https://wa.me/?text="+encodeURIComponent(msg);
+}
+
+function enviarFiltro(){
+let msg=`${cliente.value} ${apellidos.value} DNI:${dni.value}`;
+location.href="https://wa.me/?text="+encodeURIComponent(msg);
+}
+
+function limpiar(){
+cliente.value="";
+apellidos.value="";
+dni.value="";
+monto.value="";
+tasa.value="";
+plazo.value="";
+resultado.innerHTML="";
+}
+
+function abrirQR(el){
+imgQR.src=el.querySelector("img").src;
+modalQR.style.display="flex";
+}
+
+function cerrarQR(){
+modalQR.style.display="none";
+}
+
+/* 🔥 UBICACIÓN PRO */
+function enviarUbicacion(){
+
+if(navigator.geolocation){
+
+navigator.geolocation.getCurrentPosition(
+
+function(pos){
+
+let lat = pos.coords.latitude;
+let lon = pos.coords.longitude;
+
+let link = `https://www.google.com/maps?q=${lat},${lon}`;
+
+let msg = `📍 Ubicación Asesor
+
+Asesor: ${asesor}
+
+Ubicación:
+${link}`;
+
+location.href = "https://wa.me/?text=" + encodeURIComponent(msg);
+
+},
+
+function(){
+abrirMaps();
+},
+
+{
+enableHighAccuracy:true,
+timeout:8000,
+maximumAge:0
+}
+
+);
+
+}else{
+abrirMaps();
+}
+
+}
+
+function abrirMaps(){
+alert("No se pudo obtener GPS automático. Se abrirá Maps.");
+window.open("https://www.google.com/maps","_blank");
+}
+
+function guardarCliente(){
+let lista=document.getElementById("listaClientes");
+lista.innerHTML+=c_nombre.value+" "+c_apellidos.value+"<br>";
+}
+
+</script>
+
+</body>
+  </html>

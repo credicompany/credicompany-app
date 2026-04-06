@@ -121,7 +121,7 @@ window.onerror = function(msg){
 alert("ERROR JS: " + msg);
 };
 
-// LOGIN CORREGIDO
+// LOGIN
 function login(){
 
 let user = document.getElementById("usuario").value;
@@ -148,17 +148,13 @@ document.getElementById("loginDiv").style.display = "none";
 document.getElementById("dashboard").style.display = "block";
 }
 
-// NAVEGACIÓN FIX
+// NAVEGACIÓN
 function mostrar(p){
-
-let dash = document.getElementById("dashboard");
-let appDiv = document.getElementById("app");
-
-dash.style.display="none";
-appDiv.style.display="block";
+document.getElementById("dashboard").style.display="none";
+document.getElementById("app").style.display="block";
 
 ["simulador","clientes","admin"].forEach(id=>{
-let el = document.getElementById(id);
+let el=document.getElementById(id);
 if(el) el.style.display="none";
 });
 
@@ -173,23 +169,7 @@ document.getElementById("app").style.display="none";
 document.getElementById("dashboard").style.display="block";
 }
 
-// NORMALIZADOR
-function normalizar(txt){
-return (txt||"").toLowerCase().replace(/\s/g,'').normalize("NFD").replace(/[\u0300-\u036f]/g,"");
-}
-
-// BUSCADOR
-function getValor(obj, claves){
-for(let k in obj){
-let nk=normalizar(k);
-for(let c of claves){
-if(nk.includes(normalizar(c))) return obj[k];
-}
-}
-return "";
-}
-
-// EXCEL
+// EXCEL CORREGIDO
 function cargarExcel(){
 
 let file=document.getElementById("excelFile").files[0];
@@ -197,7 +177,7 @@ if(!file)return alert("Selecciona archivo");
 
 let reader=new FileReader();
 
-reader.onload=e=>{
+reader.onload=function(e){
 
 let data=new Uint8Array(e.target.result);
 let wb=XLSX.read(data,{type:'array'});
@@ -205,27 +185,29 @@ let json=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
 
 let cartera=json.map(c=>{
 
-let nombre=getValor(c,["nombre"]);
-let apePat=getValor(c,["apellido paterno"]);
-let apeMat=getValor(c,["apellido materno"]);
+let nombre=c["Nombre"]||"";
+let apePat=c["Apellido Paterno"]||"";
+let apeMat=c["Apellido Materno"]||"";
 
 return{
 nombreCompleto:`${nombre} ${apePat} ${apeMat}`.trim(),
-asesor:getValor(c,["asesor"]),
-monto:parseFloat(getValor(c,["monto"]))||0,
-cuotaMora:parseFloat(getValor(c,["cuota","mora"]))||0,
-retraso:parseFloat(getValor(c,["retraso","dias"]))||0,
-telefono:getValor(c,["telefono","celular"]),
-producto:getValor(c,["producto"]),
-cuotas:getValor(c,["cuotas"]),
-direccion:getValor(c,["direccion"]),
-distrito:getValor(c,["distrito"])
+monto:parseFloat(c["Monto Otorgado"])||0,
+retraso:parseFloat(c["Dias Retraso"]||c["Días Retraso"])||0,
+producto:c["Producto"]||"",
+asesor:c["Asesor(a)"]||"",
+direccion:c["Direccion"]||c["Dirección"]||"",
+distrito:c["Distrito"]||"",
+telefono:c["Telefono"]||c["Celular"]||"",
+cuotaMora:parseFloat(c["Cuota + Mora"])||0,
+cuotas:c["Cuotas Vencidas"]||0
 };
 
 });
 
 localStorage.setItem("cartera",JSON.stringify(cartera));
+
 alert("Excel cargado correctamente");
+
 renderClientes();
 };
 

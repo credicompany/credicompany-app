@@ -58,6 +58,7 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 
 <div id="app" style="display:none">
 
+<!-- SIMULADOR -->
 <div id="simulador" class="card">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -89,6 +90,7 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <button class="btn-naranja" onclick="limpiar()">Limpiar</button>
 </div>
 
+<!-- CLIENTES -->
 <div id="clientes" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -105,6 +107,7 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <div id="listaClientes"></div>
 </div>
 
+<!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -193,30 +196,45 @@ resultado.innerHTML="";
 cronograma.innerHTML="";
 }
 
+// 🔥 FUNCIÓN CORREGIDA
 function cargarExcel(){
+
 let file=document.getElementById("excelFile").files[0];
 if(!file)return alert("Selecciona archivo");
 
 let reader=new FileReader();
 
 reader.onload=function(e){
+
 let data=new Uint8Array(e.target.result);
 let workbook=XLSX.read(data,{type:'array'});
 let hoja=workbook.Sheets[workbook.SheetNames[0]];
 
 let json=XLSX.utils.sheet_to_json(hoja,{defval:""});
 
-// limpiar encabezados
 json=json.map(row=>{
 let limpio={};
+
 Object.keys(row).forEach(k=>{
-limpio[k.trim()]=row[k];
+let key=k.toLowerCase().replace(/\s+/g,'');
+
+if(key.includes("nombre") && !key.includes("grupo")) limpio.nombre=row[k];
+if(key.includes("paterno")) limpio.apePat=row[k];
+if(key.includes("materno")) limpio.apeMat=row[k];
+if(key.includes("monto")) limpio.monto=row[k];
+if(key.includes("retraso")) limpio.retraso=row[k];
+if(key.includes("producto")) limpio.producto=row[k];
+if(key.includes("asesor")) limpio.asesor=row[k];
+if(key.includes("direccion")) limpio.direccion=row[k];
+if(key.includes("celular") || key.includes("telefono")) limpio.celular=row[k];
 });
+
 return limpio;
 });
 
 localStorage.setItem("cartera",JSON.stringify(json));
 renderClientes();
+
 };
 
 reader.readAsArrayBuffer(file);
@@ -229,47 +247,25 @@ lista.innerHTML="";
 
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
 
-data.sort((a,b)=>(b["Dias de retraso"]||0)-(a["Dias de retraso"]||0));
+data.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
 
 data.forEach(c=>{
 
-let nombre=c["Nombre"]||"";
-let apePat=c["Apellido Paterno"]||"";
-let apeMat=c["Apellido Materno"]||"";
-
-let monto=c["Monto Otorgado"]||0;
-let retraso=c["Dias de retraso"]||0;
-let producto=c["Producto"]||"";
-let asesor=c["Asesor"]||"-";
-
-let direccion=
-c["Direccion"]||
-c["Dirección"]||
-c["DIRECCION"]||
-"-";
-
-let celular=
-c["Celular"]||
-c["CELULAR"]||
-c["Telefono"]||
-c["Teléfono"]||
-"-";
-
 let color="#2ecc71";
-if(retraso>0) color="#f1c40f";
-if(retraso>7) color="#e74c3c";
+if(c.retraso>0) color="#f1c40f";
+if(c.retraso>7) color="#e74c3c";
 
 lista.innerHTML+=`
 <div class="item" style="border-left:6px solid ${color}">
-<b>${nombre} ${apePat} ${apeMat}</b><br>
+<b>${c.nombre||""} ${c.apePat||""} ${c.apeMat||""}</b><br>
 
-Monto: S/ ${monto}<br>
-Producto: ${producto}<br>
-Retraso: ${retraso} días<br>
+Monto: S/ ${c.monto||0}<br>
+Producto: ${c.producto||"-"}<br>
+Retraso: ${c.retraso||0} días<br>
 
-👤 Asesor: ${asesor}<br>
-📍 ${direccion}<br>
-📞 ${celular}
+👤 ${c.asesor||"-"}<br>
+📍 ${c.direccion||"-"}<br>
+📞 ${c.celular||"-"}
 </div>`;
 });
 
@@ -279,15 +275,15 @@ function guardarCliente(){
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
 
 data.push({
-"Nombre":c_nombre.value,
-"Apellido Paterno":"",
-"Apellido Materno":c_apellidos.value,
-"Monto Otorgado":c_monto.value,
-"Dias de retraso":0,
-"Producto":"Manual",
-"Asesor":asesor,
-"Direccion":"",
-"Celular":""
+nombre:c_nombre.value,
+apePat:"",
+apeMat:c_apellidos.value,
+monto:c_monto.value,
+retraso:0,
+producto:"Manual",
+asesor:asesor,
+direccion:"",
+celular:""
 });
 
 localStorage.setItem("cartera",JSON.stringify(data));

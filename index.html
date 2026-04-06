@@ -11,39 +11,26 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <style>
-
 body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}
 .header{display:flex;flex-direction:column;align-items:center;padding:20px;}
 .header img{width:180px;}
-
 .card{background:#f2f2f2;color:#333;margin:15px;padding:20px;border-radius:15px;}
-
 .volver{position:sticky;top:0;background:#0a2f5c;color:white;padding:14px;border-radius:12px;text-align:center;font-weight:bold;margin-bottom:15px;cursor:pointer;}
-
 input, select{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:none;}
-
 button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;width:100%;}
 .btn-verde{background:#10c251;}
 .btn-azul{background:#123B63;}
 .btn-naranja{background:#ff9800;}
-
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:20px;}
-
 .box{background:white;color:#123B63;padding:25px;border-radius:15px;text-align:center;font-weight:bold;cursor:pointer;}
-
 .fila{display:flex;gap:10px;margin-top:10px;}
 .fila button{width:50%;}
-
 .item{background:white;padding:12px;margin-top:10px;border-radius:10px;color:#333;}
-
 .pagos-container{display:flex;flex-direction:column;gap:20px;}
-
 .pago-box{background:white;padding:10px;border-radius:12px;cursor:pointer;}
 .pago-box img{width:100%;height:260px;object-fit:contain;}
-
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;justify-content:center;align-items:center;z-index:999;}
 .modal img{width:95%;max-width:450px;}
-
 </style>
 </head>
 
@@ -54,14 +41,12 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <div>Asesor: <span id="nombreAsesor">-</span></div>
 </div>
 
-<!-- LOGIN -->
 <div id="loginDiv" class="card">
 <input id="usuario" placeholder="Usuario">
 <input id="clave" type="password" placeholder="Clave">
 <button class="btn-verde" onclick="login()">Ingresar</button>
 </div>
 
-<!-- DASHBOARD -->
 <div id="dashboard" style="display:none">
 <div class="grid">
 <div class="box" onclick="mostrar('simulador')">💰 Simulación</div>
@@ -71,10 +56,8 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 </div>
 </div>
 
-<!-- APP -->
 <div id="app" style="display:none">
 
-<!-- SIMULADOR -->
 <div id="simulador" class="card">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -104,10 +87,8 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 </div>
 
 <button class="btn-naranja" onclick="limpiar()">Limpiar</button>
-
 </div>
 
-<!-- CLIENTES -->
 <div id="clientes" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -124,30 +105,24 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <div id="listaClientes"></div>
 </div>
 
-<!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
 <div class="pagos-container">
-
 <div class="pago-box" onclick="abrirQR(this)">
 <img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image.jpg">
 </div>
-
 <div class="pago-box" onclick="abrirQR(this)">
 <img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image.jpg">
 </div>
-
 <div class="pago-box" onclick="abrirQR(this)">
 <img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image.jpg">
 </div>
-
 </div>
 </div>
 
 </div>
 
-<!-- MODAL QR -->
 <div id="modalQR" class="modal" onclick="cerrarQR()">
 <img id="imgQR">
 </div>
@@ -181,7 +156,6 @@ dashboard.style.display="block";
 }
 
 function calcular(){
-
 let P=parseFloat(monto.value);
 let t=parseFloat(tasa.value)/100;
 let n=parseInt(plazo.value);
@@ -214,25 +188,18 @@ cronograma.innerHTML=html;
 }
 
 function limpiar(){
-cliente.value="";
-apellidos.value="";
-dni.value="";
-monto.value="";
-tasa.value="";
-plazo.value="";
+document.querySelectorAll("input").forEach(i=>i.value="");
 resultado.innerHTML="";
 cronograma.innerHTML="";
 }
 
 function cargarExcel(){
-
 let file=document.getElementById("excelFile").files[0];
 if(!file)return alert("Selecciona archivo");
 
 let reader=new FileReader();
 
 reader.onload=function(e){
-
 let data=new Uint8Array(e.target.result);
 let workbook=XLSX.read(data,{type:'array'});
 let hoja=workbook.Sheets[workbook.SheetNames[0]];
@@ -250,7 +217,6 @@ return limpio;
 
 localStorage.setItem("cartera",JSON.stringify(json));
 renderClientes();
-
 };
 
 reader.readAsArrayBuffer(file);
@@ -274,11 +240,19 @@ let apeMat=c["Apellido Materno"]||"";
 let monto=c["Monto Otorgado"]||0;
 let retraso=c["Dias de retraso"]||0;
 let producto=c["Producto"]||"";
+let asesor=c["Asesor"]||"-";
 
 let direccion=
 c["Direccion"]||
 c["Dirección"]||
 c["DIRECCION"]||
+"-";
+
+let celular=
+c["Celular"]||
+c["CELULAR"]||
+c["Telefono"]||
+c["Teléfono"]||
 "-";
 
 let color="#2ecc71";
@@ -288,17 +262,20 @@ if(retraso>7) color="#e74c3c";
 lista.innerHTML+=`
 <div class="item" style="border-left:6px solid ${color}">
 <b>${nombre} ${apePat} ${apeMat}</b><br>
+
 Monto: S/ ${monto}<br>
 Producto: ${producto}<br>
 Retraso: ${retraso} días<br>
-Dirección: ${direccion}
+
+👤 Asesor: ${asesor}<br>
+📍 ${direccion}<br>
+📞 ${celular}
 </div>`;
 });
 
 }
 
 function guardarCliente(){
-
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
 
 data.push({
@@ -308,7 +285,9 @@ data.push({
 "Monto Otorgado":c_monto.value,
 "Dias de retraso":0,
 "Producto":"Manual",
-"Direccion":""
+"Asesor":asesor,
+"Direccion":"",
+"Celular":""
 });
 
 localStorage.setItem("cartera",JSON.stringify(data));

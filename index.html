@@ -8,136 +8,41 @@
 
 <title>Credicompany</title>
 
-<!-- LIBRERÍA EXCEL -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <style>
 
-body{
-margin:0;
-font-family:Arial;
-background:#123B63;
-color:white;
-padding-bottom:120px;
-}
-
-.header{
-display:flex;
-flex-direction:column;
-align-items:center;
-padding:20px;
-}
-
+body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}
+.header{display:flex;flex-direction:column;align-items:center;padding:20px;}
 .header img{width:180px;}
 
-.card{
-background:#f2f2f2;
-color:#333;
-margin:15px;
-padding:20px;
-border-radius:15px;
-}
+.card{background:#f2f2f2;color:#333;margin:15px;padding:20px;border-radius:15px;}
 
-.volver{
-position:sticky;
-top:0;
-background:#0a2f5c;
-color:white;
-padding:14px;
-border-radius:12px;
-text-align:center;
-font-weight:bold;
-margin-bottom:15px;
-cursor:pointer;
-}
+.volver{position:sticky;top:0;background:#0a2f5c;color:white;padding:14px;border-radius:12px;text-align:center;font-weight:bold;margin-bottom:15px;cursor:pointer;}
 
-input, select{
-width:100%;
-padding:12px;
-margin-top:10px;
-border-radius:10px;
-border:none;
-}
+input, select{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:none;}
 
-button{
-padding:14px;
-border:none;
-border-radius:12px;
-color:white;
-font-weight:bold;
-width:100%;
-}
-
+button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;width:100%;}
 .btn-verde{background:#10c251;}
 .btn-azul{background:#123B63;}
 .btn-naranja{background:#ff9800;}
 
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
-margin:20px;
-}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:20px;}
 
-.box{
-background:white;
-color:#123B63;
-padding:25px;
-border-radius:15px;
-text-align:center;
-font-weight:bold;
-cursor:pointer;
-}
+.box{background:white;color:#123B63;padding:25px;border-radius:15px;text-align:center;font-weight:bold;cursor:pointer;}
 
 .fila{display:flex;gap:10px;margin-top:10px;}
 .fila button{width:50%;}
 
-.item{
-background:white;
-padding:12px;
-margin-top:10px;
-border-radius:10px;
-color:#333;
-}
+.item{background:white;padding:12px;margin-top:10px;border-radius:10px;color:#333;}
 
-/* PAGOS */
-.pagos-container{
-display:flex;
-flex-direction:column;
-gap:20px;
-}
+.pagos-container{display:flex;flex-direction:column;gap:20px;}
 
-.pago-box{
-background:white;
-padding:10px;
-border-radius:12px;
-cursor:pointer;
-}
+.pago-box{background:white;padding:10px;border-radius:12px;cursor:pointer;}
+.pago-box img{width:100%;height:260px;object-fit:contain;}
 
-.pago-box img{
-width:100%;
-height:260px;
-object-fit:contain;
-}
-
-/* MODAL QR */
-.modal{
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:black;
-justify-content:center;
-align-items:center;
-z-index:999;
-}
-
-.modal img{
-width:95%;
-max-width:450px;
-}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;justify-content:center;align-items:center;z-index:999;}
+.modal img{width:95%;max-width:450px;}
 
 </style>
 </head>
@@ -238,7 +143,6 @@ max-width:450px;
 </div>
 
 </div>
-
 </div>
 
 </div>
@@ -258,21 +162,16 @@ asesor=usuario.value;
 nombreAsesor.innerText=asesor;
 loginDiv.style.display="none";
 dashboard.style.display="block";
-}else{
-alert("Usuario incorrecto");
-}
+}else{alert("Usuario incorrecto");}
 }
 
 function mostrar(p){
 dashboard.style.display="none";
 app.style.display="block";
-
 simulador.style.display="none";
 clientes.style.display="none";
 pagos.style.display="none";
-
 document.getElementById(p).style.display="block";
-
 if(p==="clientes") renderClientes();
 }
 
@@ -298,11 +197,7 @@ let cuota=(P*i)/(1-Math.pow(1+i,-n));
 
 resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
 
-window.simData={
-monto:P,
-cuota:cuota.toFixed(2),
-producto:producto.value
-};
+window.simData={monto:P,cuota:cuota.toFixed(2),producto:producto.value};
 
 let saldo=P,fecha=new Date(),html="<h4>Cronograma:</h4>";
 
@@ -312,38 +207,19 @@ let capital=cuota-interes;
 saldo-=capital;
 fecha.setDate(fecha.getDate()+dias);
 
-html+=`<div class="item">
-Cuota ${c} - ${fecha.toLocaleDateString()}<br>
-Saldo: S/ ${saldo.toFixed(2)}
-</div>`;
+html+=`<div class="item">Cuota ${c} - ${fecha.toLocaleDateString()}<br>Saldo: S/ ${saldo.toFixed(2)}</div>`;
 }
 
 cronograma.innerHTML=html;
 }
 
-function enviarSimulacion(){
-
-if(!window.simData){alert("Primero calcula");return;}
-
-let msg=`Simulación:
-Monto: S/ ${simData.monto}
-Cuota: S/ ${simData.cuota}
-Producto: ${simData.producto}`;
-
-window.open("https://wa.me/?text="+encodeURIComponent(msg));
-}
-
-function enviarFiltro(){
-
-let msg=`Cliente:
-${cliente.value} ${apellidos.value}
-DNI: ${dni.value}`;
-
-window.open("https://wa.me/?text="+encodeURIComponent(msg));
-}
-
 function limpiar(){
-document.querySelectorAll("input").forEach(i=>i.value="");
+cliente.value="";
+apellidos.value="";
+dni.value="";
+monto.value="";
+tasa.value="";
+plazo.value="";
 resultado.innerHTML="";
 cronograma.innerHTML="";
 }
@@ -360,7 +236,17 @@ reader.onload=function(e){
 let data=new Uint8Array(e.target.result);
 let workbook=XLSX.read(data,{type:'array'});
 let hoja=workbook.Sheets[workbook.SheetNames[0]];
-let json=XLSX.utils.sheet_to_json(hoja);
+
+let json=XLSX.utils.sheet_to_json(hoja,{defval:""});
+
+// limpiar encabezados
+json=json.map(row=>{
+let limpio={};
+Object.keys(row).forEach(k=>{
+limpio[k.trim()]=row[k];
+});
+return limpio;
+});
 
 localStorage.setItem("cartera",JSON.stringify(json));
 renderClientes();
@@ -377,7 +263,7 @@ lista.innerHTML="";
 
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
 
-data.sort((a,b)=>(b["RETRASO"]||0)-(a["RETRASO"]||0));
+data.sort((a,b)=>(b["Dias de retraso"]||0)-(a["Dias de retraso"]||0));
 
 data.forEach(c=>{
 
@@ -386,9 +272,14 @@ let apePat=c["Apellido Paterno"]||"";
 let apeMat=c["Apellido Materno"]||"";
 
 let monto=c["Monto Otorgado"]||0;
-let retraso=c["RETRASO"]||0;
+let retraso=c["Dias de retraso"]||0;
 let producto=c["Producto"]||"";
-let direccion=c["Direccion"]||"";
+
+let direccion=
+c["Direccion"]||
+c["Dirección"]||
+c["DIRECCION"]||
+"-";
 
 let color="#2ecc71";
 if(retraso>0) color="#f1c40f";
@@ -415,7 +306,7 @@ data.push({
 "Apellido Paterno":"",
 "Apellido Materno":c_apellidos.value,
 "Monto Otorgado":c_monto.value,
-"RETRASO":0,
+"Dias de retraso":0,
 "Producto":"Manual",
 "Direccion":""
 });
@@ -434,27 +325,21 @@ modalQR.style.display="none";
 }
 
 function enviarUbicacion(){
-
-if(navigator.geolocation){
 navigator.geolocation.getCurrentPosition(function(pos){
-
-let lat=pos.coords.latitude;
-let lon=pos.coords.longitude;
-
-let link=`https://www.google.com/maps?q=${lat},${lon}`;
-
-let msg=`Mi ubicación actual:
-${link}`;
-
-window.open("https://wa.me/?text="+encodeURIComponent(msg));
-
-},function(){
-alert("Activa GPS");
+let link=`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+window.open("https://wa.me/?text="+encodeURIComponent(link));
 });
-}else{
-alert("No soportado");
 }
 
+function enviarSimulacion(){
+if(!window.simData)return alert("Primero calcula");
+let msg=`Monto: S/ ${simData.monto}\nCuota: S/ ${simData.cuota}\nProducto: ${simData.producto}`;
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
+}
+
+function enviarFiltro(){
+let msg=`${cliente.value} ${apellidos.value}\nDNI:${dni.value}`;
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
 }
 
 </script>

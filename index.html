@@ -196,7 +196,6 @@ resultado.innerHTML="";
 cronograma.innerHTML="";
 }
 
-// 🔥 FUNCIÓN CORREGIDA
 function cargarExcel(){
 
 let file=document.getElementById("excelFile").files[0];
@@ -210,27 +209,52 @@ let data=new Uint8Array(e.target.result);
 let workbook=XLSX.read(data,{type:'array'});
 let hoja=workbook.Sheets[workbook.SheetNames[0]];
 
-let json=XLSX.utils.sheet_to_json(hoja,{defval:""});
+// leer como matriz
+let raw=XLSX.utils.sheet_to_json(hoja,{header:1});
 
-json=json.map(row=>{
-let limpio={};
+// detectar encabezado
+let headerIndex=0;
 
-Object.keys(row).forEach(k=>{
-let key=k.toLowerCase().replace(/\s+/g,'');
+for(let i=0;i<raw.length;i++){
+let row=(raw[i]||[]).join(" ").toLowerCase();
+if(row.includes("nombre") && row.includes("monto")){
+headerIndex=i;
+break;
+}
+}
 
-if(key.includes("nombre") && !key.includes("grupo")) limpio.nombre=row[k];
-if(key.includes("paterno")) limpio.apePat=row[k];
-if(key.includes("materno")) limpio.apeMat=row[k];
-if(key.includes("monto")) limpio.monto=row[k];
-if(key.includes("retraso")) limpio.retraso=row[k];
-if(key.includes("producto")) limpio.producto=row[k];
-if(key.includes("asesor")) limpio.asesor=row[k];
-if(key.includes("direccion")) limpio.direccion=row[k];
-if(key.includes("celular") || key.includes("telefono")) limpio.celular=row[k];
+let headers=raw[headerIndex];
+let dataRows=raw.slice(headerIndex+1);
+
+let json=dataRows.map(r=>{
+
+let obj={};
+
+headers.forEach((h,i)=>{
+
+if(!h)return;
+
+let key=h.toString().toLowerCase().replace(/\s+/g,'');
+let val=r[i] || "";
+
+if(key.includes("nombre") && !key.includes("grupo")) obj.nombre=val;
+if(key.includes("paterno")) obj.apePat=val;
+if(key.includes("materno")) obj.apeMat=val;
+
+if(key.includes("monto")) obj.monto=val;
+if(key.includes("retraso")) obj.retraso=val;
+if(key.includes("producto")) obj.producto=val;
+if(key.includes("asesor")) obj.asesor=val;
+if(key.includes("direccion")) obj.direccion=val;
+if(key.includes("celular") || key.includes("telefono")) obj.celular=val;
+
 });
 
-return limpio;
+return obj;
 });
+
+// eliminar vacíos
+json=json.filter(x=>x.nombre || x.monto);
 
 localStorage.setItem("cartera",JSON.stringify(json));
 renderClientes();

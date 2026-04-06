@@ -1,4 +1,4 @@
-j<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 
@@ -132,19 +132,19 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 </div>
 
 <div class="pago-box" onclick="abrirQR(this)">
-<b>📱 QR BBVA</b>
+<b>📱 YAPE</b>
 <img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg">
 <button class="btn-verde" onclick="enviarQR(event,this)">Enviar</button>
 </div>
 
 <div class="pago-box" onclick="abrirQR(this)">
-<b>📱 CUENTA BBVA</b>
+<b>📱 PLIN</b>
 <img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg">
 <button class="btn-verde" onclick="enviarQR(event,this)">Enviar</button>
 </div>
 
 <div class="pago-box" onclick="abrirQR(this)">
-<b>📲 Qr Yape</b>
+<b>📲 OTRO</b>
 <img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg">
 <button class="btn-verde" onclick="enviarQR(event,this)">Enviar</button>
 </div>
@@ -224,7 +224,6 @@ let ws=wb.Sheets[wb.SheetNames[0]];
 
 let raw=XLSX.utils.sheet_to_json(ws,{header:1});
 
-// detectar encabezado real
 let headerIndex=raw.findIndex(r=>{
 let row=(r||[]).join(" ").toLowerCase();
 return row.includes("nombre") && (row.includes("monto") || row.includes("saldo"));
@@ -282,8 +281,14 @@ let r=parseFloat(c.retraso)||0;
 return r>=min && r<=max;
 }).sort((a,b)=>(b.retraso||0)-(a.retraso||0))
 .forEach(c=>{
+
+let color="#2ecc71";
+if(c.retraso>8) color="#f1c40f";
+if(c.retraso>30) color="#e74c3c";
+if(c.retraso>60) color="black";
+
 lista.innerHTML+=`
-<div class="item">
+<div class="item" style="border-left:6px solid ${color}">
 <b>${c.nombre||""} ${c.apePat||""} ${c.apeMat||""}</b><br>
 Monto: S/ ${c.monto||0}<br>
 Producto: ${c.producto||"-"}<br>

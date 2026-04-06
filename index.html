@@ -108,6 +108,18 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <input type="file" id="excelFile" accept=".csv,.xlsx" style="margin-top:15px;">
 <button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>
 
+<div class="fila">
+<button style="background:#2ecc71" onclick="filtrarMora(0,8)">0-8</button>
+<button style="background:#f1c40f;color:black" onclick="filtrarMora(9,30)">9-30</button>
+</div>
+
+<div class="fila">
+<button style="background:#e74c3c" onclick="filtrarMora(31,60)">31-60</button>
+<button style="background:black" onclick="filtrarMora(61,1000)">61+</button>
+</div>
+
+<button class="btn-azul" onclick="renderClientes()">Ver todos</button>
+
 <div id="listaClientes"></div>
 </div>
 
@@ -183,17 +195,14 @@ function mostrar(p){
 dashboard.style.display="none";
 app.style.display="block";
 
-simulador.style.display="none";
-clientes.style.display="none";
-pagos.style.display="none";
-admin.style.display="none";
+["simulador","clientes","pagos","admin"].forEach(id=>{
+document.getElementById(id).style.display="none";
+});
 
 document.getElementById(p).style.display="block";
 
-if(p==="admin"){
-setTimeout(()=>{ renderUsuarios(); },100);
-}
-
+if(p==="admin") setTimeout(renderUsuarios,100);
+if(p==="clientes") renderClientes();
 }
 
 // VOLVER
@@ -202,23 +211,19 @@ app.style.display="none";
 dashboard.style.display="block";
 }
 
-// CREAR USUARIO
+// USUARIOS
 function crearUsuario(){
+let user=nuevoUser.value.trim();
+let pass=nuevoPass.value.trim();
 
-let user = nuevoUser.value.trim();
-let pass = nuevoPass.value.trim();
+if(!user||!pass)return alert("Completa datos");
 
-if(!user || !pass){ alert("Completa datos"); return; }
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+if(usuarios.find(u=>u.user===user)) return alert("Usuario existe");
 
-if(usuarios.find(u => u.user === user)){
-alert("Usuario ya existe");
-return;
-}
-
-usuarios.push({user, pass});
-localStorage.setItem("usuarios", JSON.stringify(usuarios));
+usuarios.push({user,pass});
+localStorage.setItem("usuarios",JSON.stringify(usuarios));
 
 nuevoUser.value="";
 nuevoPass.value="";
@@ -226,15 +231,13 @@ nuevoPass.value="";
 renderUsuarios();
 }
 
-// RENDER + ELIMINAR
 function renderUsuarios(){
-
-let lista = document.getElementById("listaUsuarios");
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+let lista=listaUsuarios;
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
 lista.innerHTML="";
 
-if(usuarios.length===0){
+if(!usuarios.length){
 lista.innerHTML="<div class='item'>No hay usuarios</div>";
 return;
 }
@@ -243,36 +246,115 @@ usuarios.forEach((u,i)=>{
 lista.innerHTML+=`
 <div class="item">
 👤 ${u.user}
-<button style="margin-top:8px;background:#e74c3c"
-onclick="eliminarUsuario(${i})">Eliminar</button>
+<button onclick="eliminarUsuario(${i})" style="background:red;margin-top:5px">Eliminar</button>
 </div>`;
 });
 }
 
-// ELIMINAR
-function eliminarUsuario(index){
+function eliminarUsuario(i){
+if(!confirm("Eliminar usuario?"))return;
 
-if(!confirm("¿Eliminar usuario?")) return;
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+usuarios.splice(i,1);
 
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-
-usuarios.splice(index,1);
-
-localStorage.setItem("usuarios", JSON.stringify(usuarios));
-
+localStorage.setItem("usuarios",JSON.stringify(usuarios));
 renderUsuarios();
 }
 
-// RESTO BASE (sin cambios)
-function calcular(){}
-function limpiar(){}
-function cargarExcel(){}
+// SIMULADOR
+function calcular(){
+let P=parseFloat(monto.value);
+let t=parseFloat(tasa.value)/100;
+let n=parseInt(plazo.value);
+
+let i={diario:t/30,semanal:t/4,quincenal:t/2,mensual:t}[producto.value];
+let dias={diario:1,semanal:7,quincenal:15,mensual:30}[producto.value];
+
+let cuota=(P*i)/(1-Math.pow(1+i,-n));
+resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
+
+let saldo=P,fecha=new Date(),html="";
+for(let c=1;c<=n;c++){
+saldo-=cuota-(saldo*i);
+fecha.setDate(fecha.getDate()+dias);
+html+=`<div class="item">Cuota ${c} - ${fecha.toLocaleDateString()}</div>`;
+}
+cronograma.innerHTML=html;
+
+window.simData={monto:P,cuota:cuota.toFixed(2),producto:producto.value};
+}
+
+function limpiar(){
+document.querySelectorAll("input").forEach(i=>i.value="");
+resultado.innerHTML="";
+cronograma.innerHTML="";
+}
+
+// WHATSAPP
+function enviarSimulacion(){
+window.open("https://wa.me/?text="+encodeURIComponent(
+`Monto: ${simData.monto}\nCuota: ${simData.cuota}\nProducto: ${simData.producto}`));
+}
+
+function enviarFiltro(){
+window.open("https://wa.me/?text="+encodeURIComponent(
+`${cliente.value} ${apellidos.value}\nDNI:${dni.value}`));
+}
+
+// EXCEL
+function cargarExcel(){
+let file=excelFile.files[0];
+if(!file)return alert("Selecciona archivo");
+
+let reader=new FileReader();
+reader.onload=e=>{
+let data=new Uint8Array(e.target.result);
+let wb=XLSX.read(data,{type:'array'});
+let json=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+localStorage.setItem("cartera",JSON.stringify(json));
+renderClientes();
+};
+reader.readAsArrayBuffer(file);
+}
+
+// CLIENTES
+function renderClientes(){
+let data=JSON.parse(localStorage.getItem("cartera"))||[];
+listaClientes.innerHTML="";
+
+data.forEach(c=>{
+listaClientes.innerHTML+=`
+<div class="item">
+<b>${c.Nombre||""}</b><br>
+Monto: ${c["Monto Otorgado"]||0}<br>
+Retraso: ${c.RETRASO||0}
+</div>`;
+});
+}
+
+function filtrarMora(min,max){
+let data=JSON.parse(localStorage.getItem("cartera"))||[];
+listaClientes.innerHTML="";
+
+data.filter(c=>(c.RETRASO||0)>=min&&(c.RETRASO||0)<=max)
+.forEach(c=>{
+listaClientes.innerHTML+=`<div class="item">${c.Nombre}</div>`;
+});
+}
+
 function guardarCliente(){}
-function abrirQR(){}
-function cerrarQR(){}
-function enviarUbicacion(){}
-function enviarSimulacion(){}
-function enviarFiltro(){}
+
+// QR
+function abrirQR(el){imgQR.src=el.querySelector("img").src;modalQR.style.display="flex";}
+function cerrarQR(){modalQR.style.display="none";}
+
+// GPS
+function enviarUbicacion(){
+navigator.geolocation.getCurrentPosition(p=>{
+window.open("https://wa.me/?text="+
+encodeURIComponent(`https://maps.google.com/?q=${p.coords.latitude},${p.coords.longitude}`));
+});
+}
 
 </script>
 

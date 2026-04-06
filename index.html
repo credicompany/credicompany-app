@@ -116,6 +116,11 @@ button{padding:12px;border:none;border-radius:10px;color:white;font-weight:bold;
 
 <script>
 
+// 🔥 DEBUG GLOBAL
+window.onerror = function(msg){
+alert("ERROR JS: " + msg);
+};
+
 // LOGIN
 function login(){
 let user=usuario.value;
@@ -138,16 +143,31 @@ loginDiv.style.display="none";
 dashboard.style.display="block";
 }
 
-// MOSTRAR
+// 🔥 FIX NAVEGACIÓN
 function mostrar(p){
-dashboard.style.display="none";
-app.style.display="block";
+
+let dash = document.getElementById("dashboard");
+let appDiv = document.getElementById("app");
+
+if(!dash || !appDiv){
+alert("Error base no encontrada");
+return;
+}
+
+dash.style.display="none";
+appDiv.style.display="block";
 
 ["simulador","clientes","admin"].forEach(id=>{
-document.getElementById(id).style.display="none";
+let el = document.getElementById(id);
+if(el) el.style.display="none";
 });
 
-document.getElementById(p).style.display="block";
+let seccion = document.getElementById(p);
+if(seccion){
+seccion.style.display="block";
+}else{
+alert("Sección no encontrada: " + p);
+}
 
 if(p==="clientes") renderClientes();
 if(p==="admin") renderUsuarios();
@@ -161,15 +181,10 @@ dashboard.style.display="block";
 
 // NORMALIZADOR
 function normalizar(txt){
-return (txt||"")
-.toString()
-.toLowerCase()
-.replace(/\s/g,'')
-.normalize("NFD")
-.replace(/[\u0300-\u036f]/g,"");
+return (txt||"").toLowerCase().replace(/\s/g,'').normalize("NFD").replace(/[\u0300-\u036f]/g,"");
 }
 
-// BUSCAR COLUMNA INTELIGENTE
+// BUSCADOR
 function getValor(obj, claves){
 for(let k in obj){
 let nk=normalizar(k);
@@ -180,7 +195,7 @@ if(nk.includes(normalizar(c))) return obj[k];
 return "";
 }
 
-// CARGAR EXCEL (FIX REAL)
+// EXCEL
 function cargarExcel(){
 
 let file=excelFile.files[0];
@@ -203,12 +218,12 @@ let apeMat=getValor(c,["apellido materno"]);
 return{
 nombreCompleto:`${nombre} ${apePat} ${apeMat}`.trim(),
 asesor:getValor(c,["asesor"]),
-monto:parseFloat(getValor(c,["monto otorgado","monto"]))||0,
+monto:parseFloat(getValor(c,["monto"]))||0,
 cuotaMora:parseFloat(getValor(c,["cuota","mora"]))||0,
-retraso:parseFloat(getValor(c,["dias retraso","retraso"]))||0,
+retraso:parseFloat(getValor(c,["retraso","dias"]))||0,
 telefono:getValor(c,["telefono","celular"]),
 producto:getValor(c,["producto"]),
-cuotas:getValor(c,["cuotas vencidas"]),
+cuotas:getValor(c,["cuotas"]),
 direccion:getValor(c,["direccion"]),
 distrito:getValor(c,["distrito"])
 };
@@ -216,16 +231,15 @@ distrito:getValor(c,["distrito"])
 });
 
 localStorage.setItem("cartera",JSON.stringify(cartera));
-
 alert("Excel cargado correctamente");
-
 renderClientes();
+
 };
 
 reader.readAsArrayBuffer(file);
 }
 
-// MOSTRAR CLIENTES
+// CLIENTES
 function renderClientes(){
 
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
@@ -255,14 +269,11 @@ listaClientes.innerHTML+=`
 
 // FILTRO
 function filtrarMora(min,max){
-
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
 listaClientes.innerHTML="";
-
 data.filter(c=>c.retraso>=min && c.retraso<=max)
 .forEach(c=>{
-listaClientes.innerHTML+=`
-<div class="item">${c.nombreCompleto} - ${c.retraso} días</div>`;
+listaClientes.innerHTML+=`<div class="item">${c.nombreCompleto} - ${c.retraso} días</div>`;
 });
 }
 
@@ -295,36 +306,14 @@ renderUsuarios();
 
 // SIMULADOR
 function calcular(){
-
 let P=parseFloat(monto.value);
 let t=parseFloat(tasa.value)/100;
 let n=parseInt(plazo.value);
 
-let map={
-diario:[t/30,1],
-semanal:[t/4,7],
-quincenal:[t/2,15],
-mensual:[t,30]
-};
-
-let i=map[producto.value][0];
-let dias=map[producto.value][1];
-
+let i=t/30;
 let cuota=(P*i)/(1-Math.pow(1+i,-n));
 
 resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
-
-let saldo=P,fecha=new Date(),html="";
-
-for(let c=1;c<=n;c++){
-saldo-=cuota-(saldo*i);
-fecha.setDate(fecha.getDate()+dias);
-
-html+=`<div class="item">Cuota ${c} - ${fecha.toLocaleDateString()}</div>`;
-}
-
-cronograma.innerHTML=html;
-
 window.simData={monto:P,cuota:cuota.toFixed(2),producto:producto.value};
 }
 
@@ -338,7 +327,7 @@ cronograma.innerHTML="";
 // WHATSAPP
 function enviarSimulacion(){
 window.open("https://wa.me/?text="+encodeURIComponent(
-`Monto: ${simData.monto} Cuota: ${simData.cuota} Producto: ${simData.producto}`));
+`Monto:${simData.monto} Cuota:${simData.cuota} Producto:${simData.producto}`));
 }
 
 // GPS

@@ -104,6 +104,18 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <input type="file" id="excelFile" accept=".csv,.xlsx" style="margin-top:15px;">
 <button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>
 
+<div class="fila">
+<button style="background:#2ecc71" onclick="filtrarMora(0,8)">0-8 días</button>
+<button style="background:#f1c40f;color:black" onclick="filtrarMora(9,30)">9-30 días</button>
+</div>
+
+<div class="fila">
+<button style="background:#e74c3c" onclick="filtrarMora(31,60)">31-60 días</button>
+<button style="background:black" onclick="filtrarMora(61,1000)">61+ días</button>
+</div>
+
+<button class="btn-azul" onclick="renderClientes()">🔄 Ver todos</button>
+
 <div id="listaClientes"></div>
 </div>
 
@@ -158,38 +170,6 @@ app.style.display="none";
 dashboard.style.display="block";
 }
 
-function calcular(){
-let P=parseFloat(monto.value);
-let t=parseFloat(tasa.value)/100;
-let n=parseInt(plazo.value);
-
-let i=0,dias=0;
-
-if(producto.value==="diario"){i=t/30;dias=1;}
-if(producto.value==="semanal"){i=t/4;dias=7;}
-if(producto.value==="quincenal"){i=t/2;dias=15;}
-if(producto.value==="mensual"){i=t;dias=30;}
-
-let cuota=(P*i)/(1-Math.pow(1+i,-n));
-
-resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
-
-window.simData={monto:P,cuota:cuota.toFixed(2),producto:producto.value};
-
-let saldo=P,fecha=new Date(),html="<h4>Cronograma:</h4>";
-
-for(let c=1;c<=n;c++){
-let interes=saldo*i;
-let capital=cuota-interes;
-saldo-=capital;
-fecha.setDate(fecha.getDate()+dias);
-
-html+=`<div class="item">Cuota ${c} - ${fecha.toLocaleDateString()}<br>Saldo: S/ ${saldo.toFixed(2)}</div>`;
-}
-
-cronograma.innerHTML=html;
-}
-
 function limpiar(){
 document.querySelectorAll("input").forEach(i=>i.value="");
 resultado.innerHTML="";
@@ -209,10 +189,8 @@ let data=new Uint8Array(e.target.result);
 let workbook=XLSX.read(data,{type:'array'});
 let hoja=workbook.Sheets[workbook.SheetNames[0]];
 
-// leer como matriz
 let raw=XLSX.utils.sheet_to_json(hoja,{header:1});
 
-// detectar encabezado
 let headerIndex=0;
 
 for(let i=0;i<raw.length;i++){
@@ -227,34 +205,31 @@ let headers=raw[headerIndex];
 let dataRows=raw.slice(headerIndex+1);
 
 let json=dataRows.map(r=>{
-
 let obj={};
 
 headers.forEach((h,i)=>{
-
 if(!h)return;
 
 let key=h.toString().toLowerCase().replace(/\s+/g,'');
-let val=r[i] || "";
 
-if(key.includes("nombre") && !key.includes("grupo")) obj.nombre=val;
+let val=r[i]||"";
+
+if(key.includes("nombre")&&!key.includes("grupo")) obj.nombre=val;
 if(key.includes("paterno")) obj.apePat=val;
 if(key.includes("materno")) obj.apeMat=val;
-
 if(key.includes("monto")) obj.monto=val;
 if(key.includes("retraso")) obj.retraso=val;
 if(key.includes("producto")) obj.producto=val;
 if(key.includes("asesor")) obj.asesor=val;
 if(key.includes("direccion")) obj.direccion=val;
-if(key.includes("celular") || key.includes("telefono")) obj.celular=val;
+if(key.includes("celular")||key.includes("telefono")) obj.celular=val;
 
 });
 
 return obj;
 });
 
-// eliminar vacíos
-json=json.filter(x=>x.nombre || x.monto);
+json=json.filter(x=>x.nombre||x.monto);
 
 localStorage.setItem("cartera",JSON.stringify(json));
 renderClientes();
@@ -265,19 +240,29 @@ reader.readAsArrayBuffer(file);
 }
 
 function renderClientes(){
+filtrarMora(0,1000);
+}
+
+function filtrarMora(min,max){
 
 let lista=document.getElementById("listaClientes");
 lista.innerHTML="";
 
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
 
-data.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
+let filtrados=data.filter(c=>{
+let r=parseFloat(c.retraso)||0;
+return r>=min && r<=max;
+});
 
-data.forEach(c=>{
+filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
+
+filtrados.forEach(c=>{
 
 let color="#2ecc71";
-if(c.retraso>0) color="#f1c40f";
-if(c.retraso>7) color="#e74c3c";
+if(c.retraso>8) color="#f1c40f";
+if(c.retraso>30) color="#e74c3c";
+if(c.retraso>60) color="black";
 
 lista.innerHTML+=`
 <div class="item" style="border-left:6px solid ${color}">

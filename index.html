@@ -10,7 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <style>
-body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:100px;}
+body{margin:0;font-family:Arial;background:#123B63;color:white;}
 .header{text-align:center;padding:20px;}
 .header img{width:180px;}
 .card{background:#f2f2f2;color:#333;margin:15px;padding:20px;border-radius:15px;}
@@ -19,6 +19,7 @@ input,select{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:n
 button{padding:12px;border:none;border-radius:10px;color:white;font-weight:bold;width:100%;}
 .btn-verde{background:#10c251;}
 .btn-azul{background:#123B63;}
+.btn-naranja{background:#ff9800;}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:20px;}
 .box{background:white;color:#123B63;padding:20px;border-radius:15px;text-align:center;font-weight:bold;cursor:pointer;}
 .fila{display:flex;gap:10px;margin-top:10px;}
@@ -65,7 +66,7 @@ button{padding:12px;border:none;border-radius:10px;color:white;font-weight:bold;
 </select>
 
 <input id="monto" placeholder="Monto">
-<input id="tasa" placeholder="Tasa">
+<input id="tasa" placeholder="Tasa (%)">
 <input id="plazo" placeholder="Cuotas">
 
 <button class="btn-verde" onclick="calcular()">Calcular</button>
@@ -73,7 +74,8 @@ button{padding:12px;border:none;border-radius:10px;color:white;font-weight:bold;
 <div id="resultado"></div>
 <div id="cronograma"></div>
 
-<button class="btn-verde" onclick="enviarSimulacion()">WhatsApp</button>
+<button class="btn-verde" onclick="enviarSimulacion()">Enviar WhatsApp</button>
+<button class="btn-naranja" onclick="limpiar()">Limpiar</button>
 </div>
 
 <!-- CLIENTES -->
@@ -104,6 +106,7 @@ button{padding:12px;border:none;border-radius:10px;color:white;font-weight:bold;
 
 <input id="nuevoUser" placeholder="Usuario">
 <input id="nuevoPass" placeholder="Clave">
+
 <button class="btn-verde" onclick="crearUsuario()">Crear Usuario</button>
 
 <div id="listaUsuarios"></div>
@@ -128,19 +131,45 @@ return;
 }
 
 let ok=usuarios.find(u=>u.user===user && u.pass===pass);
-if(!ok)return alert("Incorrecto");
+if(!ok)return alert("Usuario incorrecto");
 
 nombreAsesor.innerText=user;
 loginDiv.style.display="none";
 dashboard.style.display="block";
 }
 
-// NORMALIZADOR
-function normalizar(t){
-return (t||"").toLowerCase().replace(/\s/g,'').normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+// MOSTRAR
+function mostrar(p){
+dashboard.style.display="none";
+app.style.display="block";
+
+["simulador","clientes","admin"].forEach(id=>{
+document.getElementById(id).style.display="none";
+});
+
+document.getElementById(p).style.display="block";
+
+if(p==="clientes") renderClientes();
+if(p==="admin") renderUsuarios();
 }
 
-// BUSCADOR
+// VOLVER
+function volver(){
+app.style.display="none";
+dashboard.style.display="block";
+}
+
+// NORMALIZADOR
+function normalizar(txt){
+return (txt||"")
+.toString()
+.toLowerCase()
+.replace(/\s/g,'')
+.normalize("NFD")
+.replace(/[\u0300-\u036f]/g,"");
+}
+
+// BUSCAR COLUMNA INTELIGENTE
 function getValor(obj, claves){
 for(let k in obj){
 let nk=normalizar(k);
@@ -151,7 +180,7 @@ if(nk.includes(normalizar(c))) return obj[k];
 return "";
 }
 
-// EXCEL
+// CARGAR EXCEL (FIX REAL)
 function cargarExcel(){
 
 let file=excelFile.files[0];
@@ -174,12 +203,12 @@ let apeMat=getValor(c,["apellido materno"]);
 return{
 nombreCompleto:`${nombre} ${apePat} ${apeMat}`.trim(),
 asesor:getValor(c,["asesor"]),
-monto:parseFloat(getValor(c,["monto"]))||0,
+monto:parseFloat(getValor(c,["monto otorgado","monto"]))||0,
 cuotaMora:parseFloat(getValor(c,["cuota","mora"]))||0,
-retraso:parseFloat(getValor(c,["dias","retraso"]))||0,
+retraso:parseFloat(getValor(c,["dias retraso","retraso"]))||0,
 telefono:getValor(c,["telefono","celular"]),
 producto:getValor(c,["producto"]),
-cuotas:getValor(c,["cuotas"]),
+cuotas:getValor(c,["cuotas vencidas"]),
 direccion:getValor(c,["direccion"]),
 distrito:getValor(c,["distrito"])
 };
@@ -187,14 +216,16 @@ distrito:getValor(c,["distrito"])
 });
 
 localStorage.setItem("cartera",JSON.stringify(cartera));
-renderClientes();
 
+alert("Excel cargado correctamente");
+
+renderClientes();
 };
 
 reader.readAsArrayBuffer(file);
 }
 
-// CLIENTES
+// MOSTRAR CLIENTES
 function renderClientes(){
 
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
@@ -209,27 +240,29 @@ if(c.retraso>60)color="black";
 
 listaClientes.innerHTML+=`
 <div class="item" style="border-left:6px solid ${color}">
-<b>${c.nombreCompleto}</b><br>
-💼 ${c.asesor}<br>
+<b>${c.nombreCompleto||"SIN NOMBRE"}</b><br>
+💼 ${c.asesor||"-"}<br>
 💰 S/ ${c.monto}<br>
 📊 ${c.cuotaMora}<br>
 ⏱ ${c.retraso} días<br>
-📦 ${c.producto}<br>
-📉 ${c.cuotas}<br>
-📍 ${c.direccion} - ${c.distrito}<br>
-📞 ${c.telefono}
+📦 ${c.producto||"-"}<br>
+📉 ${c.cuotas||0}<br>
+📍 ${c.direccion||"-"} - ${c.distrito||"-"}<br>
+📞 ${c.telefono||"-"}
 </div>`;
 });
 }
 
 // FILTRO
 function filtrarMora(min,max){
+
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
 listaClientes.innerHTML="";
 
 data.filter(c=>c.retraso>=min && c.retraso<=max)
 .forEach(c=>{
-listaClientes.innerHTML+=`<div class="item">${c.nombreCompleto} - ${c.retraso}</div>`;
+listaClientes.innerHTML+=`
+<div class="item">${c.nombreCompleto} - ${c.retraso} días</div>`;
 });
 }
 
@@ -262,22 +295,50 @@ renderUsuarios();
 
 // SIMULADOR
 function calcular(){
+
 let P=parseFloat(monto.value);
 let t=parseFloat(tasa.value)/100;
 let n=parseInt(plazo.value);
 
-let i=t/30;
+let map={
+diario:[t/30,1],
+semanal:[t/4,7],
+quincenal:[t/2,15],
+mensual:[t,30]
+};
+
+let i=map[producto.value][0];
+let dias=map[producto.value][1];
+
 let cuota=(P*i)/(1-Math.pow(1+i,-n));
 
-resultado.innerHTML="Cuota: "+cuota.toFixed(2);
+resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
+
+let saldo=P,fecha=new Date(),html="";
+
+for(let c=1;c<=n;c++){
+saldo-=cuota-(saldo*i);
+fecha.setDate(fecha.getDate()+dias);
+
+html+=`<div class="item">Cuota ${c} - ${fecha.toLocaleDateString()}</div>`;
+}
+
+cronograma.innerHTML=html;
 
 window.simData={monto:P,cuota:cuota.toFixed(2),producto:producto.value};
+}
+
+// LIMPIAR
+function limpiar(){
+document.querySelectorAll("input").forEach(i=>i.value="");
+resultado.innerHTML="";
+cronograma.innerHTML="";
 }
 
 // WHATSAPP
 function enviarSimulacion(){
 window.open("https://wa.me/?text="+encodeURIComponent(
-`Monto:${simData.monto} Cuota:${simData.cuota} Producto:${simData.producto}`));
+`Monto: ${simData.monto} Cuota: ${simData.cuota} Producto: ${simData.producto}`));
 }
 
 // GPS

@@ -11,131 +11,26 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <style>
-
-body{
-margin:0;
-font-family:Arial;
-background:#123B63;
-color:white;
-padding-bottom:120px;
-}
-
-.header{
-display:flex;
-flex-direction:column;
-align-items:center;
-padding:20px;
-}
-
+body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}
+.header{display:flex;flex-direction:column;align-items:center;padding:20px;}
 .header img{width:180px;}
-
-.card{
-background:#f2f2f2;
-color:#333;
-margin:15px;
-padding:20px;
-border-radius:15px;
-}
-
-.volver{
-background:#0a2f5c;
-color:white;
-padding:14px;
-border-radius:12px;
-text-align:center;
-margin-bottom:15px;
-cursor:pointer;
-}
-
-input, select{
-width:100%;
-padding:12px;
-margin-top:10px;
-border-radius:10px;
-border:none;
-}
-
-button{
-padding:14px;
-border:none;
-border-radius:12px;
-color:white;
-font-weight:bold;
-width:100%;
-}
-
+.card{background:#f2f2f2;color:#333;margin:15px;padding:20px;border-radius:15px;}
+.volver{position:sticky;top:0;background:#0a2f5c;color:white;padding:14px;border-radius:12px;text-align:center;font-weight:bold;margin-bottom:15px;cursor:pointer;}
+input, select{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:none;}
+button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;width:100%;}
 .btn-verde{background:#10c251;}
 .btn-azul{background:#123B63;}
 .btn-naranja{background:#ff9800;}
-
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
-margin:20px;
-}
-
-.box{
-background:white;
-color:#123B63;
-padding:25px;
-border-radius:15px;
-text-align:center;
-cursor:pointer;
-}
-
-.item{
-padding:12px;
-margin-top:10px;
-border-radius:10px;
-}
-
-.filtros{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-margin-top:15px;
-}
-
-/* PAGOS */
-.pagos-container{
-display:flex;
-flex-direction:column;
-gap:15px;
-}
-
-.pago-box{
-background:white;
-padding:10px;
-border-radius:12px;
-cursor:pointer;
-}
-
-.pago-box img{
-width:100%;
-height:250px;
-object-fit:contain;
-}
-
-/* MODAL QR */
-.modal{
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:black;
-justify-content:center;
-align-items:center;
-z-index:999;
-}
-
-.modal img{
-width:90%;
-max-width:400px;
-}
-
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:20px;}
+.box{background:white;color:#123B63;padding:25px;border-radius:15px;text-align:center;font-weight:bold;cursor:pointer;}
+.fila{display:flex;gap:10px;margin-top:10px;}
+.fila button{width:50%;}
+.item{background:white;padding:12px;margin-top:10px;border-radius:10px;color:#333;}
+.pagos-container{display:flex;flex-direction:column;gap:20px;}
+.pago-box{background:white;padding:10px;border-radius:12px;cursor:pointer;}
+.pago-box img{width:100%;height:260px;object-fit:contain;}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;justify-content:center;align-items:center;z-index:999;}
+.modal img{width:95%;max-width:450px;}
 </style>
 </head>
 
@@ -146,14 +41,12 @@ max-width:400px;
 <div>Asesor: <span id="nombreAsesor">-</span></div>
 </div>
 
-<!-- LOGIN -->
 <div id="loginDiv" class="card">
 <input id="usuario" placeholder="Usuario">
 <input id="clave" type="password" placeholder="Clave">
 <button class="btn-verde" onclick="login()">Ingresar</button>
 </div>
 
-<!-- DASHBOARD -->
 <div id="dashboard" style="display:none">
 <div class="grid">
 <div class="box" onclick="mostrar('simulador')">💰 Simulación</div>
@@ -163,7 +56,6 @@ max-width:400px;
 </div>
 </div>
 
-<!-- APP -->
 <div id="app" style="display:none">
 
 <!-- SIMULADOR -->
@@ -189,20 +81,34 @@ max-width:400px;
 
 <div id="resultado"></div>
 <div id="cronograma"></div>
+
+<div class="fila">
+<button class="btn-verde" onclick="enviarSimulacion()">Simulación</button>
+<button class="btn-azul" onclick="limpiar()">Limpiar</button>
+</div>
 </div>
 
 <!-- CLIENTES -->
 <div id="clientes" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
-<input type="file" id="excelFile" accept=".xlsx">
+<input id="c_nombre" placeholder="Nombre">
+<input id="c_apellidos" placeholder="Apellidos">
+<input id="c_monto" placeholder="Monto">
+
+<button class="btn-verde" onclick="guardarCliente()">Guardar</button>
+
+<input type="file" id="excelFile" accept=".csv,.xlsx">
 <button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>
 
-<div class="filtros">
-<button onclick="filtrar(0,8)" style="background:#2ecc71">0-8</button>
-<button onclick="filtrar(9,30)" style="background:#f1c40f;color:black">9-30</button>
-<button onclick="filtrar(31,60)" style="background:#e74c3c">31-60</button>
-<button onclick="filtrar(61,1000)" style="background:black">61+</button>
+<div class="fila">
+<button onclick="filtrarMora(0,8)">0-8 días</button>
+<button onclick="filtrarMora(9,30)">9-30 días</button>
+</div>
+
+<div class="fila">
+<button onclick="filtrarMora(31,60)">31-60 días</button>
+<button onclick="filtrarMora(61,1000)">61+ días</button>
 </div>
 
 <button class="btn-azul" onclick="renderClientes()">Ver todos</button>
@@ -215,51 +121,44 @@ max-width:400px;
 <div class="volver" onclick="volver()">← Volver</div>
 
 <div class="pagos-container">
-
 <div class="pago-box" onclick="abrirQR(this)">
 <img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image.jpg">
 </div>
-
 <div class="pago-box" onclick="abrirQR(this)">
 <img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image.jpg">
 </div>
-
 <div class="pago-box" onclick="abrirQR(this)">
 <img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image.jpg">
 </div>
-
+</div>
 </div>
 
 </div>
 
-</div>
-
-<!-- MODAL QR -->
 <div id="modalQR" class="modal" onclick="cerrarQR()">
 <img id="imgQR">
 </div>
 
 <script>
 
+let asesor="";
+let simData={};
+
 function login(){
 if(usuario.value==="admin" && clave.value==="1234"){
-nombreAsesor.innerText="admin";
+asesor=usuario.value;
+nombreAsesor.innerText=asesor;
 loginDiv.style.display="none";
 dashboard.style.display="block";
-}else{
-alert("Usuario incorrecto");
-}
+}else{alert("Usuario incorrecto");}
 }
 
 function mostrar(p){
 dashboard.style.display="none";
 app.style.display="block";
-
-simulador.style.display="none";
-clientes.style.display="none";
-pagos.style.display="none";
-
+["simulador","clientes","pagos"].forEach(x=>document.getElementById(x).style.display="none");
 document.getElementById(p).style.display="block";
+if(p==="clientes") renderClientes();
 }
 
 function volver(){
@@ -267,9 +166,31 @@ app.style.display="none";
 dashboard.style.display="block";
 }
 
+function calcular(){
+let m=parseFloat(monto.value);
+let t=parseFloat(tasa.value)/100;
+let n=parseInt(plazo.value);
+let cuota=(m*(1+t))/n;
+
+simData={monto:m,cuota:cuota.toFixed(2),producto:producto.value};
+resultado.innerHTML=`Cuota: S/ ${cuota.toFixed(2)}`;
+}
+
+function enviarSimulacion(){
+if(!simData.monto)return alert("Primero calcula");
+let msg=`Monto: ${simData.monto}\nCuota: ${simData.cuota}`;
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
+}
+
+function limpiar(){
+document.querySelectorAll("input").forEach(i=>i.value="");
+resultado.innerHTML="";
+cronograma.innerHTML="";
+}
+
 function cargarExcel(){
 
-let file=document.getElementById("excelFile").files[0];
+let file=excelFile.files[0];
 if(!file)return alert("Selecciona archivo");
 
 let reader=new FileReader();
@@ -277,29 +198,61 @@ let reader=new FileReader();
 reader.onload=function(e){
 
 let data=new Uint8Array(e.target.result);
-let workbook=XLSX.read(data,{type:'array'});
-let hoja=workbook.Sheets[workbook.SheetNames[0]];
-let json=XLSX.utils.sheet_to_json(hoja);
+let wb=XLSX.read(data,{type:'array'});
+let ws=wb.Sheets[wb.SheetNames[0]];
 
-let limpio=json.map(r=>({
+let raw=XLSX.utils.sheet_to_json(ws,{header:1});
 
-nombre: r["Nombre"] || "",
-paterno: r["Apellido Paterno"] || "",
-materno: r["Apellido Materno"] || "",
+let headerIndex=raw.findIndex(r=>{
+let row=(r||[]).join(" ").toLowerCase();
+return row.includes("nombre") && (row.includes("monto") || row.includes("saldo"));
+});
 
-monto: r["Monto Otorgado"] || 0,
-retraso: r["Dias Retraso"] || r["RETRASO"] || 0,
+let headers=raw[headerIndex];
+let rows=raw.slice(headerIndex+1);
 
-producto: r["Producto"] || "",
-asesor: r["Asesor(a)"] || r["Asesor"] || "",
+let json=rows.map(r=>{
+let obj={};
 
-direccion: r["Direccion"] || "",
-distrito: r["Distrito"] || ""
+headers.forEach((h,i)=>{
+if(!h)return;
 
-}));
+let key=h.toString().toLowerCase().replace(/\s+/g,'');
+let val=(r[i]||"").toString().trim();
 
-localStorage.setItem("cartera",JSON.stringify(limpio));
+// 🔥 NOMBRE INTELIGENTE
+if(key==="nombre" || key==="nombrecompleto"){
+let partes=val.split(/\s+/);
 
+if(partes.length>=3){
+obj.apePat=partes[0];
+obj.apeMat=partes[1];
+obj.nombre=partes.slice(2).join(" ");
+}else{
+obj.nombre=val;
+}
+}
+
+if(key.includes("paterno")) obj.apePat=val;
+if(key.includes("materno")) obj.apeMat=val;
+if(key==="nombres") obj.nombre=val;
+
+if(key.includes("monto")||key.includes("saldo")) obj.monto=val;
+if(key.includes("retraso")||key.includes("dias")) obj.retraso=val;
+if(key.includes("producto")) obj.producto=val;
+
+if(key==="asesor" || key==="asesora" || key==="asesor(a)") obj.asesor=val;
+
+if(key.includes("direccion")) obj.direccion=val;
+if(key.includes("distrito")) obj.distrito=val;
+if(key.includes("celular")||key.includes("telefono")) obj.celular=val;
+
+});
+
+return obj;
+});
+
+localStorage.setItem("cartera",JSON.stringify(json));
 renderClientes();
 
 };
@@ -307,49 +260,64 @@ renderClientes();
 reader.readAsArrayBuffer(file);
 }
 
-function renderClientes(min=null,max=null){
+function renderClientes(){
+filtrarMora(0,1000);
+}
 
-let lista=document.getElementById("listaClientes");
+function filtrarMora(min,max){
+
+let lista=listaClientes;
 lista.innerHTML="";
 
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
 
-if(min!==null){
-data=data.filter(c=>c.retraso>=min && c.retraso<=max);
-}
+data.filter(c=>{
+let r=parseFloat(c.retraso)||0;
+return r>=min && r<=max;
+}).sort((a,b)=>(b.retraso||0)-(a.retraso||0))
+.forEach(c=>{
 
-data.forEach(c=>{
-
-let dias=parseInt(c.retraso)||0;
-
-let bg="#2ecc71";
-let text="white";
-
-if(dias<=8){bg="#2ecc71";}
-else if(dias<=30){bg="#f1c40f";text="black";}
-else if(dias<=60){bg="#e74c3c";}
-else{bg="black";}
+let color="#2ecc71";
+if(c.retraso>8) color="#f1c40f";
+if(c.retraso>30) color="#e74c3c";
+if(c.retraso>60) color="black";
 
 lista.innerHTML+=`
-<div class="item" style="background:${bg};color:${text};font-weight:bold;">
-👤 ${c.nombre} ${c.paterno} ${c.materno}<br>
-💰 S/ ${c.monto}<br>
-📊 ${c.producto}<br>
-⏱ ${dias} días<br>
-👨‍💼 ${c.asesor}<br>
-📍 ${c.direccion} - ${c.distrito}
-</div>
-`;
-
+<div class="item" style="border-left:6px solid ${color}">
+<b>${c.apePat||""} ${c.apeMat||""} ${c.nombre||""}</b><br>
+Monto: S/ ${c.monto||0}<br>
+Producto: ${c.producto||"-"}<br>
+Retraso: ${c.retraso||0} días<br>
+👤 ${c.asesor||"-"}<br>
+📍 ${c.direccion||"-"} - ${c.distrito||"-"}<br>
+📞 ${c.celular||"-"}
+</div>`;
 });
 
 }
 
-function filtrar(a,b){
-renderClientes(a,b);
+function guardarCliente(){
+let data=JSON.parse(localStorage.getItem("cartera"))||[];
+
+let partes=(c_apellidos.value||"").split(" ");
+
+data.push({
+nombre:c_nombre.value,
+apePat:partes[0]||"",
+apeMat:partes.slice(1).join(" ")||"",
+monto:c_monto.value,
+retraso:0,
+producto:"Manual",
+asesor:asesor,
+direccion:"",
+distrito:"",
+celular:""
+});
+
+localStorage.setItem("cartera",JSON.stringify(data));
+renderClientes();
 }
 
-/* QR */
 function abrirQR(el){
 imgQR.src=el.querySelector("img").src;
 modalQR.style.display="flex";
@@ -360,12 +328,10 @@ modalQR.style.display="none";
 }
 
 function enviarUbicacion(){
-if(navigator.geolocation){
-navigator.geolocation.getCurrentPosition(function(pos){
+navigator.geolocation.getCurrentPosition(pos=>{
 let link=`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
 window.open("https://wa.me/?text="+encodeURIComponent(link));
 });
-}
 }
 
 </script>

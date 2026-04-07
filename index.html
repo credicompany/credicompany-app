@@ -186,7 +186,49 @@ alert("❌ Usuario o clave incorrectos");
 }
 }
 
-// 🔥 EXCEL CORREGIDO
+// SIMULADOR
+function calcular(){
+let P=parseFloat(monto.value);
+let t=parseFloat(tasa.value)/100;
+let n=parseInt(plazo.value);
+
+if(!P || !t || !n) return alert("Completa datos");
+
+let i=0,dias=0;
+
+if(producto.value==="diario"){i=t/30;dias=1;}
+if(producto.value==="semanal"){i=t/4;dias=7;}
+if(producto.value==="quincenal"){i=t/2;dias=15;}
+if(producto.value==="mensual"){i=t;dias=30;}
+
+let cuota=(P*i)/(1-Math.pow(1+i,-n));
+
+resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
+
+window.simData={monto:P,cuota:cuota.toFixed(2),producto:producto.value};
+
+let saldo=P,fecha=new Date(),html="<h4>Cronograma:</h4>";
+
+for(let c=1;c<=n;c++){
+let interes=saldo*i;
+let capital=cuota-interes;
+saldo-=capital;
+fecha.setDate(fecha.getDate()+dias);
+
+html+=`<div class="item">Cuota ${c}</div>`;
+}
+
+cronograma.innerHTML=html;
+}
+
+// LIMPIAR
+function limpiar(){
+document.querySelectorAll("input").forEach(i=>i.value="");
+resultado.innerHTML="";
+cronograma.innerHTML="";
+}
+
+// 🔥 EXCEL CORREGIDO FINAL
 function cargarExcel(){
 
 let file=excelFile.files[0];
@@ -214,7 +256,7 @@ if(!h)return;
 let key=h.toLowerCase().replace(/\s+/g,"");
 let val=r[i]||"";
 
-// CORRECCIÓN REAL
+// ✔️ CORRECCIÓN REAL
 if(key.includes("cuota+mora")||key.includes("cuotamora")) obj.monto=val;
 else if((key.includes("cuota")||key.includes("mora")) && !obj.monto) obj.monto=val;
 
@@ -263,7 +305,74 @@ lista.innerHTML+=`
 });
 }
 
-// RESTO IGUAL...
+// USUARIOS
+function crearUsuario(){
+let user=nuevoUser.value.trim();
+let pass=nuevoPass.value.trim();
+
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+
+usuarios.push({user,pass});
+localStorage.setItem("usuarios",JSON.stringify(usuarios));
+
+renderUsuarios();
+}
+
+function renderUsuarios(){
+let lista=listaUsuarios;
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+
+lista.innerHTML="";
+usuarios.forEach(u=>{
+lista.innerHTML+=`<div class="item">${u.user}</div>`;
+});
+}
+
+// UI
+function mostrar(p){
+dashboard.style.display="none";
+app.style.display="block";
+
+["simulador","clientes","pagos","admin"].forEach(id=>{
+document.getElementById(id).style.display="none";
+});
+
+document.getElementById(p).style.display="block";
+
+if(p==="clientes") renderClientes();
+if(p==="admin") renderUsuarios();
+}
+
+function volver(){
+app.style.display="none";
+dashboard.style.display="block";
+}
+
+// QR
+function abrirQR(el){
+imgQR.src=el.querySelector("img").src;
+modalQR.style.display="flex";
+}
+function cerrarQR(){modalQR.style.display="none";}
+
+// GPS
+function enviarUbicacion(){
+navigator.geolocation.getCurrentPosition(pos=>{
+let link=`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+window.open("https://wa.me/?text="+encodeURIComponent(link));
+});
+}
+
+// WHATSAPP
+function enviarSimulacion(){
+let msg=`Monto: S/ ${simData.monto}`;
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
+}
+
+function enviarFiltro(){
+let msg=`${cliente.value} ${apellidos.value}`;
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
+}
 
 </script>
 

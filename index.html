@@ -280,7 +280,24 @@ alert("Carga exitosa: "+json.length+" registros");
 
 reader.readAsArrayBuffer(file);
 }
+function login(){
 
+let user = document.getElementById("usuario").value;
+let pass = document.getElementById("clave").value;
+
+// Usuario por defecto
+if(user === "admin" && pass === "1234"){
+
+    document.getElementById("loginDiv").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
+
+    document.getElementById("nombreAsesor").innerText = "ADMIN";
+
+}else{
+    alert("Usuario o clave incorrectos");
+}
+
+}
 </script>
 
 </body>

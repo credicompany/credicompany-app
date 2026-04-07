@@ -184,24 +184,7 @@ alert("Usuario incorrecto");
 }
 }
 
-// SIMULADOR
-function calcular(){
-let P=parseFloat(monto.value)||0;
-let t=parseFloat(tasa.value)/100||0;
-let n=parseInt(plazo.value)||0;
-
-let cuota=(P*t)/(1-Math.pow(1+t,-n)||1);
-resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
-}
-
-// LIMPIAR
-function limpiar(){
-document.querySelectorAll("input").forEach(i=>i.value="");
-resultado.innerHTML="";
-cronograma.innerHTML="";
-}
-
-// 🔥 MEJORA CLAVE
+// 🔥 MEJORA NUMÉRICA
 function limpiarNumero(v){
 if(!v) return 0;
 
@@ -236,7 +219,7 @@ return r>=min && r<=max;
 lista.innerHTML+=`
 <div class="item">
 <b>${c.nombre||""}</b><br>
-Cuota + Mora: S/ ${c.monto||0}<br>
+Cuota + Mora: S/ ${(c.monto||0).toLocaleString()}<br>
 Producto: ${c.producto||"-"}<br>
 Retraso: ${c.retraso||0} días<br>
 👤 ${c.asesor||"-"}<br>

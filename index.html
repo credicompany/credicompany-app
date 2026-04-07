@@ -182,7 +182,49 @@ alert("❌ Usuario o clave incorrectos");
 }
 }
 
-// ================= EXCEL CORREGIDO =================
+// SIMULADOR
+function calcular(){
+let P=parseFloat(monto.value);
+let t=parseFloat(tasa.value)/100;
+let n=parseInt(plazo.value);
+
+if(!P || !t || !n) return alert("Completa datos");
+
+let i=0,dias=0;
+
+if(producto.value==="diario"){i=t/30;dias=1;}
+if(producto.value==="semanal"){i=t/4;dias=7;}
+if(producto.value==="quincenal"){i=t/2;dias=15;}
+if(producto.value==="mensual"){i=t;dias=30;}
+
+let cuota=(P*i)/(1-Math.pow(1+i,-n));
+
+resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
+
+window.simData={monto:P,cuota:cuota.toFixed(2),producto:producto.value};
+
+let saldo=P,fecha=new Date(),html="<h4>Cronograma:</h4>";
+
+for(let c=1;c<=n;c++){
+let interes=saldo*i;
+let capital=cuota-interes;
+saldo-=capital;
+fecha.setDate(fecha.getDate()+dias);
+
+html+=`<div class="item">Cuota ${c} - ${fecha.toLocaleDateString()}<br>Saldo: S/ ${saldo.toFixed(2)}</div>`;
+}
+
+cronograma.innerHTML=html;
+}
+
+// LIMPIAR
+function limpiar(){
+document.querySelectorAll("input").forEach(i=>i.value="");
+resultado.innerHTML="";
+cronograma.innerHTML="";
+}
+
+// EXCEL MEJORADO
 function cargarExcel(){
 
 let file=document.getElementById("excelFile").files[0];
@@ -229,16 +271,9 @@ if(!h)return;
 let key=h.toString().toLowerCase().replace(/\s+/g,"");
 let val=r[i]||"";
 
-// 🔥 PRIORIDAD CUOTA + MORA
-if(key.includes("cuota+mora") || key.includes("cuotamora") || key.includes("cuotaymora")){
-obj.monto = val;
-}
-else if((key.includes("cuota") || key.includes("mora")) && !obj.monto){
-obj.monto = val;
-}
-
 if(key.includes("nombre")) obj.nombre=val;
 if(key.includes("asesor")) obj.asesor=val;
+if(key.includes("cuota") || key.includes("mora")) obj.monto=val;
 if(key.includes("dias") || key.includes("retraso")) obj.retraso=parseFloat(val)||0;
 if(key.includes("telefono") || key.includes("celular")) obj.celular=val;
 if(key.includes("producto")) obj.producto=val;
@@ -248,20 +283,19 @@ if(key.includes("distrito")) obj.distrito=val;
 });
 
 return obj;
-
 });
 
 localStorage.setItem("cartera",JSON.stringify(json));
 renderClientes();
 
-alert("✅ Excel cargado correctamente");
+alert("✅ Excel cargado: "+json.length);
 
 };
 
 reader.readAsArrayBuffer(file);
 }
 
-// CLIENTES
+// CLIENTES + RESUMEN
 function renderClientes(){filtrarMora(0,1000);}
 
 function filtrarMora(min,max){
@@ -276,6 +310,22 @@ let r=parseFloat(c.retraso)||0;
 return r>=min && r<=max;
 });
 
+let alDia=0,leve=0,medio=0,critico=0;
+
+filtrados.forEach(c=>{
+let r=parseFloat(c.retraso)||0;
+if(r<=8) alDia++;
+else if(r<=30) leve++;
+else if(r<=60) medio++;
+else critico++;
+});
+
+lista.innerHTML+=`
+<div class="item" style="background:#123B63;color:white">
+<b>📊 Resumen</b><br>
+🟢 ${alDia} | 🟡 ${leve} | 🔴 ${medio} | ⚫ ${critico}
+</div>`;
+
 filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
 
 filtrados.forEach(c=>{
@@ -288,12 +338,91 @@ lista.innerHTML+=`
 <div class="item" style="border-left:6px solid ${color}">
 <b>${c.nombre}</b><br>
 💰 ${c.monto}<br>
-📅 ${c.retraso} días
+📅 ${c.retraso} días<br>
+👤 ${c.asesor}<br>
+📞 ${c.celular}<br>
+📦 ${c.producto}<br>
+📍 ${c.direccion}<br>
+🏙️ ${c.distrito}
 </div>`;
 });
 }
 
-// RESTO IGUAL...
+// USUARIOS
+function crearUsuario(){
+let user=nuevoUser.value.trim();
+let pass=nuevoPass.value.trim();
+
+if(!user || !pass) return alert("Completar");
+
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+
+if(usuarios.find(u=>u.user===user)) return alert("Existe");
+
+usuarios.push({user,pass});
+localStorage.setItem("usuarios",JSON.stringify(usuarios));
+
+nuevoUser.value="";
+nuevoPass.value="";
+
+renderUsuarios();
+}
+
+function renderUsuarios(){
+let lista=listaUsuarios;
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+
+lista.innerHTML="";
+usuarios.forEach(u=>{
+lista.innerHTML+=`<div class="item">${u.user}</div>`;
+});
+}
+
+// UI
+function mostrar(p){
+dashboard.style.display="none";
+app.style.display="block";
+
+["simulador","clientes","pagos","admin"].forEach(id=>{
+document.getElementById(id).style.display="none";
+});
+
+document.getElementById(p).style.display="block";
+
+if(p==="clientes") renderClientes();
+if(p==="admin") renderUsuarios();
+}
+
+function volver(){
+app.style.display="none";
+dashboard.style.display="block";
+}
+
+// QR
+function abrirQR(el){
+imgQR.src=el.querySelector("img").src;
+modalQR.style.display="flex";
+}
+function cerrarQR(){modalQR.style.display="none";}
+
+// GPS
+function enviarUbicacion(){
+navigator.geolocation.getCurrentPosition(pos=>{
+let link=`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+window.open("https://wa.me/?text="+encodeURIComponent(link));
+});
+}
+
+// WHATSAPP
+function enviarSimulacion(){
+let msg=`Monto: S/ ${simData.monto}\nCuota: S/ ${simData.cuota}`;
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
+}
+  
+function enviarFiltro(){
+let msg=`${cliente.value} ${apellidos.value}`;
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
+}
 
 </script>
 

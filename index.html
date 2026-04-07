@@ -65,133 +65,340 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <!-- SIMULADOR -->
 <div id="simulador" class="card">
 <div class="volver" onclick="volver()">← Volver</div>
+
 <input id="cliente" placeholder="Nombre">
 <input id="apellidos" placeholder="Apellidos">
 <input id="dni" placeholder="DNI">
+
 <select id="producto">
 <option value="diario">Diario</option>
 <option value="semanal">Semanal</option>
 <option value="quincenal">Quincenal</option>
 <option value="mensual">Mensual</option>
 </select>
+
 <input id="monto" placeholder="Monto">
 <input id="tasa" placeholder="Tasa (%)">
 <input id="plazo" placeholder="Cuotas">
-<button class="btn-verde">Calcular</button>
+
+<button class="btn-verde" onclick="calcular()">Calcular</button>
+
+<div id="resultado"></div>
+<div id="cronograma"></div>
+
+<div class="fila">
+<button class="btn-verde" onclick="enviarSimulacion()">Simulación</button>
+<button class="btn-azul" onclick="enviarFiltro()">Filtro</button>
+</div>
+
+<button class="btn-naranja" onclick="limpiar()">Limpiar</button>
 </div>
 
 <!-- CLIENTES -->
 <div id="clientes" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
+
+<input id="c_nombre" placeholder="Nombre">
+<input id="c_apellidos" placeholder="Apellidos">
+<input id="c_dni" placeholder="DNI">
+<input id="c_monto" placeholder="Monto">
+
+<button class="btn-verde" onclick="guardarCliente()">Guardar</button>
+
+<input type="file" id="excelFile" accept=".csv,.xlsx" style="margin-top:15px;">
+<button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>
+
+<div class="fila">
+<button style="background:#2ecc71" onclick="filtrarMora(0,8)">0-8 días</button>
+<button style="background:#f1c40f;color:black" onclick="filtrarMora(9,30)">9-30 días</button>
+</div>
+
+<div class="fila">
+<button style="background:#e74c3c" onclick="filtrarMora(31,60)">31-60 días</button>
+<button style="background:black" onclick="filtrarMora(61,1000)">61+ días</button>
+</div>
+
+<button class="btn-azul" onclick="renderClientes()">🔄 Ver todos</button>
+
 <div id="listaClientes"></div>
 </div>
 
 <!-- ADMIN -->
 <div id="admin" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
+
 <input id="nuevoUser" placeholder="Usuario">
 <input id="nuevoPass" placeholder="Clave">
+
 <button class="btn-verde" onclick="crearUsuario()">Crear Usuario</button>
+
 <div id="listaUsuarios"></div>
 </div>
 
 <!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
-PAGOS
+
+<div class="pagos-container">
+<div class="pago-box" onclick="abrirQR(this)">
+<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image.jpg">
+</div>
+<div class="pago-box" onclick="abrirQR(this)">
+<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image.jpg">
+</div>
+<div class="pago-box" onclick="abrirQR(this)">
+<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image.jpg">
+</div>
+</div>
 </div>
 
+</div>
+
+<!-- MODAL -->
+<div id="modalQR" class="modal" onclick="cerrarQR()">
+<img id="imgQR">
 </div>
 
 <script>
 
-// ================= NAVIGACIÓN =================
-function mostrar(seccion){
+let asesor="";
 
-document.getElementById("dashboard").style.display = "none";
-document.getElementById("app").style.display = "block";
+// LOGIN
+function login(){
+let user=usuario.value;
+let pass=clave.value;
 
-let secciones = ["simulador","clientes","admin","pagos"];
+if(user==="admin" && pass==="1234"){
+asesor=user;
+nombreAsesor.innerText=asesor;
+loginDiv.style.display="none";
+dashboard.style.display="block";
+return;
+}
 
-secciones.forEach(id=>{
-let el = document.getElementById(id);
-if(el) el.style.display = "none";
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+
+let encontrado=usuarios.find(u=>u.user===user && u.pass===pass);
+
+if(encontrado){
+asesor=user;
+nombreAsesor.innerText=asesor;
+loginDiv.style.display="none";
+dashboard.style.display="block";
+}else{
+alert("Usuario incorrecto");
+}
+}
+
+// SIMULADOR
+function calcular(){
+let P=parseFloat(monto.value);
+let t=parseFloat(tasa.value)/100;
+let n=parseInt(plazo.value);
+
+let i=0,dias=0;
+
+if(producto.value==="diario"){i=t/30;dias=1;}
+if(producto.value==="semanal"){i=t/4;dias=7;}
+if(producto.value==="quincenal"){i=t/2;dias=15;}
+if(producto.value==="mensual"){i=t;dias=30;}
+
+let cuota=(P*i)/(1-Math.pow(1+i,-n));
+
+resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
+
+window.simData={monto:P,cuota:cuota.toFixed(2),producto:producto.value};
+
+let saldo=P,fecha=new Date(),html="<h4>Cronograma:</h4>";
+
+for(let c=1;c<=n;c++){
+let interes=saldo*i;
+let capital=cuota-interes;
+saldo-=capital;
+fecha.setDate(fecha.getDate()+dias);
+
+html+=`<div class="item">Cuota ${c} - ${fecha.toLocaleDateString()}<br>Saldo: S/ ${saldo.toFixed(2)}</div>`;
+}
+
+cronograma.innerHTML=html;
+}
+
+// LIMPIAR
+function limpiar(){
+document.querySelectorAll("input").forEach(i=>i.value="");
+resultado.innerHTML="";
+cronograma.innerHTML="";
+}
+
+// EXCEL
+function cargarExcel(){
+
+let file=document.getElementById("excelFile").files[0];
+if(!file)return alert("Selecciona archivo");
+
+let reader=new FileReader();
+
+reader.onload=function(e){
+
+let data=new Uint8Array(e.target.result);
+let workbook=XLSX.read(data,{type:'array'});
+let hoja=workbook.Sheets[workbook.SheetNames[0]];
+
+let raw=XLSX.utils.sheet_to_json(hoja,{header:1});
+
+let headerIndex=0;
+
+for(let i=0;i<raw.length;i++){
+let row=(raw[i]||[]).join(" ").toLowerCase();
+if(row.includes("nombre") && row.includes("monto")){
+headerIndex=i;
+break;
+}
+}
+
+let headers=raw[headerIndex];
+let dataRows=raw.slice(headerIndex+1);
+
+let json=dataRows.map(r=>{
+let obj={};
+
+headers.forEach((h,i)=>{
+if(!h)return;
+
+let key=h.toString().toLowerCase().replace(/\s+/g,'');
+
+let val=r[i]||"";
+
+if(key.includes("nombre")) obj.nombre=val;
+if(key.includes("paterno")) obj.apePat=val;
+if(key.includes("materno")) obj.apeMat=val;
+if(key.includes("monto")) obj.monto=val;
+if(key.includes("retraso")) obj.retraso=val;
+if(key.includes("producto")) obj.producto=val;
+if(key.includes("asesor")) obj.asesor=val;
+if(key.includes("direccion")) obj.direccion=val;
+if(key.includes("celular")||key.includes("telefono")) obj.celular=val;
+
 });
 
-document.getElementById(seccion).style.display = "block";
+return obj;
+});
+
+localStorage.setItem("cartera",JSON.stringify(json));
+renderClientes();
+
+};
+
+reader.readAsArrayBuffer(file);
 }
 
-function volver(){
-document.getElementById("app").style.display = "none";
-document.getElementById("dashboard").style.display = "block";
+// CLIENTES
+function renderClientes(){filtrarMora(0,1000);}
+
+function filtrarMora(min,max){
+
+let lista=document.getElementById("listaClientes");
+lista.innerHTML="";
+
+let data=JSON.parse(localStorage.getItem("cartera"))||[];
+
+let filtrados=data.filter(c=>{
+let r=parseFloat(c.retraso)||0;
+return r>=min && r<=max;
+});
+
+filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
+
+filtrados.forEach(c=>{
+
+let color="#2ecc71";
+if(c.retraso>8) color="#f1c40f";
+if(c.retraso>30) color="#e74c3c";
+if(c.retraso>60) color="black";
+
+lista.innerHTML+=`
+<div class="item" style="border-left:6px solid ${color}">
+<b>${c.nombre||""} ${c.apePat||""} ${c.apeMat||""}</b><br>
+Monto: S/ ${c.monto||0}<br>
+Producto: ${c.producto||"-"}<br>
+Retraso: ${c.retraso||0} días<br>
+👤 ${c.asesor||"-"}<br>
+📍 ${c.direccion||"-"}<br>
+📞 ${c.celular||"-"}
+</div>`;
+});
+
 }
 
-// ================= LOGIN =================
-function limpiarTexto(v){
-return String(v||"").trim();
-}
-
-function login(){
-
-let user = limpiarTexto(document.getElementById("usuario").value);
-let pass = limpiarTexto(document.getElementById("clave").value);
-
-let usuarios = JSON.parse(localStorage.getItem("usuarios") || "[]");
-
-if(usuarios.length === 0){
-usuarios = [{usuario:"admin", clave:"1234"}];
-localStorage.setItem("usuarios", JSON.stringify(usuarios));
-}
-
-let ok = usuarios.find(u=>u.usuario===user && u.clave===pass);
-
-if(ok){
-document.getElementById("loginDiv").style.display="none";
-document.getElementById("dashboard").style.display="block";
-document.getElementById("nombreAsesor").innerText=user;
-}else{
-alert("Datos incorrectos");
-}
-
-}
-
-// ================= USUARIOS =================
+// USUARIOS
 function crearUsuario(){
+let user=nuevoUser.value.trim();
+let pass=nuevoPass.value.trim();
 
-let user = document.getElementById("nuevoUser").value;
-let pass = document.getElementById("nuevoPass").value;
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
-if(!user || !pass) return alert("Completar datos");
-
-let usuarios = JSON.parse(localStorage.getItem("usuarios") || "[]");
-
-usuarios.push({usuario:user, clave:pass});
-
-localStorage.setItem("usuarios", JSON.stringify(usuarios));
-
-alert("Usuario creado");
+usuarios.push({user,pass});
+localStorage.setItem("usuarios",JSON.stringify(usuarios));
 
 renderUsuarios();
 }
 
 function renderUsuarios(){
-
-let lista = document.getElementById("listaUsuarios");
-if(!lista) return;
+let lista=document.getElementById("listaUsuarios");
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
 lista.innerHTML="";
-
-let usuarios = JSON.parse(localStorage.getItem("usuarios") || "[]");
-
 usuarios.forEach(u=>{
-let div=document.createElement("div");
-div.className="item";
-div.innerText=u.usuario;
-lista.appendChild(div);
+lista.innerHTML+=`<div class="item">${u.user}</div>`;
 });
 }
 
-renderUsuarios();
+// UI
+function mostrar(p){
+dashboard.style.display="none";
+app.style.display="block";
+
+simulador.style.display="none";
+clientes.style.display="none";
+pagos.style.display="none";
+admin.style.display="none";
+
+document.getElementById(p).style.display="block";
+
+if(p==="clientes") renderClientes();
+if(p==="admin") renderUsuarios();
+}
+
+function volver(){
+app.style.display="none";
+dashboard.style.display="block";
+}
+
+// QR
+function abrirQR(el){
+imgQR.src=el.querySelector("img").src;
+modalQR.style.display="flex";
+}
+function cerrarQR(){modalQR.style.display="none";}
+
+// GPS
+function enviarUbicacion(){
+navigator.geolocation.getCurrentPosition(pos=>{
+let link=`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+window.open("https://wa.me/?text="+encodeURIComponent(link));
+});
+}
+
+// WHATSAPP
+function enviarSimulacion(){
+let msg=`Monto: S/ ${simData.monto}\nCuota: S/ ${simData.cuota}\nProducto: ${simData.producto}`;
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
+}
+
+function enviarFiltro(){
+let msg=`${cliente.value} ${apellidos.value}\nDNI:${dni.value}`;
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
+}
 
 </script>
 

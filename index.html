@@ -163,7 +163,7 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 
 let asesor="";
 
-// LOGIN (igual)
+// LOGIN
 function login(){
 let user=usuario.value;
 let pass=clave.value;
@@ -177,6 +177,7 @@ return;
 }
 
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+
 let encontrado=usuarios.find(u=>u.user===user && u.pass===pass);
 
 if(encontrado){
@@ -189,7 +190,7 @@ alert("Usuario incorrecto");
 }
 }
 
-// CALCULAR (igual)
+// SIMULADOR
 function calcular(){
 let P=parseFloat(monto.value);
 let t=parseFloat(tasa.value)/100;
@@ -207,6 +208,19 @@ let cuota=(P*i)/(1-Math.pow(1+i,-n));
 resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
 
 window.simData={monto:P,cuota:cuota.toFixed(2),producto:producto.value};
+
+let saldo=P,fecha=new Date(),html="<h4>Cronograma:</h4>";
+
+for(let c=1;c<=n;c++){
+let interes=saldo*i;
+let capital=cuota-interes;
+saldo-=capital;
+fecha.setDate(fecha.getDate()+dias);
+
+html+=`<div class="item">Cuota ${c} - ${fecha.toLocaleDateString()}<br>Saldo: S/ ${saldo.toFixed(2)}</div>`;
+}
+
+cronograma.innerHTML=html;
 }
 
 // LIMPIAR
@@ -216,7 +230,7 @@ resultado.innerHTML="";
 cronograma.innerHTML="";
 }
 
-// 🔥 NUEVA FUNCIÓN EXCEL (REEMPLAZADA)
+// EXCEL
 function cargarExcel(){
 
 let file=document.getElementById("excelFile").files[0];
@@ -232,11 +246,15 @@ let hoja=workbook.Sheets[workbook.SheetNames[0]];
 
 let raw=XLSX.utils.sheet_to_json(hoja,{header:1});
 
-// detectar encabezado
-let headerIndex=raw.findIndex(r=>{
-let row=(r||[]).join(" ").toLowerCase();
-return row.includes("dni") && row.includes("nombre");
-});
+let headerIndex=0;
+
+for(let i=0;i<raw.length;i++){
+let row=(raw[i]||[]).join(" ").toLowerCase();
+if(row.includes("nombre") && row.includes("monto")){
+headerIndex=i;
+break;
+}
+}
 
 let headers=raw[headerIndex];
 let dataRows=raw.slice(headerIndex+1);
@@ -248,40 +266,18 @@ headers.forEach((h,i)=>{
 if(!h)return;
 
 let key=h.toString().toLowerCase().replace(/\s+/g,'');
-let val=(r[i]||"").toString().trim();
 
-if(key.includes("dni")) obj.dni=val;
+let val=r[i]||"";
 
-if(key.includes("nombreyapellido") || key==="nombre"){
-let partes=val.split(/\s+/);
-if(partes.length>=3){
-obj.apePat=partes[0];
-obj.apeMat=partes[1];
-obj.nombre=partes.slice(2).join(" ");
-}else{
-obj.nombre=val;
-}
-}
-
-if(key==="asesor(a)" || key==="asesor" || key==="asesora"){
-obj.asesor=val;
-}
-
-if(key.includes("cuota") || key.includes("mora")){
-obj.monto=val;
-}
-
-if(key.includes("diasretraso") || key.includes("retraso")){
-obj.retraso=val;
-}
-
-if(key.includes("telefono") || key.includes("celular")){
-obj.celular=val;
-}
-
-if(key.includes("producto")){
-obj.producto=val;
-}
+if(key.includes("nombre")) obj.nombre=val;
+if(key.includes("paterno")) obj.apePat=val;
+if(key.includes("materno")) obj.apeMat=val;
+if(key.includes("monto")) obj.monto=val;
+if(key.includes("retraso")) obj.retraso=val;
+if(key.includes("producto")) obj.producto=val;
+if(key.includes("asesor")) obj.asesor=val;
+if(key.includes("direccion")) obj.direccion=val;
+if(key.includes("celular")||key.includes("telefono")) obj.celular=val;
 
 });
 
@@ -296,7 +292,7 @@ renderClientes();
 reader.readAsArrayBuffer(file);
 }
 
-// CLIENTES (igual)
+// CLIENTES
 function renderClientes(){filtrarMora(0,1000);}
 
 function filtrarMora(min,max){
@@ -306,11 +302,14 @@ lista.innerHTML="";
 
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
 
-data.filter(c=>{
+let filtrados=data.filter(c=>{
 let r=parseFloat(c.retraso)||0;
 return r>=min && r<=max;
-}).sort((a,b)=>(b.retraso||0)-(a.retraso||0))
-.forEach(c=>{
+});
+
+filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
+
+filtrados.forEach(c=>{
 
 let color="#2ecc71";
 if(c.retraso>8) color="#f1c40f";
@@ -319,15 +318,86 @@ if(c.retraso>60) color="black";
 
 lista.innerHTML+=`
 <div class="item" style="border-left:6px solid ${color}">
-<b>${c.apePat||""} ${c.apeMat||""} ${c.nombre||""}</b><br>
+<b>${c.nombre||""} ${c.apePat||""} ${c.apeMat||""}</b><br>
 Monto: S/ ${c.monto||0}<br>
 Producto: ${c.producto||"-"}<br>
 Retraso: ${c.retraso||0} días<br>
 👤 ${c.asesor||"-"}<br>
+📍 ${c.direccion||"-"}<br>
 📞 ${c.celular||"-"}
 </div>`;
 });
 
+}
+
+// USUARIOS
+function crearUsuario(){
+let user=nuevoUser.value.trim();
+let pass=nuevoPass.value.trim();
+
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+
+usuarios.push({user,pass});
+localStorage.setItem("usuarios",JSON.stringify(usuarios));
+
+renderUsuarios();
+}
+
+function renderUsuarios(){
+let lista=document.getElementById("listaUsuarios");
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+
+lista.innerHTML="";
+usuarios.forEach(u=>{
+lista.innerHTML+=`<div class="item">${u.user}</div>`;
+});
+}
+
+// UI
+function mostrar(p){
+dashboard.style.display="none";
+app.style.display="block";
+
+simulador.style.display="none";
+clientes.style.display="none";
+pagos.style.display="none";
+admin.style.display="none";
+
+document.getElementById(p).style.display="block";
+
+if(p==="clientes") renderClientes();
+if(p==="admin") renderUsuarios();
+}
+
+function volver(){
+app.style.display="none";
+dashboard.style.display="block";
+}
+
+// QR
+function abrirQR(el){
+imgQR.src=el.querySelector("img").src;
+modalQR.style.display="flex";
+}
+function cerrarQR(){modalQR.style.display="none";}
+
+// GPS
+function enviarUbicacion(){
+navigator.geolocation.getCurrentPosition(pos=>{
+let link=`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+window.open("https://wa.me/?text="+encodeURIComponent(link));
+});
+}
+
+// WHATSAPP
+function enviarSimulacion(){
+let msg=`Monto: S/ ${simData.monto}\nCuota: S/ ${simData.cuota}\nProducto: ${simData.producto}`;
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
+}
+
+function enviarFiltro(){
+let msg=`${cliente.value} ${apellidos.value}\nDNI:${dni.value}`;
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
 }
 
 </script>

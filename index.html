@@ -268,7 +268,7 @@ let key=h.toString().toLowerCase().replace(/\s+/g,"");
 let val=r[i]||"";
 
 if(key.includes("nombre")) obj.nombre=val;
-if(key.includes("Asesor(a)")) obj.asesor=val;
+if(key.includes("Asesor(a)")) obj.Asesor(a)=val;
 if(key.includes("cuota_mora")) obj.monto=val;
 if(key.includes("dias") || key.includes("retraso")) obj.retraso=parseFloat(val)||0;
 if(key.includes("telefono") || key.includes("celular")) obj.celular=val;

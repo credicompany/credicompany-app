@@ -224,53 +224,72 @@ resultado.innerHTML="";
 cronograma.innerHTML="";
 }
 
-// EXCEL
+// EXCEL MEJORADO
 function cargarExcel(){
-// (igual que tu base, sin cambios estructurales)
+
 let file=document.getElementById("excelFile").files[0];
 if(!file)return alert("Selecciona archivo");
 
 let reader=new FileReader();
 
 reader.onload=function(e){
+
 let data=new Uint8Array(e.target.result);
 let workbook=XLSX.read(data,{type:'array'});
 let hoja=workbook.Sheets[workbook.SheetNames[0]];
 let raw=XLSX.utils.sheet_to_json(hoja,{header:1});
 
 let headerIndex=0;
+
 for(let i=0;i<raw.length;i++){
 let row=(raw[i]||[]).join(" ").toLowerCase();
-if(row.includes("nombre") && row.includes("monto")){
-headerIndex=i; break;
-}}
+if(row.includes("nombre") && row.includes("producto")){
+headerIndex=i;
+break;
+}
+}
 
 let headers=raw[headerIndex];
 let dataRows=raw.slice(headerIndex+1);
 
 let json=dataRows.map(r=>{
-let obj={};
+
+let obj={
+nombre:"",
+asesor:"",
+monto:"",
+retraso:0,
+celular:"",
+producto:"",
+direccion:"",
+distrito:""
+};
+
 headers.forEach((h,i)=>{
 if(!h)return;
+
 let key=h.toString().toLowerCase().replace(/\s+/g,"");
 let val=r[i]||"";
 
 if(key.includes("nombre")) obj.nombre=val;
-if(key.includes("paterno")) obj.apePat=val;
-if(key.includes("materno")) obj.apeMat=val;
-if(key.includes("monto")) obj.monto=val;
-if(key.includes("retraso")) obj.retraso=val;
-if(key.includes("producto")) obj.producto=val;
 if(key.includes("asesor")) obj.asesor=val;
+if(key.includes("cuota") || key.includes("mora")) obj.monto=val;
+if(key.includes("dias") || key.includes("retraso")) obj.retraso=parseFloat(val)||0;
+if(key.includes("telefono") || key.includes("celular")) obj.celular=val;
+if(key.includes("producto")) obj.producto=val;
 if(key.includes("direccion")) obj.direccion=val;
-if(key.includes("celular")) obj.celular=val;
+if(key.includes("distrito")) obj.distrito=val;
+
 });
+
 return obj;
 });
 
 localStorage.setItem("cartera",JSON.stringify(json));
 renderClientes();
-alert("✅ Cartera cargada: "+json.length);
+
+alert("✅ Excel cargado: "+json.length);
+
 };
 
 reader.readAsArrayBuffer(file);
@@ -291,7 +310,6 @@ let r=parseFloat(c.retraso)||0;
 return r>=min && r<=max;
 });
 
-// RESUMEN
 let alDia=0,leve=0,medio=0,critico=0;
 
 filtrados.forEach(c=>{
@@ -308,7 +326,6 @@ lista.innerHTML+=`
 🟢 ${alDia} | 🟡 ${leve} | 🔴 ${medio} | ⚫ ${critico}
 </div>`;
 
-// LISTA
 filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
 
 filtrados.forEach(c=>{
@@ -319,8 +336,14 @@ if(c.retraso>60) color="black";
 
 lista.innerHTML+=`
 <div class="item" style="border-left:6px solid ${color}">
-<b>${c.nombre||""} ${c.apePat||""}</b><br>
-S/ ${c.monto||0} | ${c.retraso||0} días
+<b>${c.nombre}</b><br>
+💰 ${c.monto}<br>
+📅 ${c.retraso} días<br>
+👤 ${c.asesor}<br>
+📞 ${c.celular}<br>
+📦 ${c.producto}<br>
+📍 ${c.direccion}<br>
+🏙️ ${c.distrito}
 </div>`;
 });
 }

@@ -230,6 +230,72 @@ Retraso: ${c.retraso||0} días<br>
 }
 
 </script>
+function mostrar(p){
+dashboard.style.display="none";
+app.style.display="block";
 
+simulador.style.display="none";
+clientes.style.display="none";
+pagos.style.display="none";
+admin.style.display="none";
+
+document.getElementById(p).style.display="block";
+
+if(p==="clientes") renderClientes();
+if(p==="admin") renderUsuarios();
+}
+
+function volver(){
+app.style.display="none";
+dashboard.style.display="block";
+}
+
+function crearUsuario(){
+let user=nuevoUser.value.trim();
+let pass=nuevoPass.value.trim();
+
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+
+usuarios.push({user,pass});
+localStorage.setItem("usuarios",JSON.stringify(usuarios));
+
+renderUsuarios();
+}
+
+function renderUsuarios(){
+let lista=document.getElementById("listaUsuarios");
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+
+lista.innerHTML="";
+usuarios.forEach(u=>{
+lista.innerHTML+=`<div class="item">${u.user}</div>`;
+});
+}
+
+function abrirQR(el){
+imgQR.src=el.querySelector("img").src;
+modalQR.style.display="flex";
+}
+
+function cerrarQR(){
+modalQR.style.display="none";
+}
+
+function enviarUbicacion(){
+navigator.geolocation.getCurrentPosition(pos=>{
+let link=`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+window.open("https://wa.me/?text="+encodeURIComponent(link));
+});
+}
+
+function enviarSimulacion(){
+let msg=`Simulación lista`;
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
+}
+
+function enviarFiltro(){
+let msg=`Filtro enviado`;
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
+}
 </body>
 </html>

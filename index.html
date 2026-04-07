@@ -163,7 +163,6 @@ return;
 }
 
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
-
 let encontrado=usuarios.find(u=>u.user===user && u.pass===pass);
 
 if(encontrado){
@@ -190,7 +189,6 @@ if(producto.value==="quincenal"){i=t/2;dias=15;}
 if(producto.value==="mensual"){i=t;dias=30;}
 
 let cuota=(P*i)/(1-Math.pow(1+i,-n));
-
 resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
 
 window.simData={monto:P,cuota:cuota.toFixed(2),producto:producto.value};
@@ -216,7 +214,7 @@ resultado.innerHTML="";
 cronograma.innerHTML="";
 }
 
-// 🔥 EXCEL 100% CORREGIDO
+// 🔥 EXCEL DEFINITIVO
 function cargarExcel(){
 
 let file=document.getElementById("excelFile").files[0];
@@ -253,11 +251,17 @@ headers.forEach((h,i)=>{
 
 if(!h)return;
 
-let key=h.toString().toLowerCase().replace(/\s+/g,'');
+let key=h.toString().toLowerCase().trim();
 let val=(r[i]||"").toString().trim();
 
-// 🔥 LOGICA REAL EMPRESAS
-if(key==="nombre" || key==="cliente" || key==="nombrecompleto"){
+// 🔥 DETECCIÓN TOTAL (AQUÍ ESTÁ LA CLAVE)
+if(
+key.includes("nombre") ||
+key.includes("apellido") ||
+key.includes("cliente") ||
+key.includes("razon") ||
+key.includes("persona")
+){
 
 let partes=val.split(" ").filter(p=>p!="");
 
@@ -330,7 +334,7 @@ if(c.retraso>60) color="black";
 
 lista.innerHTML+=`
 <div class="item" style="border-left:6px solid ${color}">
-<b>${c.nombre} ${c.apePat} ${c.apeMat}</b><br>
+<b>${(c.nombre||"")} ${(c.apePat||"")} ${(c.apeMat||"")}</b><br>
 Monto: S/ ${c.monto}<br>
 Producto: ${c.producto}<br>
 Retraso: ${c.retraso} días<br>
@@ -340,7 +344,7 @@ Retraso: ${c.retraso} días<br>
 
 }
 
-// RESTO FUNCIONES (NO TOCADAS)
+// RESTO
 function crearUsuario(){let user=nuevoUser.value;let pass=nuevoPass.value;let u=JSON.parse(localStorage.getItem("usuarios"))||[];u.push({user,pass});localStorage.setItem("usuarios",JSON.stringify(u));renderUsuarios();}
 function renderUsuarios(){let lista=document.getElementById("listaUsuarios");let u=JSON.parse(localStorage.getItem("usuarios"))||[];lista.innerHTML="";u.forEach(x=>lista.innerHTML+=`<div class="item">${x.user}</div>`);}
 function mostrar(p){dashboard.style.display="none";app.style.display="block";["simulador","clientes","pagos","admin"].forEach(x=>document.getElementById(x).style.display="none");document.getElementById(p).style.display="block";if(p==="clientes")renderClientes();if(p==="admin")renderUsuarios();}

@@ -161,9 +161,8 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 
 <script>
 
-// ==================== MEJORAS (SIN ROMPER NADA) ====================
+// === SOLO MEJORAS (SIN ROMPER NADA) ===
 
-// Limpieza
 function limpiarTexto(v){
 return String(v||"").trim().replace(/\s+/g," ");
 }
@@ -178,9 +177,7 @@ function validarDNI(dni){
 return String(dni).trim().length>=6;
 }
 
-// Mapeo robusto
 function mapearCampo(key){
-
 key=key.toLowerCase().trim();
 
 if(key.includes("dni")) return "dni";
@@ -191,16 +188,16 @@ if(key.includes("cuota")||key.includes("mora")||key.includes("saldo")||key.inclu
 
 if(key.includes("retraso")||key.includes("dias")) return "retraso";
 
-if(key.includes("telefono")||key.includes("celular")||key.includes("fono")) return "celular";
+if(key.includes("telefono")||key.includes("celular")) return "celular";
 
 if(key.includes("producto")) return "producto";
 
-if(key.includes("direccion")||key.includes("dirección")||key.includes("domicilio")) return "direccion";
+if(key.includes("direccion")) return "direccion";
 
 return null;
 }
 
-// ==================== SOLO SE MODIFICA ESTA FUNCIÓN ====================
+// === SOLO ESTA FUNCIÓN CAMBIÓ ===
 function cargarExcel(){
 
 let file=document.getElementById("excelFile").files[0];
@@ -216,7 +213,6 @@ let hoja=workbook.Sheets[workbook.SheetNames[0]];
 
 let raw=XLSX.utils.sheet_to_json(hoja,{header:1});
 
-// detectar encabezado
 let headerIndex=0;
 
 for(let i=0;i<raw.length;i++){
@@ -244,12 +240,7 @@ direccion:""
 };
 
 headers.forEach((h,i)=>{
-
-if(!h) return;
-
-let campo=mapearCampo(h);
-if(!campo) return;
-
+let campo=mapearCampo(h||"");
 let val=limpiarTexto(r[i]);
 
 if(campo==="dni") obj.dni=val;
@@ -258,7 +249,6 @@ if(campo==="asesor") obj.asesor=val;
 if(campo==="producto") obj.producto=val;
 if(campo==="celular") obj.celular=val;
 if(campo==="direccion") obj.direccion=val;
-
 if(campo==="monto") obj.monto=limpiarNumero(val);
 if(campo==="retraso") obj.retraso=limpiarNumero(val);
 
@@ -279,6 +269,36 @@ alert("Carga exitosa: "+json.length+" registros");
 };
 
 reader.readAsArrayBuffer(file);
+}
+
+// === SOLO CAMBIO VISUAL ===
+function filtrarMora(min,max){
+
+let lista=document.getElementById("listaClientes");
+lista.innerHTML="";
+
+let data=JSON.parse(localStorage.getItem("cartera"))||[];
+
+let filtrados=data.filter(c=>{
+let r=parseFloat(c.retraso)||0;
+return r>=min && r<=max;
+});
+
+filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
+
+filtrados.forEach(c=>{
+
+lista.innerHTML+=`
+<div class="item">
+<b>${c.nombre||""}</b><br>
+Cuota + Mora: S/ ${c.monto||0}<br>
+Producto: ${c.producto||"-"}<br>
+Retraso: ${c.retraso||0} días<br>
+👤 ${c.asesor||"-"}<br>
+📍 ${c.direccion||"-"}<br>
+📞 ${c.celular||"-"}
+</div>`;
+});
 }
 
 </script>

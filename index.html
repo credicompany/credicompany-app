@@ -352,15 +352,72 @@ Retraso: ${c.retraso||0} días<br>
 }
 
 // RESTO ORIGINAL
-function crearUsuario(){...}
-function renderUsuarios(){...}
-function mostrar(p){...}
-function volver(){...}
-function abrirQR(el){...}
-function cerrarQR(){...}
-function enviarUbicacion(){...}
-function enviarSimulacion(){...}
-function enviarFiltro(){...}
+function crearUsuario(){
+let user=nuevoUser.value.trim();
+let pass=nuevoPass.value.trim();
+
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+
+usuarios.push({user,pass});
+localStorage.setItem("usuarios",JSON.stringify(usuarios));
+
+renderUsuarios();
+}
+
+function renderUsuarios(){
+let lista=document.getElementById("listaUsuarios");
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+
+lista.innerHTML="";
+usuarios.forEach(u=>{
+lista.innerHTML+=`<div class="item">${u.user}</div>`;
+});
+}
+
+function mostrar(p){
+dashboard.style.display="none";
+app.style.display="block";
+
+simulador.style.display="none";
+clientes.style.display="none";
+pagos.style.display="none";
+admin.style.display="none";
+
+document.getElementById(p).style.display="block";
+
+if(p==="clientes") renderClientes();
+if(p==="admin") renderUsuarios();
+}
+
+function volver(){
+app.style.display="none";
+dashboard.style.display="block";
+}
+
+function abrirQR(el){
+imgQR.src=el.querySelector("img").src;
+modalQR.style.display="flex";
+}
+
+function cerrarQR(){
+modalQR.style.display="none";
+}
+
+function enviarUbicacion(){
+navigator.geolocation.getCurrentPosition(pos=>{
+let link=`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+window.open("https://wa.me/?text="+encodeURIComponent(link));
+});
+}
+
+function enviarSimulacion(){
+let msg=`Monto: S/ ${simData.monto}\nCuota: S/ ${simData.cuota}\nProducto: ${simData.producto}`;
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
+}
+
+function enviarFiltro(){
+let msg=`${cliente.value} ${apellidos.value}\nDNI:${dni.value}`;
+window.open("https://wa.me/?text="+encod
 
 </script>
 

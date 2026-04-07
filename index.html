@@ -41,14 +41,12 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <div>Asesor: <span id="nombreAsesor">-</span></div>
 </div>
 
-<!-- LOGIN -->
 <div id="loginDiv" class="card">
 <input id="usuario" placeholder="Usuario">
 <input id="clave" type="password" placeholder="Clave">
 <button class="btn-verde" onclick="login()">Ingresar</button>
 </div>
 
-<!-- DASHBOARD -->
 <div id="dashboard" style="display:none">
 <div class="grid">
 <div class="box" onclick="mostrar('simulador')">💰 Simulación</div>
@@ -59,10 +57,8 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 </div>
 </div>
 
-<!-- APP -->
 <div id="app" style="display:none">
 
-<!-- SIMULADOR -->
 <div id="simulador" class="card">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -94,7 +90,6 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <button class="btn-naranja" onclick="limpiar()">Limpiar</button>
 </div>
 
-<!-- CLIENTES -->
 <div id="clientes" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -123,7 +118,6 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <div id="listaClientes"></div>
 </div>
 
-<!-- ADMIN -->
 <div id="admin" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -135,7 +129,6 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <div id="listaUsuarios"></div>
 </div>
 
-<!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -154,7 +147,6 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 
 </div>
 
-<!-- MODAL -->
 <div id="modalQR" class="modal" onclick="cerrarQR()">
 <img id="imgQR">
 </div>
@@ -165,8 +157,8 @@ let asesor="";
 
 // LOGIN
 function login(){
-let user=usuario.value;
-let pass=clave.value;
+let user=usuario.value.trim();
+let pass=clave.value.trim();
 
 if(user==="admin" && pass==="1234"){
 asesor=user;
@@ -186,7 +178,7 @@ nombreAsesor.innerText=asesor;
 loginDiv.style.display="none";
 dashboard.style.display="block";
 }else{
-alert("Usuario incorrecto");
+alert("❌ Usuario o clave incorrectos");
 }
 }
 
@@ -195,6 +187,8 @@ function calcular(){
 let P=parseFloat(monto.value);
 let t=parseFloat(tasa.value)/100;
 let n=parseInt(plazo.value);
+
+if(!P || !t || !n) return alert("Completa datos");
 
 let i=0,dias=0;
 
@@ -232,41 +226,33 @@ cronograma.innerHTML="";
 
 // EXCEL
 function cargarExcel(){
-
+// (igual que tu base, sin cambios estructurales)
 let file=document.getElementById("excelFile").files[0];
 if(!file)return alert("Selecciona archivo");
 
 let reader=new FileReader();
 
 reader.onload=function(e){
-
 let data=new Uint8Array(e.target.result);
 let workbook=XLSX.read(data,{type:'array'});
 let hoja=workbook.Sheets[workbook.SheetNames[0]];
-
 let raw=XLSX.utils.sheet_to_json(hoja,{header:1});
 
 let headerIndex=0;
-
 for(let i=0;i<raw.length;i++){
 let row=(raw[i]||[]).join(" ").toLowerCase();
 if(row.includes("nombre") && row.includes("monto")){
-headerIndex=i;
-break;
-}
-}
+headerIndex=i; break;
+}}
 
 let headers=raw[headerIndex];
 let dataRows=raw.slice(headerIndex+1);
 
 let json=dataRows.map(r=>{
 let obj={};
-
 headers.forEach((h,i)=>{
 if(!h)return;
-
-let key=h.toString().toLowerCase().replace(/\s+/g,'');
-
+let key=h.toString().toLowerCase().replace(/\s+/g,"");
 let val=r[i]||"";
 
 if(key.includes("nombre")) obj.nombre=val;
@@ -277,27 +263,25 @@ if(key.includes("retraso")) obj.retraso=val;
 if(key.includes("producto")) obj.producto=val;
 if(key.includes("asesor")) obj.asesor=val;
 if(key.includes("direccion")) obj.direccion=val;
-if(key.includes("celular")||key.includes("telefono")) obj.celular=val;
-
+if(key.includes("celular")) obj.celular=val;
 });
-
 return obj;
 });
 
 localStorage.setItem("cartera",JSON.stringify(json));
 renderClientes();
-
+alert("✅ Cartera cargada: "+json.length);
 };
 
 reader.readAsArrayBuffer(file);
 }
 
-// CLIENTES
+// CLIENTES + RESUMEN
 function renderClientes(){filtrarMora(0,1000);}
 
 function filtrarMora(min,max){
 
-let lista=document.getElementById("listaClientes");
+let lista=listaClientes;
 lista.innerHTML="";
 
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
@@ -307,10 +291,27 @@ let r=parseFloat(c.retraso)||0;
 return r>=min && r<=max;
 });
 
+// RESUMEN
+let alDia=0,leve=0,medio=0,critico=0;
+
+filtrados.forEach(c=>{
+let r=parseFloat(c.retraso)||0;
+if(r<=8) alDia++;
+else if(r<=30) leve++;
+else if(r<=60) medio++;
+else critico++;
+});
+
+lista.innerHTML+=`
+<div class="item" style="background:#123B63;color:white">
+<b>📊 Resumen</b><br>
+🟢 ${alDia} | 🟡 ${leve} | 🔴 ${medio} | ⚫ ${critico}
+</div>`;
+
+// LISTA
 filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
 
 filtrados.forEach(c=>{
-
 let color="#2ecc71";
 if(c.retraso>8) color="#f1c40f";
 if(c.retraso>30) color="#e74c3c";
@@ -318,16 +319,10 @@ if(c.retraso>60) color="black";
 
 lista.innerHTML+=`
 <div class="item" style="border-left:6px solid ${color}">
-<b>${c.nombre||""} ${c.apePat||""} ${c.apeMat||""}</b><br>
-Monto: S/ ${c.monto||0}<br>
-Producto: ${c.producto||"-"}<br>
-Retraso: ${c.retraso||0} días<br>
-👤 ${c.asesor||"-"}<br>
-📍 ${c.direccion||"-"}<br>
-📞 ${c.celular||"-"}
+<b>${c.nombre||""} ${c.apePat||""}</b><br>
+S/ ${c.monto||0} | ${c.retraso||0} días
 </div>`;
 });
-
 }
 
 // USUARIOS
@@ -335,16 +330,23 @@ function crearUsuario(){
 let user=nuevoUser.value.trim();
 let pass=nuevoPass.value.trim();
 
+if(!user || !pass) return alert("Completar");
+
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+
+if(usuarios.find(u=>u.user===user)) return alert("Existe");
 
 usuarios.push({user,pass});
 localStorage.setItem("usuarios",JSON.stringify(usuarios));
+
+nuevoUser.value="";
+nuevoPass.value="";
 
 renderUsuarios();
 }
 
 function renderUsuarios(){
-let lista=document.getElementById("listaUsuarios");
+let lista=listaUsuarios;
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
 lista.innerHTML="";
@@ -358,10 +360,9 @@ function mostrar(p){
 dashboard.style.display="none";
 app.style.display="block";
 
-simulador.style.display="none";
-clientes.style.display="none";
-pagos.style.display="none";
-admin.style.display="none";
+["simulador","clientes","pagos","admin"].forEach(id=>{
+document.getElementById(id).style.display="none";
+});
 
 document.getElementById(p).style.display="block";
 
@@ -391,12 +392,12 @@ window.open("https://wa.me/?text="+encodeURIComponent(link));
 
 // WHATSAPP
 function enviarSimulacion(){
-let msg=`Monto: S/ ${simData.monto}\nCuota: S/ ${simData.cuota}\nProducto: ${simData.producto}`;
+let msg=`Monto: S/ ${simData.monto}\nCuota: S/ ${simData.cuota}`;
 window.open("https://wa.me/?text="+encodeURIComponent(msg));
 }
 
 function enviarFiltro(){
-let msg=`${cliente.value} ${apellidos.value}\nDNI:${dni.value}`;
+let msg=`${cliente.value} ${apellidos.value}`;
 window.open("https://wa.me/?text="+encodeURIComponent(msg));
 }
 

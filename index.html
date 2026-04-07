@@ -59,7 +59,6 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 
 <div id="app" style="display:none">
 
-<!-- SIMULADOR -->
 <div id="simulador" class="card">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -91,7 +90,6 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <button class="btn-naranja" onclick="limpiar()">Limpiar</button>
 </div>
 
-<!-- CLIENTES -->
 <div id="clientes" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -120,7 +118,6 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <div id="listaClientes"></div>
 </div>
 
-<!-- ADMIN -->
 <div id="admin" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -132,7 +129,6 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <div id="listaUsuarios"></div>
 </div>
 
-<!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -215,7 +211,7 @@ let capital=cuota-interes;
 saldo-=capital;
 fecha.setDate(fecha.getDate()+dias);
 
-html+=`<div class="item">Cuota ${c}</div>`;
+html+=`<div class="item">Cuota ${c} - ${fecha.toLocaleDateString()}<br>Saldo: S/ ${saldo.toFixed(2)}</div>`;
 }
 
 cronograma.innerHTML=html;
@@ -228,10 +224,10 @@ resultado.innerHTML="";
 cronograma.innerHTML="";
 }
 
-// 🔥 EXCEL CORREGIDO FINAL
+// EXCEL MEJORADO
 function cargarExcel(){
 
-let file=excelFile.files[0];
+let file=document.getElementById("excelFile").files[0];
 if(!file)return alert("Selecciona archivo");
 
 let reader=new FileReader();
@@ -243,27 +239,43 @@ let workbook=XLSX.read(data,{type:'array'});
 let hoja=workbook.Sheets[workbook.SheetNames[0]];
 let raw=XLSX.utils.sheet_to_json(hoja,{header:1});
 
-let headers=raw[0];
-let rows=raw.slice(1);
+let headerIndex=0;
 
-let json=rows.map(r=>{
+for(let i=0;i<raw.length;i++){
+let row=(raw[i]||[]).join(" ").toLowerCase();
+if(row.includes("nombre") && row.includes("producto")){
+headerIndex=i;
+break;
+}
+}
 
-let obj={nombre:"",asesor:"",monto:"",retraso:0,celular:"",producto:"",direccion:"",distrito:""};
+let headers=raw[headerIndex];
+let dataRows=raw.slice(headerIndex+1);
+
+let json=dataRows.map(r=>{
+
+let obj={
+nombre:"",
+asesor:"",
+monto:"",
+retraso:0,
+celular:"",
+producto:"",
+direccion:"",
+distrito:""
+};
 
 headers.forEach((h,i)=>{
 if(!h)return;
 
-let key=h.toLowerCase().replace(/\s+/g,"");
+let key=h.toString().toLowerCase().replace(/\s+/g,"");
 let val=r[i]||"";
-
-// ✔️ CORRECCIÓN REAL
-if(key.includes("cuota+mora")||key.includes("cuotamora")) obj.monto=val;
-else if((key.includes("cuota")||key.includes("mora")) && !obj.monto) obj.monto=val;
 
 if(key.includes("nombre")) obj.nombre=val;
 if(key.includes("asesor")) obj.asesor=val;
-if(key.includes("dias")) obj.retraso=parseFloat(val)||0;
-if(key.includes("telefono")) obj.celular=val;
+if(key.includes("cuota") || key.includes("mora")) obj.monto=val;
+if(key.includes("dias") || key.includes("retraso")) obj.retraso=parseFloat(val)||0;
+if(key.includes("telefono") || key.includes("celular")) obj.celular=val;
 if(key.includes("producto")) obj.producto=val;
 if(key.includes("direccion")) obj.direccion=val;
 if(key.includes("distrito")) obj.distrito=val;
@@ -276,31 +288,62 @@ return obj;
 localStorage.setItem("cartera",JSON.stringify(json));
 renderClientes();
 
-alert("✅ Excel cargado correctamente");
+alert("✅ Excel cargado: "+json.length);
 
 };
 
 reader.readAsArrayBuffer(file);
 }
 
-// CLIENTES
+// CLIENTES + RESUMEN
 function renderClientes(){filtrarMora(0,1000);}
 
 function filtrarMora(min,max){
+
 let lista=listaClientes;
 lista.innerHTML="";
 
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
 
-data.filter(c=>{
+let filtrados=data.filter(c=>{
 let r=parseFloat(c.retraso)||0;
 return r>=min && r<=max;
-}).forEach(c=>{
+});
+
+let alDia=0,leve=0,medio=0,critico=0;
+
+filtrados.forEach(c=>{
+let r=parseFloat(c.retraso)||0;
+if(r<=8) alDia++;
+else if(r<=30) leve++;
+else if(r<=60) medio++;
+else critico++;
+});
+
 lista.innerHTML+=`
-<div class="item">
+<div class="item" style="background:#123B63;color:white">
+<b>📊 Resumen</b><br>
+🟢 ${alDia} | 🟡 ${leve} | 🔴 ${medio} | ⚫ ${critico}
+</div>`;
+
+filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
+
+filtrados.forEach(c=>{
+let color="#2ecc71";
+if(c.retraso>8) color="#f1c40f";
+if(c.retraso>30) color="#e74c3c";
+if(c.retraso>60) color="black";
+
+lista.innerHTML+=`
+<div class="item" style="border-left:6px solid ${color}">
 <b>${c.nombre}</b><br>
 💰 ${c.monto}<br>
-📅 ${c.retraso} días
+📅 ${c.retraso} días<br>
+👤 ${c.asesor}<br>
+📞 ${c.celular}<br>
+📦 ${c.producto}<br>
+📍 ${c.direccion}<br>
+🏙️ ${c.distrito}
 </div>`;
 });
 }
@@ -310,10 +353,17 @@ function crearUsuario(){
 let user=nuevoUser.value.trim();
 let pass=nuevoPass.value.trim();
 
+if(!user || !pass) return alert("Completar");
+
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+
+if(usuarios.find(u=>u.user===user)) return alert("Existe");
 
 usuarios.push({user,pass});
 localStorage.setItem("usuarios",JSON.stringify(usuarios));
+
+nuevoUser.value="";
+nuevoPass.value="";
 
 renderUsuarios();
 }
@@ -365,7 +415,7 @@ window.open("https://wa.me/?text="+encodeURIComponent(link));
 
 // WHATSAPP
 function enviarSimulacion(){
-let msg=`Monto: S/ ${simData.monto}`;
+let msg=`Monto: S/ ${simData.monto}\nCuota: S/ ${simData.cuota}`;
 window.open("https://wa.me/?text="+encodeURIComponent(msg));
 }
 

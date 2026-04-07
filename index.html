@@ -65,239 +65,134 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <!-- SIMULADOR -->
 <div id="simulador" class="card">
 <div class="volver" onclick="volver()">← Volver</div>
-
 <input id="cliente" placeholder="Nombre">
 <input id="apellidos" placeholder="Apellidos">
 <input id="dni" placeholder="DNI">
-
 <select id="producto">
 <option value="diario">Diario</option>
 <option value="semanal">Semanal</option>
 <option value="quincenal">Quincenal</option>
 <option value="mensual">Mensual</option>
 </select>
-
 <input id="monto" placeholder="Monto">
 <input id="tasa" placeholder="Tasa (%)">
 <input id="plazo" placeholder="Cuotas">
-
-<button class="btn-verde" onclick="calcular()">Calcular</button>
-
-<div id="resultado"></div>
-<div id="cronograma"></div>
-
-<div class="fila">
-<button class="btn-verde" onclick="enviarSimulacion()">Simulación</button>
-<button class="btn-azul" onclick="enviarFiltro()">Filtro</button>
-</div>
-
-<button class="btn-naranja" onclick="limpiar()">Limpiar</button>
+<button class="btn-verde">Calcular</button>
 </div>
 
 <!-- CLIENTES -->
 <div id="clientes" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
-
-<input id="c_nombre" placeholder="Nombre">
-<input id="c_apellidos" placeholder="Apellidos">
-<input id="c_dni" placeholder="DNI">
-<input id="c_monto" placeholder="Monto">
-
-<button class="btn-verde" onclick="guardarCliente()">Guardar</button>
-
-<input type="file" id="excelFile" accept=".csv,.xlsx" style="margin-top:15px;">
-<button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>
-
-<div class="fila">
-<button style="background:#2ecc71" onclick="filtrarMora(0,8)">0-8 días</button>
-<button style="background:#f1c40f;color:black" onclick="filtrarMora(9,30)">9-30 días</button>
-</div>
-
-<div class="fila">
-<button style="background:#e74c3c" onclick="filtrarMora(31,60)">31-60 días</button>
-<button style="background:black" onclick="filtrarMora(61,1000)">61+ días</button>
-</div>
-
-<button class="btn-azul" onclick="renderClientes()">🔄 Ver todos</button>
-
 <div id="listaClientes"></div>
 </div>
 
 <!-- ADMIN -->
 <div id="admin" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
-
 <input id="nuevoUser" placeholder="Usuario">
 <input id="nuevoPass" placeholder="Clave">
-
 <button class="btn-verde" onclick="crearUsuario()">Crear Usuario</button>
-
 <div id="listaUsuarios"></div>
 </div>
 
 <!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
-
-<div class="pagos-container">
-<div class="pago-box" onclick="abrirQR(this)">
-<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image.jpg">
-</div>
-<div class="pago-box" onclick="abrirQR(this)">
-<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image.jpg">
-</div>
-<div class="pago-box" onclick="abrirQR(this)">
-<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image.jpg">
-</div>
-</div>
+PAGOS
 </div>
 
-</div>
-
-<!-- MODAL -->
-<div id="modalQR" class="modal" onclick="cerrarQR()">
-<img id="imgQR">
 </div>
 
 <script>
 
-// ==================== MEJORAS (SIN ROMPER NADA) ====================
+// ================= NAVIGACIÓN =================
+function mostrar(seccion){
 
-// Limpieza
-function limpiarTexto(v){
-return String(v||"").trim().replace(/\s+/g," ");
-}
+document.getElementById("dashboard").style.display = "none";
+document.getElementById("app").style.display = "block";
 
-function limpiarNumero(v){
-if(!v) return 0;
-let limpio=String(v).replace(/[^\d.-]/g,"");
-return parseFloat(limpio)||0;
-}
+let secciones = ["simulador","clientes","admin","pagos"];
 
-function validarDNI(dni){
-return String(dni).trim().length>=6;
-}
-
-// Mapeo robusto
-function mapearCampo(key){
-
-key=key.toLowerCase().trim();
-
-if(key.includes("dni")) return "dni";
-if(key.includes("nombre")) return "nombre";
-if(key.includes("asesor")) return "asesor";
-
-if(key.includes("cuota")||key.includes("mora")||key.includes("saldo")||key.includes("deuda")||key.includes("importe")||key.includes("total")) return "monto";
-
-if(key.includes("retraso")||key.includes("dias")) return "retraso";
-
-if(key.includes("telefono")||key.includes("celular")||key.includes("fono")) return "celular";
-
-if(key.includes("producto")) return "producto";
-
-if(key.includes("direccion")||key.includes("dirección")||key.includes("domicilio")) return "direccion";
-
-return null;
-}
-
-// ==================== SOLO SE MODIFICA ESTA FUNCIÓN ====================
-function cargarExcel(){
-
-let file=document.getElementById("excelFile").files[0];
-if(!file)return alert("Selecciona archivo");
-
-let reader=new FileReader();
-
-reader.onload=function(e){
-
-let data=new Uint8Array(e.target.result);
-let workbook=XLSX.read(data,{type:'array'});
-let hoja=workbook.Sheets[workbook.SheetNames[0]];
-
-let raw=XLSX.utils.sheet_to_json(hoja,{header:1});
-
-// detectar encabezado
-let headerIndex=0;
-
-for(let i=0;i<raw.length;i++){
-let row=(raw[i]||[]).join(" ").toLowerCase();
-if(row.includes("dni") && row.includes("nombre")){
-headerIndex=i;
-break;
-}
-}
-
-let headers=raw[headerIndex];
-let dataRows=raw.slice(headerIndex+1);
-
-let json=dataRows.map(r=>{
-
-let obj={
-dni:"",
-nombre:"",
-asesor:"",
-monto:0,
-retraso:0,
-celular:"",
-producto:"",
-direccion:""
-};
-
-headers.forEach((h,i)=>{
-
-if(!h) return;
-
-let campo=mapearCampo(h);
-if(!campo) return;
-
-let val=limpiarTexto(r[i]);
-
-if(campo==="dni") obj.dni=val;
-if(campo==="nombre") obj.nombre=val;
-if(campo==="asesor") obj.asesor=val;
-if(campo==="producto") obj.producto=val;
-if(campo==="celular") obj.celular=val;
-if(campo==="direccion") obj.direccion=val;
-
-if(campo==="monto") obj.monto=limpiarNumero(val);
-if(campo==="retraso") obj.retraso=limpiarNumero(val);
-
+secciones.forEach(id=>{
+let el = document.getElementById(id);
+if(el) el.style.display = "none";
 });
 
-if(!validarDNI(obj.dni) && !obj.nombre) return null;
-
-return obj;
-
-}).filter(x=>x);
-
-localStorage.setItem("cartera",JSON.stringify(json));
-
-renderClientes();
-
-alert("Carga exitosa: "+json.length+" registros");
-
-};
-
-reader.readAsArrayBuffer(file);
+document.getElementById(seccion).style.display = "block";
 }
+
+function volver(){
+document.getElementById("app").style.display = "none";
+document.getElementById("dashboard").style.display = "block";
+}
+
+// ================= LOGIN =================
+function limpiarTexto(v){
+return String(v||"").trim();
+}
+
 function login(){
 
-let user = document.getElementById("usuario").value;
-let pass = document.getElementById("clave").value;
+let user = limpiarTexto(document.getElementById("usuario").value);
+let pass = limpiarTexto(document.getElementById("clave").value);
 
-// Usuario por defecto
-if(user === "admin" && pass === "1234"){
+let usuarios = JSON.parse(localStorage.getItem("usuarios") || "[]");
 
-    document.getElementById("loginDiv").style.display = "none";
-    document.getElementById("dashboard").style.display = "block";
+if(usuarios.length === 0){
+usuarios = [{usuario:"admin", clave:"1234"}];
+localStorage.setItem("usuarios", JSON.stringify(usuarios));
+}
 
-    document.getElementById("nombreAsesor").innerText = "ADMIN";
+let ok = usuarios.find(u=>u.usuario===user && u.clave===pass);
 
+if(ok){
+document.getElementById("loginDiv").style.display="none";
+document.getElementById("dashboard").style.display="block";
+document.getElementById("nombreAsesor").innerText=user;
 }else{
-    alert("Usuario o clave incorrectos");
+alert("Datos incorrectos");
 }
 
 }
+
+// ================= USUARIOS =================
+function crearUsuario(){
+
+let user = document.getElementById("nuevoUser").value;
+let pass = document.getElementById("nuevoPass").value;
+
+if(!user || !pass) return alert("Completar datos");
+
+let usuarios = JSON.parse(localStorage.getItem("usuarios") || "[]");
+
+usuarios.push({usuario:user, clave:pass});
+
+localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+alert("Usuario creado");
+
+renderUsuarios();
+}
+
+function renderUsuarios(){
+
+let lista = document.getElementById("listaUsuarios");
+if(!lista) return;
+
+lista.innerHTML="";
+
+let usuarios = JSON.parse(localStorage.getItem("usuarios") || "[]");
+
+usuarios.forEach(u=>{
+let div=document.createElement("div");
+div.className="item";
+div.innerText=u.usuario;
+lista.appendChild(div);
+});
+}
+
+renderUsuarios();
+
 </script>
 
 </body>

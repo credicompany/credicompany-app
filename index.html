@@ -186,37 +186,69 @@ alert("❌ Usuario o clave incorrectos");
 
 // SIMULADOR
 function calcular(){
-let P=parseFloat(monto.value);
-let t=parseFloat(tasa.value)/100;
-let n=parseInt(plazo.value);
 
-if(!P || !t || !n) return alert("Completa datos");
+let P = parseFloat(monto.value);
+let t = parseFloat(tasa.value)/100;
+let n = parseInt(plazo.value);
 
-let i=0,dias=0;
-
-if(producto.value==="diario"){i=t/30;dias=1;}
-if(producto.value==="semanal"){i=t/4;dias=7;}
-if(producto.value==="quincenal"){i=t/2;dias=15;}
-if(producto.value==="mensual"){i=t;dias=30;}
-
-let cuota=(P*i)/(1-Math.pow(1+i,-n));
-
-resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
-
-window.simData={monto:P,cuota:cuota.toFixed(2),producto:producto.value};
-
-let saldo=P,fecha=new Date(),html="<h4>Cronograma:</h4>";
-
-for(let c=1;c<=n;c++){
-let interes=saldo*i;
-let capital=cuota-interes;
-saldo-=capital;
-fecha.setDate(fecha.getDate()+dias);
-
-html+=`<div class="item">Cuota ${c} - ${fecha.toLocaleDateString()}<br>Saldo: S/ ${saldo.toFixed(2)}</div>`;
+if(!P || !t || !n){
+alert("Completa datos");
+return;
 }
 
-cronograma.innerHTML=html;
+// 🔥 definir tipo
+let i = 0;
+let dias = 0;
+
+if(producto.value==="diario"){ i=t/30; dias=1; }
+if(producto.value==="semanal"){ i=t/4; dias=7; }
+if(producto.value==="quincenal"){ i=t/2; dias=15; }
+if(producto.value==="mensual"){ i=t; dias=30; }
+
+// 🔥 fórmula financiera
+let cuota = (P*i)/(1-Math.pow(1+i,-n));
+let total = cuota * n;
+let interes = total - P;
+
+// 🔥 resumen completo
+resultado.innerHTML = `
+<b>Cuota:</b> S/ ${cuota.toFixed(2)}<br>
+<b>Total a pagar:</b> S/ ${total.toFixed(2)}<br>
+<b>Interés:</b> S/ ${interes.toFixed(2)}
+`;
+
+// 🔥 cronograma REAL
+let saldo = P;
+let fecha = new Date();
+let html = "<h4>Cronograma:</h4>";
+
+for(let c=1;c<=n;c++){
+
+let interesCuota = saldo * i;
+let capital = cuota - interesCuota;
+saldo -= capital;
+
+fecha.setDate(fecha.getDate()+dias);
+
+html += `
+<div class="item">
+Cuota ${c}<br>
+Fecha: ${fecha.toLocaleDateString()}<br>
+Cuota: S/ ${cuota.toFixed(2)}<br>
+Saldo: S/ ${saldo.toFixed(2)}
+</div>`;
+}
+
+cronograma.innerHTML = html;
+
+// guardar para WhatsApp
+window.simData = {
+monto:P,
+cuota:cuota.toFixed(2),
+total:total.toFixed(2),
+producto:producto.value
+};
+
 }
 
 // LIMPIAR

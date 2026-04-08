@@ -264,17 +264,34 @@ distrito:""
 headers.forEach((h,i)=>{
 if(!h)return;
 
-let key=h.toString().toLowerCase().replace(/\s+/g,"");
-let val=r[i]||"";
+let key = h.toString()
+  .toLowerCase()
+  .replace(/\s+/g,"")
+  .replace(/[()]/g,""); // 🔥 clave para "asesor(a)"
 
-if(key.includes("nombre")) obj.nombre=val;
-if(key.includes("Asesor(a)")) obj.Asesor(a)=val;
-if(key.includes("cuota_mora")) obj.monto=val;
-if(key.includes("dias") || key.includes("retraso")) obj.retraso=parseFloat(val)||0;
-if(key.includes("telefono") || key.includes("celular")) obj.celular=val;
-if(key.includes("producto")) obj.producto=val;
-if(key.includes("direccion")) obj.direccion=val;
-if(key.includes("distrito")) obj.distrito=val;
+let val = r[i] || "";
+
+if(key.includes("nombre")) obj.nombre = val;
+
+if(
+  key.includes("asesor") ||
+  key.includes("usuario") ||
+  key.includes("gestor")
+){
+  obj.asesor = val;
+}
+
+if(key.includes("cuota_mora")) obj.monto = val;
+
+if(key.includes("dias") || key.includes("retraso")) obj.retraso = parseFloat(val) || 0;
+
+if(key.includes("telefono") || key.includes("celular")) obj.celular = val;
+
+if(key.includes("producto")) obj.producto = val;
+
+if(key.includes("direccion")) obj.direccion = val;
+
+if(key.includes("distrito")) obj.distrito = val;
 
 });
 

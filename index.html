@@ -449,13 +449,23 @@ window.open("https://wa.me/?text="+encodeURIComponent(link));
 
 // WHATSAPP
 function enviarSimulacion(){
-let msg=`Monto: S/ ${simData.monto}\nCuota: S/ ${simData.cuota}`;
-window.open("https://wa.me/?text="+encodeURIComponent(msg));
+
+if(!window.simData){
+alert("Primero realiza la simulación");
+return;
 }
 
-function enviarFiltro(){
-let msg=`${cliente.value} ${apellidos.value}`;
-window.open("https://wa.me/?text="+encodeURIComponent(msg));
+let msg = `📊 SIMULACIÓN CREDICOMPANY
+
+💼 Producto: ${simData.producto.toUpperCase()}
+💰 Monto: S/ ${simData.monto}
+💳 Cuota: S/ ${simData.cuota}
+📈 Total a pagar: S/ ${simData.total}
+
+Gracias por confiar en Credicompany 🤝`;
+
+window.open("https://wa.me/?text=" + encodeURIComponent(msg));
+
 }
 
 </script>

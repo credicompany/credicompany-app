@@ -121,7 +121,9 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <input id="nuevoPass" placeholder="Clave">
 
 <button class="btn-verde" onclick="crearUsuario()">Crear Usuario</button>
-
+<button class="btn-naranja" onclick="eliminarUsuarioManual()">
+Eliminar Usuario
+</button>
 <div id="listaUsuarios"></div>
 </div>
 <div id="pagos" class="card" style="display:none">
@@ -183,7 +185,35 @@ dashboard.style.display="block";
 alert("❌ Usuario o clave incorrectos");
 }
 }
+function eliminarUsuarioManual(){
 
+let user = document.getElementById("nuevoUser").value.trim();
+
+if(!user){
+alert("Ingrese usuario a eliminar");
+return;
+}
+
+let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+let index = usuarios.findIndex(u => u.user === user);
+
+if(index === -1){
+alert("Usuario no encontrado");
+return;
+}
+
+if(!confirm("¿Eliminar usuario?")) return;
+
+usuarios.splice(index,1);
+
+localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+renderUsuarios();
+
+alert("✅ Usuario eliminado");
+
+}
 // SIMULADOR
 function calcular(){
 

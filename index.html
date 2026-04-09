@@ -418,7 +418,22 @@ style="background:#28a745;color:white;border:none;padding:6px 10px;border-radius
 </div>`;
 });
 }
+function marcarCancelado(id){
 
+  let data = JSON.parse(localStorage.getItem("cartera")) || [];
+
+  let cliente = data.find(c => c.celular == id);
+
+  if(!cliente) return;
+
+  if(!confirm("Marcar como cancelado?")) return;
+
+  cliente.estado = "cancelado";
+
+  localStorage.setItem("cartera", JSON.stringify(data));
+
+  renderClientes();
+}
 // USUARIOS
 function crearUsuario(){
 let user=nuevoUser.value.trim();

@@ -169,12 +169,6 @@ let pass=clave.value.trim();
 if(user==="admin" && pass==="1234"){
 asesor=user;
 nombreAsesor.innerText=asesor;
-document.getElementById("nombreCartera").innerText = "Cartera: Total";
-loginDiv.style.display="none";
-dashboard.style.display="block";
-return;
-}
-
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
 let encontrado=usuarios.find(u=>u.user===user && u.pass===pass);

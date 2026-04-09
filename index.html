@@ -423,6 +423,21 @@ style="background:#28a745;color:white;border:none;padding:6px 10px;border-radius
 </div>`;
 });
 }
+  function renderCartera(){
+
+let data = JSON.parse(localStorage.getItem("cartera")) || [];
+
+let total = data.length;
+let monto = data.reduce((a,c)=>a+(parseFloat(c.monto)||0),0);
+let mora = data.filter(c=>c.retraso>0).length;
+
+resumenCartera.innerHTML = `
+<div class="item">
+<b>Total clientes:</b> ${total}<br>
+<b>Total cartera:</b> S/ ${monto.toFixed(2)}<br>
+<b>En mora:</b> ${mora}
+</div>`;
+}
 function marcarCancelado(id){
 
   let data = JSON.parse(localStorage.getItem("cartera")) || [];

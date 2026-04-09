@@ -52,7 +52,7 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <div class="box" onclick="mostrar('pagos')">💳 Pagos</div>
 <div class="box" onclick="enviarUbicacion()">📍 Ubicación</div>
 <div class="box" onclick="mostrar('admin')">⚙️ Usuarios</div>
-<div class="box" onclick="mostrar('cartera')">📊 Cartera Total</div>
+</div>
 </div>
 
 <div id="app" style="display:none">
@@ -169,6 +169,11 @@ let pass=clave.value.trim();
 if(user==="admin" && pass==="1234"){
 asesor=user;
 nombreAsesor.innerText=asesor;
+loginDiv.style.display="none";
+dashboard.style.display="block";
+return;
+}
+
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
 let encontrado=usuarios.find(u=>u.user===user && u.pass===pass);

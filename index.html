@@ -568,7 +568,22 @@ Gracias por confiar en Credicompany 🤝`;
 window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 
 }
+function mostrar(p){
 
+document.getElementById("dashboard").style.display="none";
+document.getElementById("app").style.display="block";
+
+["simulador","clientes","pagos","admin","cartera"].forEach(id=>{
+document.getElementById(id).style.display="none";
+});
+
+document.getElementById(p).style.display="block";
+
+if(p==="clientes") renderClientes();
+if(p==="admin") renderUsuarios();
+if(p==="cartera") renderCartera();
+
+}
 </script>
 
 </body>

@@ -370,7 +370,7 @@ let lista=listaClientes;
 lista.innerHTML="";
 
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
-
+data = data.filter(c => c.estado !== "cancelado");
 let filtrados=data.filter(c=>{
 let r=parseFloat(c.retraso)||0;
 return r>=min && r<=max;
@@ -387,6 +387,7 @@ else critico++;
 });
 
 lista.innerHTML+=`
+
 <div class="item" style="background:#123B63;color:white">
 <b>📊 Resumen</b><br>
 🟢 ${alDia} | 🟡 ${leve} | 🔴 ${medio} | ⚫ ${critico}

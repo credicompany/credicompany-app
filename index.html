@@ -387,7 +387,6 @@ else critico++;
 });
 
 lista.innerHTML+=`
-
 <div class="item" style="background:#123B63;color:white">
 <b>📊 Resumen</b><br>
 🟢 ${alDia} | 🟡 ${leve} | 🔴 ${medio} | ⚫ ${critico}
@@ -403,14 +402,19 @@ if(c.retraso>60) color="black";
 
 lista.innerHTML+=`
 <div class="item" style="border-left:6px solid ${color}">
-<b>${c.nombre}</b><br>
-💰 ${c.monto}<br>
-📅 ${c.retraso} días<br>
-👤 ${c.asesor}<br>
-📞 ${c.celular}<br>
-📦 ${c.producto}<br>
-📍 ${c.direccion}<br>
-🏙️ ${c.distrito}
+  <b>${c.nombre}</b><br>
+  💰 ${c.monto}<br>
+  📅 ${c.retraso} días<br>
+  👤 ${c.asesor}<br>
+  📞 ${c.celular}<br>
+  📦 ${c.producto}<br>
+  📍 ${c.direccion}<br>
+  🏙️ ${c.distrito}<br>
+
+  <button 
+  style="background:#28a745;color:white;border:none;padding:6px 10px;border-radius:6px;margin-top:8px;">
+    ✅ Cancelado
+  </button>
 </div>`;
 });
 }

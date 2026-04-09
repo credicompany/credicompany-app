@@ -425,33 +425,62 @@ style="background:#28a745;color:white;border:none;padding:6px 10px;border-radius
 }
   function renderCartera(){
 
+function renderCartera(){
+
 let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
-let total = data.length;
-let monto = data.reduce((a,c)=>a+(parseFloat(c.monto)||0),0);
-let mora = data.filter(c=>c.retraso>0).length;
+// 🔥 AGRUPAR POR ASESOR
+let asesores = {};
 
-resumenCartera.innerHTML = `
-<div class="item">
-<b>Total clientes:</b> ${total}<br>
-<b>Total cartera:</b> S/ ${monto.toFixed(2)}<br>
-<b>En mora:</b> ${mora}
-</div>`;
+data.forEach(c=>{
+let asesor = c.asesor || "Sin asesor";
+
+if(!asesores[asesor]){
+asesores[asesor] = {
+clientes:0,
+monto:0,
+mora:0
+};
 }
-function marcarCancelado(id){
 
-  let data = JSON.parse(localStorage.getItem("cartera")) || [];
+asesores[asesor].clientes++;
+asesores[asesor].monto += parseFloat(c.monto)||0;
+if(c.retraso>0) asesores[asesor].mora++;
 
-  let cliente = data.find(c => c.celular == id);
+});
 
-  if(!cliente) return;
+// 🔥 CONVERTIR A ARRAY Y ORDENAR (RANKING)
+let ranking = Object.entries(asesores).map(([nombre,data])=>({
+nombre,
+...data
+}));
 
-  if(!confirm("Marcar como cancelado?")) return;
+ranking.sort((a,b)=>b.monto-a.monto);
 
-  cliente.estado = "cancelado";
+// 🔥 HTML
+let html = `<div class="item" style="background:#123B63;color:white">
+<b>🏆 Ranking de Asesores</b>
+</div>`;
 
-  localStorage.setItem("cartera", JSON.stringify(data));
+ranking.forEach((a,i)=>{
 
+let color = "#2ecc71";
+if(a.mora > 10) color="#f1c40f";
+if(a.mora > 20) color="#e74c3c";
+
+html += `
+<div class="item" style="border-left:6px solid ${color}">
+<b>#${i+1} ${a.nombre}</b><br>
+👥 Clientes: ${a.clientes}<br>
+💰 Cartera: S/ ${a.monto.toFixed(2)}<br>
+🔴 Mora: ${a.mora}
+</div>
+`;
+});
+
+resumenCartera.innerHTML = html;
+
+}
   renderClientes();
 }
 // USUARIOS

@@ -423,12 +423,19 @@ style="background:#28a745;color:white;border:none;padding:6px 10px;border-radius
 </div>`;
 });
 }
-  function renderCartera(){
 
 function renderCartera(){
 
 let data = JSON.parse(localStorage.getItem("cartera")) || [];
+let total = data.length;
+let monto = data.reduce((a,c)=>a+(parseFloat(c.monto)||0),0);
+let mora = data.filter(c=>c.retraso>0).length;
 
+let porcentajeMora = total > 0 ? ((mora / total) * 100).toFixed(1) : 0;
+
+let colorMora = "#2ecc71";
+if(porcentajeMora > 10) colorMora = "#f1c40f";
+if(porcentajeMora > 20) colorMora = "#e74c3c";
 // 🔥 AGRUPAR POR ASESOR
 let asesores = {};
 
@@ -478,8 +485,14 @@ html += `
 `;
 });
 
-resumenCartera.innerHTML = html;
-
+resumenCartera.innerHTML = `
+<div class="item">
+<b>Total clientes:</b> ${total}<br>
+<b>Total cartera:</b> S/ ${monto.toFixed(2)}<br>
+<b>En mora:</b> ${mora}<br>
+<b style="color:${colorMora}">Mora %:</b> ${porcentajeMora}%
+</div>
+` + html;
 }
   renderClientes();
 }

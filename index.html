@@ -485,16 +485,15 @@ html += `
 `;
 });
 
-resumenCartera.innerHTML = `
+let resumen = `
 <div class="item">
 <b>Total clientes:</b> ${total}<br>
 <b>Total cartera:</b> S/ ${monto.toFixed(2)}<br>
 <b>En mora:</b> ${mora}<br>
 <b style="color:${colorMora}">Mora %:</b> ${porcentajeMora}%
 </div>
-` + html;
-}
-  renderClientes();
+`;
+resumenCartera.innerHTML = resumen + html;
 }
 // USUARIOS
 function crearUsuario(){

@@ -292,34 +292,9 @@ cronograma.innerHTML="";
 
 // EXCEL MEJORADO
 async function cargarExcelOnline(){
-
-try{
-
-let res = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6ukVwqfce1e2sB7MeWs-QtsbXCnd-3HW5torahoWAa4moG2SPtK9zIxZQMKOH4N0rhikyeCwfquGF/pub?gid=1644347369&single=true&output=csv");
-let text = await res.text();
-let data = csvToJson(text);
-let json = data.map(r => ({
-nombre: r["nombre y Apellido"] || "",
-asesor: r["Asesor(a)"] || "",
-monto: r["Cuota_Mora"] || "",
-retraso: parseFloat(r["Dias Retraso"]) || 0,
-celular: r["Telefono"] || "",
-producto: r["Producto"] || "",
-direccion: r["Direccion"] || "",
-distrito: r["Distrito"] || ""
-}));
-
-localStorage.setItem("cartera", JSON.stringify(json));
-renderClientes();
-
-alert("✅ Datos actualizados correctamente");
-
-}catch(e){
-alert("❌ Error al cargar datos");
-console.log(e);
+return;
 }
 
-}
 function csvToJson(csv){
 
 let lines = csv.split("\n");

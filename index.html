@@ -99,7 +99,7 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <button class="btn-verde" onclick="guardarCliente()">Guardar</button>
 
 <input type="file" id="excelFile" accept=".csv,.xlsx" style="margin-top:15px;">
-<button class="btn-azul" onclick="cargarExcelOnline()">🔄 Actualizar datos</button>
+<button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>
 
 <div class="fila">
 <button style="background:#2ecc71" onclick="filtrarMora(0,8)">0-8 días</button>
@@ -291,27 +291,100 @@ cronograma.innerHTML="";
 }
 
 // EXCEL MEJORADO
-async function cargarExcelOnline(){
-return;
+function cargarExcel(){
+
+let file=document.getElementById("excelFile").files[0];
+if(!file)return alert("Selecciona archivo");
+
+let reader=new FileReader();
+
+reader.onload=function(e){
+
+let data=new Uint8Array(e.target.result);
+let workbook=XLSX.read(data,{type:'array'});
+let hoja=workbook.Sheets[workbook.SheetNames[0]];
+let raw=XLSX.utils.sheet_to_json(hoja,{header:1});
+
+let headerIndex=0;
+
+for(let i=0;i<raw.length;i++){
+let row=(raw[i]||[]).join(" ").toLowerCase();
+if(row.includes("nombre") && row.includes("producto")){
+headerIndex=i;
+break;
+}
 }
 
-function csvToJson(csv){
+let headers=raw[headerIndex];
+let dataRows=raw.slice(headerIndex+1);
 
-let lines = csv.split("\n");
-let headers = lines[0].split(",");
+let json=dataRows.map(r=>{
 
-return lines.slice(1).map(line => {
-let values = line.split(",");
+let obj={
+nombre:"",
+asesor:"",
+monto:"",
+retraso:0,
+celular:"",
+producto:"",
+direccion:"",
+distrito:""
+};
 
-let obj = {};
 headers.forEach((h,i)=>{
-obj[h.trim()] = values[i]?.trim() || "";
+if(!h)return;
+
+let key=h.toString().toLowerCase().replace(/\s+/g,"");
+let val=r[i]||"";
+
+if(key.includes("nombre")) obj.nombre=val;
+if(key.includes("asesor")) obj.asesor=val;
+if(key.includes("cuota_mora")) obj.monto=val;
+if(key.includes("dias") || key.includes("retraso")) obj.retraso=parseFloat(val)||0;
+if(key.includes("telefono") || key.includes("celular")) obj.celular=val;
+if(key.includes("producto")) obj.producto=val;
+if(key.includes("direccion")) obj.direccion=val;
+if(key.includes("distrito")) obj.distrito=val;
+
 });
 
 return obj;
 });
 
+localStorage.setItem("cartera",JSON.stringify(json));
+renderClientes();
+
+alert("✅ Excel cargado: "+json.length);
+
+};
+
+reader.readAsArrayBuffer(file);
 }
+
+// CLIENTES + RESUMEN
+function renderClientes(){filtrarMora(0,1000);}
+
+function filtrarMora(min,max){
+
+let lista=listaClientes;
+lista.innerHTML="";
+
+let data=JSON.parse(localStorage.getItem("cartera"))||[];
+
+let filtrados=data.filter(c=>{
+let r=parseFloat(c.retraso)||0;
+return r>=min && r<=max;
+});
+
+let alDia=0,leve=0,medio=0,critico=0;
+
+filtrados.forEach(c=>{
+let r=parseFloat(c.retraso)||0;
+if(r<=8) alDia++;
+else if(r<=30) leve++;
+else if(r<=60) medio++;
+else critico++;
+});
 
 lista.innerHTML+=`
 <div class="item" style="background:#123B63;color:white">

@@ -370,7 +370,7 @@ let lista=listaClientes;
 lista.innerHTML="";
 
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
-data = data.filter(c => c.estado !== "cancelado");
+
 let filtrados=data.filter(c=>{
 let r=parseFloat(c.retraso)||0;
 return r>=min && r<=max;
@@ -402,38 +402,18 @@ if(c.retraso>60) color="black";
 
 lista.innerHTML+=`
 <div class="item" style="border-left:6px solid ${color}">
-  <b>${c.nombre}</b><br>
-  💰 ${c.monto}<br>
-  📅 ${c.retraso} días<br>
-  👤 ${c.asesor}<br>
-  📞 ${c.celular}<br>
-  📦 ${c.producto}<br>
-  📍 ${c.direccion}<br>
-  🏙️ ${c.distrito}<br>
-
-  <button onclick="marcarCancelado('${c.celular}')"
-style="background:#28a745;color:white;border:none;padding:6px 10px;border-radius:6px;margin-top:8px;">
-  ✅ Cancelado
-  </button>
+<b>${c.nombre}</b><br>
+💰 ${c.monto}<br>
+📅 ${c.retraso} días<br>
+👤 ${c.asesor}<br>
+📞 ${c.celular}<br>
+📦 ${c.producto}<br>
+📍 ${c.direccion}<br>
+🏙️ ${c.distrito}
 </div>`;
 });
 }
-function marcarCancelado(id){
 
-  let data = JSON.parse(localStorage.getItem("cartera")) || [];
-
-  let cliente = data.find(c => c.celular == id);
-
-  if(!cliente) return;
-
-  if(!confirm("Marcar como cancelado?")) return;
-
-  cliente.estado = "cancelado";
-
-  localStorage.setItem("cartera", JSON.stringify(data));
-
-  renderClientes();
-}
 // USUARIOS
 function crearUsuario(){
 let user=nuevoUser.value.trim();
@@ -460,7 +440,7 @@ let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
 lista.innerHTML="";
 usuarios.forEach(u=>{
-lista.innerHTML+=<div class="item">${u.user}</div>;
+lista.innerHTML+=`<div class="item">${u.user}</div>`;
 });
 }
 
@@ -494,7 +474,7 @@ function cerrarQR(){modalQR.style.display="none";}
 // GPS
 function enviarUbicacion(){
 navigator.geolocation.getCurrentPosition(pos=>{
-let link=https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude};
+let link=`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
 window.open("https://wa.me/?text="+encodeURIComponent(link));
 });
 }

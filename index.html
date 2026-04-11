@@ -99,7 +99,7 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <button class="btn-verde" onclick="guardarCliente()">Guardar</button>
 
 <input type="file" id="excelFile" accept=".csv,.xlsx" style="margin-top:15px;">
-<button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>
+<button class="btn-azul" onclick="cargarExcelOnline()">🔄 Actualizar datos</button>
 
 <div class="fila">
 <button style="background:#2ecc71" onclick="filtrarMora(0,8)">0-8 días</button>
@@ -299,20 +299,20 @@ let res = await fetch("https://opensheet.elk.sh/TU_ID/Hoja1");
 let data = await res.json();
 
 let json = data.map(r => ({
-nombre: r.Nombre || "",
-asesor: r.Asesor || "",
-monto: r.cuota_mora || "",
-retraso: parseFloat(r["Dias de retraso"]) || 0,
-celular: r.Celular || "",
-producto: r.Producto || "",
-direccion: r.Direccion || "",
-distrito: r.Distrito || ""
+nombre: r["nombre y Apellido"] || "",
+asesor: r["Asesor(a)"] || "",
+monto: r["Cuota_Mora"] || "",
+retraso: parseFloat(r["Dias Retraso"]) || 0,
+celular: r["Telefono"] || "",
+producto: r["Producto"] || "",
+direccion: r["Direccion"] || "",
+distrito: r["Distrito"] || ""
 }));
 
 localStorage.setItem("cartera", JSON.stringify(json));
 renderClientes();
 
-alert("✅ Datos actualizados automáticamente");
+alert("✅ Datos actualizados correctamente");
 
 }catch(e){
 alert("❌ Error al cargar datos");

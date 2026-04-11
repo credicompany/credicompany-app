@@ -99,7 +99,7 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <button class="btn-verde" onclick="guardarCliente()">Guardar</button>
 
 <input type="file" id="excelFile" accept=".csv,.xlsx" style="margin-top:15px;">
-<button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>
+<button class="btn-azul" style="display:none">📁 Cargar Excel</button>
 
 <div class="fila">
 <button style="background:#2ecc71" onclick="filtrarMora(0,8)">0-8 días</button>
@@ -393,7 +393,11 @@ console.log(e);
 
 }
 // CLIENTES + RESUMEN
-function renderClientes(){filtrarMora(0,1000);}
+renderClientes();
+
+cargarExcelOnline();
+
+setInterval(cargarExcelOnline, 30000);
 
 function filtrarMora(min,max){
 

@@ -99,7 +99,7 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <button class="btn-verde" onclick="guardarCliente()">Guardar</button>
 
 <input type="file" id="excelFile" accept=".csv,.xlsx" style="margin-top:15px;">
-<button class="btn-azul" style="display:none">📁 Cargar Excel</button>
+<button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>
 
 <div class="fila">
 <button style="background:#2ecc71" onclick="filtrarMora(0,8)">0-8 días</button>
@@ -319,26 +319,23 @@ let headers=raw[headerIndex];
 let dataRows=raw.slice(headerIndex+1);
 
 let json=dataRows.map(r=>{
-  
-let values = r.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
-values = values.map(v => v.replace(/^"|"$/g, "").trim());
-  
-let obj = {
-  nombre:"",
-  asesor:"",
-  monto:"",
-  retraso:0,
-  celular:"",
-  producto:"",
-  direccion:"",
-  distrito:""
+
+let obj={
+nombre:"",
+asesor:"",
+monto:"",
+retraso:0,
+celular:"",
+producto:"",
+direccion:"",
+distrito:""
 };
 
 headers.forEach((h,i)=>{
 if(!h)return;
 
 let key=h.toString().toLowerCase().replace(/\s+/g,"");
-let val = values[i] || "";
+let val=r[i]||"";
 
 if(key.includes("nombre")) obj.nombre=val;
 if(key.includes("asesor")) obj.asesor=val;
@@ -363,44 +360,9 @@ alert("✅ Excel cargado: "+json.length);
 
 reader.readAsArrayBuffer(file);
 }
-async function cargarExcelOnline(){
 
-try{
-
-let res = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6ukVwqfce1e2sB7MeWs-QtsbXCnd-3HW5torahoWAa4moG2SPtK9zIxZQMKOH4N0rhikyeCwfquGF/pub?gid=406216978&single=true&output=csv&nocache=" + new Date().getTime());
-
-let text = await res.text();
-
-let data = csvToJson(text);
-
-let json = data.map(r => ({
-nombre: r["Nombre y Apellido"] || r["nombre y Apellido"] || "",
-asesor: r["Asesor(a)"] || "",
-monto: r["Cuota_Mora"] || "",
-retraso: parseFloat(r["Dias Retraso"]) || 0,
-celular: r["Telefono"] || "",
-producto: r["Producto"] || "",
-direccion: r["Direccion"] || "",
-distrito: r["Distrito"] || ""
-}));
-
-localStorage.setItem("cartera", JSON.stringify(json));
-renderClientes();
-
-alert("✅ Datos actualizados correctamente");
-
-}catch(e){
-alert("❌ Error al cargar datos");
-console.log(e);
-}
-
-}
 // CLIENTES + RESUMEN
-renderClientes();
-
-cargarExcelOnline();
-
-setInterval(cargarExcelOnline, 30000);
+function renderClientes(){filtrarMora(0,1000);}
 
 function filtrarMora(min,max){
 
@@ -408,7 +370,7 @@ let lista=listaClientes;
 lista.innerHTML="";
 
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
-
+data = data.filter(c => c.estado !== "cancelado");
 let filtrados=data.filter(c=>{
 let r=parseFloat(c.retraso)||0;
 return r>=min && r<=max;
@@ -440,18 +402,38 @@ if(c.retraso>60) color="black";
 
 lista.innerHTML+=`
 <div class="item" style="border-left:6px solid ${color}">
-<b>${c.nombre}</b><br>
-💰 ${c.monto}<br>
-📅 ${c.retraso} días<br>
-👤 ${c.asesor}<br>
-📞 ${c.celular}<br>
-📦 ${c.producto}<br>
-📍 ${c.direccion}<br>
-🏙️ ${c.distrito}
+  <b>${c.nombre}</b><br>
+  💰 ${c.monto}<br>
+  📅 ${c.retraso} días<br>
+  👤 ${c.asesor}<br>
+  📞 ${c.celular}<br>
+  📦 ${c.producto}<br>
+  📍 ${c.direccion}<br>
+  🏙️ ${c.distrito}<br>
+
+  <button onclick="marcarCancelado('${c.celular}')"
+style="background:#28a745;color:white;border:none;padding:6px 10px;border-radius:6px;margin-top:8px;">
+  ✅ Cancelado
+  </button>
 </div>`;
 });
 }
+function marcarCancelado(id){
 
+  let data = JSON.parse(localStorage.getItem("cartera")) || [];
+
+  let cliente = data.find(c => c.celular == id);
+
+  if(!cliente) return;
+
+  if(!confirm("Marcar como cancelado?")) return;
+
+  cliente.estado = "cancelado";
+
+  localStorage.setItem("cartera", JSON.stringify(data));
+
+  renderClientes();
+}
 // USUARIOS
 function crearUsuario(){
 let user=nuevoUser.value.trim();

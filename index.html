@@ -52,9 +52,9 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <div class="box" onclick="mostrar('pagos')">💳 Pagos</div>
 <div class="box" onclick="enviarUbicacion()">📍 Ubicación</div>
 <div class="box" onclick="mostrar('admin')">⚙️ Usuarios</div>
-<div class="box" onclick="mostrar('cartera')">📊 Cartera Total</div>
 </div>
 </div>
+
 <div id="app" style="display:none">
 
 <div id="simulador" class="card">
@@ -115,12 +115,7 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 
 <div id="listaClientes"></div>
 </div>
-<div id="cartera" class="card" style="display:none">
-<div class="volver" onclick="volver()">← Volver</div>
 
-<div id="resumenCartera"></div>
-
-</div>
 <div id="admin" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -163,37 +158,33 @@ Eliminar Usuario
 </div>
 
 <script>
-let asesor="";
 
-if(!localStorage.getItem("usuarios")){
-    localStorage.setItem("usuarios", JSON.stringify([
-        {usuario:"admin", password:"1234"}
-    ]));
-}
+let asesor="";
 
 // LOGIN
 function login(){
+let user=usuario.value.trim();
+let pass=clave.value.trim();
 
-let loginDiv = document.getElementById("loginDiv");
-let dashboard = document.getElementById("dashboard");
-let nombreAsesor = document.getElementById("nombreAsesor");
+if(user==="admin" && pass==="1234"){
+asesor=user;
+nombreAsesor.innerText=asesor;
+loginDiv.style.display="none";
+dashboard.style.display="block";
+return;
+}
 
-let user = document.getElementById("usuario").value.trim().toLowerCase();
-let pass = document.getElementById("clave").value.trim();
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-
-let encontrado = usuarios.find(u => 
-    u.usuario === user && u.password === pass
-);
+let encontrado=usuarios.find(u=>u.user===user && u.pass===pass);
 
 if(encontrado){
-    asesor=user;
-    nombreAsesor.innerText=asesor;
-    loginDiv.style.display="none";
-    dashboard.style.display="block";
-} else {
-    alert("Usuario o clave incorrectos");
+asesor=user;
+nombreAsesor.innerText=asesor;
+loginDiv.style.display="none";
+dashboard.style.display="block";
+}else{
+alert("❌ Usuario o clave incorrectos");
 }
 }
 function eliminarUsuarioManual(){
@@ -228,78 +219,60 @@ alert("✅ Usuario eliminado");
 // SIMULADOR
 function calcular(){
 
-    let P = parseFloat(monto.value);
-    let t = parseFloat(tasa.value)/100;
-    let n = parseInt(plazo.value);
+let P = parseFloat(monto.value);
+let t = parseFloat(tasa.value)/100;
+let n = parseInt(plazo.value);
 
-    if(!P || !t || !n){
-        alert("Completa datos");
-        return;
-    }
-
-    // 🔥 convertir tasa correctamente
-    let i = 0;
-
-    if(producto.value==="diario"){
-        i = Math.pow(1+t,1/30)-1;
-    }
-    if(producto.value==="semanal"){
-        i = Math.pow(1+t,1/4)-1;
-    }
-    if(producto.value==="quincenal"){
-        i = Math.pow(1+t,1/2)-1;
-    }
-    if(producto.value==="mensual"){
-        i = t;
-    }
-
-    // 🔥 calcular cuota base (sin IGV)
-    let cuotaBase = (P*i)/(1-Math.pow(1+i,-n));
-    let cuotaFija = cuotaBase * 1.18;
-    cuotaFija = parseFloat(cuotaFija.toFixed(2));
-    let cronogramaHTML = "";
-    let total = 0;
-    let totalInteres = 0;
-
-    for(let k=1; k<=n; k++){
-
-    let interes = saldo * i;
-    let igv = interes * 0.18;
-
-        // 🔥 redondeo EXACTO como sistema
-     interes = parseFloat(interes.toFixed(2));
-     igv = parseFloat(igv.toFixed(2));
-
-     let cuota = cuotaFija;
-     cuota = parseFloat(cuota.toFixed(2));
-
-    let amortizacion = cuota - interes - igv;
-    amortizacion = parseFloat(amortizacion.toFixed(2));
-if(k === n){
-    amortizacion = saldo;
-    cuota = amortizacion + interes + igv;
-    cuota = parseFloat(cuota.toFixed(2));
-    saldo = 0;
+if(!P || !t || !n){
+alert("Completa datos");
+return;
 }
-     cronogramaHTML += `
-    <div class="card">
-     <b>Cuota ${k}</b><br>
-    Interés: S/ ${interes}<br>
-    IGV: S/ ${igv}<br>
-    Amortización: S/ ${amortizacion}<br>
-    Cuota: S/ ${cuota}<br>
-    Saldo: S/ ${saldo}
-    </div><br>`;
-    }
 
-    resultado.innerHTML = `
-    <b>Cuota:</b> S/ ${cuotaFija.toFixed(2)}<br>
-    <b>Total a pagar:</b> S/ ${total.toFixed(2)}<br>
-    <b>Interés:</b> S/ ${totalInteres.toFixed(2)}<br><br>
-    <b>Cronograma:</b><br>
-    ${cronogramaHTML}
-    `;
+// 🔥 definir tipo
+let i = 0;
+let dias = 0;
+
+if(producto.value==="diario"){ i=t/30; dias=1; }
+if(producto.value==="semanal"){ i=t/4; dias=7; }
+if(producto.value==="quincenal"){ i=t/2; dias=15; }
+if(producto.value==="mensual"){ i=t; dias=30; }
+
+// 🔥 fórmula financiera
+let cuota = (P*i)/(1-Math.pow(1+i,-n));
+let total = cuota * n;
+let interes = total - P;
+
+// 🔥 resumen completo
+resultado.innerHTML = `
+<b>Cuota:</b> S/ ${cuota.toFixed(2)}<br>
+<b>Total a pagar:</b> S/ ${total.toFixed(2)}<br>
+<b>Interés:</b> S/ ${interes.toFixed(2)}
+`;
+
+// 🔥 cronograma REAL
+let saldo = P;
+let fecha = new Date();
+let html = "<h4>Cronograma:</h4>";
+
+for(let c=1;c<=n;c++){
+
+let interesCuota = saldo * i;
+let capital = cuota - interesCuota;
+saldo -= capital;
+
+fecha.setDate(fecha.getDate()+dias);
+
+html += `
+<div class="item">
+Cuota ${c}<br>
+Fecha: ${fecha.toLocaleDateString()}<br>
+Cuota: S/ ${cuota.toFixed(2)}<br>
+Saldo: S/ ${saldo.toFixed(2)}
+</div>`;
 }
+
+cronograma.innerHTML = html;
+
 // guardar para WhatsApp
 window.simData = {
 monto:P,
@@ -445,77 +418,21 @@ style="background:#28a745;color:white;border:none;padding:6px 10px;border-radius
 </div>`;
 });
 }
+function marcarCancelado(id){
 
-function renderCartera(){
+  let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
-let data = JSON.parse(localStorage.getItem("cartera")) || [];
-let total = data.length;
-let monto = data.reduce((a,c)=>a+(parseFloat(c.monto)||0),0);
-let mora = data.filter(c=>c.retraso>0).length;
+  let cliente = data.find(c => c.celular == id);
 
-let porcentajeMora = total > 0 ? ((mora / total) * 100).toFixed(1) : 0;
+  if(!cliente) return;
 
-let colorMora = "#2ecc71";
-if(porcentajeMora > 10) colorMora = "#f1c40f";
-if(porcentajeMora > 20) colorMora = "#e74c3c";
-// 🔥 AGRUPAR POR ASESOR
-let asesores = {};
+  if(!confirm("Marcar como cancelado?")) return;
 
-data.forEach(c=>{
-let asesor = c.asesor || "Sin asesor";
+  cliente.estado = "cancelado";
 
-if(!asesores[asesor]){
-asesores[asesor] = {
-clientes:0,
-monto:0,
-mora:0
-};
-}
+  localStorage.setItem("cartera", JSON.stringify(data));
 
-asesores[asesor].clientes++;
-asesores[asesor].monto += parseFloat(c.monto)||0;
-if(c.retraso>0) asesores[asesor].mora++;
-
-});
-
-// 🔥 CONVERTIR A ARRAY Y ORDENAR (RANKING)
-let ranking = Object.entries(asesores).map(([nombre,data])=>({
-nombre,
-...data
-}));
-
-ranking.sort((a,b)=>b.monto-a.monto);
-
-// 🔥 HTML
-let html = `<div class="item" style="background:#123B63;color:white">
-<b>🏆 Ranking de Asesores</b>
-</div>`;
-
-ranking.forEach((a,i)=>{
-
-let color = "#2ecc71";
-if(a.mora > 10) color="#f1c40f";
-if(a.mora > 20) color="#e74c3c";
-
-html += `
-<div class="item" style="border-left:6px solid ${color}">
-<b>#${i+1} ${a.nombre}</b><br>
-👥 Clientes: ${a.clientes}<br>
-💰 Cartera: S/ ${a.monto.toFixed(2)}<br>
-🔴 Mora: ${a.mora}
-</div>
-`;
-});
-
-let resumen = `
-<div class="item">
-<b>Total clientes:</b> ${total}<br>
-<b>Total cartera:</b> S/ ${monto.toFixed(2)}<br>
-<b>En mora:</b> ${mora}<br>
-<b style="color:${colorMora}">Mora %:</b> ${porcentajeMora}%
-</div>
-`;
-resumenCartera.innerHTML = resumen + html;
+  renderClientes();
 }
 // USUARIOS
 function crearUsuario(){
@@ -543,7 +460,7 @@ let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
 lista.innerHTML="";
 usuarios.forEach(u=>{
-lista.innerHTML+=`<div class="item">${u.user}</div>`;
+lista.innerHTML+=<div class="item">${u.user}</div>;
 });
 }
 
@@ -577,7 +494,7 @@ function cerrarQR(){modalQR.style.display="none";}
 // GPS
 function enviarUbicacion(){
 navigator.geolocation.getCurrentPosition(pos=>{
-let link=`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+let link=https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude};
 window.open("https://wa.me/?text="+encodeURIComponent(link));
 });
 }
@@ -602,27 +519,7 @@ Gracias por confiar en Credicompany 🤝`;
 window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 
 }
-function mostrar(p){
 
-document.getElementById("dashboard").style.display="none";
-document.getElementById("app").style.display="block";
-
-["simulador","clientes","pagos","admin","cartera"].forEach(id=>{
-let el = document.getElementById(id);
-if(el) el.style.display="none";
-});
-
-document.getElementById(p).style.display="block";
-
-if(p==="clientes") renderClientes();
-if(p==="admin") renderUsuarios();
-if(p==="cartera") renderCartera();
-
-}
-  function volver(){
-document.getElementById("app").style.display="none";
-document.getElementById("dashboard").style.display="block";
-}
 </script>
 
 </body>

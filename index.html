@@ -251,42 +251,42 @@ function calcular(){
 
     // 🔥 calcular cuota base (sin IGV)
     let cuotaBase = (P*i)/(1-Math.pow(1+i,-n));
-
-    let saldo = P;
+    let cuotaFija = cuotaBase * 1.18;
+    cuotaFija = parseFloat(cuotaFija.toFixed(2));
     let cronogramaHTML = "";
     let total = 0;
     let totalInteres = 0;
 
     for(let k=1; k<=n; k++){
 
-        let interes = saldo * i;
-        let igv = interes * 0.18;
+    let interes = saldo * i;
+    let igv = interes * 0.18;
 
         // 🔥 redondeo EXACTO como sistema
-        interes = parseFloat(interes.toFixed(2));
-        igv = parseFloat(igv.toFixed(2));
+     interes = parseFloat(interes.toFixed(2));
+     igv = parseFloat(igv.toFixed(2));
 
-        let cuota = cuotaBase + igv;
-        cuota = parseFloat(cuota.toFixed(2));
+     let cuota = cuotaFija;
+     cuota = parseFloat(cuota.toFixed(2));
 
-        let amortizacion = cuota - interes - igv;
-        amortizacion = parseFloat(amortizacion.toFixed(2));
+    let amortizacion = cuota - interes - igv;
+    amortizacion = parseFloat(amortizacion.toFixed(2));
 
-        saldo = saldo - amortizacion;
-        saldo = parseFloat(saldo.toFixed(2));
+     saldo = saldo - amortizacion;
+     saldo = parseFloat(saldo.toFixed(2));
 
-        total += cuota;
-        totalInteres += interes;
+     total += cuota;
+     totalInteres += interes;
 
-        cronogramaHTML += `
-        <div class="card">
-            <b>Cuota ${k}</b><br>
-            Interés: S/ ${interes}<br>
-            IGV: S/ ${igv}<br>
-            Amortización: S/ ${amortizacion}<br>
-            Cuota: S/ ${cuota}<br>
-            Saldo: S/ ${saldo}
-        </div><br>`;
+     cronogramaHTML += `
+    <div class="card">
+     <b>Cuota ${k}</b><br>
+    Interés: S/ ${interes}<br>
+    IGV: S/ ${igv}<br>
+    Amortización: S/ ${amortizacion}<br>
+    Cuota: S/ ${cuota}<br>
+    Saldo: S/ ${saldo}
+    </div><br>`;
     }
 
     resultado.innerHTML = `

@@ -319,23 +319,26 @@ let headers=raw[headerIndex];
 let dataRows=raw.slice(headerIndex+1);
 
 let json=dataRows.map(r=>{
-
-let obj={
-nombre:"",
-asesor:"",
-monto:"",
-retraso:0,
-celular:"",
-producto:"",
-direccion:"",
-distrito:""
+  
+let values = r.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
+values = values.map(v => v.replace(/^"|"$/g, "").trim());
+  
+let obj = {
+  nombre:"",
+  asesor:"",
+  monto:"",
+  retraso:0,
+  celular:"",
+  producto:"",
+  direccion:"",
+  distrito:""
 };
 
 headers.forEach((h,i)=>{
 if(!h)return;
 
 let key=h.toString().toLowerCase().replace(/\s+/g,"");
-let val=r[i]||"";
+let val = values[i] || "";
 
 if(key.includes("nombre")) obj.nombre=val;
 if(key.includes("asesor")) obj.asesor=val;

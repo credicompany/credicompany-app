@@ -180,17 +180,15 @@ let nombreAsesor = document.getElementById("nombreAsesor");
 let user = document.getElementById("usuario").value.trim().toLowerCase();
 let pass = document.getElementById("clave").value.trim();
 
-alert("USER:[" + user + "] PASS:[" + pass + "]");
-
 if(user === "admin" && pass === "1234"){
     asesor=user;
     nombreAsesor.innerText=asesor;
     loginDiv.style.display="none";
     dashboard.style.display="block";
-    return;
+} else {
+    alert("Usuario o clave incorrectos");
 }
 }
-
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
 let encontrado = usuarios.find(u => u.usuario === user && u.password === pass);

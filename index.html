@@ -271,13 +271,12 @@ function calcular(){
 
     let amortizacion = cuota - interes - igv;
     amortizacion = parseFloat(amortizacion.toFixed(2));
-
-     saldo = saldo - amortizacion;
-     saldo = parseFloat(saldo.toFixed(2));
-
-     total += cuota;
-     totalInteres += interes;
-
+if(k === n){
+    amortizacion = saldo;
+    cuota = amortizacion + interes + igv;
+    cuota = parseFloat(cuota.toFixed(2));
+    saldo = 0;
+}
      cronogramaHTML += `
     <div class="card">
      <b>Cuota ${k}</b><br>
@@ -290,7 +289,7 @@ function calcular(){
     }
 
     resultado.innerHTML = `
-    <b>Cuota:</b> S/ ${cuotaBase.toFixed(2)}<br>
+    <b>Cuota:</b> S/ ${cuotaFija.toFixed(2)}<br>
     <b>Total a pagar:</b> S/ ${total.toFixed(2)}<br>
     <b>Interés:</b> S/ ${totalInteres.toFixed(2)}<br><br>
     <b>Cronograma:</b><br>

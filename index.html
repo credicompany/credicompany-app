@@ -364,7 +364,7 @@ async function cargarExcelOnline(){
 
 try{
 
-let res = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6ukVwqfce1e2sB7MeWs-QtsbXCnd-3HW5torahoWAa4moG2SPtK9zIxZQMKOH4N0rhikyeCwfquGF/pub?gid=1644347369&single=true&output=csv");
+let res = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-...&t=" + new Date().getTime());
 
 let text = await res.text();
 

@@ -224,60 +224,79 @@ alert("✅ Usuario eliminado");
 // SIMULADOR
 function calcular(){
 
-let P = parseFloat(monto.value);
-let t = parseFloat(tasa.value)/100;
-let n = parseInt(plazo.value);
+    let P = parseFloat(monto.value);
+    let t = parseFloat(tasa.value)/100;
+    let n = parseInt(plazo.value);
 
-if(!P || !t || !n){
-alert("Completa datos");
-return;
+    if(!P || !t || !n){
+        alert("Completa datos");
+        return;
+    }
+
+    // 🔥 convertir tasa correctamente
+    let i = 0;
+
+    if(producto.value==="diario"){
+        i = Math.pow(1+t,1/30)-1;
+    }
+    if(producto.value==="semanal"){
+        i = Math.pow(1+t,1/4)-1;
+    }
+    if(producto.value==="quincenal"){
+        i = Math.pow(1+t,1/2)-1;
+    }
+    if(producto.value==="mensual"){
+        i = t;
+    }
+
+    // 🔥 calcular cuota base (sin IGV)
+    let cuotaBase = (P*i)/(1-Math.pow(1+i,-n));
+
+    let saldo = P;
+    let cronogramaHTML = "";
+    let total = 0;
+    let totalInteres = 0;
+
+    for(let k=1; k<=n; k++){
+
+        let interes = saldo * i;
+        let igv = interes * 0.18;
+
+        // 🔥 redondeo EXACTO como sistema
+        interes = parseFloat(interes.toFixed(2));
+        igv = parseFloat(igv.toFixed(2));
+
+        let cuota = cuotaBase + igv;
+        cuota = parseFloat(cuota.toFixed(2));
+
+        let amortizacion = cuota - interes - igv;
+        amortizacion = parseFloat(amortizacion.toFixed(2));
+
+        saldo = saldo - amortizacion;
+        saldo = parseFloat(saldo.toFixed(2));
+
+        total += cuota;
+        totalInteres += interes;
+
+        cronogramaHTML += `
+        <div class="card">
+            <b>Cuota ${k}</b><br>
+            Interés: S/ ${interes}<br>
+            IGV: S/ ${igv}<br>
+            Amortización: S/ ${amortizacion}<br>
+            Cuota: S/ ${cuota}<br>
+            Saldo: S/ ${saldo}
+        </div><br>`;
+    }
+
+    resultado.innerHTML = `
+    <b>Cuota:</b> S/ ${cuotaBase.toFixed(2)}<br>
+    <b>Total a pagar:</b> S/ ${total.toFixed(2)}<br>
+    <b>Interés:</b> S/ ${totalInteres.toFixed(2)}<br><br>
+    <b>Cronograma:</b><br>
+    ${cronogramaHTML}
+    `;
 }
-
-// 🔥 definir tipo
-let i = 0;
-let dias = 0;
-
-if(producto.value==="diario"){ i=Math.pow(1+t,1/30)-1; dias=1; }
-if(producto.value==="semanal"){ i=Math.pow(1+t,1/4)-1; dias=7; }
-if(producto.value==="quincenal"){ i=Math.pow(1+t,1/2)-1; dias=15; }
-if(producto.value==="mensual"){ i=t; dias=30; }
-
-// 🔥 fórmula financiera
-let cuota = (P*i)/(1-Math.pow(1+i,-n));
-let total = cuota * n;
-let interes = total - P;
-
-// 🔥 resumen completo
-resultado.innerHTML = `
-<b>Cuota:</b> S/ ${cuota.toFixed(2)}<br>
-<b>Total a pagar:</b> S/ ${total.toFixed(2)}<br>
-<b>Interés:</b> S/ ${interes.toFixed(2)}
-`;
-
-// 🔥 cronograma REAL
-let saldo = P;
-let fecha = new Date();
-let html = "<h4>Cronograma:</h4>";
-
-for(let c=1;c<=n;c++){
-
-let interesCuota = saldo * i;
-let capital = cuota - interesCuota;
-saldo -= capital;
-
-fecha.setDate(fecha.getDate()+dias);
-
-html += `
-<div class="item">
-Cuota ${c}<br>
-Fecha: ${fecha.toLocaleDateString()}<br>
-Cuota: S/ ${cuota.toFixed(2)}<br>
-Saldo: S/ ${saldo.toFixed(2)}
-</div>`;
-}
-
-cronograma.innerHTML = html;
-
 // guardar para WhatsApp
 window.simData = {
 monto:P,

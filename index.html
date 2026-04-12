@@ -48,11 +48,10 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <div id="dashboard" style="display:none">
 <div class="grid">
 <div class="box" onclick="mostrar('simulador')">💰 Simulación</div>
-<div class="box" onclick="mostrar('Cobranza')">👥 Cobranza</div>
+<div class="box" onclick="mostrar('clientes')">👥 Clientes</div>
 <div class="box" onclick="mostrar('pagos')">💳 Pagos</div>
 <div class="box" onclick="enviarUbicacion()">📍 Ubicación</div>
 <div class="box" onclick="mostrar('admin')">⚙️ Usuarios</div>
-<div class="box" onclick="mostrar('cartera')">📊 Cartera Total</div>
 </div>
 </div>
 
@@ -117,10 +116,8 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <div id="listaClientes"></div>
 </div>
 
-<<div id="cartera" class="card" style="display:none">
-  <div class="volver" onclick="volver()">← Volver</div>
-  <h3>Cartera Total</h3>
-</div>
+<div id="admin" class="card" style="display:none">
+<div class="volver" onclick="volver()">← Volver</div>
 
 <input id="nuevoUser" placeholder="Usuario">
 <input id="nuevoPass" placeholder="Clave">
@@ -235,25 +232,10 @@ return;
 let i = 0;
 let dias = 0;
 
-if(producto.value==="diario"){ 
-  i = Math.pow(1 + t, 1/30) - 1; 
-  dias = 1; 
-}
-
-if(producto.value==="semanal"){ 
-  i = Math.pow(1 + t, 1/4) - 1; 
-  dias = 7; 
-}
-
-if(producto.value==="quincenal"){ 
-  i = Math.pow(1 + t, 1/2) - 1; 
-  dias = 15; 
-}
-
-if(producto.value==="mensual"){ 
-  i = t; 
-  dias = 30; 
-}
+if(producto.value==="diario"){ i=t/30; dias=1; }
+if(producto.value==="semanal"){ i=t/4; dias=7; }
+if(producto.value==="quincenal"){ i=t/2; dias=15; }
+if(producto.value==="mensual"){ i=t; dias=30; }
 
 // 🔥 fórmula financiera
 let cuota = (P*i)/(1-Math.pow(1+i,-n));
@@ -388,7 +370,7 @@ let lista=listaClientes;
 lista.innerHTML="";
 
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
-data = data.filter(c => c.estado !== "cancelado");
+
 let filtrados=data.filter(c=>{
 let r=parseFloat(c.retraso)||0;
 return r>=min && r<=max;
@@ -420,38 +402,18 @@ if(c.retraso>60) color="black";
 
 lista.innerHTML+=`
 <div class="item" style="border-left:6px solid ${color}">
-  <b>${c.nombre}</b><br>
-  💰 ${c.monto}<br>
-  📅 ${c.retraso} días<br>
-  👤 ${c.asesor}<br>
-  📞 ${c.celular}<br>
-  📦 ${c.producto}<br>
-  📍 ${c.direccion}<br>
-  🏙️ ${c.distrito}<br>
-
-  <button onclick="marcarCancelado('${c.celular}')"
-style="background:#28a745;color:white;border:none;padding:6px 10px;border-radius:6px;margin-top:8px;">
-  ✅ Cancelado
-  </button>
+<b>${c.nombre}</b><br>
+💰 ${c.monto}<br>
+📅 ${c.retraso} días<br>
+👤 ${c.asesor}<br>
+📞 ${c.celular}<br>
+📦 ${c.producto}<br>
+📍 ${c.direccion}<br>
+🏙️ ${c.distrito}
 </div>`;
 });
 }
-function marcarCancelado(id){
 
-  let data = JSON.parse(localStorage.getItem("cartera")) || [];
-
-  let cliente = data.find(c => c.celular == id);
-
-  if(!cliente) return;
-
-  if(!confirm("Marcar como cancelado?")) return;
-
-  cliente.estado = "cancelado";
-
-  localStorage.setItem("cartera", JSON.stringify(data));
-
-  renderClientes();
-}
 // USUARIOS
 function crearUsuario(){
 let user=nuevoUser.value.trim();

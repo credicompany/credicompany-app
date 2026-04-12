@@ -122,14 +122,17 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <h3>Cartera Total</h3>
 </div>
 
-<input id="nuevoUser" placeholder="Usuario">
-<input id="nuevoPass" placeholder="Clave">
+<div id="admin" class="card" style="display:none">
+  <div class="volver" onclick="volver()">← Volver</div>
 
-<button class="btn-verde" onclick="crearUsuario()">Crear Usuario</button>
-<button class="btn-naranja" onclick="eliminarUsuarioManual()">
-Eliminar Usuario
-</button>
-<div id="listaUsuarios"></div>
+  <input id="nuevoUser" placeholder="Usuario">
+  <input id="nuevoPass" placeholder="Clave">
+
+  <button class="btn-verde" onclick="crearUsuario()">Crear Usuario</button>
+  <button class="btn-naranja" onclick="eliminarUsuarioManual()">Eliminar Usuario</button>
+
+  <div id="listaUsuarios"></div>
+</div>
 </div>
 <div id="pagos" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>

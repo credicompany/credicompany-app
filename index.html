@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache">
+
 <title>Credicompany</title>
+
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
 <style>
 body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}
 .header{display:flex;flex-direction:column;align-items:center;padding:20px;}
@@ -37,12 +41,14 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <div>Asesor: <span id="nombreAsesor">-</span></div>
 </div>
 
+<!-- LOGIN -->
 <div id="loginDiv" class="card">
 <input id="usuario" placeholder="Usuario">
 <input id="clave" type="password" placeholder="Clave">
 <button class="btn-verde" onclick="login()">Ingresar</button>
 </div>
 
+<!-- DASHBOARD -->
 <div id="dashboard" style="display:none">
 <div class="grid">
 <div class="box" onclick="mostrar('simulador')">💰 Simulación</div>
@@ -53,8 +59,10 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 </div>
 </div>
 
+<!-- APP -->
 <div id="app" style="display:none">
 
+<!-- SIMULADOR -->
 <div id="simulador" class="card">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -86,6 +94,7 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <button class="btn-naranja" onclick="limpiar()">Limpiar</button>
 </div>
 
+<!-- CLIENTES -->
 <div id="clientes" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -114,6 +123,7 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <div id="listaClientes"></div>
 </div>
 
+<!-- ADMIN -->
 <div id="admin" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -121,36 +131,30 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <input id="nuevoPass" placeholder="Clave">
 
 <button class="btn-verde" onclick="crearUsuario()">Crear Usuario</button>
-<button class="btn-naranja" onclick="eliminarUsuarioManual()">
-Eliminar Usuario
-</button>
+
 <div id="listaUsuarios"></div>
 </div>
+
+<!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
 <div class="pagos-container">
-
 <div class="pago-box" onclick="abrirQR(this)">
-<img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg">
+<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image.jpg">
 </div>
-
 <div class="pago-box" onclick="abrirQR(this)">
-<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg">
+<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image.jpg">
 </div>
-
 <div class="pago-box" onclick="abrirQR(this)">
-<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg">
+<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image.jpg">
 </div>
-
-<div class="pago-box" onclick="abrirQR(this)">
-<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg">0j
-
 </div>
 </div>
 
 </div>
 
+<!-- MODAL -->
 <div id="modalQR" class="modal" onclick="cerrarQR()">
 <img id="imgQR">
 </div>
@@ -161,8 +165,8 @@ let asesor="";
 
 // LOGIN
 function login(){
-let user=usuario.value.trim();
-let pass=clave.value.trim();
+let user=usuario.value;
+let pass=clave.value;
 
 if(user==="admin" && pass==="1234"){
 asesor=user;
@@ -182,75 +186,41 @@ nombreAsesor.innerText=asesor;
 loginDiv.style.display="none";
 dashboard.style.display="block";
 }else{
-alert("❌ Usuario o clave incorrectos");
+alert("Usuario incorrecto");
 }
 }
 
 // SIMULADOR
 function calcular(){
+let P=parseFloat(monto.value);
+let t=parseFloat(tasa.value)/100;
+let n=parseInt(plazo.value);
 
-let P = parseFloat(monto.value);
-let t = parseFloat(tasa.value)/100;
-let n = parseInt(plazo.value);
+let i=0,dias=0;
 
-if(!P || !t || !n){
-alert("Completa datos");
-return;
-}
+if(producto.value==="diario"){i=t/30;dias=1;}
+if(producto.value==="semanal"){i=t/4;dias=7;}
+if(producto.value==="quincenal"){i=t/2;dias=15;}
+if(producto.value==="mensual"){i=t;dias=30;}
 
-// 🔥 definir tipo
-let i = 0;
-let dias = 0;
+let cuota=(P*i)/(1-Math.pow(1+i,-n));
 
-if(producto.value==="diario"){ i=t/30; dias=1; }
-if(producto.value==="semanal"){ i=t/4; dias=7; }
-if(producto.value==="quincenal"){ i=t/2; dias=15; }
-if(producto.value==="mensual"){ i=t; dias=30; }
+resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
 
-// 🔥 fórmula financiera
-let cuota = (P*i)/(1-Math.pow(1+i,-n));
-let total = cuota * n;
-let interes = total - P;
+window.simData={monto:P,cuota:cuota.toFixed(2),producto:producto.value};
 
-// 🔥 resumen completo
-resultado.innerHTML = `
-<b>Cuota:</b> S/ ${cuota.toFixed(2)}<br>
-<b>Total a pagar:</b> S/ ${total.toFixed(2)}<br>
-<b>Interés:</b> S/ ${interes.toFixed(2)}
-`;
-
-// 🔥 cronograma REAL
-let saldo = P;
-let fecha = new Date();
-let html = "<h4>Cronograma:</h4>";
+let saldo=P,fecha=new Date(),html="<h4>Cronograma:</h4>";
 
 for(let c=1;c<=n;c++){
-
-let interesCuota = saldo * i;
-let capital = cuota - interesCuota;
-saldo -= capital;
-
+let interes=saldo*i;
+let capital=cuota-interes;
+saldo-=capital;
 fecha.setDate(fecha.getDate()+dias);
 
-html += `
-<div class="item">
-Cuota ${c}<br>
-Fecha: ${fecha.toLocaleDateString()}<br>
-Cuota: S/ ${cuota.toFixed(2)}<br>
-Saldo: S/ ${saldo.toFixed(2)}
-</div>`;
+html+=`<div class="item">Cuota ${c} - ${fecha.toLocaleDateString()}<br>Saldo: S/ ${saldo.toFixed(2)}</div>`;
 }
 
-cronograma.innerHTML = html;
-
-// guardar para WhatsApp
-window.simData = {
-monto:P,
-cuota:cuota.toFixed(2),
-total:total.toFixed(2),
-producto:producto.value
-};
-
+cronograma.innerHTML=html;
 }
 
 // LIMPIAR
@@ -260,7 +230,7 @@ resultado.innerHTML="";
 cronograma.innerHTML="";
 }
 
-// EXCEL MEJORADO
+// EXCEL
 function cargarExcel(){
 
 let file=document.getElementById("excelFile").files[0];
@@ -273,13 +243,14 @@ reader.onload=function(e){
 let data=new Uint8Array(e.target.result);
 let workbook=XLSX.read(data,{type:'array'});
 let hoja=workbook.Sheets[workbook.SheetNames[0]];
+
 let raw=XLSX.utils.sheet_to_json(hoja,{header:1});
 
 let headerIndex=0;
 
 for(let i=0;i<raw.length;i++){
 let row=(raw[i]||[]).join(" ").toLowerCase();
-if(row.includes("nombre") && row.includes("producto")){
+if(row.includes("nombre") && row.includes("monto")){
 headerIndex=i;
 break;
 }
@@ -289,32 +260,24 @@ let headers=raw[headerIndex];
 let dataRows=raw.slice(headerIndex+1);
 
 let json=dataRows.map(r=>{
-
-let obj={
-nombre:"",
-asesor:"",
-monto:"",
-retraso:0,
-celular:"",
-producto:"",
-direccion:"",
-distrito:""
-};
+let obj={};
 
 headers.forEach((h,i)=>{
 if(!h)return;
 
-let key=h.toString().toLowerCase().replace(/\s+/g,"");
+let key=h.toString().toLowerCase().replace(/\s+/g,'');
+
 let val=r[i]||"";
 
 if(key.includes("nombre")) obj.nombre=val;
-if(key.includes("asesor")) obj.asesor=val;
-if(key.includes("cuota_mora")) obj.monto=val;
-if(key.includes("dias") || key.includes("retraso")) obj.retraso=parseFloat(val)||0;
-if(key.includes("telefono") || key.includes("celular")) obj.celular=val;
+if(key.includes("paterno")) obj.apePat=val;
+if(key.includes("materno")) obj.apeMat=val;
+if(key.includes("monto")) obj.monto=val;
+if(key.includes("retraso")) obj.retraso=val;
 if(key.includes("producto")) obj.producto=val;
+if(key.includes("asesor")) obj.asesor=val;
 if(key.includes("direccion")) obj.direccion=val;
-if(key.includes("distrito")) obj.distrito=val;
+if(key.includes("celular")||key.includes("telefono")) obj.celular=val;
 
 });
 
@@ -324,19 +287,17 @@ return obj;
 localStorage.setItem("cartera",JSON.stringify(json));
 renderClientes();
 
-alert("✅ Excel cargado: "+json.length);
-
 };
 
 reader.readAsArrayBuffer(file);
 }
 
-// CLIENTES + RESUMEN
+// CLIENTES
 function renderClientes(){filtrarMora(0,1000);}
 
 function filtrarMora(min,max){
 
-let lista=listaClientes;
+let lista=document.getElementById("listaClientes");
 lista.innerHTML="";
 
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
@@ -346,25 +307,10 @@ let r=parseFloat(c.retraso)||0;
 return r>=min && r<=max;
 });
 
-let alDia=0,leve=0,medio=0,critico=0;
-
-filtrados.forEach(c=>{
-let r=parseFloat(c.retraso)||0;
-if(r<=8) alDia++;
-else if(r<=30) leve++;
-else if(r<=60) medio++;
-else critico++;
-});
-
-lista.innerHTML+=`
-<div class="item" style="background:#123B63;color:white">
-<b>📊 Resumen</b><br>
-🟢 ${alDia} | 🟡 ${leve} | 🔴 ${medio} | ⚫ ${critico}
-</div>`;
-
 filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
 
 filtrados.forEach(c=>{
+
 let color="#2ecc71";
 if(c.retraso>8) color="#f1c40f";
 if(c.retraso>30) color="#e74c3c";
@@ -372,16 +318,16 @@ if(c.retraso>60) color="black";
 
 lista.innerHTML+=`
 <div class="item" style="border-left:6px solid ${color}">
-<b>${c.nombre}</b><br>
-💰 ${c.monto}<br>
-📅 ${c.retraso} días<br>
-👤 ${c.asesor}<br>
-📞 ${c.celular}<br>
-📦 ${c.producto}<br>
-📍 ${c.direccion}<br>
-🏙️ ${c.distrito}
+<b>${c.nombre||""} ${c.apePat||""} ${c.apeMat||""}</b><br>
+Monto: S/ ${c.monto||0}<br>
+Producto: ${c.producto||"-"}<br>
+Retraso: ${c.retraso||0} días<br>
+👤 ${c.asesor||"-"}<br>
+📍 ${c.direccion||"-"}<br>
+📞 ${c.celular||"-"}
 </div>`;
 });
+
 }
 
 // USUARIOS
@@ -389,23 +335,16 @@ function crearUsuario(){
 let user=nuevoUser.value.trim();
 let pass=nuevoPass.value.trim();
 
-if(!user || !pass) return alert("Completar");
-
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
-
-if(usuarios.find(u=>u.user===user)) return alert("Existe");
 
 usuarios.push({user,pass});
 localStorage.setItem("usuarios",JSON.stringify(usuarios));
-
-nuevoUser.value="";
-nuevoPass.value="";
 
 renderUsuarios();
 }
 
 function renderUsuarios(){
-let lista=listaUsuarios;
+let lista=document.getElementById("listaUsuarios");
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
 lista.innerHTML="";
@@ -419,9 +358,10 @@ function mostrar(p){
 dashboard.style.display="none";
 app.style.display="block";
 
-["simulador","clientes","pagos","admin"].forEach(id=>{
-document.getElementById(id).style.display="none";
-});
+simulador.style.display="none";
+clientes.style.display="none";
+pagos.style.display="none";
+admin.style.display="none";
 
 document.getElementById(p).style.display="block";
 
@@ -451,23 +391,13 @@ window.open("https://wa.me/?text="+encodeURIComponent(link));
 
 // WHATSAPP
 function enviarSimulacion(){
-
-if(!window.simData){
-alert("Primero realiza la simulación");
-return;
+let msg=`Monto: S/ ${simData.monto}\nCuota: S/ ${simData.cuota}\nProducto: ${simData.producto}`;
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
 }
 
-let msg = `📊 SIMULACIÓN CREDICOMPANY
-
-💼 Producto: ${simData.producto.toUpperCase()}
-💰 Monto: S/ ${simData.monto}
-💳 Cuota: S/ ${simData.cuota}
-📈 Total a pagar: S/ ${simData.total}
-
-Gracias por confiar en Credicompany 🤝`;
-
-window.open("https://wa.me/?text=" + encodeURIComponent(msg));
-
+function enviarFiltro(){
+let msg=`${cliente.value} ${apellidos.value}\nDNI:${dni.value}`;
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
 }
 
 </script>

@@ -88,8 +88,8 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <div id="cronograma"></div>
 
 <div class="fila">
-<button class="btn-verde" onclick="enviarSimulacion()">Simulación</button>
-<button class="btn-azul" onclick="enviarFiltro()">Filtro</button>
+<button class="btn-verde" onclick="ejecutarSeguro(() => enviarSimulacion(), 'Simulación')">Simulación</button>
+<button class="btn-azul" onclick="ejecutarSeguro(() => enviarFiltro(), 'Filtro')">Filtro</button>
 </div>
 
 <button class="btn-naranja" onclick="limpiar()">Limpiar</button>
@@ -103,7 +103,7 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <input id="c_dni" placeholder="DNI">
 <input id="c_monto" placeholder="Monto">
 
-<button class="btn-verde" onclick="guardarCliente()">Guardar</button>
+<button class="btn-verde" onclick="ejecutarSeguro(() => guardarCliente(), 'Guardar Cliente')">Guardar</button>
 
 <input type="file" id="excelFile" accept=".csv,.xlsx" style="margin-top:15px;">
 <button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>

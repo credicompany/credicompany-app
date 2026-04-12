@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest-v2.json">
+<meta name="theme-color" content="#0a3a63">
 <meta http-equiv="Cache-Control" content="no-cache">
 <title>Credicompany</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
@@ -121,23 +123,31 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <input id="nuevoPass" placeholder="Clave">
 
 <button class="btn-verde" onclick="crearUsuario()">Crear Usuario</button>
-
+<button class="btn-naranja" onclick="eliminarUsuarioManual()">
+Eliminar Usuario
+</button>
 <div id="listaUsuarios"></div>
 </div>
-
 <div id="pagos" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
 <div class="pagos-container">
+
 <div class="pago-box" onclick="abrirQR(this)">
-<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image.jpg">
+<img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg">
 </div>
+
 <div class="pago-box" onclick="abrirQR(this)">
-<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image.jpg">
+<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg">
 </div>
+
 <div class="pago-box" onclick="abrirQR(this)">
-<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image.jpg">
+<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg">
 </div>
+
+<div class="pago-box" onclick="abrirQR(this)">
+<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg">0j
+
 </div>
 </div>
 
@@ -177,40 +187,100 @@ dashboard.style.display="block";
 alert("❌ Usuario o clave incorrectos");
 }
 }
+function eliminarUsuarioManual(){
 
-// SIMULADOR
-function calcular(){
-let P=parseFloat(monto.value);
-let t=parseFloat(tasa.value)/100;
-let n=parseInt(plazo.value);
+let user = document.getElementById("nuevoUser").value.trim();
 
-if(!P || !t || !n) return alert("Completa datos");
-
-let i=0,dias=0;
-
-if(producto.value==="diario"){i=t/30;dias=1;}
-if(producto.value==="semanal"){i=t/4;dias=7;}
-if(producto.value==="quincenal"){i=t/2;dias=15;}
-if(producto.value==="mensual"){i=t;dias=30;}
-
-let cuota=(P*i)/(1-Math.pow(1+i,-n));
-
-resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
-
-window.simData={monto:P,cuota:cuota.toFixed(2),producto:producto.value};
-
-let saldo=P,fecha=new Date(),html="<h4>Cronograma:</h4>";
-
-for(let c=1;c<=n;c++){
-let interes=saldo*i;
-let capital=cuota-interes;
-saldo-=capital;
-fecha.setDate(fecha.getDate()+dias);
-
-html+=`<div class="item">Cuota ${c} - ${fecha.toLocaleDateString()}<br>Saldo: S/ ${saldo.toFixed(2)}</div>`;
+if(!user){
+alert("Ingrese usuario a eliminar");
+return;
 }
 
-cronograma.innerHTML=html;
+let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+let index = usuarios.findIndex(u => u.user === user);
+
+if(index === -1){
+alert("Usuario no encontrado");
+return;
+}
+
+if(!confirm("¿Eliminar usuario?")) return;
+
+usuarios.splice(index,1);
+
+localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+renderUsuarios();
+
+alert("✅ Usuario eliminado");
+
+}
+// SIMULADOR
+function calcular(){
+
+let P = parseFloat(monto.value);
+let t = parseFloat(tasa.value)/100;
+let n = parseInt(plazo.value);
+
+if(!P || !t || !n){
+alert("Completa datos");
+return;
+}
+
+// 🔥 definir tipo
+let i = 0;
+let dias = 0;
+
+if(producto.value==="diario"){ i=t/30; dias=1; }
+if(producto.value==="semanal"){ i=t/4; dias=7; }
+if(producto.value==="quincenal"){ i=t/2; dias=15; }
+if(producto.value==="mensual"){ i=t; dias=30; }
+
+// 🔥 fórmula financiera
+let cuota = (P*i)/(1-Math.pow(1+i,-n));
+let total = cuota * n;
+let interes = total - P;
+
+// 🔥 resumen completo
+resultado.innerHTML = `
+<b>Cuota:</b> S/ ${cuota.toFixed(2)}<br>
+<b>Total a pagar:</b> S/ ${total.toFixed(2)}<br>
+<b>Interés:</b> S/ ${interes.toFixed(2)}
+`;
+
+// 🔥 cronograma REAL
+let saldo = P;
+let fecha = new Date();
+let html = "<h4>Cronograma:</h4>";
+
+for(let c=1;c<=n;c++){
+
+let interesCuota = saldo * i;
+let capital = cuota - interesCuota;
+saldo -= capital;
+
+fecha.setDate(fecha.getDate()+dias);
+
+html += `
+<div class="item">
+Cuota ${c}<br>
+Fecha: ${fecha.toLocaleDateString()}<br>
+Cuota: S/ ${cuota.toFixed(2)}<br>
+Saldo: S/ ${saldo.toFixed(2)}
+</div>`;
+}
+
+cronograma.innerHTML = html;
+
+// guardar para WhatsApp
+window.simData = {
+monto:P,
+cuota:cuota.toFixed(2),
+total:total.toFixed(2),
+producto:producto.value
+};
+
 }
 
 // LIMPIAR
@@ -300,7 +370,7 @@ let lista=listaClientes;
 lista.innerHTML="";
 
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
-
+data = data.filter(c => c.estado !== "cancelado");
 let filtrados=data.filter(c=>{
 let r=parseFloat(c.retraso)||0;
 return r>=min && r<=max;
@@ -332,18 +402,38 @@ if(c.retraso>60) color="black";
 
 lista.innerHTML+=`
 <div class="item" style="border-left:6px solid ${color}">
-<b>${c.nombre}</b><br>
-💰 ${c.monto}<br>
-📅 ${c.retraso} días<br>
-👤 ${c.asesor}<br>
-📞 ${c.celular}<br>
-📦 ${c.producto}<br>
-📍 ${c.direccion}<br>
-🏙️ ${c.distrito}
+  <b>${c.nombre}</b><br>
+  💰 ${c.monto}<br>
+  📅 ${c.retraso} días<br>
+  👤 ${c.asesor}<br>
+  📞 ${c.celular}<br>
+  📦 ${c.producto}<br>
+  📍 ${c.direccion}<br>
+  🏙️ ${c.distrito}<br>
+
+  <button onclick="marcarCancelado('${c.celular}')"
+style="background:#28a745;color:white;border:none;padding:6px 10px;border-radius:6px;margin-top:8px;">
+  ✅ Cancelado
+  </button>
 </div>`;
 });
 }
+function marcarCancelado(id){
 
+  let data = JSON.parse(localStorage.getItem("cartera")) || [];
+
+  let cliente = data.find(c => c.celular == id);
+
+  if(!cliente) return;
+
+  if(!confirm("Marcar como cancelado?")) return;
+
+  cliente.estado = "cancelado";
+
+  localStorage.setItem("cartera", JSON.stringify(data));
+
+  renderClientes();
+}
 // USUARIOS
 function crearUsuario(){
 let user=nuevoUser.value.trim();
@@ -411,13 +501,23 @@ window.open("https://wa.me/?text="+encodeURIComponent(link));
 
 // WHATSAPP
 function enviarSimulacion(){
-let msg=`Monto: S/ ${simData.monto}\nCuota: S/ ${simData.cuota}`;
-window.open("https://wa.me/?text="+encodeURIComponent(msg));
+
+if(!window.simData){
+alert("Primero realiza la simulación");
+return;
 }
 
-function enviarFiltro(){
-let msg=`${cliente.value} ${apellidos.value}`;
-window.open("https://wa.me/?text="+encodeURIComponent(msg));
+let msg = `📊 SIMULACIÓN CREDICOMPANY
+
+💼 Producto: ${simData.producto.toUpperCase()}
+💰 Monto: S/ ${simData.monto}
+💳 Cuota: S/ ${simData.cuota}
+📈 Total a pagar: S/ ${simData.total}
+
+Gracias por confiar en Credicompany 🤝`;
+
+window.open("https://wa.me/?text=" + encodeURIComponent(msg));
+
 }
 
 </script>

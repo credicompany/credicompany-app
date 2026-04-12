@@ -3,8 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="manifest" href="manifest-v2.json">
-<meta name="theme-color" content="#0a3a63">
 <meta http-equiv="Cache-Control" content="no-cache">
 <title>Credicompany</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
@@ -187,35 +185,7 @@ dashboard.style.display="block";
 alert("❌ Usuario o clave incorrectos");
 }
 }
-function eliminarUsuarioManual(){
 
-let user = document.getElementById("nuevoUser").value.trim();
-
-if(!user){
-alert("Ingrese usuario a eliminar");
-return;
-}
-
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-
-let index = usuarios.findIndex(u => u.user === user);
-
-if(index === -1){
-alert("Usuario no encontrado");
-return;
-}
-
-if(!confirm("¿Eliminar usuario?")) return;
-
-usuarios.splice(index,1);
-
-localStorage.setItem("usuarios", JSON.stringify(usuarios));
-
-renderUsuarios();
-
-alert("✅ Usuario eliminado");
-
-}
 // SIMULADOR
 function calcular(){
 

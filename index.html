@@ -520,7 +520,36 @@ window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 
 }
 
-</script>
+<script>
+// 🔒 PROTECCIÓN GLOBAL DE ERRORES (SINCRÓNICOS)
+window.addEventListener("error", function (e) {
+    console.error("❌ Error detectado:", e.message, "en", e.filename, "línea:", e.lineno);
+});
 
+// 🔒 PROTECCIÓN PARA PROMESAS (ASYNC)
+window.addEventListener("unhandledrejection", function (e) {
+    console.error("❌ Error en promesa:", e.reason);
+});
+
+// 🔒 EJECUCIÓN SEGURA
+function ejecutarSeguro(fn, nombre = "Función") {
+    try {
+        const resultado = fn();
+
+        if (resultado instanceof Promise) {
+            return resultado.catch(error => {
+                console.error(`❌ Error async en ${nombre}:`, error);
+                return null;
+            });
+        }
+
+        return resultado;
+
+    } catch (error) {
+        console.error(`❌ Error en ${nombre}:`, error);
+        return null;
+    }
+}
+</script>
 </body>
 </html>

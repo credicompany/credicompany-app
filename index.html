@@ -1,4 +1,4 @@
-o
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -523,7 +523,7 @@ function mostrar(p){
 dashboard.style.display="none";
 app.style.display="block";
 
-["simulador","clientes","pagos","admin"].forEach(id=>{
+["simulador","clientes","pagos","admin","cartera"].forEach(id=>{
 document.getElementById(id).style.display="none";
 });
 
@@ -575,10 +575,71 @@ window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 function enviarFiltro(){
     alert("Filtro en desarrollo");
 }
+function cobrarCliente(nombre, celular, monto, dias){
 
+let mensaje = `💰 COBRANZA CREDICOMPANY
+
+👤 Cliente: ${nombre}
+💵 Deuda: S/ ${parseFloat(monto).toFixed(2)}
+📅 Días de atraso: ${dias}
+
+Por favor realizar el pago a la brevedad 🙏`;
+
+let url = "https://wa.me/";
+
+if(celular && celular.length >= 9){
+  url += celular;
+}
+
+url += "?text=" + encodeURIComponent(mensaje);
+
+window.open(url);
+}
 function guardarCliente(){
-    alert("Guardar cliente en desarrollo");
-}  
+
+let nombre = c_nombre.value.trim();
+let apellidos = c_apellidos.value.trim();
+let dni = c_dni.value.trim();
+let monto = parseFloat(c_monto.value);
+
+if(!nombre || !dni || !monto){
+  alert("Completa datos obligatorios");
+  return;
+}
+
+let cartera = JSON.parse(localStorage.getItem("cartera")) || [];
+
+if(cartera.find(c => c.dni === dni)){
+  alert("Cliente ya existe");
+  return;
+}
+
+let nuevo = {
+  nombre: nombre + " " + apellidos,
+  dni,
+  monto,
+  retraso: 0,
+  asesor: asesor || "Sin asesor",
+  celular: "",
+  producto: "Manual",
+  direccion: "",
+  distrito: "",
+  estado: "activo"
+};
+
+cartera.push(nuevo);
+
+localStorage.setItem("cartera", JSON.stringify(cartera));
+
+alert("✅ Cliente guardado");
+
+c_nombre.value="";
+c_apellidos.value="";
+c_dni.value="";
+c_monto.value="";
+
+renderClientes();
+  }
 </script>
   
 </body>

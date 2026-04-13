@@ -264,10 +264,10 @@ return;
 let i = 0;
 let dias = 0;
 
-if(producto.value==="diario"){ i=t/30; dias=1; }
-if(producto.value==="semanal"){ i=t/4; dias=7; }
-if(producto.value==="quincenal"){ i=t/2; dias=15; }
-if(producto.value==="mensual"){ i=t; dias=30; }
+if(producto.value==="diario"){ i = Math.pow(1+t,1/30)-1; dias=1; }
+if(producto.value==="semanal"){ i = Math.pow(1+t,1/4)-1; dias=7; }
+if(producto.value==="quincenal"){ i = Math.pow(1+t,1/2)-1; dias=15; }
+if(producto.value==="mensual"){ i = t; dias=30; }
 
 // 🔥 fórmula financiera
 let cuota = (P*i)/(1-Math.pow(1+i,-n));

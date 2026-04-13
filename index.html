@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -163,7 +164,14 @@ Eliminar Usuario
 <div id="modalQR" class="modal" onclick="cerrarQR()">
 <img id="imgQR">
 </div>
+<div id="cartera" class="card" style="display:none">
+<div class="volver" onclick="volver()">← Volver</div>
 
+<h3>📊 Cartera</h3>
+
+<div id="listaCartera"></div>
+
+</div>
 <script>
 // 🔒 PROTECCIÓN GLOBAL (ARRIBA DE TODO)
 window.addEventListener("error", function (e) {
@@ -410,8 +418,11 @@ return r>=min && r<=max;
 });
 
 let alDia=0,leve=0,medio=0,critico=0;
+let total = 0;
 
 filtrados.forEach(c=>{
+let monto = parseFloat(c.monto)||0;
+total += monto;  
 let r=parseFloat(c.retraso)||0;
 if(r<=8) alDia++;
 else if(r<=30) leve++;
@@ -422,16 +433,17 @@ else critico++;
 lista.innerHTML+=`
 <div class="item" style="background:#123B63;color:white">
 <b>📊 Resumen</b><br>
+💰 Total: S/ ${total.toFixed(2)}<br>
 🟢 ${alDia} | 🟡 ${leve} | 🔴 ${medio} | ⚫ ${critico}
-</div>`;
-
-filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
+</div>`;  
+filtrados.sort((a,b)=>(parseFloat(b.retraso)||0)-(parseFloat(a.retraso)||0));
 
 filtrados.forEach(c=>{
-let color="#2ecc71";
-if(c.retraso>8) color="#f1c40f";
-if(c.retraso>30) color="#e74c3c";
-if(c.retraso>60) color="black";
+let r = parseFloat(c.retraso)||0;
+
+if(r>8) color="#f1c40f";
+if(r>30) color="#e74c3c";
+if(r>60) color="black";
 
 lista.innerHTML+=`
 <div class="item" style="border-left:6px solid ${color}">

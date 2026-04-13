@@ -439,6 +439,7 @@ lista.innerHTML+=`
 filtrados.sort((a,b)=>(parseFloat(b.retraso)||0)-(parseFloat(a.retraso)||0));
 
 filtrados.forEach(c=>{
+let color = "#2ecc71"; // verde base 
 let r = parseFloat(c.retraso)||0;
 
 if(r>8) color="#f1c40f";
@@ -446,20 +447,28 @@ if(r>30) color="#e74c3c";
 if(r>60) color="black";
 
 lista.innerHTML+=`
-<div class="item" style="border-left:6px solid ${color}">
+<div class="item" style="border-left:6px solid ${color};font-weight:bold">
   <b>${c.nombre}</b><br>
-  💰 ${c.monto}<br>
+  💰 S/ ${parseFloat(c.monto||0).toFixed(2)}
   📅 ${c.retraso} días<br>
   👤 ${c.asesor}<br>
   📞 ${c.celular}<br>
   📦 ${c.producto}<br>
   📍 ${c.direccion}<br>
   🏙️ ${c.distrito}<br>
+  <div style="display:flex;gap:5px;margin-top:8px">
 
-  <button onclick="marcarCancelado('${c.celular}')"
-style="background:#28a745;color:white;border:none;padding:6px 10px;border-radius:6px;margin-top:8px;">
-  ✅ Cancelado
-  </button>
+<button onclick="cobrarCliente('${c.nombre}','${c.celular}','${c.monto}','${c.retraso}')"
+style="background:#25D366;color:white;border:none;padding:6px;border-radius:6px;width:50%">
+📲 Cobrar
+</button>
+
+<button onclick="marcarCancelado('${c.celular}')"
+style="background:#28a745;color:white;border:none;padding:6px;border-radius:6px;width:50%">
+✅ Pagó
+</button>
+
+</div>
 </div>`;
 });
 }

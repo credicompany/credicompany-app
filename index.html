@@ -1,4 +1,4 @@
-k<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -493,8 +493,14 @@ return;
 let msg = `📊 SIMULACIÓN CREDICOMPANY
 
 💼 Producto: ${simData.producto.toUpperCase()}
-💰 Monto: S/ ${simData.monto}
-💳 Cuota: S/ ${simData.cuota}
+💰 Monto aprobado: S/ ${simData.monto}
+💳 Cuota ${simData.producto === "diario" ? "diaria" : simData.producto === "semanal" ? "semanal" : simData.producto === "quincenal" ? "quincenal" : "mensual"}: S/ ${simData.cuota}
+
+✅ SIN TRÁMITES COMPLICADOS
+✅ DESEMBOLSO ÍNTEGRO Y RÁPIDO
+✅ *SIN RETENCIÓN DEL 10%*
+
+¿Deseas que activemos tu crédito hoy mismo? 🚀`;
 
 Gracias por confiar en Credicompany 🤝`;
 

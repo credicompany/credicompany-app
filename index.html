@@ -576,6 +576,19 @@ function enviarFiltro(){
 }
 function cobrarCliente(nombre, celular, monto, dias){
 
+if(!celular || celular.length < 9){
+  alert("❌ Cliente sin número válido");
+  return;
+}
+
+// limpiar número
+celular = celular.replace(/\D/g, "");
+
+// agregar código Perú
+if(!celular.startsWith("51")){
+  celular = "51" + celular;
+}
+
 let mensaje = `💰 COBRANZA CREDICOMPANY
 
 👤 Cliente: ${nombre}
@@ -584,16 +597,10 @@ let mensaje = `💰 COBRANZA CREDICOMPANY
 
 Por favor realizar el pago a la brevedad 🙏`;
 
-let url = "https://wa.me/";
+let url = `https://wa.me/${celular}?text=${encodeURIComponent(mensaje)}`;
 
-if(celular && celular.length >= 9){
-  url += celular;
-}
-
-url += "?text=" + encodeURIComponent(mensaje);
-
-window.open(url);
-}
+window.open(url, "_blank");
+  }
 function guardarCliente(){
 
 let nombre = c_nombre.value.trim();

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -62,7 +63,7 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 </div>
 </div>
 
-<div id="app" style="display:none">
+<div id="app" style="display:nonoe">
 
 <div id="simulador" class="card">
 <div class="volver" onclick="volver()">← Volver</div>
@@ -203,29 +204,38 @@ let asesor="";
 
 // LOGIN
 function login(){
-let user=usuario.value.trim();
-let pass=clave.value.trim();
 
-if(user==="admin" && pass==="1234"){
-asesor=user;
-nombreAsesor.innerText=asesor;
-loginDiv.style.display="none";
-dashboard.style.display="block";
-return;
+let user = document.getElementById("usuario").value.trim();
+let pass = document.getElementById("clave").value.trim();
+
+if(!user || !pass){
+  alert("Completa usuario y clave");
+  return;
 }
 
-let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+if(user === "admin" && pass === "1234"){
+  iniciarSesion(user);
+  return;
+}
 
-let encontrado=usuarios.find(u=>u.user===user && u.pass===pass);
+let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+let encontrado = usuarios.find(u => u.user === user && u.pass === pass);
 
 if(encontrado){
-asesor=user;
-nombreAsesor.innerText=asesor;
-loginDiv.style.display="none";
-dashboard.style.display="block";
+  iniciarSesion(user);
 }else{
-alert("❌ Usuario o clave incorrectos");
+  alert("❌ Usuario o clave incorrectos");
 }
+}
+
+function iniciarSesion(user){
+  asesor = user;
+  document.getElementById("nombreAsesor").innerText = user;
+  document.getElementById("loginDiv").style.display = "none";
+  document.getElementById("dashboard").style.display = "block";
+
+  localStorage.setItem("usuarioActivo", user);
 }
 function eliminarUsuarioManual(){
 

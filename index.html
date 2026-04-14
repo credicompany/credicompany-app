@@ -223,9 +223,11 @@ let P = Number(monto.value);
 let t = Number(tasa.value)/100;
 let n = Number(plazo.value);
 
-if(!P || !t || !n){
-alert("Completa datos");
-return;
+if(isNaN(P) || isNaN(t) || isNaN(n)){
+  alert("⚠️ Verifica monto, tasa y cuotas");
+  if(P <= 0 || t <= 0 || n <= 0){
+  alert("Valores deben ser mayores a 0");
+  return;
 }
 
 // 🔥 definir tipo

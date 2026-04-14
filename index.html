@@ -233,7 +233,7 @@ let i = 0;
 let dias = 0;
 
 if(producto.value==="diario"){ i=t/30; dias=1; }
-if(producto.value==="semanal"){ i=t/4; dias=7; }
+if(producto=="semanal") i = Math.pow(1 + (tasaInput/100), 1/4) - 1;
 if(producto.value==="quincenal"){ i=t/2; dias=15; }
 if(producto.value==="mensual"){ i=t; dias=30; }
 

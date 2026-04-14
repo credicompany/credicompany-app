@@ -1,241 +1,167 @@
+<!DOCTYPE html>  <html lang="es">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<link rel="manifest" href="manifest-v2.json">  
+<meta name="theme-color" content="#0a3a63">  
+<meta http-equiv="Cache-Control" content="no-cache">  
+<title>Credicompany</title>  
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>  
+<style>  
+body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}  
+.header{display:flex;flex-direction:column;align-items:center;padding:20px;}  
+.header img{width:180px;}  
+.card{background:#f2f2f2;color:#333;margin:15px;padding:20px;border-radius:15px;}  
+.volver{position:sticky;top:0;background:#0a2f5c;color:white;padding:14px;border-radius:12px;text-align:center;font-weight:bold;margin-bottom:15px;cursor:pointer;}  
+input, select{  
+  width:100%;  
+  padding:12px;  
+  margin-top:10px;  
+  border-radius:10px;  
+  border:none;  
+}  
+button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;width:100%;}  
+.btn-verde{background:#10c251;}  
+.btn-azul{background:#123B63;}  
+.btn-naranja{background:#ff9800;}  
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:20px;}  
+.box{background:white;color:#123B63;padding:25px;border-radius:15px;text-align:center;font-weight:bold;cursor:pointer;}  
+.fila{display:flex;gap:10px;margin-top:10px;}  
+.fila button{width:50%;}  
+.item{background:white;padding:12px;margin-top:10px;border-radius:10px;color:#333;}  
+.pagos-container{display:flex;flex-direction:column;gap:20px;}  
+.pago-box{background:white;padding:10px;border-radius:12px;cursor:pointer;}  
+.pago-box img{width:100%;height:260px;object-fit:contain;}  
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;justify-content:center;align-items:center;z-index:999;}  
+.modal img{width:95%;max-width:450px;}  
+</style>  
+</head>  <body>  <div class="header">  
+<img src="logo.png">  
+<div>Asesor: <span id="nombreAsesor">-</span></div>  
+</div>  <div id="loginDiv" class="card">  
+<input id="usuario" placeholder="Usuario">  
+<input id="clave" type="password" placeholder="Clave">  
+<button class="btn-verde" onclick="login()">Ingresar</button>  
+</div>  <div id="dashboard" style="display:none">  
+<div class="grid">  
+<div class="box" onclick="mostrar('simulador')">💰 Simulación</div>  
+<div class="box" onclick="mostrar('clientes')">👥 Clientes</div>  
+<div class="box" onclick="mostrar('pagos')">💳 Pagos</div>  
+<div class="box" onclick="enviarUbicacion()">📍 Ubicación</div>  
+<div class="box" onclick="mostrar('admin')">⚙️ Usuarios</div>  
+<div class="box" onclick="mostrar('cartera')">📊 Cartera</div>  
+</div>  
+</div>  <div id="app" style="display:none">  <div id="simulador" class="card">  
+<div class="volver" onclick="volver()">← Volver</div>  <input id="cliente" placeholder="Nombre">  
+<input id="apellidos" placeholder="Apellidos">  
+<input id="dni" placeholder="DNI">  <select id="producto">  
+<option value="diario">Diario</option>  
+<option value="semanal">Semanal</option>  
+<option value="quincenal">Quincenal</option>  
+<option value="mensual">Mensual</option>  
+</select>  <input id="monto" placeholder="Monto">  
+<input id="tasa" placeholder="Tasa (%)">  
+<input id="plazo" placeholder="Cuotas">  <button class="btn-verde" onclick="calcular()">Calcular</button>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="manifest" href="manifest-v2.json">
-<meta name="theme-color" content="#0a3a63">
-<meta http-equiv="Cache-Control" content="no-cache">
-<title>Credicompany</title>
-<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-<style>
-body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}
-.header{display:flex;flex-direction:column;align-items:center;padding:20px;}
-.header img{width:180px;}
-.card{background:#f2f2f2;color:#333;margin:15px;padding:20px;border-radius:15px;}
-.volver{position:sticky;top:0;background:#0a2f5c;color:white;padding:14px;border-radius:12px;text-align:center;font-weight:bold;margin-bottom:15px;cursor:pointer;}
-input, select{
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-  border-radius:10px;
-  border:none;
-}
-button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;width:100%;}
-.btn-verde{background:#10c251;}
-.btn-azul{background:#123B63;}
-.btn-naranja{background:#ff9800;}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:20px;}
-.box{background:white;color:#123B63;padding:25px;border-radius:15px;text-align:center;font-weight:bold;cursor:pointer;}
-.fila{display:flex;gap:10px;margin-top:10px;}
-.fila button{width:50%;}
-.item{background:white;padding:12px;margin-top:10px;border-radius:10px;color:#333;}
-.pagos-container{display:flex;flex-direction:column;gap:20px;}
-.pago-box{background:white;padding:10px;border-radius:12px;cursor:pointer;}
-.pago-box img{width:100%;height:260px;object-fit:contain;}
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;justify-content:center;align-items:center;z-index:999;}
-.modal img{width:95%;max-width:450px;}
-</style>
-</head>
+<div id="resultado"></div>  
+<div id="cronograma"></div>  <div class="fila">  
+<button class="btn-verde" onclick="ejecutarSeguro(() => enviarSimulacion(), 'Simulación')">Simulación</button>  
+<button class="btn-azul" onclick="ejecutarSeguro(() => enviarFiltro(), 'Filtro')">Filtro</button>  
+</div>  <button class="btn-naranja" onclick="limpiar()">Limpiar</button>
 
-<body>
+</div>  <div id="clientes" class="card" style="display:none">  
+<div class="volver" onclick="volver()">← Volver</div>  <input id="c_nombre" placeholder="Nombre">  
+<input id="c_apellidos" placeholder="Apellidos">  
+<input id="c_dni" placeholder="DNI">  
+<input id="c_monto" placeholder="Monto">  <button class="btn-verde" onclick="ejecutarSeguro(() => guardarCliente(), 'Guardar Cliente')">Guardar</button>
 
-<div class="header">
-<img src="logo.png">
-<div>Asesor: <span id="nombreAsesor">-</span></div>
-</div>
+<input type="file" id="excelFile" accept=".csv,.xlsx" style="margin-top:15px;">  
+<button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>  <div class="fila">  
+<button style="background:#2ecc71" onclick="filtrarMora(0,8)">0-8 días</button>  
+<button style="background:#f1c40f;color:black" onclick="filtrarMora(9,30)">9-30 días</button>  
+</div>  <div class="fila">  
+<button style="background:#e74c3c" onclick="filtrarMora(31,60)">31-60 días</button>  
+<button style="background:black" onclick="filtrarMora(61,1000)">61+ días</button>  
+</div>  <button class="btn-azul" onclick="renderClientes()">🔄 Ver todos</button>
 
-<div id="loginDiv" class="card">
-<input id="usuario" placeholder="Usuario">
-<input id="clave" type="password" placeholder="Clave">
-<button class="btn-verde" onclick="login()">Ingresar</button>
-</div>
-
-<div id="dashboard" style="display:none">
-<div class="grid">
-<div class="box" onclick="mostrar('simulador')">💰 Simulación</div>
-<div class="box" onclick="mostrar('clientes')">👥 Clientes</div>
-<div class="box" onclick="mostrar('pagos')">💳 Pagos</div>
-<div class="box" onclick="enviarUbicacion()">📍 Ubicación</div>
-<div class="box" onclick="mostrar('admin')">⚙️ Usuarios</div>
-<div class="box" onclick="mostrar('cartera')">📊 Cartera</div>
-</div>
-</div>
-
-<div id="app" style="display:nonoe">
-
-<div id="simulador" class="card">
-<div class="volver" onclick="volver()">← Volver</div>
-
-<input id="cliente" placeholder="Nombre">
-<input id="apellidos" placeholder="Apellidos">
-<input id="dni" placeholder="DNI">
-
-<select id="producto">
-<option value="diario">Diario</option>
-<option value="semanal">Semanal</option>
-<option value="quincenal">Quincenal</option>
-<option value="mensual">Mensual</option>
-</select>
-
-<input id="monto" placeholder="Monto">
-<input id="tasa" placeholder="Tasa (%)">
-<input id="plazo" placeholder="Cuotas">
-
-<button class="btn-verde" onclick="calcular()">Calcular</button>
-
-<div id="resultado"></div>
-<div id="cronograma"></div>
-
-<div class="fila">
-<button class="btn-verde" onclick="ejecutarSeguro(() => enviarSimulacion(), 'Simulación')">Simulación</button>
-<button class="btn-azul" onclick="ejecutarSeguro(() => enviarFiltro(), 'Filtro')">Filtro</button>
-</div>
-
-<button class="btn-naranja" onclick="limpiar()">Limpiar</button>
-</div>
-
-<div id="clientes" class="card" style="display:none">
-<div class="volver" onclick="volver()">← Volver</div>
-
-<input id="c_nombre" placeholder="Nombre">
-<input id="c_apellidos" placeholder="Apellidos">
-<input id="c_dni" placeholder="DNI">
-<input id="c_monto" placeholder="Monto">
-
-<button class="btn-verde" onclick="ejecutarSeguro(() => guardarCliente(), 'Guardar Cliente')">Guardar</button>
-
-<input type="file" id="excelFile" accept=".csv,.xlsx" style="margin-top:15px;">
-<button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>
-
-<div class="fila">
-<button style="background:#2ecc71" onclick="filtrarMora(0,8)">0-8 días</button>
-<button style="background:#f1c40f;color:black" onclick="filtrarMora(9,30)">9-30 días</button>
-</div>
-
-<div class="fila">
-<button style="background:#e74c3c" onclick="filtrarMora(31,60)">31-60 días</button>
-<button style="background:black" onclick="filtrarMora(61,1000)">61+ días</button>
-</div>
-
-<button class="btn-azul" onclick="renderClientes()">🔄 Ver todos</button>
-
-<div id="listaClientes"></div>
-</div>
-
-<div id="admin" class="card" style="display:none">
-<div class="volver" onclick="volver()">← Volver</div>
-
-<input id="nuevoUser" placeholder="Usuario">
-<input id="nuevoPass" placeholder="Clave">
-
-<button class="btn-verde" onclick="crearUsuario()">Crear Usuario</button>
+<div id="listaClientes"></div>  
+</div>  <div id="admin" class="card" style="display:none">  
+<div class="volver" onclick="volver()">← Volver</div>  <input id="nuevoUser" placeholder="Usuario">  
+<input id="nuevoPass" placeholder="Clave">  <button class="btn-verde" onclick="crearUsuario()">Crear Usuario</button>
 <button class="btn-naranja" onclick="eliminarUsuarioManual()">
 Eliminar Usuario
 </button>
-<div id="listaUsuarios"></div>
-</div>
-<div id="pagos" class="card" style="display:none">
-<div class="volver" onclick="volver()">← Volver</div>
 
-<div class="pagos-container">
-
-<div class="pago-box" onclick="abrirQR(this)">
-<img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg">
-</div>
-
-<div class="pago-box" onclick="abrirQR(this)">
-<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg">
-</div>
-
-<div class="pago-box" onclick="abrirQR(this)">
-<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg">
-</div>
-
-<div class="pago-box" onclick="abrirQR(this)">
-<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg">
-
-</div>
-</div>
-
-</div>
-
-<div id="modalQR" class="modal" onclick="cerrarQR()">
-<img id="imgQR">
-</div>
-<div id="cartera" class="card" style="display:none">
-<div class="volver" onclick="volver()">← Volver</div>
-
-<h3>📊 Cartera</h3>
-
-<div id="listaCartera"></div>
-
-</div>
-<script>
-// 🔒 PROTECCIÓN GLOBAL (ARRIBA DE TODO)
-window.addEventListener("error", function (e) {
-    console.error("❌ Error detectado:", e.message);
-});
-
-window.addEventListener("unhandledrejection", function (e) {
-    console.error("❌ Error en promesa:", e.reason);
+<div id="listaUsuarios"></div>  
+</div>  
+<div id="pagos" class="card" style="display:none">  
+<div class="volver" onclick="volver()">← Volver</div>  <div class="pagos-container">  <div class="pago-box" onclick="abrirQR(this)">  
+<img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg">  
+</div>  <div class="pago-box" onclick="abrirQR(this)">  
+<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg">  
+</div>  <div class="pago-box" onclick="abrirQR(this)">  
+<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg">  
+</div>  <div class="pago-box" onclick="abrirQR(this)">  
+<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg">  </div>  
+</div>  </div>  <div id="modalQR" class="modal" onclick="cerrarQR()">  
+<img id="imgQR">  
+</div>  
+<div id="cartera" class="card" style="display:none">  
+<div class="volver" onclick="volver()">← Volver</div>  <h3>📊 Cartera</h3>  <div id="listaCartera"></div>  </div>  
+<script>  
+// 🔒 PROTECCIÓN GLOBAL (ARRIBA DE TODO)  
+window.addEventListener("error", function (e) {  
+    console.error("❌ Error detectado:", e.message);  
+});  window.addEventListener("unhandledrejection", function (e) {
+console.error("❌ Error en promesa:", e.reason);
 });
 
 function ejecutarSeguro(fn, nombre = "Función") {
-    try {
-        const resultado = fn();
+try {
+const resultado = fn();
 
-        if (resultado instanceof Promise) {
-            return resultado.catch(error => {
-                console.error(`❌ Error async en ${nombre}:`, error);
-                return null;
-            });
-        }
-        return resultado;
+if (resultado instanceof Promise) {  
+        return resultado.catch(error => {  
+            console.error(`❌ Error async en ${nombre}:`, error);  
+            return null;  
+        });  
+    }  
+    return resultado;  
 
-    } catch (error) {
-        console.error(`❌ Error en ${nombre}:`, error);
-        return null;
-    }
+} catch (error) {  
+    console.error(`❌ Error en ${nombre}:`, error);  
+    return null;  
 }
-  
+
+}
+
 let asesor="";
 
 // LOGIN
 function login(){
+let user=usuario.value.trim();
+let pass=clave.value.trim();
 
-let user = document.getElementById("usuario").value.trim();
-let pass = document.getElementById("clave").value.trim();
-
-if(!user || !pass){
-  alert("Completa usuario y clave");
-  return;
+if(user==="admin" && pass==="1234"){
+asesor=user;
+nombreAsesor.innerText=asesor;
+loginDiv.style.display="none";
+dashboard.style.display="block";
+return;
 }
 
-if(user === "admin" && pass === "1234"){
-  iniciarSesion(user);
-  return;
-}
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-
-let encontrado = usuarios.find(u => u.user === user && u.pass === pass);
+let encontrado=usuarios.find(u=>u.user===user && u.pass===pass);
 
 if(encontrado){
-  iniciarSesion(user);
+asesor=user;
+nombreAsesor.innerText=asesor;
+loginDiv.style.display="none";
+dashboard.style.display="block";
 }else{
-  alert("❌ Usuario o clave incorrectos");
+alert("❌ Usuario o clave incorrectos");
 }
-}
-
-function iniciarSesion(user){
-  asesor = user;
-  document.getElementById("nombreAsesor").innerText = user;
-  document.getElementById("loginDiv").style.display = "none";
-  document.getElementById("dashboard").style.display = "block";
-
-  localStorage.setItem("usuarioActivo", user);
 }
 function eliminarUsuarioManual(){
 
@@ -293,10 +219,7 @@ let total = cuota * n;
 let interes = total - P;
 
 // 🔥 resumen completo
-resultado.innerHTML = `
-<b>Cuota:</b> S/ ${cuota.toFixed(2)}<br>
-<b>Interés:</b> S/ ${interes.toFixed(2)}
-`;
+resultado.innerHTML =   <b>Cuota:</b> S/ ${cuota.toFixed(2)}<br>   <b>Total a pagar:</b> S/ ${total.toFixed(2)}<br>   <b>Interés:</b> S/ ${interes.toFixed(2)}  ;
 
 // 🔥 cronograma REAL
 let saldo = P;
@@ -312,20 +235,20 @@ saldo -= capital;
 fecha.setDate(fecha.getDate()+dias);
 
 html += `
-<div class="item">
-Cuota ${c}<br>
-Fecha: ${fecha.toLocaleDateString()}<br>
-Cuota: S/ ${cuota.toFixed(2)}<br>
-Saldo: S/ ${saldo.toFixed(2)}
-</div>`;
-}
 
-cronograma.innerHTML = html;
+<div class="item">  
+Cuota ${c}<br>  
+Fecha: ${fecha.toLocaleDateString()}<br>  
+Cuota: S/ ${cuota.toFixed(2)}<br>  
+Saldo: S/ ${saldo.toFixed(2)}  
+</div>`;  
+}  cronograma.innerHTML = html;
 
 // guardar para WhatsApp
 window.simData = {
 monto:P,
 cuota:cuota.toFixed(2),
+total:total.toFixed(2),
 producto:producto.value
 };
 
@@ -429,7 +352,7 @@ let total = 0;
 
 filtrados.forEach(c=>{
 let monto = parseFloat(c.monto)||0;
-total += monto;  
+total += monto;
 let r=parseFloat(c.retraso)||0;
 if(r<=8) alDia++;
 else if(r<=30) leve++;
@@ -438,15 +361,14 @@ else critico++;
 });
 
 lista.innerHTML+=`
-<div class="item" style="background:#123B63;color:white">
-<b>📊 Resumen</b><br>
-💰 Total: S/ ${total.toFixed(2)}<br>
-🟢 ${alDia} | 🟡 ${leve} | 🔴 ${medio} | ⚫ ${critico}
-</div>`;  
-filtrados.sort((a,b)=>(parseFloat(b.retraso)||0)-(parseFloat(a.retraso)||0));
 
-filtrados.forEach(c=>{
-let color = "#2ecc71"; // verde base 
+<div class="item" style="background:#123B63;color:white">  
+<b>📊 Resumen</b><br>  
+💰 Total: S/ ${total.toFixed(2)}<br>  
+🟢 ${alDia} | 🟡 ${leve} | 🔴 ${medio} | ⚫ ${critico}  
+</div>`;    
+filtrados.sort((a,b)=>(parseFloat(b.retraso)||0)-(parseFloat(a.retraso)||0));  filtrados.forEach(c=>{
+let color = "#2ecc71"; // verde base
 let r = parseFloat(c.retraso)||0;
 
 if(r>8) color="#f1c40f";
@@ -454,46 +376,43 @@ if(r>30) color="#e74c3c";
 if(r>60) color="black";
 
 lista.innerHTML+=`
-<div class="item" style="border-left:6px solid ${color};font-weight:bold">
-  <b>${c.nombre}</b><br>
-  💰 S/ ${parseFloat(c.monto||0).toFixed(2)}
-  📅 ${c.retraso} días<br>
-  👤 ${c.asesor}<br>
-  📞 ${c.celular}<br>
-  📦 ${c.producto}<br>
-  📍 ${c.direccion}<br>
-  🏙️ ${c.distrito}<br>
-  <div style="display:flex;gap:5px;margin-top:8px">
 
-<button onclick="cobrarCliente('${c.nombre}','${c.celular}','${c.monto}','${c.retraso}')"
+<div class="item" style="border-left:6px solid ${color};font-weight:bold">  
+  <b>${c.nombre}</b><br>  
+  💰 S/ ${parseFloat(c.monto||0).toFixed(2)}  
+  📅 ${c.retraso} días<br>  
+  👤 ${c.asesor}<br>  
+  📞 ${c.celular}<br>  
+  📦 ${c.producto}<br>  
+  📍 ${c.direccion}<br>  
+  🏙️ ${c.distrito}<br>  
+  <div style="display:flex;gap:5px;margin-top:8px">  <button onclick="cobrarCliente('${c.nombre}','${c.celular}','${c.monto}','${c.retraso}')"  
 style="background:#25D366;color:white;border:none;padding:6px;border-radius:6px;width:50%">
 📲 Cobrar
 </button>
 
-<button onclick="marcarCancelado('${c.celular}')"
+<button onclick="marcarCancelado('${c.celular}')"  
 style="background:#28a745;color:white;border:none;padding:6px;border-radius:6px;width:50%">
 ✅ Pagó
 </button>
 
-</div>
-</div>`;
-});
-}
-function marcarCancelado(id){
+</div>  
+</div>`;  
+});  
+}  
+function marcarCancelado(id){  let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
-  let data = JSON.parse(localStorage.getItem("cartera")) || [];
+let cliente = data.find(c => c.celular == id);
 
-  let cliente = data.find(c => c.celular == id);
+if(!cliente) return;
 
-  if(!cliente) return;
+if(!confirm("Marcar como cancelado?")) return;
 
-  if(!confirm("Marcar como cancelado?")) return;
+cliente.estado = "cancelado";
 
-  cliente.estado = "cancelado";
+localStorage.setItem("cartera", JSON.stringify(data));
 
-  localStorage.setItem("cartera", JSON.stringify(data));
-
-  renderClientes();
+renderClientes();
 }
 // USUARIOS
 function crearUsuario(){
@@ -521,7 +440,7 @@ let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
 lista.innerHTML="";
 usuarios.forEach(u=>{
-lista.innerHTML+=`<div class="item">${u.user}</div>`;
+lista.innerHTML+=<div class="item">${u.user}</div>;
 });
 }
 
@@ -530,7 +449,7 @@ function mostrar(p){
 dashboard.style.display="none";
 app.style.display="block";
 
-["simulador","clientes","pagos","admin","cartera"].forEach(id=>{
+["simulador","clientes","pagos","admin"].forEach(id=>{
 document.getElementById(id).style.display="none";
 });
 
@@ -555,10 +474,11 @@ function cerrarQR(){modalQR.style.display="none";}
 // GPS
 function enviarUbicacion(){
 navigator.geolocation.getCurrentPosition(pos=>{
-let link=`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+let link=https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude};
 window.open("https://wa.me/?text="+encodeURIComponent(link));
 });
 }
+
 // WHATSAPP
 function enviarSimulacion(){
 
@@ -567,96 +487,25 @@ alert("Primero realiza la simulación");
 return;
 }
 
-let msg = `📊 *SIMULACIÓN CREDICOMPANY*
+let msg = `📊 SIMULACIÓN CREDICOMPANY
 
 💼 Producto: ${simData.producto.toUpperCase()}
-💰 Monto aprobado: S/ ${simData.monto}
-💳 Cuota ${tipoCuota}: S/ ${simData.cuota
+💰 Monto: S/ ${simData.monto}
+💳 Cuota: S/ ${simData.cuota}
+📈 Total a pagar: S/ ${simData.total}
 
-✅ *SIN TRÁMITES COMPLICADOS*
-✅ *DESEMBOLSO INTEGRO Y RÁPIDO*
-✅ *SIN RETENCION DEL 10% *
-
-¿Deseas que activemos tu crédito hoy mismo? 🚀`;
+Gracias por confiar en Credicompany 🤝`;
 window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 
 }
 function enviarFiltro(){
-    alert("Filtro en desarrollo");
-}
-function cobrarCliente(nombre, celular, monto, dias){
-
-if(!celular || celular.length < 9){
-  alert("❌ Cliente sin número válido");
-  return;
+alert("Filtro en desarrollo");
 }
 
-// limpiar número
-celular = celular.replace(/\D/g, "");
-
-// agregar código Perú
-if(!celular.startsWith("51")){
-  celular = "51" + celular;
-}
-
-let mensaje = `💰 COBRANZA CREDICOMPANY
-
-👤 Cliente: ${nombre}
-💵 Deuda: S/ ${parseFloat(monto).toFixed(2)}
-📅 Días de atraso: ${dias}
-
-Por favor realizar el pago a la brevedad 🙏`;
-
-let url = `https://wa.me/${celular}?text=${encodeURIComponent(mensaje)}`;
-
-window.open(url, "_blank");
-  }
 function guardarCliente(){
-
-let nombre = c_nombre.value.trim();
-let apellidos = c_apellidos.value.trim();
-let dni = c_dni.value.trim();
-let monto = parseFloat(c_monto.value);
-
-if(!nombre || !dni || !monto){
-  alert("Completa datos obligatorios");
-  return;
+alert("Guardar cliente en desarrollo");
 }
-
-let cartera = JSON.parse(localStorage.getItem("cartera")) || [];
-
-if(cartera.find(c => c.dni === dni)){
-  alert("Cliente ya existe");
-  return;
-}
-
-let nuevo = {
-  nombre: nombre + " " + apellidos,
-  dni,
-  monto,
-  retraso: 0,
-  asesor: asesor || "Sin asesor",
-  celular: "",
-  producto: "Manual",
-  direccion: "",
-  distrito: "",
-  estado: "activo"
-};
-
-cartera.push(nuevo);
-
-localStorage.setItem("cartera", JSON.stringify(cartera));
-
-alert("✅ Cliente guardado");
-
-c_nombre.value="";
-c_apellidos.value="";
-c_dni.value="";
-c_monto.value="";
-
-renderClientes();
-  }
 </script>
-  
-</body>
-</html>
+
+</body>  
+</html>  

@@ -558,13 +558,17 @@ alert("Primero realiza la simulación");
 return;
 }
 
-let msg = `📊 SIMULACIÓN CREDICOMPANY
+let msg = `📊 *SIMULACIÓN CREDICOMPANY*
 
 💼 Producto: ${simData.producto.toUpperCase()}
-💰 Monto: S/ ${simData.monto}
-💳 Cuota: S/ ${simData.cuota}
+💰 Monto aprobado: S/ ${simData.monto}
+💳 Cuota diaria: S/ ${simData.cuota}
 
-Gracias por confiar en Credicompany 🤝`;
+✅ *SIN TRÁMITES COMPLICADOS*
+✅ *DESEMBOLSO INTEGRO Y RÁPIDO*
+✅ *SIN RETENCION DEL 10% *
+
+¿Deseas que activemos tu crédito hoy mismo? 🚀`;
 window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 
 }

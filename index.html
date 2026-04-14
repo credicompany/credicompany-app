@@ -316,7 +316,6 @@ cronograma.innerHTML = html;
 window.simData = {
 monto:P,
 cuota:cuota.toFixed(2),
-total:total.toFixed(2),
 producto:producto.value
 };
 
@@ -564,7 +563,6 @@ let msg = `📊 SIMULACIÓN CREDICOMPANY
 💼 Producto: ${simData.producto.toUpperCase()}
 💰 Monto: S/ ${simData.monto}
 💳 Cuota: S/ ${simData.cuota}
-📈 Total a pagar: S/ ${simData.total}
 
 Gracias por confiar en Credicompany 🤝`;
 window.open("https://wa.me/?text=" + encodeURIComponent(msg));

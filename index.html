@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -391,7 +390,7 @@ lista.innerHTML+=`
 
 filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
 
-filtrados.forEach(c=>{
+filtrados.forEach((c,index)=>{
 let color="#2ecc71";
 if(c.retraso>8) color="#f1c40f";
 if(c.retraso>30) color="#e74c3c";
@@ -407,6 +406,19 @@ lista.innerHTML+=`
 📦 ${c.producto}<br>
 📍 ${c.direccion}<br>
 🏙️ ${c.distrito}
+
+<div style="display:flex;gap:10px;margin-top:10px;">
+<button onclick='enviarCobranza(${JSON.stringify(c)})'
+style="flex:1;background:#123B63;color:white;border:none;padding:10px;border-radius:8px;">
+📩 Cobrar
+</button>
+
+<button onclick='marcarCancelado(${index})'
+style="flex:1;background:#10c251;color:white;border:none;padding:10px;border-radius:8px;">
+✅ Cancelado
+</button>
+</div>
+
 </div>`;
 });
 }
@@ -501,7 +513,48 @@ Gracias por confiar en Credicompany 🤝`;
 window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 
 }
+// 📩 COBRANZA WHATSAPP
+function enviarCobranza(cliente){
 
+let nombre = cliente.nombre || "Cliente";
+let dias = cliente.retraso || 0;
+let monto = cliente.monto || "0";
+
+let nivel = "🟢 RECORDATORIO";
+if(dias > 8) nivel = "🟡 AVISO";
+if(dias > 30) nivel = "🔴 URGENTE";
+
+let msg = `${nivel} - CREDICOMPANY
+
+Estimado(a) ${nombre},
+
+Registra ${dias} días de atraso.
+
+💰 Deuda pendiente: S/ ${monto}
+
+Le solicitamos regularizar el pago hoy para evitar acciones adicionales.
+
+Quedamos atentos a su confirmación.`;
+
+window.open("https://wa.me/?text=" + encodeURIComponent(msg));
+}
+
+// ✅ CANCELADO (ELIMINAR)
+function marcarCancelado(index){
+
+let data = JSON.parse(localStorage.getItem("cartera")) || [];
+
+if(!confirm("¿Marcar como cancelado?")) return;
+
+data.splice(index,1);
+
+localStorage.setItem("cartera", JSON.stringify(data));
+
+renderClientes();
+
+alert("✅ Cliente eliminado del seguimiento");
+
+}
 </script>
 
 </body>

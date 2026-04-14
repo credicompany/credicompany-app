@@ -8,29 +8,130 @@
 
 <title>Credicompany</title>
 
-<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-
 <style>
-body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}
-.header{display:flex;flex-direction:column;align-items:center;padding:20px;}
+
+body{
+margin:0;
+font-family:Arial;
+background:#123B63;
+color:white;
+padding-bottom:120px;
+}
+
+.header{
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:20px;
+}
+
 .header img{width:180px;}
-.card{background:#f2f2f2;color:#333;margin:15px;padding:20px;border-radius:15px;}
-.volver{position:sticky;top:0;background:#0a2f5c;color:white;padding:14px;border-radius:12px;text-align:center;font-weight:bold;margin-bottom:15px;cursor:pointer;}
-input, select{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:none;}
-button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;width:100%;}
+
+.card{
+background:#f2f2f2;
+color:#333;
+margin:15px;
+padding:20px;
+border-radius:15px;
+}
+
+.volver{
+position:sticky;
+top:0;
+background:#0a2f5c;
+color:white;
+padding:14px;
+border-radius:12px;
+text-align:center;
+font-weight:bold;
+margin-bottom:15px;
+cursor:pointer;
+}
+
+h3{text-align:center;}
+
+input, select{
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:10px;
+border:none;
+}
+
+button{
+padding:14px;
+border:none;
+border-radius:12px;
+color:white;
+font-weight:bold;
+width:100%;
+}
+
 .btn-verde{background:#10c251;}
 .btn-azul{background:#123B63;}
 .btn-naranja{background:#ff9800;}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:20px;}
-.box{background:white;color:#123B63;padding:25px;border-radius:15px;text-align:center;font-weight:bold;cursor:pointer;}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+margin:20px;
+}
+
+.box{
+background:white;
+color:#123B63;
+padding:25px;
+border-radius:15px;
+text-align:center;
+font-weight:bold;
+cursor:pointer;
+}
+
 .fila{display:flex;gap:10px;margin-top:10px;}
 .fila button{width:50%;}
-.item{background:white;padding:12px;margin-top:10px;border-radius:10px;color:#333;}
-.pagos-container{display:flex;flex-direction:column;gap:20px;}
-.pago-box{background:white;padding:10px;border-radius:12px;cursor:pointer;}
-.pago-box img{width:100%;height:260px;object-fit:contain;}
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;justify-content:center;align-items:center;z-index:999;}
-.modal img{width:95%;max-width:450px;}
+
+.item{
+background:white;
+padding:10px;
+margin-top:10px;
+border-radius:10px;
+color:#333;
+}
+
+/* PAGOS */
+.pagos-container{
+display:flex;
+flex-direction:column;
+gap:15px;
+align-items:center;
+}
+
+.pago-box{
+background:white;
+padding:15px;
+border-radius:12px;
+width:100%;
+max-width:320px;
+text-align:center;
+box-shadow:0 2px 6px rgba(0,0,0,0.2);
+cursor:pointer;
+}
+
+.pago-box img{
+width:100%;
+height:auto;
+max-height:320px;
+object-fit:contain;
+border-radius:10px;
+}
+
+.pago-titulo{
+font-weight:bold;
+margin-bottom:10px;
+color:#123B63;
+}
+
 </style>
 </head>
 
@@ -41,26 +142,31 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <div>Asesor: <span id="nombreAsesor">-</span></div>
 </div>
 
+<!-- LOGIN -->
 <div id="loginDiv" class="card">
+<h3>Ingreso Asesor</h3>
 <input id="usuario" placeholder="Usuario">
 <input id="clave" type="password" placeholder="Clave">
 <button class="btn-verde" onclick="login()">Ingresar</button>
 </div>
 
+<!-- DASHBOARD -->
 <div id="dashboard" style="display:none">
 <div class="grid">
 <div class="box" onclick="mostrar('simulador')">💰 Simulación</div>
 <div class="box" onclick="mostrar('clientes')">👥 Clientes</div>
 <div class="box" onclick="mostrar('pagos')">💳 Pagos</div>
-<div class="box" onclick="enviarUbicacion()">📍 Ubicación</div>
 </div>
 </div>
 
+<!-- APP -->
 <div id="app" style="display:none">
 
 <!-- SIMULADOR -->
 <div id="simulador" class="card">
-<div class="volver" onclick="volver()">← Volver</div>
+<div class="volver" onclick="volver()">← Volver al inicio</div>
+
+<h3>Simulador</h3>
 
 <input id="cliente" placeholder="Nombre">
 <input id="apellidos" placeholder="Apellidos">
@@ -68,7 +174,7 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 
 <select id="producto">
 <option value="diario">Diario</option>
-<option value="semanal">Semanal</option>
+<option value="semanal" selected>Semanal</option>
 <option value="quincenal">Quincenal</option>
 <option value="mensual">Mensual</option>
 </select>
@@ -80,66 +186,76 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <button class="btn-verde" onclick="calcular()">Calcular</button>
 
 <div id="resultado"></div>
-<div id="cronograma"></div>
 
 <div class="fila">
-<button class="btn-verde" onclick="enviarSimulacion()">Simulación</button>
-<button class="btn-azul" onclick="enviarFiltro()">Filtro</button>
+<button class="btn-verde" onclick="enviar()">📲 Enviar simulación</button>
+<button class="btn-azul" onclick="filtrar()">📤 Enviar Filtro</button>
 </div>
 
-<button class="btn-naranja" onclick="limpiar()">Limpiar</button>
+<h3>Control de pagos</h3>
+<input id="pago" placeholder="Monto pagado">
+<button class="btn-naranja" onclick="registrarPago()">💰 Registrar pago</button>
+<div id="estadoPago"></div>
+
 </div>
 
 <!-- CLIENTES -->
 <div id="clientes" class="card" style="display:none">
-<div class="volver" onclick="volver()">← Volver</div>
+<div class="volver" onclick="volver()">← Volver al inicio</div>
+
+<h3>Cartera de Clientes</h3>
 
 <input id="c_nombre" placeholder="Nombre">
 <input id="c_apellidos" placeholder="Apellidos">
 <input id="c_dni" placeholder="DNI">
 <input id="c_monto" placeholder="Monto">
 
-<button class="btn-verde" onclick="guardarCliente()">Guardar</button>
+<select id="c_producto">
+<option>Diario</option>
+<option>Semanal</option>
+<option>Quincenal</option>
+<option>Mensual</option>
+</select>
 
-<input type="file" id="excelFile" accept=".csv,.xlsx" style="margin-top:15px;">
-<button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>
+<input id="c_fecha" type="date">
 
-<div class="fila">
-<button style="background:#2ecc71" onclick="filtrarMora(0,8)">0-8 días</button>
-<button style="background:#f1c40f;color:black" onclick="filtrarMora(9,30)">9-30 días</button>
-</div>
-
-<div class="fila">
-<button style="background:#e74c3c" onclick="filtrarMora(31,60)">31-60 días</button>
-<button style="background:black" onclick="filtrarMora(61,1000)">61+ días</button>
-</div>
-
-<button class="btn-azul" onclick="renderClientes()">🔄 Ver todos</button>
+<button class="btn-verde" onclick="guardarCliente()">Guardar Cliente</button>
 
 <div id="listaClientes"></div>
 </div>
 
 <!-- PAGOS -->
 <div id="pagos" class="card" style="display:none">
-<div class="volver" onclick="volver()">← Volver</div>
+<div class="volver" onclick="volver()">← Volver al inicio</div>
+
+<h3>💳 Medios de Pago</h3>
 
 <div class="pagos-container">
-<div class="pago-box" onclick="abrirQR(this)">
-<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image.jpg">
+
+<div class="pago-box" onclick="enviarQR('BBVA','https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg')">
+<div class="pago-titulo">BBVA</div>
+<img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg">
 </div>
-<div class="pago-box" onclick="abrirQR(this)">
-<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image.jpg">
+
+<div class="pago-box" onclick="enviarQR('BCP','https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg')">
+<div class="pago-titulo">BCP</div>
+<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg">
 </div>
-<div class="pago-box" onclick="abrirQR(this)">
-<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image.jpg">
+
+<div class="pago-box" onclick="enviarQR('Yape','https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg')">
+<div class="pago-titulo">YAPE</div>
+<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg">
 </div>
-</div>
+
+<div class="pago-box" onclick="enviarQR('Otros medios','https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg')">
+<div class="pago-titulo">OTRO</div>
+<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg">
 </div>
 
 </div>
 
-<div id="modalQR" class="modal" onclick="cerrarQR()">
-<img id="imgQR">
+</div>
+
 </div>
 
 <script>
@@ -152,16 +268,21 @@ asesor=usuario.value;
 nombreAsesor.innerText=asesor;
 loginDiv.style.display="none";
 dashboard.style.display="block";
-}else{alert("Usuario incorrecto");}
+}else{
+alert("Usuario incorrecto");
+}
 }
 
 function mostrar(p){
 dashboard.style.display="none";
 app.style.display="block";
+
 simulador.style.display="none";
 clientes.style.display="none";
 pagos.style.display="none";
+
 document.getElementById(p).style.display="block";
+
 if(p==="clientes") renderClientes();
 }
 
@@ -170,160 +291,108 @@ app.style.display="none";
 dashboard.style.display="block";
 }
 
-function limpiar(){
-document.querySelectorAll("input").forEach(i=>i.value="");
-resultado.innerHTML="";
-cronograma.innerHTML="";
+function calcular(){
+let P=parseFloat(monto.value);
+let t=parseFloat(tasa.value)/100;
+let n=parseInt(plazo.value);
+
+if(isNaN(P)||isNaN(t)||isNaN(n)){
+alert("Completa datos");
+return;
 }
 
-function cargarExcel(){
+let i=t/4;
+let cuota=(P*i)/(1-Math.pow(1+i,-n));
 
-let file=document.getElementById("excelFile").files[0];
-if(!file)return alert("Selecciona archivo");
+resultado.innerHTML="Cuota: S/ "+cuota.toFixed(2);
 
-let reader=new FileReader();
-
-reader.onload=function(e){
-
-let data=new Uint8Array(e.target.result);
-let workbook=XLSX.read(data,{type:'array'});
-let hoja=workbook.Sheets[workbook.SheetNames[0]];
-
-let raw=XLSX.utils.sheet_to_json(hoja,{header:1});
-
-let headerIndex=0;
-
-for(let i=0;i<raw.length;i++){
-let row=(raw[i]||[]).join(" ").toLowerCase();
-if(row.includes("nombre") && row.includes("monto")){
-headerIndex=i;
-break;
-}
-}
-
-let headers=raw[headerIndex];
-let dataRows=raw.slice(headerIndex+1);
-
-let json=dataRows.map(r=>{
-let obj={};
-
-headers.forEach((h,i)=>{
-if(!h)return;
-
-let key=h.toString().toLowerCase().replace(/\s+/g,'');
-
-let val=r[i]||"";
-
-if(key.includes("nombre")&&!key.includes("grupo")) obj.nombre=val;
-if(key.includes("paterno")) obj.apePat=val;
-if(key.includes("materno")) obj.apeMat=val;
-if(key.includes("monto")) obj.monto=val;
-if(key.includes("retraso")) obj.retraso=val;
-if(key.includes("producto")) obj.producto=val;
-if(key.includes("asesor")) obj.asesor=val;
-if(key.includes("direccion")) obj.direccion=val;
-if(key.includes("celular")||key.includes("telefono")) obj.celular=val;
-
-});
-
-return obj;
-});
-
-json=json.filter(x=>x.nombre||x.monto);
-
-localStorage.setItem("cartera",JSON.stringify(json));
-renderClientes();
-
+window.sim={
+nombre:cliente.value,
+ape:apellidos.value,
+dni:dni.value,
+cuota:cuota
 };
-
-reader.readAsArrayBuffer(file);
 }
 
-function renderClientes(){
-filtrarMora(0,1000);
+function enviar(){
+let d=window.sim;
+if(!d){alert("Primero calcula");return;}
+
+let msg=`Simulación:
+${d.nombre} ${d.ape}
+DNI: ${d.dni}
+Cuota: S/ ${d.cuota.toFixed(2)}`;
+
+location.href="https://wa.me/?text="+encodeURIComponent(msg);
 }
 
-function filtrarMora(min,max){
+function filtrar(){
+let texto=dni.value.toLowerCase();
+let data=JSON.parse(localStorage.getItem("cartera_"+asesor)||"[]");
 
-let lista=document.getElementById("listaClientes");
-lista.innerHTML="";
+let c=data.find(x=>
+(x.dni+"").includes(texto)||
+(x.nombre+"").toLowerCase().includes(texto)
+);
 
-let data=JSON.parse(localStorage.getItem("cartera"))||[];
+if(!c){alert("No encontrado");return;}
 
-let filtrados=data.filter(c=>{
-let r=parseFloat(c.retraso)||0;
-return r>=min && r<=max;
-});
+let msg=`Filtro:
+${c.nombre} ${c.apellidos}
+DNI: ${c.dni}`;
 
-filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
+location.href="https://wa.me/?text="+encodeURIComponent(msg);
+}
 
-filtrados.forEach(c=>{
-
-let color="#2ecc71";
-if(c.retraso>8) color="#f1c40f";
-if(c.retraso>30) color="#e74c3c";
-if(c.retraso>60) color="black";
-
-lista.innerHTML+=`
-<div class="item" style="border-left:6px solid ${color}">
-<b>${c.nombre||""} ${c.apePat||""} ${c.apeMat||""}</b><br>
-
-Monto: S/ ${c.monto||0}<br>
-Producto: ${c.producto||"-"}<br>
-Retraso: ${c.retraso||0} días<br>
-
-👤 ${c.asesor||"-"}<br>
-📍 ${c.direccion||"-"}<br>
-📞 ${c.celular||"-"}
-</div>`;
-});
-
+function registrarPago(){
+let m=parseFloat(pago.value);
+if(isNaN(m)){alert("Ingresa pago");return;}
+estadoPago.innerHTML="Pago registrado: S/ "+m;
 }
 
 function guardarCliente(){
-let data=JSON.parse(localStorage.getItem("cartera"))||[];
+let data=JSON.parse(localStorage.getItem("cartera_"+asesor)||"[]");
 
 data.push({
 nombre:c_nombre.value,
-apePat:"",
-apeMat:c_apellidos.value,
-monto:c_monto.value,
-retraso:0,
-producto:"Manual",
-asesor:asesor,
-direccion:"",
-celular:""
+apellidos:c_apellidos.value,
+dni:c_dni.value,
+monto:c_monto.value
 });
 
-localStorage.setItem("cartera",JSON.stringify(data));
+localStorage.setItem("cartera_"+asesor,JSON.stringify(data));
 renderClientes();
 }
 
-function abrirQR(el){
-imgQR.src=el.querySelector("img").src;
-modalQR.style.display="flex";
-}
+function renderClientes(){
+let lista=document.getElementById("listaClientes");
+let data=JSON.parse(localStorage.getItem("cartera_"+asesor)||"[]");
 
-function cerrarQR(){
-modalQR.style.display="none";
-}
+lista.innerHTML="";
 
-function enviarUbicacion(){
-navigator.geolocation.getCurrentPosition(function(pos){
-let link=`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-window.open("https://wa.me/?text="+encodeURIComponent(link));
+data.forEach(c=>{
+lista.innerHTML+=`
+<div class="item">
+<b>${c.nombre} ${c.apellidos}</b><br>
+DNI: ${c.dni}<br>
+Monto: S/ ${c.monto}
+</div>`;
 });
 }
 
-function enviarSimulacion(){
-if(!window.simData)return alert("Primero calcula");
-let msg=`Monto: S/ ${simData.monto}\nCuota: S/ ${simData.cuota}\nProducto: ${simData.producto}`;
-window.open("https://wa.me/?text="+encodeURIComponent(msg));
-}
+function enviarQR(tipo,link){
 
-function enviarFiltro(){
-let msg=`${cliente.value} ${apellidos.value}\nDNI:${dni.value}`;
-window.open("https://wa.me/?text="+encodeURIComponent(msg));
+let mensaje=`💳 Credicompany
+
+Puede realizar su pago vía ${tipo}
+
+Escanee el siguiente código:
+${link}
+
+Luego enviar su comprobante.`;
+
+location.href="https://wa.me/?text="+encodeURIComponent(mensaje);
+
 }
 
 </script>

@@ -219,9 +219,9 @@ alert("✅ Usuario eliminado");
 // SIMULADOR
 function calcular(){
 
-let P = parseFloat(monto.value);
-let t = parseFloat(tasa.value)/100;
-let n = parseInt(plazo.value);
+let P = Number(monto.value);
+let t = Number(tasa.value)/100;
+let n = Number(plazo.value);
 
 if(!P || !t || !n){
 alert("Completa datos");

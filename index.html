@@ -360,18 +360,21 @@ reader.readAsArrayBuffer(file);
 }
 
 // CLIENTES + RESUMEN
-function renderClientes(){filtrarMora(0,1000);}
-
 function filtrarMora(min,max){
 
-let lista=listaClientes;
+let lista = document.getElementById("listaClientes");
 lista.innerHTML="";
 
-let data=JSON.parse(localStorage.getItem("cartera"))||[];
+let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
-let filtrados=data.filter(c=>{
-let r=parseFloat(c.retraso)||0;
-return r>=min && r<=max;
+let filtrados = data.filter(c=>{
+let r = parseFloat(c.retraso)||0;
+
+if(asesor === "admin") return r>=min && r<=max;
+
+let esMio = (c.asesor || "").toLowerCase() === asesor.toLowerCase();
+
+return r>=min && r<=max && esMio;
 });
 
 let alDia=0,leve=0,medio=0,critico=0;

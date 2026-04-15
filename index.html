@@ -369,7 +369,12 @@ let lista=listaClientes;
 lista.innerHTML="";
 
 let data=JSON.parse(localStorage.getItem("cartera"))||[];
-
+// 🔐 FILTRO POR USUARIO
+if(asesor !== "admin"){
+data = data.filter(c => 
+(c.asesor || "").toUpperCase() === asesor.toUpperCase()
+);
+}
 let filtrados=data.filter(c=>{
 let r=parseFloat(c.retraso)||0;
 return r>=min && r<=max;

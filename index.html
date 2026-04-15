@@ -162,7 +162,7 @@ let user=usuario.value.trim();
 let pass=clave.value.trim();
 
 if(user==="admin" && pass==="1234"){
-asesor=user;
+asesor = user.toLowerCase().trim();
 nombreAsesor.innerText=asesor;
 loginDiv.style.display="none";
 dashboard.style.display="block";
@@ -174,7 +174,7 @@ let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 let encontrado=usuarios.find(u=>u.user===user && u.pass===pass);
 
 if(encontrado){
-asesor=user;
+asesor = user.toLowerCase().trim();
 nombreAsesor.innerText=asesor;
 loginDiv.style.display="none";
 dashboard.style.display="block";

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,8 +8,6 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <title>Credicompany</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <style>
 body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}
 .header{display:flex;flex-direction:column;align-items:center;padding:20px;}
@@ -156,26 +153,14 @@ Eliminar Usuario
 </div>
 
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyAyqtBZTz5lBG2ydjqTWZ0_yHnmUCPQTOw",
-  authDomain: "credicompany-eb9ee.firebaseapp.com",
-  projectId: "credicompany-eb9ee",
-  storageBucket: "credicompany-eb9ee.appspot.com",
-  messagingSenderId: "425404369452",
-  appId: "1:425404369452:web:459c96ef928eeafba59f89"
-};
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
 let asesor="";
 
 // LOGIN
 function login(){
+let user=usuario.value.trim();
+let pass=clave.value.trim();
 
-let user = usuario.value.trim().toLowerCase();
-let pass = clave.value.trim().toLowerCase();
-
-// ADMIN LOCAL (se mantiene)
 if(user==="admin" && pass==="1234"){
 asesor=user;
 nombreAsesor.innerText=asesor;
@@ -184,31 +169,19 @@ dashboard.style.display="block";
 return;
 }
 
-// 🔥 LOGIN DESDE FIREBASE
-db.collection("usuarios")
-.where("user","==",user)
-.where("pass","==",pass)
-.get()
-.then(snapshot=>{
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
-if(snapshot.empty){
-alert("❌ Usuario o clave incorrectos");
-return;
-}
+let encontrado=usuarios.find(u=>u.user===user && u.pass===pass);
 
-snapshot.forEach(doc=>{
-asesor = doc.data().user;
+if(encontrado){
+asesor=user;
 nombreAsesor.innerText=asesor;
 loginDiv.style.display="none";
 dashboard.style.display="block";
-});
-
-})
-.catch(error=>{
-console.error(error);
-alert("Error conexión Firebase");
-});
-
+}else{
+alert("❌ Usuario o clave incorrectos");
+}
+}
 function eliminarUsuarioManual(){
 
 let user = document.getElementById("nuevoUser").value.trim();
@@ -376,20 +349,7 @@ if(key.includes("distrito")) obj.distrito=val;
 return obj;
 });
 
-json.forEach(c=>{
-db.collection("clientes").add({
-nombre: c.nombre || "",
-asesor: c.asesor || "",
-monto: c.monto || 0,
-retraso: c.retraso || 0,
-celular: c.celular || "",
-producto: c.producto || "",
-direccion: c.direccion || "",
-distrito: c.distrito || ""
-});
-});
-
-alert("✅ Clientes subidos a la nube");
+localStorage.setItem("cartera",JSON.stringify(json));
 renderClientes();
 
 alert("✅ Excel cargado: "+json.length);
@@ -407,19 +367,8 @@ function filtrarMora(min,max){
 let lista=listaClientes;
 lista.innerHTML="";
 
-db.collection("clientes").get().then(snapshot=>{
+let data=JSON.parse(localStorage.getItem("cartera"))||[];
 
-let data = [];
-
-snapshot.forEach(doc=>{
-data.push(doc.data());
-});
-// 🔐 FILTRO POR USUARIO
-if(asesor !== "admin"){
-data = data.filter(c => 
-(c.asesor || "").toUpperCase() === asesor.toUpperCase()
-);
-}
 let filtrados=data.filter(c=>{
 let r=parseFloat(c.retraso)||0;
 return r>=min && r<=max;

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -350,7 +349,20 @@ if(key.includes("distrito")) obj.distrito=val;
 return obj;
 });
 
-localStorage.setItem("cartera",JSON.stringify(json));
+json.forEach(c=>{
+db.collection("clientes").add({
+nombre: c.nombre || "",
+asesor: c.asesor || "",
+monto: c.monto || 0,
+retraso: c.retraso || 0,
+celular: c.celular || "",
+producto: c.producto || "",
+direccion: c.direccion || "",
+distrito: c.distrito || ""
+});
+});
+
+alert("✅ Clientes subidos a la nube");
 renderClientes();
 
 alert("✅ Excel cargado: "+json.length);
@@ -368,7 +380,13 @@ function filtrarMora(min,max){
 let lista=listaClientes;
 lista.innerHTML="";
 
-let data=JSON.parse(localStorage.getItem("cartera"))||[];
+db.collection("clientes").get().then(snapshot=>{
+
+let data = [];
+
+snapshot.forEach(doc=>{
+data.push(doc.data());
+});
 // 🔐 FILTRO POR USUARIO
 if(asesor !== "admin"){
 data = data.filter(c => 

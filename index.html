@@ -171,7 +171,13 @@ $("dashboard").style.display="block";
 return;
 }
 
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+let usuarios = [];
+
+try{
+usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+}catch(e){
+usuarios = [];
+}
 
 let encontrado = usuarios.find(u => u.user === user && u.pass === pass);
 

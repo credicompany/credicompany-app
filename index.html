@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -8,6 +9,8 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <title>Credicompany</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <style>
 body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}
 .header{display:flex;flex-direction:column;align-items:center;padding:20px;}
@@ -153,7 +156,17 @@ Eliminar Usuario
 </div>
 
 <script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAyqtBZTz5lBG2ydjqTWZ0_yHnmUCPQTOw",
+  authDomain: "credicompany-eb9ee.firebaseapp.com",
+  projectId: "credicompany-eb9ee",
+  storageBucket: "credicompany-eb9ee.firebasestorage.app",
+  messagingSenderId: "425404369452",
+  appId: "1:425404369452:web:459c96ef928eeafba59f89"
+};
 
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 let asesor="";
 
 // LOGIN

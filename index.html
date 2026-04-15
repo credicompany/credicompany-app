@@ -170,30 +170,7 @@ const db = firebase.firestore();
 let asesor="";
 
 // LOGIN
-function login(){
-let user=usuario.value.trim();
-let pass=clave.value.trim();
 
-if(user==="admin" && pass==="1234"){
-asesor=user;
-nombreAsesor.innerText=asesor;
-loginDiv.style.display="none";
-dashboard.style.display="block";
-return;
-}
-
-let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
-
-let encontrado=usuarios.find(u=>u.user===user && u.pass===pass);
-
-if(encontrado){
-asesor=user;
-nombreAsesor.innerText=asesor;
-loginDiv.style.display="none";
-dashboard.style.display="block";
-}else{
-alert("❌ Usuario o clave incorrectos");
-}
 }
 function eliminarUsuarioManual(){
 

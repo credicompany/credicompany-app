@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -119,6 +120,8 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <button class="btn-naranja" onclick="eliminarUsuarioManual()">
 Eliminar Usuario
 </button>
+<button class="btn-azul" onclick="exportarUsuarios()">Exportar Usuarios</button>
+<button class="btn-verde" onclick="importarUsuarios()">Importar Usuarios</button>   
 <div id="listaUsuarios"></div>
 </div>
 <div id="pagos" class="card" style="display:none">
@@ -555,6 +558,42 @@ renderClientes();
 alert("✅ Cliente eliminado del seguimiento");
 
 }
+function exportarUsuarios(){
+let data = localStorage.getItem("usuarios") || "[]";
+
+let blob = new Blob([data], {type:"application/json"});
+let a = document.createElement("a");
+
+a.href = URL.createObjectURL(blob);
+a.download = "usuarios.json";
+a.click();
+}
+
+function importarUsuarios(){
+
+let input = document.createElement("input");
+input.type = "file";
+input.accept = ".json";
+
+input.onchange = e => {
+let file = e.target.files[0];
+
+let reader = new FileReader();
+reader.onload = function(evt){
+localStorage.setItem("usuarios", evt.target.result);
+renderUsuarios();
+alert("✅ Usuarios importados");
+};
+
+reader.readAsText(file);
+};
+
+input.click();
+
+}
+
+/* 🔚 FIN */
+    
 </script>
 
 </body>

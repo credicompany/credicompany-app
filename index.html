@@ -544,24 +544,23 @@ Quedamos atentos a su confirmación.`;
 window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 }
 
-// ✅ CANCELADO (ELIMINAR)
-function marcarCancelado(cliente){
+// ✅ Cancelado
+function marcarCancelado(index){
 
 let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
 if(!confirm("¿Marcar como cancelado?")) return;
 
-data = data.filter(c => 
-c.nombre !== cliente.nombre || c.celular !== cliente.celular
-);
+// 🔥 eliminar correctamente usando índice REAL
+data.splice(index,1);
 
 localStorage.setItem("cartera", JSON.stringify(data));
 
 renderClientes();
 
-alert("✅ Cliente eliminado correctamente");
+alert("✅ Cliente eliminado");
 
-}
+}    
 
 let data = JSON.parse(localStorage.getItem("cartera")) || 
 function exportarUsuarios(){

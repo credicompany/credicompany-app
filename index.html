@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+u<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -552,21 +552,14 @@ onclick='marcarCancelado("${c.nombre}|${c.celular}")'
 
 // 🔴 FUNCIÓN CORRECTA
 function marcarCancelado(id){
-
-let [nombre, celular] = id.split("|");
-
-let data = JSON.parse(localStorage.getItem("cartera")) || [];
-
+let [nombre,celular]=id.split("|");
+let data=JSON.parse(localStorage.getItem("cartera"))||[];
 if(!confirm("¿Marcar como cancelado?")) return;
-
-data = data.filter(c => !(c.nombre === nombre && c.celular === celular));
-
-localStorage.setItem("cartera", JSON.stringify(data));
-
-renderClientes();
-
-alert("✅ Cliente eliminado del seguimiento");
+data=data.filter(c=>!(c.nombre===nombre && c.celular===celular));
+localStorage.setItem("cartera",JSON.stringify(data));
+filtrarMora(0,1000);
 }
+
 function exportarUsuarios(){
 let data = localStorage.getItem("usuarios") || "[]";
 

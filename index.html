@@ -469,7 +469,7 @@ document.getElementById(id).style.display="none";
 
 document.getElementById(p).style.display="block";
 
-if(p==="clientes") filtrarMora(0,1000);
+if(p==="clientes") renderClientes();
 if(p==="admin") renderUsuarios();
 }
 
@@ -602,28 +602,13 @@ reader.readAsText(file);
 input.click();
 
 }
-window.onload = function(){
 
-let data = [];
-
-try{
-data = JSON.parse(localStorage.getItem("cartera")) || [];
-}catch(e){
-data = [];
-}
-
-if(data.length > 0){
-loginDiv.style.display = "none";
-dashboard.style.display = "block";
-
-// 🔥 preparar data (SIN abrir pantalla)
-filtrarMora(0,1000);
-}
-
-};
 /* 🔚 FIN */
     
 </script>
+
+</body>
+</html>
 
 </body>
 </html>

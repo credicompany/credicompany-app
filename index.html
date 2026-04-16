@@ -413,12 +413,12 @@ lista.innerHTML+=`
 🏙️ ${c.distrito}
 
 <div style="display:flex;gap:10px;margin-top:10px;">
-onclick="marcarCancelado(${index})"
+<button onclick='enviarCobranza(${JSON.stringify(c)})'
 style="flex:1;background:#123B63;color:white;border:none;padding:10px;border-radius:8px;">
 📩 Cobrar
 </button>
 
-onclick='marcarCancelado(${JSON.stringify(c)})'
+<button onclick='marcarCancelado(${index})'
 style="flex:1;background:#10c251;color:white;border:none;padding:10px;border-radius:8px;">
 ✅ Cancelado
 </button>
@@ -544,25 +544,22 @@ Quedamos atentos a su confirmación.`;
 window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 }
 
-// ✅ Cancelado
+// ✅ CANCELADO (ELIMINAR)
 function marcarCancelado(index){
 
 let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
 if(!confirm("¿Marcar como cancelado?")) return;
 
-// 🔥 eliminar correctamente usando índice REAL
 data.splice(index,1);
 
 localStorage.setItem("cartera", JSON.stringify(data));
 
 renderClientes();
 
-alert("✅ Cliente eliminado");
+alert("✅ Cliente eliminado del seguimiento");
 
-}    
-
-let data = JSON.parse(localStorage.getItem("cartera")) || 
+}
 function exportarUsuarios(){
 let data = localStorage.getItem("usuarios") || "[]";
 

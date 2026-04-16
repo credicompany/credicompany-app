@@ -485,12 +485,15 @@ modalQR.style.display="flex";
 }
 function cerrarQR(){modalQR.style.display="none";}
 
-// GPS
+// 🔴 GEO CON CONTROL
 function enviarUbicacion(){
-navigator.geolocation.getCurrentPosition(pos=>{
+navigator.geolocation.getCurrentPosition(
+pos=>{
 let link=`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
 window.open("https://wa.me/?text="+encodeURIComponent(link));
-});
+},
+()=>alert("No se pudo obtener ubicación")
+);
 }
 
 // WHATSAPP
@@ -545,20 +548,24 @@ window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 }
 
 // ✅ CANCELADO (ELIMINAR)
-function marcarCancelado(index){
+onclick='marcarCancelado("${c.nombre}|${c.celular}")'
+
+// 🔴 FUNCIÓN CORRECTA
+function marcarCancelado(id){
+
+let [nombre, celular] = id.split("|");
 
 let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
 if(!confirm("¿Marcar como cancelado?")) return;
 
-data.splice(index,1);
+data = data.filter(c => !(c.nombre === nombre && c.celular === celular));
 
 localStorage.setItem("cartera", JSON.stringify(data));
 
 renderClientes();
 
 alert("✅ Cliente eliminado del seguimiento");
-
 }
 function exportarUsuarios(){
 let data = localStorage.getItem("usuarios") || "[]";

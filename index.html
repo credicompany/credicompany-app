@@ -469,7 +469,7 @@ document.getElementById(id).style.display="none";
 
 document.getElementById(p).style.display="block";
 
-if(p==="clientes") renderClientes();
+if(p==="clientes") filtrarMora(0,1000);
 if(p==="admin") renderUsuarios();
 }
 
@@ -615,6 +615,9 @@ data = [];
 if(data.length > 0){
 loginDiv.style.display = "none";
 dashboard.style.display = "block";
+
+// 🔥 preparar data (SIN abrir pantalla)
+filtrarMora(0,1000);
 }
 
 };

@@ -418,7 +418,7 @@ style="flex:1;background:#123B63;color:white;border:none;padding:10px;border-rad
 📩 Cobrar
 </button>
 
-<button onclick='marcarCancelado(${index})'
+onclick='marcarCancelado(${JSON.stringify(c)})'
 style="flex:1;background:#10c251;color:white;border:none;padding:10px;border-radius:8px;">
 ✅ Cancelado
 </button>
@@ -545,21 +545,25 @@ window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 }
 
 // ✅ CANCELADO (ELIMINAR)
-function marcarCancelado(index){
+function marcarCancelado(cliente){
 
 let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
 if(!confirm("¿Marcar como cancelado?")) return;
 
-data.splice(index,1);
+data = data.filter(c => 
+c.nombre !== cliente.nombre || c.celular !== cliente.celular
+);
 
 localStorage.setItem("cartera", JSON.stringify(data));
 
 renderClientes();
 
-alert("✅ Cliente eliminado del seguimiento");
+alert("✅ Cliente eliminado correctamente");
 
 }
+
+let data = JSON.parse(localStorage.getItem("cartera")) || 
 function exportarUsuarios(){
 let data = localStorage.getItem("usuarios") || "[]";
 

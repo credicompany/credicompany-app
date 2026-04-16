@@ -609,16 +609,22 @@ input.click();
 function enviarFiltro(){
 
 let nombre = cliente.value || "";
-let apellidosVal = apellidos.value || "";  
+let apellidosVal = apellidos.value || "";
 let dniVal = dni.value || "";
+let productoVal = producto.value || "";
+let montoVal = monto.value || "";
+let plazoVal = plazo.value || "";
 
 let msg = `🔎 FILTRO DE CLIENTE - CREDICOMPANY
 
 👤 Nombre: ${nombre}
 👥 Apellidos: ${apellidosVal}
 🆔 DNI: ${dniVal}
+📦 Producto: ${productoVal}
+💰 Monto: ${montoVal}
+📆 Cuotas: ${plazoVal}
 
-Solicito evaluación o seguimiento de este cliente.`;
+Solicito filtro de cliente gracias.`;
 
 window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 

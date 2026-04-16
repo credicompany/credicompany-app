@@ -552,12 +552,21 @@ onclick='marcarCancelado("${c.nombre}|${c.celular}")'
 
 // 🔴 FUNCIÓN CORRECTA
 function marcarCancelado(id){
-let [nombre,celular]=id.split("|");
-let data=JSON.parse(localStorage.getItem("cartera"))||[];
+
+let [nombre, celular] = id.split("|");
+
+let data = JSON.parse(localStorage.getItem("cartera")) || [];
+
 if(!confirm("¿Marcar como cancelado?")) return;
-data=data.filter(c=>!(c.nombre===nombre && c.celular===celular));
-localStorage.setItem("cartera",JSON.stringify(data));
+
+data = data.filter(c => !(c.nombre === nombre && c.celular === celular));
+
+localStorage.setItem("cartera", JSON.stringify(data));
+
 filtrarMora(0,1000);
+
+alert("✅ Cliente eliminado correctamente");
+
 }
 
 function exportarUsuarios(){

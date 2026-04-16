@@ -602,7 +602,23 @@ reader.readAsText(file);
 input.click();
 
 }
+window.onload = function(){
 
+let data = [];
+
+try{
+data = JSON.parse(localStorage.getItem("cartera")) || [];
+}catch(e){
+data = [];
+}
+
+if(data.length > 0){
+loginDiv.style.display = "none";
+dashboard.style.display = "block";
+mostrar("clientes");
+}
+
+};
 /* 🔚 FIN */
     
 </script>

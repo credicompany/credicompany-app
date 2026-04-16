@@ -349,10 +349,14 @@ if(key.includes("distrito")) obj.distrito=val;
 return obj;
 });
 
-localStorage.setItem("cartera",JSON.stringify(json));
+// 🔥 GUARDADO REAL
+localStorage.setItem("cartera", JSON.stringify(json));
+localStorage.setItem("cartera_backup", JSON.stringify(json));
+
+// 🔥 MOSTRAR
 filtrarMora(0,1000);
 
-alert("✅ Excel cargado: "+json.length);
+alert("✅ Cartera cargada y guardada correctamente");
 
 };
 

@@ -167,6 +167,7 @@ asesor = user.toLowerCase().trim();
 nombreAsesor.innerText=asesor;
 loginDiv.style.display="none";
 dashboard.style.display="block";
+cargarResumen();
 return;
 }
 
@@ -181,6 +182,7 @@ loginDiv.style.display="none";
 dashboard.style.display="block";
 }else{
 alert("❌ Usuario o clave incorrectos");
+cargarResumen();
 }
 }
 function eliminarUsuarioManual(){

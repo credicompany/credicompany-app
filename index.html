@@ -428,6 +428,10 @@ style="flex:1;background:#123B63;color:white;border:none;padding:10px;border-rad
 style="flex:1;background:#10c251;color:white;border:none;padding:10px;border-radius:8px;">
 ✅ Cancelado
 </button>
+<button onclick='registrarPago("${c.nombre}|${c.celular}")'
+style="flex:1;background:#2ecc71;color:white;border:none;padding:10px;border-radius:8px;">
+💵 Registrar pago
+</button>
 </div>
 
 </div>`;
@@ -565,7 +569,12 @@ let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
 if(!confirm("¿Marcar como cancelado?")) return;
 
-data = data.filter(c => !(c.nombre === nombre && c.celular === celular));
+data = data.map(c=>{
+  if(c.nombre === nombre && c.celular === celular){
+    c.estado_gestion = "CANCELADO";
+  }
+  return c;
+});
 
 localStorage.setItem("cartera", JSON.stringify(data));
 
@@ -574,7 +583,30 @@ filtrarMora(0,1000);
 alert("✅ Cliente eliminado correctamente");
 
 }
+function registrarPago(id){
 
+let [nombre, celular] = id.split("|");
+
+let monto = prompt("Monto pagado:");
+if(!monto) return;
+
+let data = JSON.parse(localStorage.getItem("cartera")) || [];
+
+data = data.map(c=>{
+  if(c.nombre === nombre && c.celular === celular){
+    c.ultimo_pago = new Date().toLocaleString();
+    c.monto_pagado = monto;
+    c.estado_gestion = "PAGÓ";
+  }
+  return c;
+});
+
+localStorage.setItem("cartera", JSON.stringify(data));
+
+filtrarMora(0,1000);
+
+alert("✅ Pago registrado");
+}
 function exportarUsuarios(){
 let data = localStorage.getItem("usuarios") || "[]";
 

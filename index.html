@@ -354,7 +354,14 @@ return obj;
 // 🔥 GUARDADO REAL
 localStorage.setItem("cartera", JSON.stringify(json));
 localStorage.setItem("cartera_backup", JSON.stringify(json));
+// 🔥 RESET DIARIO (LÍNEA 357)
+let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
+data.forEach(c=>{
+  c.pagado_hoy = false;
+});
+
+localStorage.setItem("cartera", JSON.stringify(data));
 // 🔥 MOSTRAR
 filtrarMora(0,1000);
 

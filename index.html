@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -355,13 +356,13 @@ return obj;
 localStorage.setItem("cartera", JSON.stringify(json));
 localStorage.setItem("cartera_backup", JSON.stringify(json));
 // 🔥 RESET DIARIO (LÍNEA 357)
-let data = JSON.parse(localStorage.getItem("cartera")) || [];
+let dataReset = JSON.parse(localStorage.getItem("cartera")) || [];
 
-data.forEach(c=>{
-  c.pagado_hoy = false;
+dataReset.forEach(c=>{
+c.pagado_hoy = false;
 });
 
-localStorage.setItem("cartera", JSON.stringify(data));
+localStorage.setItem("cartera", JSON.stringify(dataReset));
 // 🔥 MOSTRAR
 filtrarMora(0,1000);
 
@@ -565,31 +566,7 @@ window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 }
 
 // ✅ CANCELADO (ELIMINAR)
-onclick='marcarCancelado("${c.nombre}|${c.celular}")'
 
-// 🔴 FUNCIÓN CORRECTA
-function marcarCancelado(id){
-
-let [nombre, celular] = id.split("|");
-
-let data = JSON.parse(localStorage.getItem("cartera")) || [];
-
-if(!confirm("¿Marcar como cancelado?")) return;
-
-data = data.map(c=>{
-  if(c.nombre === nombre && c.celular === celular){
-    c.estado_gestion = "CANCELADO";
-  }
-  return c;
-});
-
-localStorage.setItem("cartera", JSON.stringify(data));
-
-filtrarMora(0,1000);
-
-alert("✅ Pago registrado correctamente");
-
-}
 function registrarPago(id){
 
 let [nombre, celular] = id.split("|");

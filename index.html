@@ -96,13 +96,13 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>
 
 <div class="fila">
-<button style="background:#2ecc71" onclick="filtrarMora(0,8)">0-8 días</button>
-<button style="background:#f1c40f;color:black" onclick="filtrarMora(9,30)">9-30 días</button>
+<button id="btn0_8" style="background:#2ecc71" onclick="filtrarMora(0,8)">0-8 días (0)</button>
+<button id="btn9_30" style="background:#f1c40f;color:black" onclick="filtrarMora(9,30)">9-30 días (0)</button>
 </div>
 
 <div class="fila">
-<button style="background:#e74c3c" onclick="filtrarMora(31,60)">31-60 días</button>
-<button style="background:black" onclick="filtrarMora(61,1000)">61+ días</button>
+<button id="btn31_60" style="background:#e74c3c" onclick="filtrarMora(31,60)">31-60 días (0)</button>
+<button id="btn61" style="background:black" onclick="filtrarMora(61,1000)">61+ días (0)</button>
 </div>
 
 <button class="btn-azul" onclick="verTodosClientes()">📋 Todos los clientes</button>
@@ -446,6 +446,7 @@ style="flex:1;background:#2ecc71;color:white;border:none;padding:10px;border-rad
 
 </div>`;
 });
+actualizarContadores();
 }
 
 // USUARIOS
@@ -657,11 +658,32 @@ window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 
 }
 /* 🔚 FIN */
-    
-</script>
+function actualizarContadores(){
 
-</body>
-</html>
+let data = JSON.parse(localStorage.getItem("cartera")) || [];
+
+let c0_8=0, c9_30=0, c31_60=0, c61=0;
+
+data.forEach(c=>{
+
+if(c.pagado_hoy === true) return; // 🔥 excluir pagados
+
+let r = parseFloat(c.retraso)||0;
+
+if(r<=8) c0_8++;
+else if(r<=30) c9_30++;
+else if(r<=60) c31_60++;
+else c61++;
+
+});
+
+document.getElementById("btn0_8").innerText = `0-8 días (${c0_8})`;
+document.getElementById("btn9_30").innerText = `9-30 días (${c9_30})`;
+document.getElementById("btn31_60").innerText = `31-60 días (${c31_60})`;
+document.getElementById("btn61").innerText = `61+ días (${c61})`;
+
+}   
+</script>
 
 </body>
 </html>

@@ -105,7 +105,7 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 <button style="background:black" onclick="filtrarMora(61,1000)">61+ días</button>
 </div>
 
-<button class="btn-azul" onclick="renderClientes()">🔄 Ver todos</button>
+<button class="btn-azul" onclick="verTodosClientes()">📋 Todos los clientes</button>
 
 <div id="listaClientes"></div>
 </div>
@@ -475,7 +475,14 @@ usuarios.forEach(u=>{
 lista.innerHTML+=`<div class="item">${u.user}</div>`;
 });
 }
+function verTodosClientes(){
 
+// Mostrar toda la cartera
+filtrarMora(0,1000);
+
+console.log("Vista general activada");
+
+}
 // UI
 function mostrar(p){
 dashboard.style.display="none";

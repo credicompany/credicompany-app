@@ -374,6 +374,10 @@ lista.innerHTML="";
 let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
 let filtrados = data.filter(c=>{
+
+// 🔴 OCULTAR PAGADOS
+if(c.pagado_hoy) return false;
+
 let r = parseFloat(c.retraso)||0;
 
 if(asesor === "admin") return r>=min && r<=max;
@@ -424,10 +428,6 @@ style="flex:1;background:#123B63;color:white;border:none;padding:10px;border-rad
 📩 Cobrar
 </button>
 
-<button onclick='marcarCancelado("${c.nombre}|${c.celular}")'
-style="flex:1;background:#10c251;color:white;border:none;padding:10px;border-radius:8px;">
-✅ Cancelado
-</button>
 <button onclick='registrarPago("${c.nombre}|${c.celular}")'
 style="flex:1;background:#2ecc71;color:white;border:none;padding:10px;border-radius:8px;">
 💵 Registrar pago
@@ -580,7 +580,7 @@ localStorage.setItem("cartera", JSON.stringify(data));
 
 filtrarMora(0,1000);
 
-alert("✅ Cliente eliminado correctamente");
+alert("✅ Pago registrado correctamente");
 
 }
 function registrarPago(id){
@@ -594,10 +594,12 @@ let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
 data = data.map(c=>{
   if(c.nombre === nombre && c.celular === celular){
-    c.ultimo_pago = new Date().toLocaleString();
-    c.monto_pagado = monto;
-    c.estado_gestion = "PAGÓ";
-  }
+  c.ultimo_pago = new Date().toLocaleString();
+  c.monto_pagado = monto;
+  c.estado_gestion = "PAGÓ";
+  c.retraso = 0;
+  c.pagado_hoy = true; // 👈 ESTA ES LA CLAVE
+}
   return c;
 });
 

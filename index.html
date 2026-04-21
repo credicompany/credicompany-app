@@ -410,16 +410,16 @@ return obj;
 });
 
 // 🔥 GUARDADO REAL
-localStorage.setItem("cartera", JSON.stringify(json));
+await guardarCarteraFirebase(json);
 localStorage.setItem("cartera_backup", JSON.stringify(json));
 // 🔥 RESET DIARIO (LÍNEA 357)
-let dataReset = JSON.parse(localStorage.getItem("cartera")) || [];
+let dataReset = await obtenerCarteraFirebase();
 
 dataReset.forEach(c=>{
-c.pagado_hoy = false;
+  c.pagado_hoy = false;
 });
 
-localStorage.setItem("cartera", JSON.stringify(dataReset));
+await guardarCarteraFirebase(dataReset);
 // 🔥 MOSTRAR
 filtrarMora(0,1000);
 
@@ -431,12 +431,12 @@ reader.readAsArrayBuffer(file);
 }
 
 // CLIENTES + RESUMEN
-function filtrarMora(min,max){
+async function filtrarMora(min,max){
 
 let lista = document.getElementById("listaClientes");
 lista.innerHTML="";
 
-let data = JSON.parse(localStorage.getItem("cartera")) || [];
+let data = await obtenerCarteraFirebase();
 
 let filtrados = data.filter(c=>{
 

@@ -10,29 +10,25 @@
 <title>Credicompany</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 <script type="module">
+
+// 🔥 Firebase (pegado aquí)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIza...",
-  authDomain: "credicompany.firebaseapp.com",
-  projectId: "credicompany",
-  storageBucket: "...",
-  messagingSenderId: "...",
-  appId: "..."
+  apiKey: "...",
+  authDomain: "...",
+  projectId: "..."
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-window.db = db;
-window.collection = collection;
-window.addDoc = addDoc;
-window.getDocs = getDocs;
-window.deleteDoc = deleteDoc;
-window.doc = doc;
-
-</script>
+// 🔥 TU CÓDIGO SIGUE ABAJO
+let asesor="";
+window.login = function(){
+...
+}
 <style>
 body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}
 .header{display:flex;flex-direction:column;align-items:center;padding:20px;}
@@ -210,12 +206,12 @@ Eliminar Usuario
 <img id="imgQR">
 </div>
 
-<script>
+<script type="module">
 
 let asesor="";
 
 // LOGIN
-function login(){
+window.login = function(){
 let user=usuario.value.trim();
 let pass=clave.value.trim();
 
@@ -270,7 +266,7 @@ alert("✅ Usuario eliminado");
 
 }
 // SIMULADOR
-function calcular(){
+window.calcular = function(){
 
 let P = parseFloat(monto.value);
 let t = parseFloat(tasa.value)/100;
@@ -347,7 +343,7 @@ cronograma.innerHTML="";
 }
 
 // EXCEL MEJORADO
-async function cargarExcel(){
+window.cargarExcel = async function(){
 
 let file=document.getElementById("excelFile").files[0];
 if(!file)return alert("Selecciona archivo");
@@ -431,7 +427,7 @@ reader.readAsArrayBuffer(file);
 }
 
 // CLIENTES + RESUMEN
-async function filtrarMora(min,max){
+window.filtrarMora = async function(min,max){
 
 let lista = document.getElementById("listaClientes");
 lista.innerHTML="";
@@ -541,7 +537,7 @@ console.log("Vista general activada");
 
 }
 // UI
-function mostrar(p){
+window.mostrar = function(p){
 dashboard.style.display="none";
 app.style.display="block";
 
@@ -555,7 +551,7 @@ if(p==="clientes") filtrarMora(0,1000);
 if(p==="admin") renderUsuarios();
 }
 
-function volver(){
+window.volver = function(){
 app.style.display="none";
 dashboard.style.display="block";
 }
@@ -630,7 +626,7 @@ window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 }
 
 // ✅ CANCELADO (ELIMINAR)
-function registrarPago(id){
+window.registrarPago = async function(id){
 
 let [nombre, celular] = id.split("|");
 

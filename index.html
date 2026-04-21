@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,26 +8,6 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <title>Credicompany</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-<script type="module">
-
-// 🔥 Firebase (pegado aquí)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "...",
-  authDomain: "...",
-  projectId: "..."
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// 🔥 TU CÓDIGO SIGUE ABAJO
-let asesor="";
-window.login = function(){
-...
-}
 <style>
 body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}
 .header{display:flex;flex-direction:column;align-items:center;padding:20px;}
@@ -206,12 +185,12 @@ Eliminar Usuario
 <img id="imgQR">
 </div>
 
-<script type="module">
+<script>
 
 let asesor="";
 
 // LOGIN
-window.login = function(){
+function login(){
 let user=usuario.value.trim();
 let pass=clave.value.trim();
 
@@ -266,7 +245,7 @@ alert("✅ Usuario eliminado");
 
 }
 // SIMULADOR
-window.calcular = function(){
+function calcular(){
 
 let P = parseFloat(monto.value);
 let t = parseFloat(tasa.value)/100;
@@ -343,7 +322,7 @@ cronograma.innerHTML="";
 }
 
 // EXCEL MEJORADO
-window.cargarExcel = async function(){
+function cargarExcel(){
 
 let file=document.getElementById("excelFile").files[0];
 if(!file)return alert("Selecciona archivo");
@@ -406,16 +385,16 @@ return obj;
 });
 
 // 🔥 GUARDADO REAL
-await guardarCarteraFirebase(json);
+localStorage.setItem("cartera", JSON.stringify(json));
 localStorage.setItem("cartera_backup", JSON.stringify(json));
 // 🔥 RESET DIARIO (LÍNEA 357)
-let dataReset = await obtenerCarteraFirebase();
+let dataReset = JSON.parse(localStorage.getItem("cartera")) || [];
 
 dataReset.forEach(c=>{
-  c.pagado_hoy = false;
+c.pagado_hoy = false;
 });
 
-await guardarCarteraFirebase(dataReset);
+localStorage.setItem("cartera", JSON.stringify(dataReset));
 // 🔥 MOSTRAR
 filtrarMora(0,1000);
 
@@ -427,12 +406,12 @@ reader.readAsArrayBuffer(file);
 }
 
 // CLIENTES + RESUMEN
-window.filtrarMora = async function(min,max){
+function filtrarMora(min,max){
 
 let lista = document.getElementById("listaClientes");
 lista.innerHTML="";
 
-let data = await obtenerCarteraFirebase();
+let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
 let filtrados = data.filter(c=>{
 
@@ -537,7 +516,7 @@ console.log("Vista general activada");
 
 }
 // UI
-window.mostrar = function(p){
+function mostrar(p){
 dashboard.style.display="none";
 app.style.display="block";
 
@@ -551,7 +530,7 @@ if(p==="clientes") filtrarMora(0,1000);
 if(p==="admin") renderUsuarios();
 }
 
-window.volver = function(){
+function volver(){
 app.style.display="none";
 dashboard.style.display="block";
 }
@@ -626,7 +605,7 @@ window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 }
 
 // ✅ CANCELADO (ELIMINAR)
-window.registrarPago = async function(id){
+function registrarPago(id){
 
 let [nombre, celular] = id.split("|");
 

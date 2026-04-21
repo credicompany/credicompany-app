@@ -347,7 +347,7 @@ cronograma.innerHTML="";
 }
 
 // EXCEL MEJORADO
-function cargarExcel(){
+async function cargarExcel(){
 
 let file=document.getElementById("excelFile").files[0];
 if(!file)return alert("Selecciona archivo");

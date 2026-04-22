@@ -183,13 +183,15 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 <button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>
 
 <div class="fila">
-<button style="background:#2ecc71" onclick="filtrarMora(0,8)">0-8 días</button>
-<button style="background:#f1c40f;color:black" onclick="filtrarMora(9,30)">9-30 días</button>
-</div>
+<button style="background:#2ecc71;color:white" onclick="filtrarMora(0,0)">0 días</button>
 
-<div class="fila">
-<button style="background:#e74c3c" onclick="filtrarMora(31,60)">31-60 días</button>
-<button style="background:black" onclick="filtrarMora(61,1000)">61+ días</button>
+<button style="background:#27ae60;color:white" onclick="filtrarMora(1,8)">1-8 días</button>
+
+<button style="background:#f1c40f;color:black" onclick="filtrarMora(9,30)">9-30 días</button>
+
+<button style="background:#e74c3c;color:white" onclick="filtrarMora(31,60)">31-60 días</button>
+
+<button style="background:black;color:white" onclick="filtrarMora(61,1000)">61+ días</button>
 </div>
 
 <button class="btn-azul" onclick="verTodosClientes()">📋 Todos los clientes</button>
@@ -524,20 +526,21 @@ let esMio = (c.asesor || "").toLowerCase() === asesor.toLowerCase();
 return r>=min && r<=max && esMio;
 });
 
-let alDia=0,leve=0,medio=0,critico=0;
-
+let hoy=0, alDia=0, leve=0, medio=0, critico=0;
 filtrados.forEach(c=>{
-let r=parseFloat(c.retraso)||0;
-if(r<=8) alDia++;
-else if(r<=30) leve++;
-else if(r<=60) medio++;
-else critico++;
+    let r=parseFloat(c.retraso)||0;
+
+    if(r === 0) hoy++;
+    else if(r <= 8) alDia++;
+    else if(r <= 30) leve++;
+    else if(r <= 60) medio++;
+    else critico++;
 });
 
 lista.innerHTML+=`
 <div class="item" style="background:#123B63;color:white">
 <b>📊 Resumen</b><br>
-🟢 ${alDia} | 🟡 ${leve} | 🔴 ${medio} | ⚫ ${critico}
+🟢 ${hoy} | 🟢 ${alDia} | 🟡 ${leve} | 🔴 ${medio} | ⚫ ${critico}
 </div>`;
 
 filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));

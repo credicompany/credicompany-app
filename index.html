@@ -458,8 +458,45 @@ alert("✅ Cartera cargada y guardada correctamente");
 
 reader.readAsArrayBuffer(file);
 }
-
 // CLIENTES + RESUMEN
+function actualizarResumen(){
+
+  let data = JSON.parse(localStorage.getItem("cartera")) || [];
+
+  let total = 0;
+  let mora = 0;
+  let hoy = 0;
+  let vencenHoy = 0;
+  let criticos = 0;
+
+  let hoyFecha = new Date().toLocaleDateString();
+
+  data.forEach(c=>{
+
+    let monto = parseFloat(c.monto) || 0;
+    total += monto;
+
+    let retraso = parseFloat(c.retraso) || 0;
+
+    if(retraso > 0) mora++;
+    if(retraso > 30) criticos++;
+    if(c.pagado_hoy) hoy += monto;
+    if(c.fecha_pago === hoyFecha) vencenHoy++;
+
+  });
+
+  let totalClientes = data.length;
+
+  let porcentajeMora = totalClientes ? ((mora / totalClientes) * 100).toFixed(1) : 0;
+
+  document.getElementById("totalCartera").innerText = "S/ " + total.toFixed(2);
+  document.getElementById("porcentajeMora").innerText = porcentajeMora + "%";
+  document.getElementById("cobradoHoy").innerText = "S/ " + hoy.toFixed(2);
+  document.getElementById("vencenHoy").innerText = vencenHoy;
+  document.getElementById("criticos").innerText = criticos;
+  document.getElementById("totalClientes").innerText = totalClientes;
+
+}  
 function filtrarMora(min,max){
 
 let lista = document.getElementById("listaClientes");

@@ -548,7 +548,7 @@ function verTodosClientes(){
 
 // Mostrar toda la cartera
 filtrarMora(0,1000);
-
+cargarResumen();
 console.log("Vista general activada");
 
 }
@@ -663,7 +663,7 @@ return c;
 localStorage.setItem("cartera", JSON.stringify(data));
 
 filtrarMora(0,1000); // 🔥 refresca lista
-
+cargarResumen();
 }
 function exportarUsuarios(){
 let data = localStorage.getItem("usuarios") || "[]";

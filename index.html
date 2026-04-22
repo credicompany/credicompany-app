@@ -751,7 +751,8 @@ if(c.nombre === nombre && c.celular === celular){
 c.ultimo_pago = new Date().toLocaleString();
 c.estado_gestion = "PAGADO";
 c.retraso = 0;
-c.pagado_hoy = true; // 🔥 hace que desaparezca
+c.cuotasVencidas = 0;
+c.pagado_hoy = false; 
 
 }
 return c;
@@ -760,7 +761,7 @@ return c;
 localStorage.setItem("cartera", JSON.stringify(data));
 
 filtrarMora(0,1000); // 🔥 refresca lista
-cargarResumen();
+actualizarResumen();
 }
 function exportarUsuarios(){
 let data = localStorage.getItem("usuarios") || "[]";

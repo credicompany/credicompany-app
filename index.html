@@ -483,7 +483,7 @@ function actualizarResumen(){
     let saldo = parseFloat(c.saldo || c.monto) || 0;
      
     // 🔥 CLIENTES AL DÍA
-    if(retraso === 0){
+    if(retraso === 0 && !c.pagado_hoy){
     hoy += saldo;
       
     vencenHoy++;
@@ -491,7 +491,7 @@ function actualizarResumen(){
 
     });
 
-  let totalClientes = data.length;
+  let totalClientes = data.filter(c => !c.pagado_hoy).length;
 
   let porcentajeMora = totalClientes ? ((mora / totalClientes) * 100).toFixed(1) : 0;
 
@@ -746,53 +746,22 @@ let [nombre, celular] = id.split("|");
 let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
 data = data.map(c=>{
-
 if(c.nombre === nombre && c.celular === celular){
 
-// 🔥 HISTORIAL
-if(!c.historialPagos) c.historialPagos = [];
-
-c.historialPagos.push({
-fecha: new Date().toLocaleString(),
-tipo: "PAGO"
-});
-
-// 🔥 LOGICA REAL
 c.ultimo_pago = new Date().toLocaleString();
 c.estado_gestion = "PAGADO";
-
-// 🔥 REDUCE CUOTAS
-let cuotas = parseFloat(c.cuotasVencidas) || 0;
-
-if(cuotas > 0){
-c.cuotasVencidas = cuotas - 1;
-}
-
-// 🔥 AJUSTE DE ATRASO
-let atraso = parseFloat(c.retraso) || 0;
-
-if(atraso > 0){
-c.retraso = Math.max(0, atraso - 1);
-}
-
-// 🔥 NO DESAPARECE
-c.pagado_hoy = false;
+c.retraso = 0;
+c.cuotasVencidas = 0;
+c.pagado_hoy = true;
 
 }
-
 return c;
-
 });
 
-// 🔥 GUARDAR
 localStorage.setItem("cartera", JSON.stringify(data));
 
-// 🔥 REFRESCAR TODO
-filtrarMora(0,1000);
+filtrarMora(0,1000); // 🔥 refresca lista
 actualizarResumen();
-
-alert("✅ Pago aplicado correctamente");
-
 }
 function exportarUsuarios(){
 let data = localStorage.getItem("usuarios") || "[]";

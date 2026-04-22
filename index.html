@@ -452,9 +452,8 @@ c.pagado_hoy = false;
 localStorage.setItem("cartera", JSON.stringify(dataReset));
 // 🔥 MOSTRAR
 filtrarMora(0,1000);
-cargarResumen();
+actualizarResumen();
 alert("✅ Cartera cargada y guardada correctamente");
-cargarResumen();
 };
 
 reader.readAsArrayBuffer(file);

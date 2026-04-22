@@ -397,9 +397,9 @@ c.pagado_hoy = false;
 localStorage.setItem("cartera", JSON.stringify(dataReset));
 // 🔥 MOSTRAR
 filtrarMora(0,1000);
-
+cargarResumen();
 alert("✅ Cartera cargada y guardada correctamente");
-
+cargarResumen();
 };
 
 reader.readAsArrayBuffer(file);
@@ -477,7 +477,44 @@ style="flex:1;background:#2ecc71;color:white;border:none;padding:10px;border-rad
 </div>`;
 });
 }
+function cargarResumen(){
+  let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
+  let total = 0;
+  let vencido = 0;
+  let hoy = 0;
+  let vencenHoy = 0;
+  let criticos = 0;
+
+  let hoyFecha = new Date().toISOString().split("T")[0];
+
+  data.forEach(c=>{
+    let deuda = Number(c.deuda || 0);
+    let dias = Number(c.dias_mora || 0);
+
+    total += deuda;
+
+    if(dias > 0) vencido += deuda;
+    if(dias > 30) criticos++;
+
+    if(c.pagado_hoy === true){
+      hoy += deuda;
+    }
+
+    if(c.fecha_pago === hoyFecha){
+      vencenHoy++;
+    }
+  });
+
+  let moraPorcentaje = total > 0 ? (vencido / total * 100).toFixed(1) : 0;
+
+  document.getElementById("totalCartera").innerText = "S/ " + total.toFixed(2);
+  document.getElementById("porcentajeMora").innerText = moraPorcentaje + "%";
+  document.getElementById("cobradoHoy").innerText = "S/ " + hoy.toFixed(2);
+  document.getElementById("vencenHoy").innerText = vencenHoy;
+  document.getElementById("criticos").innerText = criticos;
+  document.getElementById("totalClientes").innerText = data.length;
+}
 // USUARIOS
 function crearUsuario(){
 let user=nuevoUser.value.trim();

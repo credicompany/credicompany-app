@@ -746,22 +746,53 @@ let [nombre, celular] = id.split("|");
 let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
 data = data.map(c=>{
+
 if(c.nombre === nombre && c.celular === celular){
 
-c.ultimo_pago = new Date().toLocaleString();
-c.estado_gestion = "PAGADO";
-c.retraso = 0;
-c.cuotasVencidas = 0;
-c.pagado_hoy = false; 
+// 🔥 HISTORIAL
+if(!c.historialPagos) c.historialPagos = [];
 
-}
-return c;
+c.historialPagos.push({
+fecha: new Date().toLocaleString(),
+tipo: "PAGO"
 });
 
+// 🔥 LOGICA REAL
+c.ultimo_pago = new Date().toLocaleString();
+c.estado_gestion = "PAGADO";
+
+// 🔥 REDUCE CUOTAS
+let cuotas = parseFloat(c.cuotasVencidas) || 0;
+
+if(cuotas > 0){
+c.cuotasVencidas = cuotas - 1;
+}
+
+// 🔥 AJUSTE DE ATRASO
+let atraso = parseFloat(c.retraso) || 0;
+
+if(atraso > 0){
+c.retraso = Math.max(0, atraso - 1);
+}
+
+// 🔥 NO DESAPARECE
+c.pagado_hoy = false;
+
+}
+
+return c;
+
+});
+
+// 🔥 GUARDAR
 localStorage.setItem("cartera", JSON.stringify(data));
 
-filtrarMora(0,1000); // 🔥 refresca lista
+// 🔥 REFRESCAR TODO
+filtrarMora(0,1000);
 actualizarResumen();
+
+alert("✅ Pago aplicado correctamente");
+
 }
 function exportarUsuarios(){
 let data = localStorage.getItem("usuarios") || "[]";

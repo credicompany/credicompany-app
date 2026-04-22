@@ -480,10 +480,16 @@ function actualizarResumen(){
 
     if(retraso > 0) mora++;
     if(retraso > 30) criticos++;
-    if(c.pagado_hoy) hoy += monto;
-    if(c.fecha_pago === hoyFecha) vencenHoy++;
+    let saldo = parseFloat(c.saldo || c.monto) || 0;
+     
+    // 🔥 CLIENTES AL DÍA
+    if(retraso === 0){
+    hoy += saldo;
+      
+    vencenHoy++;
+    }
 
-  });
+    });
 
   let totalClientes = data.length;
 

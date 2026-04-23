@@ -404,7 +404,7 @@ break;
 }
 }
 
-let headers=raw[headerIndex];
+let headers=raw[headerIndex];m
 let dataRows=raw.slice(headerIndex+1);
 
 let json=dataRows.map(r=>{
@@ -453,9 +453,13 @@ c.pagado_hoy = false;
 });
 
 localStorage.setItem("cartera", JSON.stringify(dataReset));
+console.log("DATA CARGADA:", dataReset);  
 backup();
 // 🔥 MOSTRAR
+setTimeout(()=>{
 filtrarMora(0,1000);
+actualizarResumen();
+}, 200);
 actualizarResumen();
 alert("✅ Cartera cargada y guardada correctamente");
 };
@@ -523,7 +527,7 @@ let r = parseFloat(c.retraso)||0;
 
 if(asesor === "admin") return r>=min && r<=max;
 
-let esMio = (c.asesor || "").toLowerCase() === asesor.toLowerCase();
+let esMio = asesor === "admin" || (c.asesor || "").toLowerCase() === asesor.toLowerCase();i
 
 return r>=min && r<=max && esMio;
 });

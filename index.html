@@ -558,7 +558,16 @@ lista.innerHTML+=`
 📅 ${c.retraso} días<br>
 🚨 ${c.cuotasVencidas || 0} cuotas vencidas<br>
 👤 ${c.asesor}<br>
-📞 ${c.celular}<br>
+📞 <a href="#"
+onclick='enviarCobranzaDesdeLista(
+"${encodeURIComponent(c.nombre)}",
+"${c.celular}",
+"${c.retraso}",
+"${c.monto}"
+); return false;'
+style="color:#25D366;font-weight:bold;text-decoration:none;">
+${c.celular}
+</a><br>
 📦 ${c.producto}<br>
 📍 ${c.direccion}<br>
 🏙️ ${c.distrito}

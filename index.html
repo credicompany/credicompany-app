@@ -326,8 +326,22 @@ if(producto.value==="quincenal"){ i=t/2; dias=15; }
 if(producto.value==="mensual"){ i=t; dias=30; }
 
 // 🔥 fórmula financiera
-let cuota = (P*i)/(1-Math.pow(1+i,-n));
-let total = cuota * n;
+let saldo = P;
+let cuota = 0;
+let total = 0;
+
+for(let c=1;c<=n;c++){
+
+let interesTmp = saldo * i;
+let igvTmp = interesTmp * 0.18;
+let capitalTmp = P / n;
+
+cuota = capitalTmp + interesTmp + igvTmp;
+
+saldo -= capitalTmp;
+total += cuota;
+}
+
 let interes = total - P;
 
 // 🔥 resumen completo
@@ -344,17 +358,20 @@ let html = "<h4>Cronograma:</h4>";
 
 for(let c=1;c<=n;c++){
 
-let interesCuota = saldo * i;
-let capital = cuota - interesCuota;
-saldo -= capital;
+let interesCuota = Math.round((saldo * i) * 100) / 100;
+let igv = Math.round((interesCuota * 0.18) * 100) / 100;
+let capital = Math.round((saldo / (n - c + 1)) * 100) / 100;
 
+let cuotaReal = capital + interesCuota + igv;
+cuotaReal = Math.round(cuotaReal * 100) / 100;
+saldo -= capital;
 fecha.setDate(fecha.getDate()+dias);
 
 html += `
 <div class="item">
 Cuota ${c}<br>
 Fecha: ${fecha.toLocaleDateString()}<br>
-Cuota: S/ ${cuota.toFixed(2)}<br>
+Cuota: S/ ${cuotaReal.toFixed(2)}
 Saldo: S/ ${saldo.toFixed(2)}
 </div>`;
 }

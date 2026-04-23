@@ -726,11 +726,12 @@ window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 
 }
 // 📩 COBRANZA WHATSAPP
-function enviarCobranza(cliente){
+function enviarCobranzaDesdeLista(nombre, celular, dias, monto){
 
-let nombre = cliente.nombre || "Cliente";
-let dias = cliente.retraso || 0;
-let monto = cliente.monto || "0";
+nombre = decodeURIComponent(nombre);
+celular = (celular || "").replace(/\D/g,""); // limpia espacios
+
+dias = parseFloat(dias) || 0;
 
 let msg = "";
 
@@ -794,7 +795,8 @@ Es importante regularizar de inmediato para evitar acciones adicionales.
 Agradecemos su pronta respuesta.`;
 }
 
-window.open("https://wa.me/?text=" + encodeURIComponent(msg));
+// 🔥 AQUÍ ESTÁ LA CLAVE
+window.open("https://wa.me/51" + celular + "?text=" + encodeURIComponent(msg));
 }
 
 // ✅ CANCELADO (ELIMINAR)

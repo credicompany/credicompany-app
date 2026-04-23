@@ -723,11 +723,26 @@ let nombre = cliente.nombre || "Cliente";
 let dias = cliente.retraso || 0;
 let monto = cliente.monto || "0";
 
-let nivel = "🟢 RECORDATORIO";
-if(dias > 8) nivel = "🟡 AVISO";
-if(dias > 30) nivel = "🔴 URGENTE";
+let msg = "";
 
-let msg = `${nivel} - CREDICOMPANY
+// 🟢 VENCE HOY
+if(dias === 0){
+msg = `📌 RECORDATORIO - CREDICOMPANY
+
+Estimado(a) ${nombre},
+
+Hoy corresponde el pago de su cuota programada. 💼
+
+💰 Monto a pagar: S/ ${monto}
+
+Le recomendamos realizar el pago dentro del día para mantener su crédito al día y evitar cargos por mora.
+
+Quedamos atentos a su confirmación.`;
+}
+
+// 🟡 1–8 días
+else if(dias <= 8){
+msg = `🟡 AVISO - CREDICOMPANY
 
 Estimado(a) ${nombre},
 
@@ -735,9 +750,40 @@ Registra ${dias} días de atraso.
 
 💰 Deuda pendiente: S/ ${monto}
 
-Le solicitamos regularizar el pago hoy para evitar acciones adicionales.
+Le solicitamos regularizar el pago a la brevedad para evitar mayores cargos.
 
 Quedamos atentos a su confirmación.`;
+}
+
+// 🟠 9–30 días
+else if(dias <= 30){
+msg = `🟠 SEGUIMIENTO - CREDICOMPANY
+
+Estimado(a) ${nombre},
+
+Registra ${dias} días de atraso.
+
+💰 Deuda pendiente: S/ ${monto}
+
+Le solicitamos regularizar el pago lo antes posible.
+
+Quedamos atentos a su confirmación.`;
+}
+
+// 🔴 +30 días
+else{
+msg = `🔴 URGENTE - CREDICOMPANY
+
+Estimado(a) ${nombre},
+
+Su crédito registra ${dias} días de atraso.
+
+💰 Deuda pendiente: S/ ${monto}
+
+Es importante regularizar de inmediato para evitar acciones adicionales.
+
+Agradecemos su pronta respuesta.`;
+}
 
 window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 }

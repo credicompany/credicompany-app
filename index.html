@@ -326,9 +326,22 @@ if(producto.value==="quincenal"){ i=t/2; dias=15; }
 if(producto.value==="mensual"){ i=t; dias=30; }
 
 // 🔥 fórmula financiera
-let cuota = (P*i)/(1-Math.pow(1+i,-n));
-let total = cuota * n;
-let interes = total - P;
+let cuota, total, interes;
+
+if(producto.value === "diario"){
+
+  let tasaDiaria = t / 30;
+  interes = P * tasaDiaria * n;
+  total = P + interes;
+  cuota = total / n;
+
+}else{
+
+  cuota = (P*i)/(1 - Math.pow(1+i,-n));
+  total = cuota * n;
+  interes = total - P;
+
+}
 
 // 🔥 resumen completo
 resultado.innerHTML = `

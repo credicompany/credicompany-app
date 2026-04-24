@@ -317,7 +317,7 @@ return;
 let i = 0;
 let dias = 0;
 
-if(producto.value==="diario"){ i=t/30; dias=1; }
+if(producto.value==="diario"){ i=t/26; dias=1; }
 if(producto.value==="semanal"){
     i = Math.pow(1 + t, 1/4) - 1;
     dias = 7;
@@ -328,20 +328,9 @@ if(producto.value==="mensual"){ i=t; dias=30; }
 // 🔥 fórmula financiera
 let cuota, total, interes;
 
-if(producto.value === "diario"){
-
-let tasaDiaria = t / 26;
-interes = P * tasaDiaria * n;
-total = P + interes;
-cuota = total / n;
-
-}else{
-
   cuota = (P*i)/(1 - Math.pow(1+i,-n));
   total = cuota * n;
   interes = total - P;
-
-}
 
 // 🔥 resumen completo
 resultado.innerHTML = `
@@ -358,7 +347,8 @@ let html = "<h4>Cronograma:</h4>";
 for(let c=1;c<=n;c++){
 
 let interesCuota = saldo * i;
-let capital = cuota - interesCuota;
+let igv = interesCuota * 0.18;
+let capital = cuota - interesCuota - igv;
 saldo -= capital;
 
 fecha.setDate(fecha.getDate()+dias);

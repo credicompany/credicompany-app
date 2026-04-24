@@ -859,27 +859,20 @@ input.click();
 }
 function enviarFiltro(){
 
-let nombre = cliente.value || "";
-let apellidosVal = apellidos.value || "";
-let dniVal = dni.value || "";
-let productoVal = producto.value || "";
-let montoVal = monto.value || "";
-let plazoVal = plazo.value || "";
+  let nombre = cliente.value || "";
+  let apellidosVal = apellidos.value || "";
+  let dniVal = dni.value || "";
 
-let msg = `🔎 FILTRO DE CLIENTE - CREDICOMPANY
+  let msg = "🔎 FILTRO DE CLIENTE - CREDICOMPANY\n\n";
 
-👤 Nombre: ${nombre}
-👥 Apellidos: ${apellidosVal}
-🆔 DNI: ${dniVal}
-📦 Producto: ${productoVal}
-💰 Monto: ${montoVal}
-📆 Cuotas: ${plazoVal}
+  if(nombre) msg += `👤 Nombre: ${nombre}\n`;
+  if(apellidosVal) msg += `👥 Apellidos: ${apellidosVal}\n`;
+  if(dniVal) msg += `🆔 DNI: ${dniVal}\n`;
 
-👨‍💼 Asesor: ${asesor}
+  msg += `\n👨‍💼 Asesor: ${asesor}\n`;
+  msg += "\nApoyo filtro de cliente gracias.";
 
-Solicito filtro de cliente gracias.`;
-
-window.open("https://wa.me/?text=" + encodeURIComponent(msg));
+  window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 
 }
 /* 🔚 FIN */

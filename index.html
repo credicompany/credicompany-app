@@ -317,7 +317,10 @@ return;
 let i = 0;
 let dias = 0;
 
-if(producto.value==="diario"){ i=t/26; dias=1; }
+if(producto.value==="diario"){ 
+  i = Math.pow(1 + t, 1/26) - 1; 
+  dias = 1; 
+}
 if(producto.value==="semanal"){
     i = Math.pow(1 + t, 1/4) - 1;
     dias = 7;

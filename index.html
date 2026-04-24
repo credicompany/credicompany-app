@@ -326,11 +326,9 @@ if(producto.value==="quincenal"){ i=t/2; dias=15; }
 if(producto.value==="mensual"){ i=t; dias=30; }
 
 // 🔥 fórmula financiera
-let cuota, total, interes;
-
-  cuota = (P*i)/(1 - Math.pow(1+i,-n));
-  total = cuota * n;
-  interes = total - P;
+let cuota = (P*i)/(1 - Math.pow(1+i,-n));
+let total = cuota * n;
+let interes = total - P;
 
 // 🔥 resumen completo
 resultado.innerHTML = `
@@ -348,7 +346,12 @@ for(let c=1;c<=n;c++){
 
 let interesCuota = saldo * i;
 let igv = interesCuota * 0.18;
+
+// 🔥 ahora sí correcto
+let interesCuota = saldo * i;
+let igv = interesCuota * 0.18;
 let capital = cuota - interesCuota - igv;
+
 saldo -= capital;
 
 fecha.setDate(fecha.getDate()+dias);

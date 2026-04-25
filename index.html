@@ -140,10 +140,6 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
     <div>👥 Clientes</div>
     <div id="totalClientes">0</div>
   </div>
-<div class="card-resumen">
-    <div>⚠ Parciales</div>
-    <div id="clientesParciales">0</div>
-</div>
 
 <div class="card-resumen">
     <div>💸 Mora Recuperada</div>
@@ -487,7 +483,6 @@ function actualizarResumen(){
   let hoy = 0;
   let vencenHoy = 0;
   let criticos = 0;
-let parciales = 0;
 let moraRecuperada = 0;
 let ranking = {};
   let hoyFecha = new Date().toLocaleDateString();
@@ -502,10 +497,6 @@ let ranking = {};
 let pagado = parseFloat(c.pagado_monto) || 0;
 let cuota = parseFloat(c.monto) || 0;
 
-// detectar parciales
-if(pagado > 0 && pagado < cuota){
-    parciales++;
-}
 
 // mora recuperada
 if(retraso > 0 && pagado > 0){
@@ -543,7 +534,6 @@ ranking[asesorNombre] += pagado;
   document.getElementById("vencenHoy").innerText = vencenHoy;
   document.getElementById("criticos").innerText = criticos;
   document.getElementById("totalClientes").innerText = totalClientes;
-  document.getElementById("clientesParciales").innerText = parciales;
 
 document.getElementById("moraRecuperada").innerText =
 "S/ " + moraRecuperada.toFixed(2);

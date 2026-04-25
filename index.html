@@ -80,6 +80,22 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
   margin-top:2px;
   font-weight:bold;
 }
+  #rankingBox{
+  background:white;
+  margin:10px 15px;
+  padding:10px;
+  border-radius:18px;
+  text-align:center;
+  min-height:55px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.08);
+}
+
+#rankingBox h3{
+  margin:0;
+  font-size:18px;
+  text-align:center;
+  color:#333;
+}
 </style>
 </head>
 
@@ -90,8 +106,8 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 <div>Asesor: <span id="nombreAsesor">-</span></div>
 </div>
 <div class="card" id="rankingBox">
-    <h3>🏆 Ranking Asesores del Día</h3>
-    <div id="rankingAsesores"></div>
+<h3>🏆 Ranking Asesores del Día</h3>
+<div id="rankingAsesores"></div>
 </div>
 <div id="loginDiv" class="card">
 <input id="usuario" placeholder="Usuario">
@@ -562,7 +578,7 @@ if(index === 0) medalla = "🥇";
 if(index === 1) medalla = "🥈";
 
 rankingHTML += `
-<div class="item">
+<div style="font-size:12px;margin-top:4px;">
 ${medalla} ${item[0]} → S/${item[1].toFixed(2)}
 </div>
 `;

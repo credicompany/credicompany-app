@@ -162,6 +162,10 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 <div style="font-size:28px;">⚙️</div>
 <div>Usuarios</div>
 </div>
+  <div class="box" onclick="verHistorialPagos()">
+    <div style="font-size:28px;">📋</div>
+    <div>Historial Pagos</div>
+  </div>
 </div>
 </div>
 
@@ -929,7 +933,17 @@ return c;
 });
 
 localStorage.setItem("cartera", JSON.stringify(data));
+let historial = JSON.parse(localStorage.getItem("historialPagos")) || [];
 
+historial.push({
+    cliente: nombre,
+    celular: celular,
+    monto: c.monto,
+    fecha: new Date().toLocaleString(),
+    asesor: usuarioActual || c.asesor || "Sin asesor"
+});
+
+localStorage.setItem("historialPagos", JSON.stringify(historial));
 filtrarMora(0,1000);
 actualizarResumen();
 
@@ -984,10 +998,38 @@ function enviarFiltro(){
   msg += "\nApoyo filtro de cliente gracias.";
 
   window.open("https://wa.me/?text=" + encodeURIComponent(msg));
+function verHistorialPagos(){
+
+document.getElementById("menuPrincipal").style.display="none";
+document.getElementById("historialDiv").style.display="block";
+
+let historial = JSON.parse(localStorage.getItem("historialPagos")) || [];
+let lista = document.getElementById("listaHistorial");
+
+lista.innerHTML="";
+
+if(historial.length===0){
+    lista.innerHTML="<p>No hay pagos registrados</p>";
+    return;
+}
+
+historial.reverse().forEach(p=>{
+
+lista.innerHTML += `
+<div class="item">
+    <b>${p.cliente}</b><br>
+    💰 S/${p.monto}<br>
+    👤 ${p.asesor}<br>
+    📞 ${p.celular}<br>
+    🕒 ${p.fecha}
+</div>
+`;
+
+});
 
 }
-/* 🔚 FIN */
-    
+  
+/* 🔚 FIN */   
 </script>
 
 </body>

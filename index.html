@@ -870,22 +870,42 @@ let [nombre, celular] = id.split("|");
 let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
 data = data.map(c=>{
+
 if(c.nombre === nombre && c.celular === celular){
+
+let montoPagado = prompt("Ingrese monto pagado:");
+
+if(!montoPagado){
+return c;
+}
+
+c.pagado_monto = parseFloat(montoPagado) || 0;
 
 c.ultimo_pago = new Date().toLocaleString();
 c.estado_gestion = "PAGADO";
-c.retraso = 0;
-c.cuotasVencidas = 0;
-c.pagado_hoy = true;
+
+// pago completo
+if(c.pagado_monto >= parseFloat(c.monto)){
+    c.retraso = 0;
+    c.cuotasVencidas = 0;
+    c.pagado_hoy = true;
+}else{
+    // pago parcial
+    c.pagado_hoy = false;
+}
 
 }
+
 return c;
+
 });
 
 localStorage.setItem("cartera", JSON.stringify(data));
 
-filtrarMora(0,1000); // 🔥 refresca lista
+filtrarMora(0,1000);
 actualizarResumen();
+
+alert("✅ Pago registrado correctamente");
 }
 function exportarUsuarios(){
 let data = localStorage.getItem("usuarios") || "[]";

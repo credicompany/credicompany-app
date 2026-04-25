@@ -39,11 +39,12 @@ box-shadow:0 4px 10px rgba(0,0,0,0.1);
 transform:translateY(-5px);
 box-shadow:0 8px 20px rgba(0,0,0,0.2);
 }
-.fila{display:flex;gap:10px;margin-top:10px;}
+.fila{display:flex;gap:6px;margin-top:6px;}
 .fila button{width:50%;}
-.item{background:white;padding:12px;margin-top:10px;border-radius:10px;color:#333;}
+.item{background:white;padding:6px;margin-top:6px;border-radius:8px;color:#333;font-size:12px;line-height:1.1;
+} 
 .pagos-container{display:flex;flex-direction:column;gap:20px;}
-.pago-box{background:white;padding:10px;border-radius:12px;cursor:pointer;}
+.pago-box{background:white;padding:6px;border-radius:12px;cursor:pointer;}
 .pago-box img{width:100%;height:auto;max-height:500px;object-fit:contain;}
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;justify-content:center;align-items:center;z-index:999;}
 .modal img{width:95%;max-width:450px;}
@@ -616,11 +617,11 @@ if(c.retraso>30) color="#e74c3c";
 if(c.retraso>60) color="black";
 
 lista.innerHTML+=`
-<div class="item" style="border-left:6px solid ${color}">
-<b>${c.nombre}</b><br>
-💰 ${c.monto}<br>
-📅 ${c.retraso} días<br>
-🚨 ${c.cuotasVencidas || 0} cuotas vencidas<br>
+<div class="item" style="border-left:4px solid ${color}">
+<b style="font-size:11px;">${c.nombre}</b>
+💰 S/${parseFloat(c.monto).toFixed(0)}<br>
+📅 ${c.retraso}d<br>
+🚨 ${c.cuotasVencidas || 0} cuotas<br>
 👤 ${c.asesor}<br>
 📞 <a href="#"
 onclick='enviarCobranzaDesdeLista(
@@ -636,9 +637,9 @@ ${c.celular}
 📍 ${c.direccion}<br>
 🏙️ ${c.distrito}
 
-<div style="display:flex;gap:10px;margin-top:10px;">
+<div style="display:flex;gap:5px;margin-top:5px;
 <button onclick='enviarCobranza(${JSON.stringify(c)})'
-style="flex:1;background:#123B63;color:white;border:none;padding:10px;border-radius:8px;">
+style="flex:1;background:#123B63;color:white;border:none;padding:8px;border-radius:8px;">
 📩 Cobrar
 </button>
 

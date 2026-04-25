@@ -97,6 +97,24 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
   text-align:center;
   color:#333;
 }
+ #rankingContainer{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:10px 15px;
+}
+
+#btnVolverTop{
+  background:#123B63;
+  color:white;
+  border:none;
+  padding:8px 12px;
+  border-radius:12px;
+  font-size:13px;
+  font-weight:bold;
+  width:auto;
+  min-width:90px;
+} 
 </style>
 </head>
 
@@ -106,9 +124,15 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 <img src="logo.png">
 <div>Asesor: <span id="nombreAsesor">-</span></div>
 </div>
-<div class="card" id="rankingBox">
-<h3>🏆 Ranking Asesores del Día</h3>
-<div id="rankingAsesores"></div>
+<div id="rankingContainer">
+
+    <div class="card" id="rankingBox">
+        <h3>🏆 Ranking Asesores del Día</h3>
+        <div id="rankingAsesores"></div>
+    </div>
+
+    <button id="btnVolverTop" onclick="volverInicio()">← Volver</button>
+
 </div>
 <div id="loginDiv" class="card">
 <input id="usuario" placeholder="Usuario">
@@ -213,7 +237,6 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 </div>
 
 <div id="clientes" class="card" style="display:none">
-<div class="volver" onclick="volver()">← Volver</div>
 
 <input type="file" id="excelFile" accept=".csv,.xlsx" style="margin-top:15px;">
 <button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>

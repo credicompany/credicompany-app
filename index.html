@@ -150,7 +150,10 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
     <div id="moraRecuperada">S/0</div>
 </div>
 </div>
-
+<div class="card" id="rankingBox">
+    <h3>🏆 Ranking Asesores del Día</h3>
+    <div id="rankingAsesores"></div>
+</div>
 <div id="app" style="display:none">
 
 <div id="simulador" class="card">
@@ -544,6 +547,26 @@ ranking[asesorNombre] += pagado;
 
 document.getElementById("moraRecuperada").innerText =
 "S/ " + moraRecuperada.toFixed(2);
+  let rankingHTML = "";
+
+Object.entries(ranking)
+.sort((a,b)=>b[1]-a[1])
+.slice(0,5)
+.forEach((item,index)=>{
+
+let medalla = "🥉";
+
+if(index === 0) medalla = "🥇";
+if(index === 1) medalla = "🥈";
+
+rankingHTML += `
+<div class="item">
+${medalla} ${item[0]} → S/${item[1].toFixed(2)}
+</div>
+`;
+});
+
+document.getElementById("rankingAsesores").innerHTML = rankingHTML;
 }  
 function filtrarMora(min,max){
 

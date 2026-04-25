@@ -862,15 +862,7 @@ let data = JSON.parse(localStorage.getItem("cartera")) || [];
 data = data.map(c=>{
 
 if(c.nombre === nombre && c.celular === celular){
-
-let montoPagado = prompt("Ingrese monto pagado:");
-
-if(!montoPagado){
-return c;
-}
-
-c.pagado_monto = parseFloat(montoPagado) || 0;
-
+c.pagado_monto = parseFloat(c.monto) || 0;
 c.ultimo_pago = new Date().toLocaleString();
 c.estado_gestion = "PAGADO";
 

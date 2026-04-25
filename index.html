@@ -875,15 +875,9 @@ c.ultimo_pago = new Date().toLocaleString();
 c.estado_gestion = "PAGADO";
 
 // pago completo
-if(c.pagado_monto >= parseFloat(c.monto)){
-    c.retraso = 0;
-    c.cuotasVencidas = 0;
-    c.pagado_hoy = true;
-}else{
-    // pago parcial
-    c.pagado_hoy = false;
-}
-
+c.retraso = 0;
+c.cuotasVencidas = 0;
+c.pagado_hoy = true;
 }
 
 return c;

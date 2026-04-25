@@ -140,7 +140,15 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
     <div>👥 Clientes</div>
     <div id="totalClientes">0</div>
   </div>
+<div class="card-resumen">
+    <div>⚠ Parciales</div>
+    <div id="clientesParciales">0</div>
+</div>
 
+<div class="card-resumen">
+    <div>💸 Mora Recuperada</div>
+    <div id="moraRecuperada">S/0</div>
+</div>
 </div>
 
 <div id="app" style="display:none">
@@ -476,7 +484,9 @@ function actualizarResumen(){
   let hoy = 0;
   let vencenHoy = 0;
   let criticos = 0;
-
+let parciales = 0;
+let moraRecuperada = 0;
+let ranking = {};
   let hoyFecha = new Date().toLocaleDateString();
 
   data.forEach(c=>{
@@ -484,8 +494,29 @@ function actualizarResumen(){
     let monto = parseFloat(c.monto) || 0;
     total += monto;
 
-    let retraso = parseFloat(c.retraso) || 0;
+  let retraso = parseFloat(c.retraso) || 0;
 
+let pagado = parseFloat(c.pagado_monto) || 0;
+let cuota = parseFloat(c.monto) || 0;
+
+// detectar parciales
+if(pagado > 0 && pagado < cuota){
+    parciales++;
+}
+
+// mora recuperada
+if(retraso > 0 && pagado > 0){
+    moraRecuperada += pagado;
+}
+
+// ranking asesor
+let asesorNombre = c.asesor || "Sin asesor";
+
+if(!ranking[asesorNombre]){
+    ranking[asesorNombre] = 0;
+}
+
+ranking[asesorNombre] += pagado;
     if(retraso > 0) mora++;
     if(retraso > 30) criticos++;
     let saldo = parseFloat(c.saldo || c.monto) || 0;
@@ -509,7 +540,10 @@ function actualizarResumen(){
   document.getElementById("vencenHoy").innerText = vencenHoy;
   document.getElementById("criticos").innerText = criticos;
   document.getElementById("totalClientes").innerText = totalClientes;
+  document.getElementById("clientesParciales").innerText = parciales;
 
+document.getElementById("moraRecuperada").innerText =
+"S/ " + moraRecuperada.toFixed(2);
 }  
 function filtrarMora(min,max){
 

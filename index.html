@@ -795,6 +795,19 @@ if(p==="admin") renderUsuarios();
 }
 
 function volver(){
+
+document.getElementById("app").style.display="none";
+document.getElementById("dashboard").style.display="block";
+document.getElementById("historialDiv").style.display="none";
+
+document.getElementById("rankingContainer").style.display="flex";
+document.querySelector(".resumen").style.display="grid";
+
+["simulador","clientes","pagos","admin"].forEach(id=>{
+document.getElementById(id).style.display="none";
+});
+
+}
 app.style.display="none";
 dashboard.style.display="block";
 }
@@ -1011,11 +1024,12 @@ function enviarFiltro(){
 
   window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 }
-function verHistorialPagos(){
-
 document.getElementById("dashboard").style.display="none";
+document.getElementById("app").style.display="none";
 document.getElementById("historialDiv").style.display="block";
 
+document.getElementById("rankingContainer").style.display="none";
+document.querySelector(".resumen").style.display="none";
 let historial = JSON.parse(localStorage.getItem("historialPagos")) || [];
 let lista = document.getElementById("listaHistorial");
 

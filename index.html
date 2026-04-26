@@ -300,7 +300,15 @@ Eliminar Usuario
 </div>
 
 </div>
+<div id="historialDiv" class="card" style="display:none;">
 
+<div class="volver" onclick="volver()">← Volver</div>
+
+<h3>📋 Historial de Pagos</h3>
+
+<div id="listaHistorial"></div>
+
+</div>
 <div id="modalQR" class="modal" onclick="cerrarQR()">
 <img id="imgQR">
 </div>
@@ -933,14 +941,18 @@ return c;
 });
 
 localStorage.setItem("cartera", JSON.stringify(data));
+let clientePagado = data.find(c => 
+    c.nombre === nombre && c.celular === celular
+);
+
 let historial = JSON.parse(localStorage.getItem("historialPagos")) || [];
 
 historial.push({
     cliente: nombre,
     celular: celular,
-    monto: c.monto,
+    monto: clientePagado.monto || 0,
     fecha: new Date().toLocaleString(),
-    asesor: usuarioActual || c.asesor || "Sin asesor"
+    asesor: clientePagado.asesor || "Sin asesor"
 });
 
 localStorage.setItem("historialPagos", JSON.stringify(historial));
@@ -998,9 +1010,10 @@ function enviarFiltro(){
   msg += "\nApoyo filtro de cliente gracias.";
 
   window.open("https://wa.me/?text=" + encodeURIComponent(msg));
+}
 function verHistorialPagos(){
 
-document.getElementById("menuPrincipal").style.display="none";
+document.getElementById("dashboard").style.display="none";
 document.getElementById("historialDiv").style.display="block";
 
 let historial = JSON.parse(localStorage.getItem("historialPagos")) || [];

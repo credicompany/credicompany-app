@@ -808,9 +808,6 @@ document.getElementById(id).style.display="none";
 });
 
 }
-app.style.display="none";
-dashboard.style.display="block";
-}
 
 // QR
 function abrirQR(el){
@@ -1023,13 +1020,40 @@ function enviarFiltro(){
   msg += "\nApoyo filtro de cliente gracias.";
 
   window.open("https://wa.me/?text=" + encodeURIComponent(msg));
-}
+  }
+  function verHistorialPagos(){
+
 document.getElementById("dashboard").style.display="none";
 document.getElementById("app").style.display="none";
 document.getElementById("historialDiv").style.display="block";
 
 document.getElementById("rankingContainer").style.display="none";
 document.querySelector(".resumen").style.display="none";
+
+let historial = JSON.parse(localStorage.getItem("historialPagos")) || [];
+let lista = document.getElementById("listaHistorial");
+
+lista.innerHTML="";
+
+if(historial.length===0){
+lista.innerHTML="<p>No hay pagos registrados</p>";
+return;
+}
+
+historial.reverse().forEach(p=>{
+
+lista.innerHTML += `
+<div class="item">
+<b>${p.cliente}</b><br>
+💰 S/${p.monto}<br>
+👤 ${p.asesor}<br>
+📞 ${p.celular}<br>
+🕒 ${p.fecha}
+</div>
+`;
+});
+
+}
 let historial = JSON.parse(localStorage.getItem("historialPagos")) || [];
 let lista = document.getElementById("listaHistorial");
 

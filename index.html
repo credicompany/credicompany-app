@@ -550,6 +550,7 @@ let criticos = 0;
 let moraRecuperada = 0;
 
 let controlAsesores = {};
+let ranking = JSON.parse(localStorage.getItem("rankingAsesores")) || {};  
 let bonos = {};
 
 data.forEach(c=>{
@@ -633,8 +634,6 @@ document.getElementById("vencenHoy").innerText = vencenHoy;
 document.getElementById("criticos").innerText = criticos;
 document.getElementById("totalClientes").innerText = totalClientes;
 document.getElementById("moraRecuperada").innerText = "S/ " + moraRecuperada.toFixed(2);
-// 🔥 TRAER RANKING GUARDADO (PERSISTENTE)
-let ranking = JSON.parse(localStorage.getItem("rankingAsesores")) || {};
 // 🏆 RANKING + BONO
 let rankingHTML = "";
 

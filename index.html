@@ -982,13 +982,19 @@ return c;
 
 localStorage.setItem("cartera", JSON.stringify(data));
 // 🔥 GUARDAR RANKING PERSISTENTE
-let rankingStorage = JSON.parse(localStorage.getItem("rankingAsesores")) || {};
+localStorage.setItem("rankingAsesores", JSON.stringify(rankingStorage));
 
 let clientePagado = data.find(c => 
+  c.nombre === nombre && c.celular === celular
 );
 
 let asesorNombre = clientePagado.asesor || "Sin asesor";
 let montoPagado = parseFloat(clientePagado.monto) || 0;
+if(!rankingStorage[asesorNombre]){
+  rankingStorage[asesorNombre] = 0;
+}
+
+rankingStorage[asesorNombre] += montoPagado;  
 
 localStorage.setItem("rankingAsesores", JSON.stringify(rankingStorage));   
     c.nombre === nombre && c.celular === celular

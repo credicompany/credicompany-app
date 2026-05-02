@@ -498,8 +498,8 @@ cuotasVencidas:0,
 celular:"",
 producto:"",
 direccion:"",
-distrito:""
-retraso_anterior:0, 
+distrito:"",   // 👈 ESTA COMA FALTABA
+retraso_anterior:0
 };
 
 headers.forEach((h,i)=>{
@@ -583,57 +583,7 @@ function actualizarResumen(){
       vencenHoy++;
     }
 
-    // 🔥 MORA RECUPERADA
-    if(esMio && c.pagado_hoy && (parseFloat(c.retraso_anterior) || 0) > 0){
-      moraRecuperada += pagado;
-    }
-
-    // 🏆 RANKING
-    let asesorNombre = c.asesor || "Sin asesor";
-    if(!ranking[asesorNombre]) ranking[asesorNombre] = 0;
-    ranking[asesorNombre] += pagado;
-
-  });
-
-  let totalClientes = data.filter(c =>
-    (c.asesor || "").toLowerCase() === asesor.toLowerCase()
-  ).length;
-
-  let porcentajeMora = totalClientes ? ((mora / totalClientes) * 100).toFixed(1) : 0;
-
-  document.getElementById("totalCartera").innerText = "S/ " + total.toFixed(2);
-  document.getElementById("porcentajeMora").innerText = porcentajeMora + "%";
-  document.getElementById("cobradoHoy").innerText = "S/ " + hoy.toFixed(2);
-  document.getElementById("vencenHoy").innerText = vencenHoy;
-  document.getElementById("criticos").innerText = criticos;
-  document.getElementById("totalClientes").innerText = totalClientes;
-  document.getElementById("moraRecuperada").innerText = "S/ " + moraRecuperada.toFixed(2);
-
-  // 🏆 RANKING VISUAL
-  let rankingHTML = "";
-
-  Object.entries(ranking)
-  .sort((a,b)=>b[1]-a[1])
-  .slice(0,5)
-  .forEach((item,index)=>{
-
-    let medalla = "🥉";
-    if(index === 0) medalla = "🥇";
-    if(index === 1) medalla = "🥈";
-
-    rankingHTML += `
-    <div style="font-size:12px;margin-top:4px;">
-    ${medalla} ${item[0]} → S/${item[1].toFixed(2)}
-    </div>`;
-  });
-
-  document.getElementById("rankingAsesores").innerHTML = rankingHTML;
-}
-
-// mora recuperada
-if(c.pagado_hoy && (parseFloat(c.retraso_anterior) || 0) > 0){
-    moraRecuperada += parseFloat(c.pagado_monto) || 0;
-}
+    /
 
 // ranking asesor
 let asesorNombre = c.asesor || "Sin asesor";

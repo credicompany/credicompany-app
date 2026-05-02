@@ -166,10 +166,6 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
     <div style="font-size:28px;">📋</div>
     <div>Historial Pagos</div>
   </div>
-  <div class="box" onclick="mostrar('moraAsesor')">
-  <div style="font-size:28px;">📉</div>
-  <div>Mora Asesor</div>
-</div>
 </div>
 </div>
 
@@ -498,8 +494,7 @@ cuotasVencidas:0,
 celular:"",
 producto:"",
 direccion:"",
-distrito:"",   // 👈 ESTA COMA FALTABA
-retraso_anterior:0
+distrito:""
 };
 
 headers.forEach((h,i)=>{
@@ -543,7 +538,6 @@ alert("✅ Cartera cargada y guardada correctamente");
 reader.readAsArrayBuffer(file);
 }
 // CLIENTES + RESUMEN
-
 function actualizarResumen(){
 
   let data = JSON.parse(localStorage.getItem("cartera")) || [];
@@ -553,43 +547,46 @@ function actualizarResumen(){
   let hoy = 0;
   let vencenHoy = 0;
   let criticos = 0;
-  let moraRecuperada = 0;
-  let ranking = {};
+let moraRecuperada = 0;
+let ranking = {};
+  let hoyFecha = new Date().toLocaleDateString();
 
   data.forEach(c=>{
 
-  let esMio = (c.asesor || "").toLowerCase() === asesor.toLowerCase();
-
-  let monto = parseFloat(c.monto) || 0;
-  total += monto;
+    let monto = parseFloat(c.monto) || 0;
+    total += monto;
 
   let retraso = parseFloat(c.retraso) || 0;
-  let saldo = parseFloat(c.saldo || c.monto) || 0;
-  let pagado = parseFloat(c.pagado_monto) || 0;
 
-  if(esMio && retraso > 0) mora++;
-  if(esMio && retraso > 30) criticos++;
+let pagado = parseFloat(c.pagado_monto) || 0;
+let cuota = parseFloat(c.monto) || 0;
 
-  if(esMio && c.pagado_hoy){
-    hoy += pagado;
-  }
 
-  if(esMio && retraso === 0 && !c.pagado_hoy){
-    vencenHoy++;
-  }
-
-  // 🔥 MORA RECUPERADA
-  if(esMio && c.pagado_hoy && (parseFloat(c.retraso_anterior) || 0) > 0){
+// mora recuperada
+if(retraso > 0 && pagado > 0){
     moraRecuperada += pagado;
-  }
+}
 
-  // 🏆 RANKING
-  let asesorNombre = c.asesor || "Sin asesor";
-  if(!ranking[asesorNombre]) ranking[asesorNombre] = 0;
-  ranking[asesorNombre] += pagado;
+// ranking asesor
+let asesorNombre = c.asesor || "Sin asesor";
 
-});
+if(!ranking[asesorNombre]){
+    ranking[asesorNombre] = 0;
+}
+
+ranking[asesorNombre] += pagado;
+    if(retraso > 0) mora++;
+    if(retraso > 30) criticos++;
+    let saldo = parseFloat(c.saldo || c.monto) || 0;
+     
+    // 🔥 CLIENTES AL DÍA
+    if(retraso === 0 && !c.pagado_hoy){
+    hoy += saldo;
+      
+    vencenHoy++;
     }
+
+    });
 
   let totalClientes = data.filter(c => !c.pagado_hoy).length;
 
@@ -692,13 +689,19 @@ ${c.celular}
 📍 ${c.direccion}<br>
 🏙️ ${c.distrito}
 
-<div style="margin-top:5px;">
+<div style="display:flex;gap:5px;margin-top:5px;
+<button onclick='enviarCobranza(${JSON.stringify(c)})'
+style="flex:1;background:#123B63;color:white;border:none;padding:8px;border-radius:8px;">
+📩 Cobrar
+</button>
+
 <button onclick='registrarPago("${c.nombre}|${c.celular}")'
-style="width:100%;background:#2ecc71;color:white;border:none;padding:9px;border-radius:8px;font-weight:bold;font-size:13px;">
+style="flex:1;background:#2ecc71;color:white;border:none;padding:10px;border-radius:8px;">
 💵 Registrar pago
 </button>
 </div>
-`;
+
+</div>`;
 });
 }
 function cargarResumen(){
@@ -792,18 +795,8 @@ if(p==="admin") renderUsuarios();
 }
 
 function volver(){
-
-document.getElementById("app").style.display="none";
-document.getElementById("dashboard").style.display="block";
-document.getElementById("historialDiv").style.display="none";
-
-document.getElementById("rankingContainer").style.display="flex";
-document.querySelector(".resumen").style.display="grid";
-
-["simulador","clientes","pagos","admin"].forEach(id=>{
-document.getElementById(id).style.display="none";
-});
-
+app.style.display="none";
+dashboard.style.display="block";
 }
 
 // QR
@@ -933,7 +926,6 @@ let data = JSON.parse(localStorage.getItem("cartera")) || [];
 data = data.map(c=>{
 
 if(c.nombre === nombre && c.celular === celular){
-c.retraso_anterior = c.retraso;
 c.pagado_monto = parseFloat(c.monto) || 0;
 c.ultimo_pago = new Date().toLocaleString();
 c.estado_gestion = "PAGADO";
@@ -1018,15 +1010,11 @@ function enviarFiltro(){
   msg += "\nApoyo filtro de cliente gracias.";
 
   window.open("https://wa.me/?text=" + encodeURIComponent(msg));
-  }
-  function verHistorialPagos(){
+}
+function verHistorialPagos(){
 
 document.getElementById("dashboard").style.display="none";
-document.getElementById("app").style.display="none";
 document.getElementById("historialDiv").style.display="block";
-
-document.getElementById("rankingContainer").style.display="none";
-document.querySelector(".resumen").style.display="none";
 
 let historial = JSON.parse(localStorage.getItem("historialPagos")) || [];
 let lista = document.getElementById("listaHistorial");
@@ -1034,21 +1022,22 @@ let lista = document.getElementById("listaHistorial");
 lista.innerHTML="";
 
 if(historial.length===0){
-lista.innerHTML="<p>No hay pagos registrados</p>";
-return;
+    lista.innerHTML="<p>No hay pagos registrados</p>";
+    return;
 }
 
 historial.reverse().forEach(p=>{
 
 lista.innerHTML += `
 <div class="item">
-<b>${p.cliente}</b><br>
-💰 S/${p.monto}<br>
-👤 ${p.asesor}<br>
-📞 ${p.celular}<br>
-🕒 ${p.fecha}
+    <b>${p.cliente}</b><br>
+    💰 S/${p.monto}<br>
+    👤 ${p.asesor}<br>
+    📞 ${p.celular}<br>
+    🕒 ${p.fecha}
 </div>
 `;
+
 });
 
 }

@@ -540,102 +540,68 @@ reader.readAsArrayBuffer(file);
 // CLIENTES + RESUMEN
 function actualizarResumen(){
 
-let data = JSON.parse(localStorage.getItem("cartera")) || [];
+  let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
-let total = 0;
-let mora = 0;
-let hoy = 0;
-let vencenHoy = 0;
-let criticos = 0;
+  let total = 0;
+  let mora = 0;
+  let hoy = 0;
+  let vencenHoy = 0;
+  let criticos = 0;
 let moraRecuperada = 0;
+let ranking = {};
+  let hoyFecha = new Date().toLocaleDateString();
 
-let controlAsesores = {};
-let ranking = JSON.parse(localStorage.getItem("rankingAsesores")) || {};  
-let bonos = {};
+  data.forEach(c=>{
 
-data.forEach(c=>{
+    let monto = parseFloat(c.monto) || 0;
+    total += monto;
 
-let esMio = (c.asesor || "").toLowerCase() === asesor.toLowerCase();
+  let retraso = parseFloat(c.retraso) || 0;
 
-let monto = parseFloat(c.monto) || 0;
-total += monto;
-
-let retraso = parseFloat(c.retraso) || 0;
 let pagado = parseFloat(c.pagado_monto) || 0;
+let cuota = parseFloat(c.monto) || 0;
 
-// 📉 MÉTRICAS
-if(esMio && retraso > 0) mora++;
-if(esMio && retraso > 30) criticos++;
 
-if(esMio && c.pagado_hoy){
-  hoy += pagado;
+// mora recuperada
+if(retraso > 0 && pagado > 0){
+    moraRecuperada += pagado;
 }
 
-if(esMio && retraso === 0 && !c.pagado_hoy){
-  vencenHoy++;
-}
-
-// 💸 MORA RECUPERADA
-if(esMio && c.pagado_hoy && (parseFloat(c.retraso_anterior) || 0) > 0){
-  moraRecuperada += pagado;
-}
-
-// 🏆 RANKING
+// ranking asesor
 let asesorNombre = c.asesor || "Sin asesor";
-if(!ranking[asesorNombre]) ranking[asesorNombre] = 0;
+
+if(!ranking[asesorNombre]){
+    ranking[asesorNombre] = 0;
+}
+
 ranking[asesorNombre] += pagado;
+    if(retraso > 0) mora++;
+    if(retraso > 30) criticos++;
+    let saldo = parseFloat(c.saldo || c.monto) || 0;
+     
+    // 🔥 CLIENTES AL DÍA
+    if(retraso === 0 && !c.pagado_hoy){
+    hoy += saldo;
+      
+    vencenHoy++;
+    }
 
-// 🎯 BONO SOLO CLIENTES QUE VENCEN HOY
-if(retraso === 0){
+    });
 
-  if(!controlAsesores[asesorNombre]){
-    controlAsesores[asesorNombre] = {
-      total: 0,
-      pagados: 0
-    };
-  }
+  let totalClientes = data.filter(c => !c.pagado_hoy).length;
 
-  controlAsesores[asesorNombre].total++;
+  let porcentajeMora = totalClientes ? ((mora / totalClientes) * 100).toFixed(1) : 0;
 
-  if(c.pagado_hoy){
-    controlAsesores[asesorNombre].pagados++;
-  }
+  document.getElementById("totalCartera").innerText = "S/ " + total.toFixed(2);
+  document.getElementById("porcentajeMora").innerText = porcentajeMora + "%";
+  document.getElementById("cobradoHoy").innerText = "S/ " + hoy.toFixed(2);
+  document.getElementById("vencenHoy").innerText = vencenHoy;
+  document.getElementById("criticos").innerText = criticos;
+  document.getElementById("totalClientes").innerText = totalClientes;
 
-}
-
-});
-
-// 🎯 CALCULAR BONOS
-Object.keys(controlAsesores).forEach(a=>{
-
-let t = controlAsesores[a].total;
-let p = controlAsesores[a].pagados;
-
-if(t > 0 && t === p){
-  bonos[a] = 15;
-} else {
-  bonos[a] = 0;
-}
-
-});
-
-// 📊 TOTALES
-let totalClientes = data.filter(c =>
-(c.asesor || "").toLowerCase() === asesor.toLowerCase()
-).length;
-
-let porcentajeMora = totalClientes ? ((mora / totalClientes) * 100).toFixed(1) : 0;
-
-// 🧾 PINTAR RESUMEN
-document.getElementById("totalCartera").innerText = "S/ " + total.toFixed(2);
-document.getElementById("porcentajeMora").innerText = porcentajeMora + "%";
-document.getElementById("cobradoHoy").innerText = "S/ " + hoy.toFixed(2);
-document.getElementById("vencenHoy").innerText = vencenHoy;
-document.getElementById("criticos").innerText = criticos;
-document.getElementById("totalClientes").innerText = totalClientes;
-document.getElementById("moraRecuperada").innerText = "S/ " + moraRecuperada.toFixed(2);
-// 🏆 RANKING + BONO
-let rankingHTML = "";
+document.getElementById("moraRecuperada").innerText =
+"S/ " + moraRecuperada.toFixed(2);
+  let rankingHTML = "";
 
 Object.entries(ranking)
 .sort((a,b)=>b[1]-a[1])
@@ -643,25 +609,19 @@ Object.entries(ranking)
 .forEach((item,index)=>{
 
 let medalla = "🥉";
+
 if(index === 0) medalla = "🥇";
 if(index === 1) medalla = "🥈";
-
-let bono = bonos[item[0]] || 0;
-let progreso = controlAsesores[item[0]] 
-? `${controlAsesores[item[0]].pagados}/${controlAsesores[item[0]].total}`
-: "0/0";
 
 rankingHTML += `
 <div style="font-size:12px;margin-top:4px;">
 ${medalla} ${item[0]} → S/${item[1].toFixed(2)}
-<br>🎯 Bono: S/${bono} (${progreso})
 </div>
 `;
 });
 
 document.getElementById("rankingAsesores").innerHTML = rankingHTML;
-
-}
+}  
 function filtrarMora(min,max){
 
 let lista = document.getElementById("listaClientes");
@@ -729,7 +689,7 @@ ${c.celular}
 📍 ${c.direccion}<br>
 🏙️ ${c.distrito}
 
-<div style="display:flex;gap:5px;margin-top:5px;">
+<div style="display:flex;gap:5px;margin-top:5px;
 <button onclick='enviarCobranza(${JSON.stringify(c)})'
 style="flex:1;background:#123B63;color:white;border:none;padding:8px;border-radius:8px;">
 📩 Cobrar
@@ -981,22 +941,7 @@ return c;
 });
 
 localStorage.setItem("cartera", JSON.stringify(data));
-// 🔥 GUARDAR RANKING PERSISTENTE
-localStorage.setItem("rankingAsesores", JSON.stringify(rankingStorage));
-
 let clientePagado = data.find(c => 
-  c.nombre === nombre && c.celular === celular
-);
-
-let asesorNombre = clientePagado.asesor || "Sin asesor";
-let montoPagado = parseFloat(clientePagado.monto) || 0;
-if(!rankingStorage[asesorNombre]){
-  rankingStorage[asesorNombre] = 0;
-}
-
-rankingStorage[asesorNombre] += montoPagado;  
-
-localStorage.setItem("rankingAsesores", JSON.stringify(rankingStorage));   
     c.nombre === nombre && c.celular === celular
 );
 

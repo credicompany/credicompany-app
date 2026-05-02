@@ -558,53 +558,38 @@ function actualizarResumen(){
 
   data.forEach(c=>{
 
-    let esMio = (c.asesor || "").toLowerCase() === asesor.toLowerCase();
+  let esMio = (c.asesor || "").toLowerCase() === asesor.toLowerCase();
 
-    let monto = parseFloat(c.monto) || 0;
-    total += monto;
+  let monto = parseFloat(c.monto) || 0;
+  total += monto;
 
-    let retraso = parseFloat(c.retraso) || 0;
-    let saldo = parseFloat(c.saldo || c.monto) || 0;
-    let pagado = parseFloat(c.pagado_monto) || 0;
+  let retraso = parseFloat(c.retraso) || 0;
+  let saldo = parseFloat(c.saldo || c.monto) || 0;
+  let pagado = parseFloat(c.pagado_monto) || 0;
 
-    // 🔴 MORA
-    if(esMio && retraso > 0) mora++;
+  if(esMio && retraso > 0) mora++;
+  if(esMio && retraso > 30) criticos++;
 
-    // 🔴 CRÍTICOS
-    if(esMio && retraso > 30) criticos++;
+  if(esMio && c.pagado_hoy){
+    hoy += pagado;
+  }
 
-    // 💵 COBRADO HOY
-    if(esMio && c.pagado_hoy){
-      hoy += pagado;
-    }
-
-    // ⏰ VENCEN HOY
-    if(esMio && retraso === 0 && !c.pagado_hoy){
-      vencenHoy++;
-    }
-
-    /
-
-// ranking asesor
-let asesorNombre = c.asesor || "Sin asesor";
-
-if(!ranking[asesorNombre]){
-    ranking[asesorNombre] = 0;
-}
-
-ranking[asesorNombre] += pagado;
-    if(retraso > 0) mora++;
-    if(retraso > 30) criticos++;
-    let saldo = parseFloat(c.saldo || c.monto) || 0;
-     
-    // 🔥 CLIENTES AL DÍA
-    if(retraso === 0 && !c.pagado_hoy){
-    hoy += saldo;
-      
+  if(esMio && retraso === 0 && !c.pagado_hoy){
     vencenHoy++;
-    }
+  }
 
-    });
+  // 🔥 MORA RECUPERADA
+  if(esMio && c.pagado_hoy && (parseFloat(c.retraso_anterior) || 0) > 0){
+    moraRecuperada += pagado;
+  }
+
+  // 🏆 RANKING
+  let asesorNombre = c.asesor || "Sin asesor";
+  if(!ranking[asesorNombre]) ranking[asesorNombre] = 0;
+  ranking[asesorNombre] += pagado;
+
+});
+    }
 
   let totalClientes = data.filter(c => !c.pagado_hoy).length;
 

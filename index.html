@@ -549,7 +549,6 @@ let vencenHoy = 0;
 let criticos = 0;
 let moraRecuperada = 0;
 
-let ranking = {};
 let controlAsesores = {};
 let bonos = {};
 
@@ -634,7 +633,8 @@ document.getElementById("vencenHoy").innerText = vencenHoy;
 document.getElementById("criticos").innerText = criticos;
 document.getElementById("totalClientes").innerText = totalClientes;
 document.getElementById("moraRecuperada").innerText = "S/ " + moraRecuperada.toFixed(2);
-
+// 🔥 TRAER RANKING GUARDADO (PERSISTENTE)
+let ranking = JSON.parse(localStorage.getItem("rankingAsesores")) || {};
 // 🏆 RANKING + BONO
 let rankingHTML = "";
 
@@ -982,7 +982,23 @@ return c;
 });
 
 localStorage.setItem("cartera", JSON.stringify(data));
+// 🔥 GUARDAR RANKING PERSISTENTE
+let rankingStorage = JSON.parse(localStorage.getItem("rankingAsesores")) || {};
+
 let clientePagado = data.find(c => 
+  c.nombre === nombre && c.celular === celular
+);
+
+let asesorNombre = clientePagado.asesor || "Sin asesor";
+let montoPagado = parseFloat(clientePagado.monto) || 0;
+
+if(!rankingStorage[asesorNombre]){
+  rankingStorage[asesorNombre] = 0;
+}
+
+rankingStorage[asesorNombre] += montoPagado;
+
+localStorage.setItem("rankingAsesores", JSON.stringify(rankingStorage));   
     c.nombre === nombre && c.celular === celular
 );
 

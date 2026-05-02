@@ -547,8 +547,10 @@ function actualizarResumen(){
   let hoy = 0;
   let vencenHoy = 0;
   let criticos = 0;
-let moraRecuperada = 0;
-let ranking = {};
+  let moraRecuperada = 0;
+  let ranking = {};
+  let control = {};
+  let bonos = {};
   let hoyFecha = new Date().toLocaleDateString();
 
   data.forEach(c=>{
@@ -573,8 +575,23 @@ let asesorNombre = c.asesor || "Sin asesor";
 if(!ranking[asesorNombre]){
     ranking[asesorNombre] = 0;
 }
-
 ranking[asesorNombre] += pagado;
+
+// CONTROL GERENCIAL
+if(!control[asesorNombre]){
+    control[asesorNombre] = {
+        total: 0,
+        pagados: 0
+    };
+}
+
+if(retraso === 0 && !c.pagado_hoy){
+    control[asesorNombre].total++;
+}
+
+if(c.pagado_hoy){
+    control[asesorNombre].pagados++;
+}
     if(retraso > 0) mora++;
     if(retraso > 30) criticos++;
     let saldo = parseFloat(c.saldo || c.monto) || 0;
@@ -601,6 +618,22 @@ ranking[asesorNombre] += pagado;
 
 document.getElementById("moraRecuperada").innerText =
 "S/ " + moraRecuperada.toFixed(2);
+  Object.keys(control).forEach(a=>{
+
+let t = control[a].total;
+let p = control[a].pagados;
+
+if(t >= 5 && p === t){
+    bonos[a] = 20;
+}
+else if(p >= t * 0.8 && t > 0){
+    bonos[a] = 10;
+}
+else{
+    bonos[a] = 0;
+}
+
+});
   let rankingHTML = "";
 
 Object.entries(ranking)
@@ -612,10 +645,15 @@ let medalla = "🥉";
 
 if(index === 0) medalla = "🥇";
 if(index === 1) medalla = "🥈";
+let bono = bonos[item[0]] || 0;
+let prog = control[item[0]] 
+? `${control[item[0]].pagados}/${control[item[0]].total}`
+: "0/0";
 
 rankingHTML += `
 <div style="font-size:12px;margin-top:4px;">
 ${medalla} ${item[0]} → S/${item[1].toFixed(2)}
+<br>🎯 ${prog} | 💰 Bono: S/${bono}
 </div>
 `;
 });

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+s<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -357,11 +357,14 @@ let user=usuario.value.trim();
 let pass=clave.value.trim();
 
 if(user==="admin" && pass==="1234"){
-asesor = user.toLowerCase().trim();
-nombreAsesor.innerText=asesor;
-loginDiv.style.display="none";
-dashboard.style.display="block";
-return;
+  asesor = user.toLowerCase().trim();
+  nombreAsesor.innerText=asesor;
+  loginDiv.style.display="none";
+  dashboard.style.display="block";
+
+  actualizarResumen(); // 🔥 CLAVE
+
+  return;
 }
 
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];

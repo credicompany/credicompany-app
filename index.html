@@ -1079,66 +1079,46 @@ function enviarFiltro(){
 document.getElementById("dashboard").style.display="none";
 document.getElementById("historialDiv").style.display="block";
 
-let bonosHoy = JSON.parse(localStorage.getItem("bonosHoy")) || {};
 let lista = document.getElementById("listaHistorial");
 
+// 🔥 LIMPIAR
 lista.innerHTML = "";
 
-let asesores = Object.keys(bonosHoy);
+// 🔥 BONOS
+let bonosHoy = JSON.parse(localStorage.getItem("bonosHoy")) || {};
 
-if(asesores.length === 0){
-    lista.innerHTML = "<p>No hay bonos registrados</p>";
-    return;
-}
+lista.innerHTML += "<h4>💰 Bonos del día</h4>";
 
-asesores.forEach(a => {
-
+Object.keys(bonosHoy).forEach(a=>{
 lista.innerHTML += `
 <div class="item">
-    <b>👤 ${a}</b><br>
-    💰 Bono ganado: S/${bonosHoy[a]}<br>
-    🕒 ${new Date().toLocaleString()}
-</div>
-`;
-
+👤 ${a} → S/${bonosHoy[a]}
+</div>`;
 });
 
-  }
-asesores.forEach(a => {
+// 🔥 PAGOS
+let historial = JSON.parse(localStorage.getItem("historialPagos")) || [];
 
-lista.innerHTML += `
-<div class="item">
-    <b>👤 ${a}</b><br>
-    💰 Bono ganado: S/${bonosHoy[a]}<br>
-    🕒 ${new Date().toLocaleString()}
-</div>
-`;
+lista.innerHTML += "<h4>📋 Pagos registrados</h4>";
 
-});
-let lista = document.getElementById("listaHistorial");
-
-lista.innerHTML="";
-
-if(historial.length===0){
-    lista.innerHTML="<p>No hay pagos registrados</p>";
-    return;
+if(historial.length === 0){
+lista.innerHTML += "<p>No hay pagos registrados</p>";
+return;
 }
 
-historial.reverse().forEach(p=>{
-
+historial.slice().reverse().forEach(p=>{
 lista.innerHTML += `
 <div class="item">
-    <b>${p.cliente}</b><br>
-    💰 S/${p.monto}<br>
-    👤 ${p.asesor}<br>
-    📞 ${p.celular}<br>
-    🕒 ${p.fecha}
-</div>
-`;
-
+<b>${p.cliente}</b><br>
+💰 S/${p.monto}<br>
+👤 ${p.asesor}<br>
+📞 ${p.celular}<br>
+🕒 ${p.fecha}
+</div>`;
 });
 
 }
+
   
 /* 🔚 FIN */   
 </script>

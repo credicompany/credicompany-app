@@ -574,24 +574,7 @@ function actualizarResumen(){
   let hoyFecha = new Date().toLocaleDateString();
 
   data.forEach(c=>{
-let asesorNombre = c.asesor || "Sin asesor";
-    // 🔥 META REAL (clientes al día)
-if(!control[asesorNombre]){
-    control[asesorNombre] = {
-        total: 0,
-        pagados: 0
-    };
-}
 
-// clientes que debía atender hoy
-if(retraso === 0){
-    control[asesorNombre].total++;
-}
-
-// clientes que sí pagaron hoy
-if(c.pagado_hoy){
-    control[asesorNombre].pagados++;
-}
     let monto = parseFloat(c.monto) || 0;
     total += monto;
 
@@ -655,30 +638,7 @@ if(c.pagado_hoy){
 
 document.getElementById("moraRecuperada").innerText =
 "S/ " + moraRecuperada.toFixed(2);
- Object.keys(control).forEach(a=>{
-
-let t = control[a].total;
-let p = control[a].pagados;
-
-// 🔥 BONO REAL SOLO SI CUMPLE TODO
-if(t > 0 && p === t){
-    bonos[a] = 15;
-}else{
-    bonos[a] = 0;
-}
-
-});
-let t = control[a].total;
-let p = control[a].pagados;
-
-// 🔥 BONO REAL SOLO SI CUMPLE TODO
-if(t > 0 && p === t){
-    bonos[a] = 15;
-}else{
-    bonos[a] = 0;
-}
-
-});
+  Object.keys(control).forEach(a=>{
 
 let t = control[a].total;
 let p = control[a].pagados;
@@ -705,9 +665,7 @@ localStorage.setItem("bonosHoy", JSON.stringify(bonosHoy));
   let rankingHTML = "";
 
 Object.entries(ranking)
-.filter(([asesor]) => 
-  asesor && asesor !== "admin" && asesor !== "sin asesor"
-)
+.filter(([asesor]) => asesor !== "admin") // 👈 línea nueva
 .sort((a,b)=>b[1]-a[1])
 .slice(0,5)
 .forEach((item,index)=>{
@@ -723,13 +681,10 @@ let prog = control[item[0]]
 ? `${control[item[0]].pagados}/${control[item[0]].total}`
 : "0/0";
 
-let bono = bonos[item[0]] || 0;
-
 rankingHTML += `
 <div style="font-size:12px;margin-top:4px;">
 ${medalla} ${item[0]} → S/${item[1].toFixed(2)}
-<br>🎯 ${control[item[0]] ? control[item[0]].pagados + "/" + control[item[0]].total : "0/0"}
-| 💰 Bono: S/${bono}
+<br>🎯 ${prog} | 💰 Bono: S/${bono}
 </div>
 `;
 });

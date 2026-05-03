@@ -634,6 +634,17 @@ else{
 }
 
 });
+  let bonosHoy = JSON.parse(localStorage.getItem("bonosHoy")) || {};
+
+Object.keys(bonos).forEach(a=>{
+  if(!bonosHoy[a]) bonosHoy[a] = 0;
+
+  if(bonos[a] > 0){
+    bonosHoy[a] = bonos[a];
+  }
+});
+
+localStorage.setItem("bonosHoy", JSON.stringify(bonosHoy));
   let rankingHTML = "";
 
 Object.entries(ranking)
@@ -646,6 +657,8 @@ let medalla = "🥉";
 if(index === 0) medalla = "🥇";
 if(index === 1) medalla = "🥈";
 let bono = bonos[item[0]] || 0;
+let bonosHoy = JSON.parse(localStorage.getItem("bonosHoy")) || {};
+let bonoAcumulado = bonosHoy[item[0]] || 0;  
 let prog = control[item[0]] 
 ? `${control[item[0]].pagados}/${control[item[0]].total}`
 : "0/0";

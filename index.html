@@ -124,7 +124,7 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 <img src="logo.png">
 <div>Asesor: <span id="nombreAsesor">-</span></div>
 </div>
-<div id="rankingContainer">
+<div id="rankingContainer" style="display:none;">
 
     <div class="card" id="rankingBox">
         <h3>🏆 Ranking Asesores del Día</h3>
@@ -361,7 +361,7 @@ if(user==="admin" && pass==="1234"){
   nombreAsesor.innerText=asesor;
   loginDiv.style.display="none";
   dashboard.style.display="block";
-
+  document.getElementById("rankingContainer").style.display = "flex"; // 👈 línea nueva
   actualizarResumen(); // 🔥 CLAVE
 
   return;

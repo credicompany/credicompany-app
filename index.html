@@ -196,11 +196,6 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
     <div>👥 Clientes</div>
     <div id="totalClientes">0</div>
   </div>
-
-<div class="card-resumen">
-    <div>💸 Mora Recuperada</div>
-    <div id="moraRecuperada">S/0</div>
-</div>
 </div>
 
 <div id="app" style="display:none">
@@ -634,10 +629,7 @@ if(c.pagado_hoy){
   document.getElementById("cobradoHoy").innerText = "S/ " + hoy.toFixed(2);
   document.getElementById("vencenHoy").innerText = vencenHoy;
   document.getElementById("criticos").innerText = criticos;
-  document.getElementById("totalClientes").innerText = totalClientes;
-
-document.getElementById("moraRecuperada").innerText =
-"S/ " + moraRecuperada.toFixed(2);
+  document.getElementById("totalClientes").innerText = total clientes;
   Object.keys(control).forEach(a=>{
 
 let t = control[a].total;

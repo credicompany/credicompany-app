@@ -186,23 +186,22 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
     <div>⏰ Vencen Hoy</div>
     <div id="vencenHoy">0</div>
   </div>
+ <div id="dashboard" style="display:none">
 
-  <div class="card-resumen">
-    <div>🚨 +30 días</div>
-    <div id="criticos">0</div>
+  <div class="grid">
+    ...
   </div>
 
-  <div class="card-resumen">
-    <div>👥 Clientes</div>
-    <div id="totalClientes">0</div>
+  <div class="resumen">
+    ...
   </div>
 
-<div class="card-resumen" style="display:none;">
-  <div>💸 Mora Recuperada</div>
-  <div id="moraRecuperada">S/0</div>
 </div>
 </div>
-
+  <div id="bonoDiario" style="display:none;">
+  <h3>🏆 Asesores que llegaron a bonear</h3>
+  <div id="listaBono"></div>
+</div>
 <div id="app" style="display:none">
 
 <div id="simulador" class="card">
@@ -307,8 +306,33 @@ Eliminar Usuario
 <div id="modalQR" class="modal" onclick="cerrarQR()">
 <img id="imgQR">
 </div>
+function verBonoDiario() {
+  document.getElementById("dashboard").style.display = "none";
+  document.getElementById("bonoDiario").style.display = "block";
 
-<script>
+  cargarRankingBono();
+}
+
+function volverDashboard() {
+  document.getElementById("dashboard").style.display = "block";
+  document.getElementById("bonoDiario").style.display = "none";
+}
+
+function cargarRankingBono() {
+  const lista = document.getElementById("listaBono");
+
+  const asesores = [
+    { nombre: "Leon", clientes: 5 },
+    { nombre: "Maria", clientes: 6 }
+  ];
+
+  lista.innerHTML = asesores.map(a => `
+    <div class="card-resumen">
+      👤 ${a.nombre} - ${a.clientes} pagos cumplidos
+    </div>
+  `).join("");
+}
+</script>
 
 let asesor="";
 window.onload = function(){

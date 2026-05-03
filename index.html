@@ -316,7 +316,9 @@ Eliminar Usuario
 <script>
 
 let asesor="";
-
+window.onload = function(){
+    actualizarResumen();
+};
 // LOGIN
 function login(){
 let user=usuario.value.trim();

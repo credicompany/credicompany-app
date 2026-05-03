@@ -302,7 +302,7 @@ Eliminar Usuario
 
 <h3>📋 Historial de Pagos</h3>
 
-<div id="listaHistorial"></div>
+<h3>💰 Historial de Bonos</h3>
 
 </div>
 <div id="modalQR" class="modal" onclick="cerrarQR()">
@@ -1080,7 +1080,29 @@ function verHistorialPagos(){
 document.getElementById("dashboard").style.display="none";
 document.getElementById("historialDiv").style.display="block";
 
-let historial = JSON.parse(localStorage.getItem("historialPagos")) || [];
+let bonosHoy = JSON.parse(localStorage.getItem("bonosHoy")) || {};
+let lista = document.getElementById("listaHistorial");
+
+lista.innerHTML = "";
+
+let asesores = Object.keys(bonosHoy);
+
+if(asesores.length === 0){
+    lista.innerHTML = "<p>No hay bonos registrados</p>";
+    return;
+}
+
+asesores.forEach(a => {
+
+lista.innerHTML += `
+<div class="item">
+    <b>👤 ${a}</b><br>
+    💰 Bono ganado: S/${bonosHoy[a]}<br>
+    🕒 ${new Date().toLocaleString()}
+</div>
+`;
+
+});
 let lista = document.getElementById("listaHistorial");
 
 lista.innerHTML="";

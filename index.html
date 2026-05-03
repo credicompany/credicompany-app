@@ -541,7 +541,9 @@ let key=h.toString().toLowerCase().replace(/\s+/g,"");
 let val=r[i]||"";
 
 if(key.includes("nombre")) obj.nombre=val;
-if(key.includes("asesor")) obj.asesor = (val || "").toLowerCase().trim();
+if(key.includes("asesor") || key.includes("asesor(a)")){
+  obj.asesor = (val || "").toLowerCase().trim();
+}
 if(key.includes("cuota_mora")) obj.monto=val;
 if(key.includes("dias") || key.includes("retraso")) obj.retraso=parseFloat(val)||0;
 if(key.includes("cuota") && key.includes("venc")) obj.cuotasVencidas = parseFloat(val)||0;   
@@ -1015,6 +1017,7 @@ c.estado_gestion = "PAGADO";
 c.retraso = 0;
 c.cuotasVencidas = 0;
 c.pagado_hoy = true;
+c.asesor = asesor;
 }
 
 return c;

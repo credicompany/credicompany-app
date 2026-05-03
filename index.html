@@ -301,9 +301,8 @@ Eliminar Usuario
 <div class="volver" onclick="volver()">← Volver</div>
 
 <h3>📋 Historial de Pagos</h3>
-
 <h3>💰 Historial de Bonos</h3>
-
+<div id="listaHistorial"></div>
 </div>
 <div id="modalQR" class="modal" onclick="cerrarQR()">
 <img id="imgQR">
@@ -1075,7 +1074,7 @@ function enviarFiltro(){
 
   window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 }
-function verHistorialPagos(){
+  function verHistorialPagos(){
 
 document.getElementById("dashboard").style.display="none";
 document.getElementById("historialDiv").style.display="block";
@@ -1092,6 +1091,19 @@ if(asesores.length === 0){
     return;
 }
 
+asesores.forEach(a => {
+
+lista.innerHTML += `
+<div class="item">
+    <b>👤 ${a}</b><br>
+    💰 Bono ganado: S/${bonosHoy[a]}<br>
+    🕒 ${new Date().toLocaleString()}
+</div>
+`;
+
+});
+
+  }
 asesores.forEach(a => {
 
 lista.innerHTML += `

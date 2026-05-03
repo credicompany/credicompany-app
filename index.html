@@ -623,8 +623,8 @@ document.getElementById("moraRecuperada").innerText =
 let t = control[a].total;
 let p = control[a].pagados;
 
-// 🔥 BONO FIJO GENERAL
-if(control[a].pagados > 0){
+// 🔥 BONO SOLO SI CUMPLE META COMPLETA
+if(t > 0 && p === t){
     bonos[a] = 15;
 }else{
     bonos[a] = 0;

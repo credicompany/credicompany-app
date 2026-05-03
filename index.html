@@ -665,6 +665,7 @@ localStorage.setItem("bonosHoy", JSON.stringify(bonosHoy));
   let rankingHTML = "";
 
 Object.entries(ranking)
+.filter(([asesor]) => asesor !== "admin") // 👈 línea nueva
 .sort((a,b)=>b[1]-a[1])
 .slice(0,5)
 .forEach((item,index)=>{

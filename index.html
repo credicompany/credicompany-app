@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -318,6 +317,29 @@ Eliminar Usuario
 
 let asesor="";
 window.onload = function(){
+
+    let hoy = new Date().toLocaleDateString();
+    let ultimo = localStorage.getItem("fechaSistema");
+
+    // 🔥 SI ES UN NUEVO DÍA → RESET
+    if(ultimo !== hoy){
+
+        let data = JSON.parse(localStorage.getItem("cartera")) || [];
+
+        data.forEach(c=>{
+            c.pagado_hoy = false;
+            c.pagado_monto = 0;
+        });
+
+        localStorage.setItem("cartera", JSON.stringify(data));
+
+        // 🔥 limpiar bonos diarios
+        localStorage.setItem("bonosHoy", JSON.stringify({}));
+
+        // guardar fecha actual
+        localStorage.setItem("fechaSistema", hoy);
+    }
+
     actualizarResumen();
 };
 // LOGIN

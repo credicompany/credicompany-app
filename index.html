@@ -124,7 +124,7 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 <img src="logo.png">
 <div>Asesor: <span id="nombreAsesor">-</span></div>
 </div>
-<div id="rankingContainer" style="display:none;">
+<div id="rankingContainer">
 
     <div class="card" id="rankingBox">
         <h3>🏆 Ranking Asesores del Día</h3>
@@ -186,12 +186,23 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
     <div>⏰ Vencen Hoy</div>
     <div id="vencenHoy">0</div>
   </div>
- 
+
+  <div class="card-resumen">
+    <div>🚨 +30 días</div>
+    <div id="criticos">0</div>
+  </div>
+
+  <div class="card-resumen">
+    <div>👥 Clientes</div>
+    <div id="totalClientes">0</div>
+  </div>
+
+<div class="card-resumen">
+    <div>💸 Mora Recuperada</div>
+    <div id="moraRecuperada">S/0</div>
 </div>
-  <div id="bonoDiario" style="display:none;">
-  <h3>🏆 Asesores que llegaron a bonear</h3>
-  <div id="listaBono"></div>
 </div>
+
 <div id="app" style="display:none">
 
 <div id="simulador" class="card">
@@ -296,33 +307,8 @@ Eliminar Usuario
 <div id="modalQR" class="modal" onclick="cerrarQR()">
 <img id="imgQR">
 </div>
-  <script>
-function verBonoDiario() {
-  document.getElementById("dashboard").style.display = "none";
-  document.getElementById("bonoDiario").style.display = "block";
 
-  cargarRankingBono();
-}
-
-function volverDashboard() {
-  document.getElementById("dashboard").style.display = "block";
-  document.getElementById("bonoDiario").style.display = "none";
-}
-
-function cargarRankingBono() {
-  const lista = document.getElementById("listaBono");
-
-  const asesores = [
-    { nombre: "Leon", clientes: 5 },
-    { nombre: "Maria", clientes: 6 }
-  ];
-
-  lista.innerHTML = asesores.map(a => `
-    <div class="card-resumen">
-      👤 ${a.nombre} - ${a.clientes} pagos cumplidos
-    </div>
-  `).join("");
-}
+<script>
 
 let asesor="";
 window.onload = function(){
@@ -357,14 +343,11 @@ let user=usuario.value.trim();
 let pass=clave.value.trim();
 
 if(user==="admin" && pass==="1234"){
-  asesor = user.toLowerCase().trim();
-  nombreAsesor.innerText=asesor;
-  loginDiv.style.display="none";
-  dashboard.style.display="block";
-  document.getElementById("rankingContainer").style.display = "flex"; // 👈 línea nueva
-  actualizarResumen(); // 🔥 CLAVE
-
-  return;
+asesor = user.toLowerCase().trim();
+nombreAsesor.innerText=asesor;
+loginDiv.style.display="none";
+dashboard.style.display="block";
+return;
 }
 
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
@@ -541,9 +524,7 @@ let key=h.toString().toLowerCase().replace(/\s+/g,"");
 let val=r[i]||"";
 
 if(key.includes("nombre")) obj.nombre=val;
-if(key.includes("asesor") || key.includes("asesor(a)")){
-  obj.asesor = (val || "").toLowerCase().trim();
-}
+if(key.includes("asesor")) obj.asesor = (val || "").toLowerCase().trim();
 if(key.includes("cuota_mora")) obj.monto=val;
 if(key.includes("dias") || key.includes("retraso")) obj.retraso=parseFloat(val)||0;
 if(key.includes("cuota") && key.includes("venc")) obj.cuotasVencidas = parseFloat(val)||0;   
@@ -571,7 +552,6 @@ localStorage.setItem("cartera", JSON.stringify(dataReset));
 // 🔥 MOSTRAR
 filtrarMora(0,1000);
 actualizarResumen();
-volver();
 alert("✅ Cartera cargada y guardada correctamente");
 };
 
@@ -1017,7 +997,6 @@ c.estado_gestion = "PAGADO";
 c.retraso = 0;
 c.cuotasVencidas = 0;
 c.pagado_hoy = true;
-c.asesor = asesor;
 }
 
 return c;
@@ -1140,7 +1119,9 @@ lista.innerHTML += `
 
 }
 
+  
 /* 🔚 FIN */   
 </script>
+
 </body>
 </html>

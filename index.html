@@ -623,13 +623,10 @@ document.getElementById("moraRecuperada").innerText =
 let t = control[a].total;
 let p = control[a].pagados;
 
-if(t >= 5 && p === t){
-    bonos[a] = 20;
-}
-else if(p >= t * 0.8 && t > 0){
-    bonos[a] = 10;
-}
-else{
+// 🔥 BONO FIJO GENERAL
+if(control[a].pagados > 0){
+    bonos[a] = 15;
+}else{
     bonos[a] = 0;
 }
 

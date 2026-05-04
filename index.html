@@ -255,7 +255,7 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 
 <div id="panelAsesores" style="display:none;">
 
-<button class="btn-azul" onclick="verTodosClientes()">
+<button class="btn-azul" onclick="resetFiltros()">
 📋 Todos los clientes
 </button>
 
@@ -325,6 +325,9 @@ Eliminar Usuario
 <script>
 
 let asesor="";
+let filtroAsesor = "";
+let filtroMin = 0;
+let filtroMax = 1000;
 window.onload = function(){
 
     let hoy = new Date().toLocaleDateString('en-CA');
@@ -717,19 +720,30 @@ let lista = document.getElementById("listaClientes");
 lista.innerHTML="";
 
 let data = JSON.parse(localStorage.getItem("cartera")) || [];
+filtroMin = min;
+filtroMax = max;
 
 let filtrados = data.filter(c=>{
 
-// 🔴 OCULTAR PAGADOS
 if(c.pagado_hoy) return false;
 
 let r = parseFloat(c.retraso)||0;
 
-if(asesor === "admin") return r>=min && r<=max;
+// 🔥 ADMIN con filtro combinado
+if(asesor === "admin"){
 
+    if(filtroAsesor){
+        return r>=filtroMin && r<=filtroMax &&
+        (c.asesor || "").toLowerCase() === filtroAsesor.toLowerCase();
+    }
+
+    return r>=filtroMin && r<=filtroMax;
+}
+
+// 🔥 ASESOR NORMAL
 let esMio = (c.asesor || "").toLowerCase() === asesor.toLowerCase();
 
-return r>=min && r<=max && esMio;
+return r>=filtroMin && r<=filtroMax && esMio;
 });
 
 let hoy=0, alDia=0, leve=0, medio=0, critico=0;
@@ -790,14 +804,11 @@ style="flex:1;background:#2ecc71;color:white;border:none;padding:10px;border-rad
 }
 function filtrarPorAsesor(nombreAsesor){
 
-let lista = document.getElementById("listaClientes");
-lista.innerHTML="";
+filtroAsesor = nombreAsesor;
 
-let data = JSON.parse(localStorage.getItem("cartera")) || [];
-
-let filtrados = data.filter(c =>
-(c.asesor || "").toLowerCase() === nombreAsesor.toLowerCase()
-);
+// reutiliza el filtro actual de días
+filtrarMora(filtroMin, filtroMax);
+}
 
 // ordenar por mora
 filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));

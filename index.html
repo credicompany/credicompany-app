@@ -775,7 +775,8 @@ lista.innerHTML+=`
 <div class="item" style="border-left:4px solid ${color}">
 <b style="font-size:11px;">${c.nombre}</b>
 
-💰 S/${parseFloat(c.monto).toLocaleString('es-PE', {minimumFractionDigits:2})}
+
+💰 S/${parseFloat(c.monto).toFixed(2)}
 📅 ${c.retraso}d<br>
 🚨 ${c.cuotasVencidas || 0} cuotas<br>
 👤 ${c.asesor}<br>

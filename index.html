@@ -828,12 +828,6 @@ function resetFiltros(){
     filtroMax = 1000;
     filtrarMora(0,1000);
 }
-
-filtroAsesor = nombreAsesor;
-
-// reutiliza el filtro actual de días
-filtrarMora(filtroMin, filtroMax);
-}
 function cargarResumen(){
   let data = JSON.parse(localStorage.getItem("cartera")) || [];
 

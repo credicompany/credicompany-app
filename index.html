@@ -253,7 +253,21 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 <button style="background:black;color:white" onclick="filtrarMora(61,1000)">61+ días</button>
 </div>
 
-<button class="btn-azul" onclick="verTodosClientes()">📋 Todos los clientes</button>
+<div id="panelAsesores" style="display:none;">
+
+<button class="btn-azul" onclick="verTodosClientes()">
+📋 Todos los clientes
+</button>
+
+<button class="btn-verde" onclick="filtrarPorAsesor('emedina')">
+👤 Medina
+</button>
+
+<button class="btn-verde" onclick="filtrarPorAsesor('tleon')">
+👤 Leon
+</button>
+
+</div>
 
 <div id="listaClientes"></div>
 </div>
@@ -347,6 +361,12 @@ asesor = user.toLowerCase().trim();
 nombreAsesor.innerText=asesor;
 loginDiv.style.display="none";
 dashboard.style.display="block";
+
+// 🔥 ESTA LÍNEA ACTIVA LOS BOTONES
+setTimeout(()=>{
+    document.getElementById("panelAsesores").style.display = "block";
+},300);
+
 return;
 }
 
@@ -768,6 +788,38 @@ style="flex:1;background:#2ecc71;color:white;border:none;padding:10px;border-rad
 </div>`;
 });
 }
+function filtrarPorAsesor(nombreAsesor){
+
+let lista = document.getElementById("listaClientes");
+lista.innerHTML="";
+
+let data = JSON.parse(localStorage.getItem("cartera")) || [];
+
+let filtrados = data.filter(c =>
+(c.asesor || "").toLowerCase() === nombreAsesor.toLowerCase()
+);
+
+// ordenar por mora
+filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
+
+filtrados.forEach(c=>{
+
+let color="#2ecc71";
+if(c.retraso>8) color="#f1c40f";
+if(c.retraso>30) color="#e74c3c";
+if(c.retraso>60) color="black";
+
+lista.innerHTML += `
+<div class="item" style="border-left:4px solid ${color}">
+<b>${c.nombre}</b><br>
+💰 S/${parseFloat(c.monto).toFixed(0)}<br>
+📅 ${c.retraso}d<br>
+👤 ${c.asesor}
+</div>
+`;
+
+});
+  }
 function cargarResumen(){
   let data = JSON.parse(localStorage.getItem("cartera")) || [];
 

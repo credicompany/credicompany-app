@@ -784,10 +784,13 @@ if(c.retraso>60) color="black";
 lista.innerHTML+=`
 <div class="item" style="border-left:4px solid ${color}">
 <b style="font-size:11px;">${c.nombre}</b>
-
-
+<div style="margin-top:4px;font-weight:bold;color:#27ae60;">
 💰 S/${parseFloat(c.monto).toFixed(2)}
-📅 ${c.retraso}d<br>
+</div>
+
+<div style="font-size:13px;color:#555;">
+📅 ${c.retraso}d
+</div>
 🚨 ${c.cuotasVencidas || 0} cuotas<br>
 👤 ${c.asesor}<br>
 📞 <a href="#"
@@ -815,12 +818,16 @@ style="flex:1;background:#2ecc71;color:white;border:none;padding:10px;border-rad
 });
 }
 function filtrarPorAsesor(nombreAsesor){
+    filtroAsesor = nombreAsesor;
+    filtrarMora(filtroMin, filtroMax);
+}
+
 function resetFiltros(){
     filtroAsesor = "";
     filtroMin = 0;
     filtroMax = 1000;
     filtrarMora(0,1000);
-}  
+}
 
 filtroAsesor = nombreAsesor;
 

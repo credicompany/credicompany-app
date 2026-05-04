@@ -810,11 +810,6 @@ filtroAsesor = nombreAsesor;
 filtrarMora(filtroMin, filtroMax);
 }
 
-// ordenar por mora
-filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
-
-filtrados.forEach(c=>{
-
 let color="#2ecc71";
 if(c.retraso>8) color="#f1c40f";
 if(c.retraso>30) color="#e74c3c";

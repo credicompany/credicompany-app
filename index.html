@@ -258,13 +258,15 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 <button class="btn-azul" onclick="resetFiltros()">
 📋 Todos los clientes
 </button>
-
+<button class="btn-verde" onclick="filtrarPorAsesor('ebenites')">
+👤 Ebenites
+</button>
 <button class="btn-verde" onclick="filtrarPorAsesor('emedina')">
-👤 Medina
+👤 Emedina
 </button>
 
 <button class="btn-verde" onclick="filtrarPorAsesor('tleon')">
-👤 Leon
+👤 Tleon
 </button>
 
 </div>
@@ -547,7 +549,15 @@ let key=h.toString().toLowerCase().replace(/\s+/g,"");
 let val=r[i]||"";
 
 if(key.includes("nombre")) obj.nombre=val;
-if(key.includes("asesor")) obj.asesor = (val || "").toLowerCase().trim();
+if(key.includes("asesor")){
+    let nombre = (val || "").toLowerCase().trim();
+
+    if(nombre.includes("benites")) nombre = "ebenites";
+    if(nombre.includes("medina")) nombre = "emedina";
+    if(nombre.includes("leon")) nombre = "tleon";
+
+    obj.asesor = nombre;
+}
 if(key.includes("cuota_mora")) obj.monto=val;
 if(key.includes("dias") || key.includes("retraso")) obj.retraso=parseFloat(val)||0;
 if(key.includes("cuota") && key.includes("venc")) obj.cuotasVencidas = parseFloat(val)||0;   

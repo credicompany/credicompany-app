@@ -774,7 +774,8 @@ if(c.retraso>60) color="black";
 lista.innerHTML+=`
 <div class="item" style="border-left:4px solid ${color}">
 <b style="font-size:11px;">${c.nombre}</b>
-💰 S/${parseFloat(c.monto).toFixed(0)}<br>
+
+💰 S/${parseFloat(c.monto).toLocaleString('es-PE', {minimumFractionDigits:2})}
 📅 ${c.retraso}d<br>
 🚨 ${c.cuotasVencidas || 0} cuotas<br>
 👤 ${c.asesor}<br>

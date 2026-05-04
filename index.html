@@ -803,29 +803,18 @@ style="flex:1;background:#2ecc71;color:white;border:none;padding:10px;border-rad
 });
 }
 function filtrarPorAsesor(nombreAsesor){
+function resetFiltros(){
+    filtroAsesor = "";
+    filtroMin = 0;
+    filtroMax = 1000;
+    filtrarMora(0,1000);
+}  
 
 filtroAsesor = nombreAsesor;
 
 // reutiliza el filtro actual de días
 filtrarMora(filtroMin, filtroMax);
 }
-
-let color="#2ecc71";
-if(c.retraso>8) color="#f1c40f";
-if(c.retraso>30) color="#e74c3c";
-if(c.retraso>60) color="black";
-
-lista.innerHTML += `
-<div class="item" style="border-left:4px solid ${color}">
-<b>${c.nombre}</b><br>
-💰 S/${parseFloat(c.monto).toFixed(0)}<br>
-📅 ${c.retraso}d<br>
-👤 ${c.asesor}
-</div>
-`;
-
-});
-  }
 function cargarResumen(){
   let data = JSON.parse(localStorage.getItem("cartera")) || [];
 

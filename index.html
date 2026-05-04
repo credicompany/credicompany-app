@@ -258,16 +258,13 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 <button class="btn-azul" onclick="resetFiltros()">
 📋 Todos los clientes
 </button>
-  
-<button class="btn-verde" onclick="filtrarPorAsesor('ebenites')">
-👤 Ebenites
-</button>
+
 <button class="btn-verde" onclick="filtrarPorAsesor('emedina')">
-👤 Emedina
+👤 Medina
 </button>
 
 <button class="btn-verde" onclick="filtrarPorAsesor('tleon')">
-👤 TLeon
+👤 Leon
 </button>
 
 </div>
@@ -550,15 +547,7 @@ let key=h.toString().toLowerCase().replace(/\s+/g,"");
 let val=r[i]||"";
 
 if(key.includes("nombre")) obj.nombre=val;
-if(key.includes("asesor")){
-    let nombre = (val || "").toLowerCase().trim();
-
-    if(nombre.includes("benites")) nombre = "ebenites";
-    if(nombre.includes("medina")) nombre = "emedina";
-    if(nombre.includes("leon")) nombre = "tleon";
-
-    obj.asesor = nombre;
-}
+if(key.includes("asesor")) obj.asesor = (val || "").toLowerCase().trim();
 if(key.includes("cuota_mora")) obj.monto=val;
 if(key.includes("dias") || key.includes("retraso")) obj.retraso=parseFloat(val)||0;
 if(key.includes("cuota") && key.includes("venc")) obj.cuotasVencidas = parseFloat(val)||0;   
@@ -784,25 +773,11 @@ if(c.retraso>60) color="black";
 
 lista.innerHTML+=`
 <div class="item" style="border-left:4px solid ${color}">
-
-<b style="font-size:11px;display:block;margin-bottom:4px;">
-${c.nombre}
-</b>
-
-<div style="font-size:13px;margin-bottom:4px;">
-👤 ${c.asesor}
-</div>
-
-<div style="margin-top:4px;font-weight:bold;color:#27ae60;">
-💰 S/${parseFloat(c.monto).toFixed(2)}
-</div>
-
-<div style="font-size:13px;color:#555;">
-📅 ${c.retraso}d
-</div>
-
+<b style="font-size:11px;">${c.nombre}</b>
+💰 S/${parseFloat(c.monto).toFixed(0)}<br>
+📅 ${c.retraso}d<br>
 🚨 ${c.cuotasVencidas || 0} cuotas<br>
-
+👤 ${c.asesor}<br>
 📞 <a href="#"
 onclick='enviarCobranzaDesdeLista(
 "${encodeURIComponent(c.nombre)}",
@@ -813,7 +788,6 @@ onclick='enviarCobranzaDesdeLista(
 style="color:#25D366;font-weight:bold;text-decoration:none;">
 ${c.celular}
 </a><br>
-
 📦 ${c.producto}<br>
 📍 ${c.direccion}<br>
 🏙️ ${c.distrito}
@@ -826,6 +800,7 @@ style="flex:1;background:#2ecc71;color:white;border:none;padding:10px;border-rad
 </div>
 
 </div>`;
+});
 }
 function filtrarPorAsesor(nombreAsesor){
 function resetFiltros(){

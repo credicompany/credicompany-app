@@ -115,6 +115,42 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
   width:auto;
   min-width:90px;
 } 
+  .modalTarifario{
+    display:none;
+    position:fixed;
+    z-index:99999;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    overflow:auto;
+    background:rgba(0,0,0,0.75);
+}
+
+.contenidoTarifario{
+    background:#fff;
+    margin:1% auto;
+    padding:10px;
+    width:95%;
+    max-width:1600px;
+    border-radius:12px;
+    position:relative;
+}
+
+.imgTarifario{
+    width:100%;
+    border-radius:10px;
+}
+
+.cerrarTarifario{
+    position:absolute;
+    right:15px;
+    top:5px;
+    font-size:38px;
+    font-weight:bold;
+    cursor:pointer;
+    color:#001f5b;
+}
 </style>
 </head>
 
@@ -230,6 +266,11 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 
 <div class="fila">
 <button class="btn-verde" onclick="enviarSimulacion()">📊 Simulación</button>
+
+<button class="btn-azul" onclick="abrirTarifario()">
+📋 Tarifario
+</button>
+
 <button class="btn-verde" onclick="enviarFiltro()">🔎 Filtro</button>
 </div>
 
@@ -323,7 +364,19 @@ Eliminar Usuario
 <div id="modalQR" class="modal" onclick="cerrarQR()">
 <img id="imgQR">
 </div>
+<div id="modalTarifario" class="modalTarifario">
 
+    <div class="contenidoTarifario">
+
+        <span class="cerrarTarifario" onclick="cerrarTarifario()">
+            &times;
+        </span>
+
+        <img src="tarifario.png" class="imgTarifario">
+
+    </div>
+
+</div>
 <script>
 
 let asesor="";
@@ -929,6 +982,17 @@ imgQR.src=el.querySelector("img").src;
 modalQR.style.display="flex";
 }
 function cerrarQR(){modalQR.style.display="none";}
+function abrirTarifario(){
+
+document.getElementById("modalTarifario").style.display = "block";
+
+}
+
+function cerrarTarifario(){
+
+document.getElementById("modalTarifario").style.display = "none";
+
+}
 
 // 🔴 GEO CON CONTROL
 function enviarUbicacion(){

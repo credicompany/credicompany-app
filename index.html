@@ -994,17 +994,6 @@ document.getElementById("modalTarifario").style.display = "none";
 
 }
 
-// 🔴 GEO CON CONTROL
-function enviarUbicacion(){
-navigator.geolocation.getCurrentPosition(
-pos=>{
-let link=`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-window.open("https://wa.me/?text="+encodeURIComponent(link));
-},
-()=>alert("No se pudo obtener ubicación")
-);
-}
-
 // WHATSAPP
 function enviarSimulacion(){
 
@@ -1205,11 +1194,16 @@ document.getElementById("dashboard").style.display = "none";
 
 document.getElementById("app").style.display = "block";
 
+// 🔥 ocultar todos los módulos
+["simulador","clientes","pagos","admin"].forEach(id=>{
+document.getElementById(id).style.display = "none";
+});
+
+// 🔥 mostrar solo bono diario
 document.getElementById("historialDiv").style.display = "block";
 
 let lista = document.getElementById("listaHistorial");
 
-// 🔥 LIMPIAR
 lista.innerHTML = "";
 
 // 🔥 BONOS

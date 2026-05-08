@@ -239,23 +239,50 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 </div>
 
 <div id="app" style="display:none">
-
 <div id="simulador" class="card">
-<div class="volver" onclick="m
+
+<div class="volver" onclick="volver()">← Volver</div>
+
+<input id="cliente" placeholder="Nombre">
+<input id="apellidos" placeholder="Apellidos">
+<input id="dni" placeholder="DNI">
+
+<select id="producto">
+<option value="diario">Diario</option>
+<option value="semanal">Semanal</option>
+<option value="quincenal">Quincenal</option>
+<option value="mensual">Mensual</option>
+</select>
+
+<input id="monto" placeholder="Monto">
+<input id="tasa" placeholder="Tasa (%)">
+<input id="plazo" placeholder="Cuotas">
+
+<button class="btn-verde" onclick="calcular()">🧮 Calcular</button>
+
 <div id="resultado"></div>
 <div id="cronograma"></div>
 
 <div class="fila">
-<button class="btn-verde" onclick="enviarSimulacion()">📊 Simulación</button>
+
+<button class="btn-verde" onclick="enviarSimulacion()">
+📊 Simulación
+</button>
 
 <button class="btn-azul" onclick="abrirTarifario()">
 📋 Tarifario
 </button>
 
-<button class="btn-verde" onclick="enviarFiltro()">🔎 Filtro</button>
+<button class="btn-verde" onclick="enviarFiltro()">
+🔎 Filtro
+</button>
+
 </div>
 
-<button class="btn-azul" onclick="limpiar()">🧹 Limpiar</button>
+<button class="btn-azul" onclick="limpiar()">
+🧹 Limpiar
+</button>
+
 </div>
 
 <div id="clientes" class="card" style="display:none">

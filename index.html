@@ -397,11 +397,14 @@ window.onload = function(){
 
         localStorage.setItem("cartera", JSON.stringify(data));
 
-        // 🔥 limpiar bonos diarios
-        localStorage.setItem("bonosHoy", JSON.stringify({}));
+  // 🔥 limpiar bonos diarios
+    localStorage.setItem("bonosHoy", JSON.stringify({}));
 
-        // guardar fecha actual
-        localStorage.setItem("fechaSistema", hoy);
+    // 🔥 limpiar historial de pagos del día
+    localStorage.setItem("historialPagos", JSON.stringify([]));
+
+    // guardar fecha actual
+    localStorage.setItem("fechaSistema", hoy);
     }
 
     actualizarResumen();

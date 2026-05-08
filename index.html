@@ -201,8 +201,7 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 </div>
 </div>
 
-<div class="resumen">
-
+<div class="resumen" id="resumenDashboard">
   <div class="card-resumen">
     <div>💰 Cartera</div>
     <div id="totalCartera">S/ 0</div>
@@ -242,25 +241,7 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 <div id="app" style="display:none">
 
 <div id="simulador" class="card">
-<div class="volver" onclick="volver()">← Volver</div>
-
-<input id="cliente" placeholder="Nombre">
-<input id="apellidos" placeholder="Apellidos">
-<input id="dni" placeholder="DNI">
-
-<select id="producto">
-<option value="diario">Diario</option>
-<option value="semanal">Semanal</option>
-<option value="quincenal">Quincenal</option>
-<option value="mensual">Mensual</option>
-</select>
-
-<input id="monto" placeholder="Monto">
-<input id="tasa" placeholder="Tasa (%)">
-<input id="plazo" placeholder="Cuotas">
-
-<button class="btn-verde" onclick="calcular()">🧮 Calcular</button>
-
+<div class="volver" onclick="m
 <div id="resultado"></div>
 <div id="cronograma"></div>
 
@@ -959,6 +940,7 @@ console.log("Vista general activada");
 // UI
 function mostrar(p){
 dashboard.style.display="none";
+document.getElementById("resumenDashboard").style.display = "none"; 
 app.style.display="block";
 ["simulador","clientes","pagos","admin","historialDiv"].forEach(id=>{
 document.getElementById(id).style.display="none";
@@ -974,7 +956,7 @@ function volver(){
 app.style.display = "none";
 
 document.getElementById("historialDiv").style.display = "none";
-
+document.getElementById("resumenDashboard").style.display = "grid";
 dashboard.style.display = "block";
 
 }
@@ -1194,7 +1176,7 @@ function enviarFiltro(){
 function verHistorialPagos(){
 
 document.getElementById("dashboard").style.display = "none";
-
+document.getElementById("resumenDashboard").style.display = "none";
 document.getElementById("app").style.display = "block";
 
 // 🔥 ocultar todos los módulos

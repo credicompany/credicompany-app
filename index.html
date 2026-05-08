@@ -957,8 +957,7 @@ console.log("Vista general activada");
 function mostrar(p){
 dashboard.style.display="none";
 app.style.display="block";
-
-["simulador","clientes","pagos","admin"].forEach(id=>{
+["simulador","clientes","pagos","admin","historialDiv"].forEach(id=>{
 document.getElementById(id).style.display="none";
 });
 
@@ -1200,10 +1199,13 @@ function enviarFiltro(){
 
   window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 }
-  function verHistorialPagos(){
+function verHistorialPagos(){
 
-document.getElementById("dashboard").style.display="none";
-document.getElementById("historialDiv").style.display="block";
+document.getElementById("dashboard").style.display = "none";
+
+document.getElementById("app").style.display = "block";
+
+document.getElementById("historialDiv").style.display = "block";
 
 let lista = document.getElementById("listaHistorial");
 

@@ -160,15 +160,6 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 <img src="logo.png">
 <div>Asesor: <span id="nombreAsesor">-</span></div>
 </div>
-
-<div id="loginDiv" class="card">
-<input id="usuario" placeholder="Usuario">
-<input id="clave" type="password" placeholder="Clave">
-<button class="btn-verde" onclick="login()">Ingresar</button>
-</div>
-
-<div id="dashboard" style="display:none">
-
 <div id="rankingContainer">
 
     <div class="card" id="rankingBox">
@@ -179,7 +170,13 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
     <button id="btnVolverTop" onclick="volver()">← Volver</button>
 
 </div>
+<div id="loginDiv" class="card">
+<input id="usuario" placeholder="Usuario">
+<input id="clave" type="password" placeholder="Clave">
+<button class="btn-verde" onclick="login()">Ingresar</button>
+</div>
 
+<div id="dashboard" style="display:none">
 <div class="grid">
 <div class="box" onclick="mostrar('simulador')">
 <div style="font-size:28px;">💰</div>
@@ -204,7 +201,8 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 </div>
 </div>
 
-<div class="resumen" id="resumenDashboard">
+<div class="resumen">
+
   <div class="card-resumen">
     <div>💰 Cartera</div>
     <div id="totalCartera">S/ 0</div>
@@ -235,11 +233,16 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
     <div id="totalClientes">0</div>
   </div>
 
+<div class="card-resumen">
+    <div>💸 Mora Recuperada</div>
+    <div id="moraRecuperada">S/0</div>
+</div>
 </div>
 
 <div id="app" style="display:none">
-<div id="simulador" class="card">
 
+<div id="simulador" class="card">
+<div class="volver" onclick="volver()">← Volver</div>
 
 <input id="cliente" placeholder="Nombre">
 <input id="apellidos" placeholder="Apellidos">
@@ -262,25 +265,16 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 <div id="cronograma"></div>
 
 <div class="fila">
-
-<button class="btn-verde" onclick="enviarSimulacion()">
-📊 Simulación
-</button>
+<button class="btn-verde" onclick="enviarSimulacion()">📊 Simulación</button>
 
 <button class="btn-azul" onclick="abrirTarifario()">
 📋 Tarifario
 </button>
 
-<button class="btn-verde" onclick="enviarFiltro()">
-🔎 Filtro
-</button>
-
+<button class="btn-verde" onclick="enviarFiltro()">🔎 Filtro</button>
 </div>
 
-<button class="btn-azul" onclick="limpiar()">
-🧹 Limpiar
-</button>
-
+<button class="btn-azul" onclick="limpiar()">🧹 Limpiar</button>
 </div>
 
 <div id="clientes" class="card" style="display:none">
@@ -322,6 +316,7 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 </div>
 
 <div id="admin" class="card" style="display:none">
+<div class="volver" onclick="volver()">← Volver</div>
 
 <input id="nuevoUser" placeholder="Usuario">
 <input id="nuevoPass" placeholder="Clave">
@@ -335,6 +330,7 @@ Eliminar Usuario
 <div id="listaUsuarios"></div>
 </div>
 <div id="pagos" class="card" style="display:none">
+<div class="volver" onclick="volver()">← Volver</div>
 
 <div class="pagos-container">
 
@@ -361,6 +357,8 @@ Eliminar Usuario
 
 <div class="volver" onclick="volver()">← Volver</div>
 
+<h3>📋 Historial de Pagos</h3>
+<h3>💰 Historial de Bonos</h3>
 <div id="listaHistorial"></div>
 </div>
 <div id="modalQR" class="modal" onclick="cerrarQR()">
@@ -401,14 +399,11 @@ window.onload = function(){
 
         localStorage.setItem("cartera", JSON.stringify(data));
 
-  // 🔥 limpiar bonos diarios
-    localStorage.setItem("bonosHoy", JSON.stringify({}));
+        // 🔥 limpiar bonos diarios
+        localStorage.setItem("bonosHoy", JSON.stringify({}));
 
-    // 🔥 limpiar historial de pagos del día
-    localStorage.setItem("historialPagos", JSON.stringify([]));
-
-    // guardar fecha actual
-    localStorage.setItem("fechaSistema", hoy);
+        // guardar fecha actual
+        localStorage.setItem("fechaSistema", hoy);
     }
 
     actualizarResumen();
@@ -960,34 +955,24 @@ cargarResumen();
 console.log("Vista general activada");
 
 }
+// UI
 function mostrar(p){
+dashboard.style.display="none";
+app.style.display="block";
 
-dashboard.style.display = "none";
-
-document.getElementById("resumenDashboard").style.display = "none";
-document.getElementById("rankingContainer").style.display = "none";
-app.style.display = "block";
-
-["simulador","clientes","pagos","admin","historialDiv"].forEach(id=>{
-document.getElementById(id).style.display = "none";
+["simulador","clientes","pagos","admin"].forEach(id=>{
+document.getElementById(id).style.display="none";
 });
 
-// 🔥 mostrar módulo seleccionado
-document.getElementById(p).style.display = "block";
+document.getElementById(p).style.display="block";
 
 if(p==="clientes") filtrarMora(0,1000);
 if(p==="admin") renderUsuarios();
-
 }
+
 function volver(){
-
-app.style.display = "none";
-
-document.getElementById("historialDiv").style.display = "none";
-document.getElementById("resumenDashboard").style.display = "grid";
- document.getElementById("rankingContainer").style.display = "flex"; 
-dashboard.style.display = "block";
-
+app.style.display="none";
+dashboard.style.display="block";
 }
 
 // QR
@@ -1006,6 +991,17 @@ function cerrarTarifario(){
 
 document.getElementById("modalTarifario").style.display = "none";
 
+}
+
+// 🔴 GEO CON CONTROL
+function enviarUbicacion(){
+navigator.geolocation.getCurrentPosition(
+pos=>{
+let link=`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+window.open("https://wa.me/?text="+encodeURIComponent(link));
+},
+()=>alert("No se pudo obtener ubicación")
+);
 }
 
 // WHATSAPP
@@ -1202,23 +1198,14 @@ function enviarFiltro(){
 
   window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 }
-function verHistorialPagos(){
+  function verHistorialPagos(){
 
-document.getElementById("dashboard").style.display = "none";
-document.getElementById("resumenDashboard").style.display = "none";
-document.getElementById("rankingContainer").style.display = "none";  
-document.getElementById("app").style.display = "block";
-
-// 🔥 ocultar todos los módulos
-["simulador","clientes","pagos","admin"].forEach(id=>{
-document.getElementById(id).style.display = "none";
-});
-
-// 🔥 mostrar solo bono diario
-document.getElementById("historialDiv").style.display = "block";
+document.getElementById("dashboard").style.display="none";
+document.getElementById("historialDiv").style.display="block";
 
 let lista = document.getElementById("listaHistorial");
 
+// 🔥 LIMPIAR
 lista.innerHTML = "";
 
 // 🔥 BONOS

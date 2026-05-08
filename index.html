@@ -967,10 +967,14 @@ document.getElementById(p).style.display="block";
 if(p==="clientes") filtrarMora(0,1000);
 if(p==="admin") renderUsuarios();
 }
-
 function volver(){
-app.style.display="none";
-dashboard.style.display="block";
+
+app.style.display = "none";
+
+document.getElementById("historialDiv").style.display = "none";
+
+dashboard.style.display = "block";
+
 }
 
 // QR

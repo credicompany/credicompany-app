@@ -160,6 +160,13 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 <img src="logo.png">
 <div>Asesor: <span id="nombreAsesor">-</span></div>
 </div>
+
+<div id="loginDiv" class="card">
+<input id="usuario" placeholder="Usuario">
+<input id="clave" type="password" placeholder="Clave">
+<button class="btn-verde" onclick="login()">Ingresar</button>
+</div>
+
 <div id="dashboard" style="display:none">
 
 <div id="rankingContainer">
@@ -173,16 +180,6 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 
 </div>
 
-<div class="grid">
-
-</div>
-<div id="loginDiv" class="card">
-<input id="usuario" placeholder="Usuario">
-<input id="clave" type="password" placeholder="Clave">
-<button class="btn-verde" onclick="login()">Ingresar</button>
-</div>
-
-<div id="dashboard" style="display:none">
 <div class="grid">
 <div class="box" onclick="mostrar('simulador')">
 <div style="font-size:28px;">💰</div>

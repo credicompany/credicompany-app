@@ -937,19 +937,24 @@ cargarResumen();
 console.log("Vista general activada");
 
 }
-// UI
 function mostrar(p){
-dashboard.style.display="none";
-document.getElementById("resumenDashboard").style.display = "none"; 
-app.style.display="block";
+
+dashboard.style.display = "none";
+
+document.getElementById("resumenDashboard").style.display = "none";
+
+app.style.display = "block";
+
 ["simulador","clientes","pagos","admin","historialDiv"].forEach(id=>{
-document.getElementById(id).style.display="none";
+document.getElementById(id).style.display = "none";
 });
 
-document.getElementById(p).style.display="block";
+// 🔥 mostrar módulo seleccionado
+document.getElementById(p).style.display = "block";
 
 if(p==="clientes") filtrarMora(0,1000);
 if(p==="admin") renderUsuarios();
+
 }
 function volver(){
 

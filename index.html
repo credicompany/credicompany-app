@@ -249,6 +249,12 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 <input id="dni" placeholder="DNI">
 
 <select id="producto">
+<select id="tipoCliente">
+<option value="nuevo">Nuevo</option>
+<option value="recurrente">Recurrente</option>
+<option value="a1">Recurrente A1</option>
+<option value="gerencia">Preferencial / Gerencia</option>
+</select>  
 <option value="diario">Diario</option>
 <option value="semanal">Semanal</option>
 <option value="quincenal">Quincenal</option>
@@ -256,8 +262,8 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 </select>
 
 <input id="monto" placeholder="Monto">
-<input id="tasa" placeholder="Tasa (%)">
-<input id="plazo" placeholder="Cuotas">
+<input id="tasa" placeholder="Tasa (%)" readonly>
+<input id="plazo" placeholder="Cuotas" readonly>
 
 <button class="btn-verde" onclick="calcular()">🧮 Calcular</button>
 
@@ -468,12 +474,318 @@ renderUsuarios();
 alert("✅ Usuario eliminado");
 
 }
+function obtenerTarifario(producto,monto,tipo){
+
+let config = null;
+
+// =========================
+// DIARIO
+// =========================
+
+if(producto === "diario"){
+
+if(tipo === "nuevo"){
+
+if(monto >= 300 && monto <= 600){
+config = {tem:35, plazo:25};
+}
+
+if(monto >= 601 && monto <= 2000){
+config = {tem:33, plazo:45};
+}
+
+}
+
+if(tipo === "recurrente"){
+
+if(monto >= 300 && monto <= 600){
+config = {tem:34, plazo:25};
+}
+
+if(monto >= 601 && monto <= 2000){
+config = {tem:32, plazo:45};
+}
+
+if(monto >= 2001 && monto <= 3000){
+config = {tem:30, plazo:60};
+}
+
+}
+
+if(tipo === "a1"){
+
+if(monto >= 300 && monto <= 600){
+config = {tem:32, plazo:10};
+}
+
+if(monto >= 601 && monto <= 3000){
+config = {tem:30, plazo:12};
+}
+
+if(monto >= 3001 && monto <= 5000){
+config = {tem:28, plazo:16};
+}
+
+if(monto >= 5001 && monto <= 10000){
+config = {tem:26, plazo:20};
+}
+
+}
+
+if(tipo === "gerencia"){
+
+if(monto >= 1001 && monto <= 5000){
+config = {tem:28, plazo:5};
+}
+
+if(monto >= 5001 && monto <= 10000){
+config = {tem:23, plazo:6};
+}
+
+if(monto >= 10100 && monto <= 15000){
+config = {tem:20, plazo:8};
+}
+
+}
+
+}
+
+// =========================
+// SEMANAL
+// =========================
+
+if(producto === "semanal"){
+
+if(tipo === "nuevo"){
+
+if(monto >= 500 && monto <= 1500){
+config = {tem:21, plazo:8};
+}
+
+if(monto >= 1501 && monto <= 3000){
+config = {tem:21, plazo:10};
+}
+
+}
+
+if(tipo === "recurrente"){
+
+if(monto >= 500 && monto <= 1000){
+config = {tem:14, plazo:4};
+}
+
+if(monto >= 1001 && monto <= 3000){
+config = {tem:18, plazo:10};
+}
+
+if(monto >= 3001 && monto <= 5000){
+config = {tem:17, plazo:12};
+}
+
+}
+
+if(tipo === "a1"){
+
+if(monto >= 500 && monto <= 1000){
+config = {tem:17, plazo:10};
+}
+
+if(monto >= 1001 && monto <= 5000){
+config = {tem:16, plazo:12};
+}
+
+if(monto >= 5001 && monto <= 10000){
+config = {tem:15, plazo:16};
+}
+
+if(monto >= 10001 && monto <= 15000){
+config = {tem:14, plazo:20};
+}
+
+}
+
+if(tipo === "gerencia"){
+
+if(monto >= 1001 && monto <= 5000){
+config = {tem:11, plazo:5};
+}
+
+if(monto >= 5001 && monto <= 10000){
+config = {tem:10, plazo:6};
+}
+
+if(monto >= 10100 && monto <= 15000){
+config = {tem:9, plazo:8};
+}
+
+}
+
+}
+
+// =========================
+// QUINCENAL
+// =========================
+
+if(producto === "quincenal"){
+
+if(tipo === "nuevo"){
+
+if(monto >= 500 && monto <= 1000){
+config = {tem:15, plazo:3};
+}
+
+if(monto >= 1001 && monto <= 2000){
+config = {tem:15, plazo:4};
+}
+
+}
+
+if(tipo === "recurrente"){
+
+if(monto >= 500 && monto <= 1000){
+config = {tem:14, plazo:4};
+}
+
+if(monto >= 1001 && monto <= 3000){
+config = {tem:13, plazo:6};
+}
+
+if(monto >= 3001 && monto <= 5000){
+config = {tem:12, plazo:8};
+}
+
+}
+
+if(tipo === "a1"){
+
+if(monto >= 500 && monto <= 1000){
+config = {tem:13, plazo:5};
+}
+
+if(monto >= 1001 && monto <= 5000){
+config = {tem:12, plazo:6};
+}
+
+if(monto >= 5001 && monto <= 10000){
+config = {tem:11, plazo:7};
+}
+
+if(monto >= 10001 && monto <= 15000){
+config = {tem:10, plazo:8};
+}
+
+}
+
+if(tipo === "gerencia"){
+
+if(monto >= 1001 && monto <= 5000){
+config = {tem:11, plazo:5};
+}
+
+if(monto >= 5001 && monto <= 10000){
+config = {tem:10, plazo:6};
+}
+
+if(monto >= 10100 && monto <= 15000){
+config = {tem:9, plazo:8};
+}
+
+}
+
+}
+
+// =========================
+// MENSUAL
+// =========================
+
+if(producto === "mensual"){
+
+if(tipo === "nuevo"){
+
+if(monto >= 500 && monto <= 1000){
+config = {tem:12, plazo:3};
+}
+
+if(monto >= 1001 && monto <= 2000){
+config = {tem:12, plazo:4};
+}
+
+}
+
+if(tipo === "recurrente"){
+
+if(monto >= 500 && monto <= 1000){
+config = {tem:11, plazo:4};
+}
+
+if(monto >= 1001 && monto <= 3000){
+config = {tem:11, plazo:5};
+}
+
+if(monto >= 3001 && monto <= 5000){
+config = {tem:11, plazo:6};
+}
+
+}
+
+if(tipo === "a1"){
+
+if(monto >= 500 && monto <= 1000){
+config = {tem:11, plazo:5};
+}
+
+if(monto >= 1001 && monto <= 5000){
+config = {tem:10, plazo:6};
+}
+
+if(monto >= 5001 && monto <= 10000){
+config = {tem:9, plazo:7};
+}
+
+if(monto >= 10001 && monto <= 15000){
+config = {tem:8, plazo:8};
+}
+
+}
+
+if(tipo === "gerencia"){
+
+if(monto >= 1001 && monto <= 5000){
+config = {tem:9, plazo:5};
+}
+
+if(monto >= 5001 && monto <= 10000){
+config = {tem:8, plazo:6};
+}
+
+if(monto >= 10100 && monto <= 15000){
+config = {tem:7, plazo:8};
+}
+
+}
+
+}
+
+return config;
+}  
 // SIMULADOR
 function calcular(){
-
 let P = parseFloat(monto.value);
-let t = parseFloat(tasa.value)/100;
-let n = parseInt(plazo.value);
+
+let tipo = document.getElementById("tipoCliente").value;
+
+let tarifa = obtenerTarifario(producto.value, P, tipo);
+
+if(!tarifa){
+alert("❌ Monto fuera de tarifario");
+return;
+}
+
+document.getElementById("tasa").value = tarifa.tem;
+document.getElementById("plazo").value = tarifa.plazo;
+
+let t = tarifa.tem / 100;
+let n = tarifa.plazo;
 
 if(!P || !t || !n){
 alert("Completa datos");

@@ -248,17 +248,54 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 <input id="apellidos" placeholder="Apellidos">
 <input id="dni" placeholder="DNI">
 
-<select id="producto">
+<!-- TIPO CLIENTE -->
 <select id="tipoCliente">
-<option value="nuevo">Nuevo</option>
-<option value="recurrente">Recurrente</option>
-<option value="a1">Recurrente A1</option>
-<option value="gerencia">Preferencial / Gerencia</option>
-</select>  
-<option value="diario">Diario</option>
-<option value="semanal">Semanal</option>
-<option value="quincenal">Quincenal</option>
-<option value="mensual">Mensual</option>
+
+<option value="">
+Tipo Cliente
+</option>
+
+<option value="nuevo">
+Nuevo
+</option>
+
+<option value="recurrente">
+Recurrente
+</option>
+
+<option value="a1">
+Recurrente A1
+</option>
+
+<option value="gerencia">
+Preferencial / Gerencia
+</option>
+
+</select>
+
+<!-- PRODUCTO -->
+<select id="producto">
+
+<option value="">
+Producto
+</option>
+
+<option value="diario">
+Diario
+</option>
+
+<option value="semanal">
+Semanal
+</option>
+
+<option value="quincenal">
+Quincenal
+</option>
+
+<option value="mensual">
+Mensual
+</option>
+
 </select>
 
 <input id="monto" placeholder="Monto">
@@ -770,6 +807,19 @@ return config;
 }  
 // SIMULADOR
 function calcular(){
+if(!tipoCliente.value){
+
+alert("Seleccione tipo cliente");
+return;
+
+}
+
+if(!producto.value){
+
+alert("Seleccione producto");
+return;
+
+}  
 let P = parseFloat(monto.value);
 
 let tipo = document.getElementById("tipoCliente").value;

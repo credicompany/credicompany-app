@@ -300,7 +300,7 @@ Mensual
 
 <input id="monto" placeholder="Monto">
 <input id="tasa" placeholder="Tasa (%)">
-<input id="plazo" placeholder="Cuotas">
+<input id="plazo" placeholder="Cuotas"readonly>
 
 <button class="btn-verde" onclick="calcular()">🧮 Calcular</button>
 
@@ -825,6 +825,24 @@ let P = parseFloat(monto.value);
 let tipo = document.getElementById("tipoCliente").value;
 
 let tarifa = obtenerTarifario(producto.value, P, tipo);
+let tasaIngresada = parseFloat(
+document.getElementById("tasa").value
+);
+
+if(
+tasaIngresada &&
+tasaIngresada < tarifa.tem
+){
+
+alert(
+"❌ La TEM no puede ser menor al tarifario"
+);
+
+document.getElementById("tasa").value = tarifa.tem;
+
+return;
+
+}  
 
 if(!tarifa){
 alert("❌ Monto fuera de tarifario");

@@ -824,7 +824,12 @@ let P = parseFloat(monto.value);
 
 let tipo = document.getElementById("tipoCliente").value;
 
+}
 let tarifa = obtenerTarifario(producto.value, P, tipo);
+if(!tarifa){
+alert("❌ Monto fuera de tarifario");
+return;
+}  
 let tasaIngresada = parseFloat(
 document.getElementById("tasa").value
 );
@@ -843,11 +848,6 @@ document.getElementById("tasa").value = tarifa.tem;
 return;
 
 }  
-
-if(!tarifa){
-alert("❌ Monto fuera de tarifario");
-return;
-}
 
 if(!document.getElementById("tasa").value){
 

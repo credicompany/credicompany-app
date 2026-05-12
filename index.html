@@ -299,8 +299,8 @@ Mensual
 </select>
 
 <input id="monto" placeholder="Monto">
-<input id="tasa" placeholder="Tasa (%)" readonly>
-<input id="plazo" placeholder="Cuotas" readonly>
+<input id="tasa" placeholder="Tasa (%)">
+<input id="plazo" placeholder="Cuotas">
 
 <button class="btn-verde" onclick="calcular()">🧮 Calcular</button>
 
@@ -834,8 +834,13 @@ return;
 document.getElementById("tasa").value = tarifa.tem;
 document.getElementById("plazo").value = tarifa.plazo;
 
-let t = tarifa.tem / 100;
-let n = tarifa.plazo;
+let t = parseFloat(
+document.getElementById("tasa").value
+) / 100;
+
+let n = parseInt(
+document.getElementById("plazo").value
+);
 
 if(!P || !t || !n){
 alert("Completa datos");

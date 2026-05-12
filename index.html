@@ -886,7 +886,7 @@ dias = 1;
 
 if(producto.value==="semanal"){
 
-i = t / 4;
+i = Math.pow(1 + t, 7/30) - 1;
 dias = 7;
 
 }

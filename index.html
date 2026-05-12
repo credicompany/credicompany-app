@@ -300,7 +300,7 @@ Mensual
 
 <input id="monto" placeholder="Monto">
 <input id="tasa" placeholder="Tasa (%)">
-<input id="plazo" placeholder="Cuotas"readonly>
+<input id="plazo" placeholder="Cuotas">
 
 <button class="btn-verde" onclick="calcular()">🧮 Calcular</button>
 
@@ -853,8 +853,6 @@ if(!document.getElementById("tasa").value){
 document.getElementById("tasa").value = tarifa.tem;
 
 }
-
-if(!document.getElementById("plazo").value){
 
 document.getElementById("plazo").value = tarifa.plazo;
 

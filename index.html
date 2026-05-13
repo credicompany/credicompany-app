@@ -899,9 +899,15 @@ if(producto.value==="quincenal"){ i=t/2; dias=15; }
 if(producto.value==="mensual"){ i=t; dias=30; }
 
 // 🔥 fórmula financiera
-let cuota = (P*i)/(1 - Math.pow(1+i,-n));
+let cuota = (
+capitalFinanciado * i
+) / (
+1 - Math.pow(1+i,-n)
+);
 let total = cuota * n;
-let interes = total - P;
+
+let interes =
+total - capitalFinanciado;
 let comision = 0;
 
 if(P >= 300 && P <= 2000){
@@ -914,25 +920,38 @@ else if(P >= 5001){
     comision = 15;
 }
 
-let totalEntrega = P - comision;
+let capitalFinanciado = P + comision;
+
+let totalEntrega = P;
 
 // 🔥 resumen completo
 resultado.innerHTML = `
-<b>💰 Monto aprobado:</b> S/ ${P.toFixed(2)}<br>
 
-<b>💸 Comisión:</b> S/ ${comision.toFixed(2)}<br>
+<b>💰 Monto solicitado:</b>
+S/ ${P.toFixed(2)}<br>
 
-<b>✅ Total a entregar:</b> S/ ${totalEntrega.toFixed(2)}<br>
+<b>💸 Comisión:</b>
+S/ ${comision.toFixed(2)}<br>
 
-<b>💳 Cuota:</b> S/ ${cuota.toFixed(2)}<br>
+<b>🏦 Capital financiado:</b>
+S/ ${capitalFinanciado.toFixed(2)}<br>
 
-<b>📈 Total a pagar:</b> S/ ${total.toFixed(2)}<br>
+<b>✅ Total entregado:</b>
+S/ ${totalEntrega.toFixed(2)}<br>
 
-<b>🏦 Interés:</b> S/ ${interes.toFixed(2)}
+<b>💳 Cuota:</b>
+S/ ${cuota.toFixed(2)}<br>
+
+<b>📈 Total a pagar:</b>
+S/ ${total.toFixed(2)}<br>
+
+<b>🏛️ Interés:</b>
+S/ ${interes.toFixed(2)}
+
 `;
 
 // 🔥 cronograma REAL
-let saldo = P;
+let saldo = capitalFinanciado;
 let fecha = new Date();
 let html = "<h4>Cronograma:</h4>";
 

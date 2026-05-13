@@ -932,16 +932,27 @@ let capitalFinanciado = P + comision;
 let totalEntrega = P;
 
 // 🔥 fórmula financiera
-let cuota = (
+// 🔥 cuota base SIN IGV
+let cuotaBase = (
 capitalFinanciado * i
 ) / (
 1 - Math.pow(1+i,-n)
 );
 
-let total = cuota * n;
+// 🔥 interés total
+let interesBase = (cuotaBase * n) - capitalFinanciado;
 
-let interes =
-total - capitalFinanciado;
+// 🔥 IGV sobre interés
+let igv = interesBase * 0.18;
+
+// 🔥 total final
+let total = capitalFinanciado + interesBase + igv;
+
+// 🔥 cuota final
+let cuota = total / n;
+
+// 🔥 interés mostrado
+let interes = interesBase + igv;
 // 🔥 resumen completo
 resultado.innerHTML = `
 

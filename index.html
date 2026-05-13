@@ -902,12 +902,33 @@ if(producto.value==="mensual"){ i=t; dias=30; }
 let cuota = (P*i)/(1 - Math.pow(1+i,-n));
 let total = cuota * n;
 let interes = total - P;
+let comision = 0;
+
+if(P >= 300 && P <= 2000){
+    comision = 5;
+}
+else if(P >= 2001 && P <= 5000){
+    comision = 10;
+}
+else if(P >= 5001){
+    comision = 15;
+}
+
+let totalEntrega = P - comision;
 
 // 🔥 resumen completo
 resultado.innerHTML = `
-<b>Cuota:</b> S/ ${cuota.toFixed(2)}<br>
-<b>Total a pagar:</b> S/ ${total.toFixed(2)}<br>
-<b>Interés:</b> S/ ${interes.toFixed(2)}
+<b>💰 Monto aprobado:</b> S/ ${P.toFixed(2)}<br>
+
+<b>💸 Comisión:</b> S/ ${comision.toFixed(2)}<br>
+
+<b>✅ Total a entregar:</b> S/ ${totalEntrega.toFixed(2)}<br>
+
+<b>💳 Cuota:</b> S/ ${cuota.toFixed(2)}<br>
+
+<b>📈 Total a pagar:</b> S/ ${total.toFixed(2)}<br>
+
+<b>🏦 Interés:</b> S/ ${interes.toFixed(2)}
 `;
 
 // 🔥 cronograma REAL

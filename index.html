@@ -232,7 +232,15 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
     <div>👥 Clientes</div>
     <div id="totalClientes">0</div>
   </div>
+<div class="card-resumen">
+    <div>🚨 Mi Mora</div>
+    <div id="miMora">S/0</div>
+</div>
 
+<div class="card-resumen">
+    <div>📌 Mis Morosos</div>
+    <div id="misMorosos">0</div>
+</div>
 <div class="card-resumen">
     <div>💸 Mora Recuperada</div>
     <div id="moraRecuperada">S/0</div>
@@ -674,7 +682,7 @@ config = {tem:15, plazo:3};
 if(monto >= 1001 && monto <= 2000){
 config = {tem:15, plazo:4};
 }
-
+7
 }
 
 if(tipo === "recurrente"){
@@ -1045,6 +1053,8 @@ function actualizarResumen(){
   let vencenHoy = 0;
   let criticos = 0;
   let moraRecuperada = 0;
+  let miMora = 0;
+  let misMorosos = 0;
   let ranking = {};
   let control = {};
   let bonos = {};
@@ -1090,6 +1100,15 @@ if(c.pagado_hoy){
     control[asesorNombre].pagados++;
 }
     if(retraso > 0) mora++;
+    if(
+    retraso > 0 &&
+    (c.asesor || "").toLowerCase() === asesor.toLowerCase()
+){
+
+    miMora += monto;
+    misMorosos++;
+
+    }
     if(retraso > 30) criticos++;
     let saldo = parseFloat(c.saldo || c.monto) || 0;
      
@@ -1115,6 +1134,11 @@ if(c.pagado_hoy){
 
 document.getElementById("moraRecuperada").innerText =
 "S/ " + moraRecuperada.toFixed(2);
+document.getElementById("miMora").innerText =
+"S/ " + miMora.toFixed(2);
+
+document.getElementById("misMorosos").innerText =
+misMorosos;
   Object.keys(control).forEach(a=>{
 
 let t = control[a].total;

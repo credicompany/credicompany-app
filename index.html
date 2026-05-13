@@ -468,7 +468,7 @@ asesor = user.toLowerCase().trim();
 nombreAsesor.innerText=asesor;
 loginDiv.style.display="none";
 dashboard.style.display="block";
-
+actualizarResumen();
 // 🔥 ESTA LÍNEA ACTIVA LOS BOTONES
 setTimeout(()=>{
     document.getElementById("panelAsesores").style.display = "block";
@@ -486,6 +486,7 @@ asesor = user.toLowerCase().trim();
 nombreAsesor.innerText=asesor;
 loginDiv.style.display="none";
 dashboard.style.display="block";
+actualizarResumen();  
 }else{
 alert("❌ Usuario o clave incorrectos");
 }
@@ -1099,14 +1100,25 @@ if(retraso === 0){
 if(c.pagado_hoy){
     control[asesorNombre].pagados++;
 }
-    if(retraso > 0) mora++;
-    if(
-    retraso > 0 &&
-    (c.asesor || "").toLowerCase() === asesor.toLowerCase()
-){
+    if(retraso > 0){
 
-    miMora += monto;
-    misMorosos++;
+    let asesorCliente = (c.asesor || "")
+    .toLowerCase()
+    .trim();
+
+    let asesorActual = (asesor || "")
+    .toLowerCase()
+    .trim();
+
+    if(
+        asesorActual &&
+        asesorCliente === asesorActual
+    ){
+
+        miMora += monto;
+        misMorosos++;
+
+    }
 
     }
     if(retraso > 30) criticos++;

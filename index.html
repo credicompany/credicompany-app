@@ -683,7 +683,7 @@ config = {tem:15, plazo:3};
 if(monto >= 1001 && monto <= 2000){
 config = {tem:15, plazo:4};
 }
-7
+
 }
 
 if(tipo === "recurrente"){
@@ -899,15 +899,7 @@ if(producto.value==="quincenal"){ i=t/2; dias=15; }
 if(producto.value==="mensual"){ i=t; dias=30; }
 
 // 🔥 fórmula financiera
-let cuota = (
-capitalFinanciado * i
-) / (
-1 - Math.pow(1+i,-n)
-);
-let total = cuota * n;
-
-let interes =
-total - capitalFinanciado;
+// 🔥 comisión
 let comision = 0;
 
 if(P >= 300 && P <= 2000){
@@ -920,10 +912,23 @@ else if(P >= 5001){
     comision = 15;
 }
 
+// 🔥 capital financiado
 let capitalFinanciado = P + comision;
 
+// 🔥 total entregado
 let totalEntrega = P;
 
+// 🔥 fórmula financiera
+let cuota = (
+capitalFinanciado * i
+) / (
+1 - Math.pow(1+i,-n)
+);
+
+let total = cuota * n;
+
+let interes =
+total - capitalFinanciado;
 // 🔥 resumen completo
 resultado.innerHTML = `
 
@@ -1133,14 +1138,9 @@ if(!control[asesorNombre]){
     };
 }
 
-if(retraso === 0){
-    control[asesorNombre].total++;
-}
+if(retraso > 0){
 
-if(c.pagado_hoy){
-    control[asesorNombre].pagados++;
-}
-    if(retraso > 0){
+    mora++;
 
     let asesorCliente = (c.asesor || "")
     .toLowerCase()
@@ -1160,7 +1160,7 @@ if(c.pagado_hoy){
 
     }
 
-    }
+}
     if(retraso > 30) criticos++;
     let saldo = parseFloat(c.saldo || c.monto) || 0;
      

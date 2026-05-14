@@ -1542,14 +1542,28 @@ window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 function enviarCobranzaDesdeLista(nombre, celular, dias, monto){
 
 nombre = decodeURIComponent(nombre);
-celular = (celular || "").replace(/\D/g,""); // limpia espacios
+celular = (celular || "").replace(/\D/g,"");
 
 dias = parseFloat(dias) || 0;
 
 let msg = "";
 
+// 🔥 FIRMA
+let firma = "";
+
+if(asesor === "ebenites"){
+
+    firma = "Área de Cobranzas\nCREDICOMPANY";
+
+}else{
+
+    firma = `Asesor(a): ${asesor}\nCREDICOMPANY`;
+
+}
+
 // 🟢 VENCE HOY
 if(dias === 0){
+
 msg = `📌 RECORDATORIO - CREDICOMPANY
 
 Estimado(a) ${nombre},
@@ -1562,11 +1576,13 @@ Le recomendamos realizar el pago dentro del día para mantener su crédito al d�
 
 Quedamos atentos a su confirmación.
 
-${firma}
+${firma}`;
+
 }
 
 // 🟡 1–8 días
 else if(dias <= 8){
+
 msg = `🟡 AVISO - CREDICOMPANY
 
 Estimado(a) ${nombre},
@@ -1579,11 +1595,13 @@ Le solicitamos regularizar el pago a la brevedad para evitar mayores cargos.
 
 Quedamos atentos a su confirmación.
 
-${firma}
+${firma}`;
+
 }
 
 // 🟠 9–30 días
 else if(dias <= 30){
+
 msg = `🟠 SEGUIMIENTO - CREDICOMPANY
 
 Estimado(a) ${nombre},
@@ -1596,11 +1614,13 @@ Le solicitamos regularizar el pago lo antes posible.
 
 Quedamos atentos a su confirmación.
 
-${firma}
+${firma}`;
+
 }
 
 // 🔴 +30 días
 else{
+
 msg = `🔴 URGENTE - CREDICOMPANY
 
 Estimado(a) ${nombre},
@@ -1610,24 +1630,19 @@ Su crédito registra ${dias} días de atraso.
 💰 Deuda pendiente: S/ ${monto}
 
 Es importante regularizar de inmediato para evitar acciones adicionales.
+
 Quedamos atentos a su confirmación.
 
-${firma}  
-}
-
-// 🔥 AQUÍ ESTÁ LA CLAVE
-  let firma = "";
-
-if(asesor === "ebenites"){
-
-    firma = "Área de Cobranzas\nCREDICOMPANY";
-
-}else{
-
-    firma = `Asesor(a): ${asesor}\nCREDICOMPANY`;
+${firma}`;
 
 }
-window.open("https://wa.me/51" + celular + "?text=" + encodeURIComponent(msg));
+
+// 🔥 ENVÍO WHATSAPP
+window.open(
+"https://wa.me/51" + celular +
+"?text=" + encodeURIComponent(msg)
+);
+
 }
 
 // ✅ CANCELADO (ELIMINAR)

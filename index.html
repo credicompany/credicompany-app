@@ -158,7 +158,27 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 
 <div class="header">
 <img src="logo.png">
-<div>Asesor: <span id="nombreAsesor">-</span></div>
+<div class="perfilAsesor">
+
+<img id="fotoAsesor"
+src=""
+style="
+width:120px;
+height:120px;
+border-radius:50%;
+object-fit:cover;
+border:4px solid #10c251;
+margin-top:10px;
+box-shadow:0 4px 12px rgba(0,0,0,0.25);
+display:none;
+">
+
+<div style="margin-top:10px;">
+Asesor:
+<span id="nombreAsesor">-</span>
+</div>
+
+</div>
 </div>
 <div id="rankingContainer">
 
@@ -466,6 +486,7 @@ let pass=clave.value.trim();
 if(user==="admin" && pass==="1234"){
 asesor = user.toLowerCase().trim();
 nombreAsesor.innerText=asesor;
+mostrarFotoAsesor();
 loginDiv.style.display="none";
 dashboard.style.display="block";
 actualizarResumen();
@@ -484,12 +505,48 @@ let encontrado=usuarios.find(u=>u.user===user && u.pass===pass);
 if(encontrado){
 asesor = user.toLowerCase().trim();
 nombreAsesor.innerText=asesor;
+mostrarFotoAsesor();
 loginDiv.style.display="none";
 dashboard.style.display="block";
 actualizarResumen();  
 }else{
 alert("❌ Usuario o clave incorrectos");
 }
+}
+  function mostrarFotoAsesor(){
+
+let foto = document.getElementById("fotoAsesor");
+
+foto.style.display = "block";
+
+// ADMIN
+if(asesor === "admin"){
+
+foto.src = "ebenites.png";
+
+}
+
+// ERICK MEDINA
+else if(asesor === "emedina"){
+
+foto.src = "emedina.png";
+
+}
+
+// ALESSANDRA LEON
+else if(asesor === "tleon"){
+
+foto.src = "tleon.png";
+
+}
+
+// DEFAULT
+else{
+
+foto.src = "logo.png";
+
+}
+
 }
 function eliminarUsuarioManual(){
 

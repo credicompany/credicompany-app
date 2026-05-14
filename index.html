@@ -1560,7 +1560,9 @@ Hoy corresponde el pago de su cuota programada. 💼
 
 Le recomendamos realizar el pago dentro del día para mantener su crédito al día y evitar cargos por mora.
 
-Quedamos atentos a su confirmación.`;
+Quedamos atentos a su confirmación.
+
+${firma}
 }
 
 // 🟡 1–8 días
@@ -1575,7 +1577,9 @@ Registra ${dias} días de atraso.
 
 Le solicitamos regularizar el pago a la brevedad para evitar mayores cargos.
 
-Quedamos atentos a su confirmación.`;
+Quedamos atentos a su confirmación.
+
+${firma}
 }
 
 // 🟠 9–30 días
@@ -1590,7 +1594,9 @@ Registra ${dias} días de atraso.
 
 Le solicitamos regularizar el pago lo antes posible.
 
-Quedamos atentos a su confirmación.`;
+Quedamos atentos a su confirmación.
+
+${firma}
 }
 
 // 🔴 +30 días
@@ -1604,11 +1610,23 @@ Su crédito registra ${dias} días de atraso.
 💰 Deuda pendiente: S/ ${monto}
 
 Es importante regularizar de inmediato para evitar acciones adicionales.
+Quedamos atentos a su confirmación.
 
-Agradecemos su pronta respuesta.`;
+${firma}  
 }
 
 // 🔥 AQUÍ ESTÁ LA CLAVE
+  let firma = "";
+
+if(asesor === "ebenites"){
+
+    firma = "Área de Cobranzas\nCREDICOMPANY";
+
+}else{
+
+    firma = `Asesor(a): ${asesor}\nCREDICOMPANY`;
+
+}
 window.open("https://wa.me/51" + celular + "?text=" + encodeURIComponent(msg));
 }
 

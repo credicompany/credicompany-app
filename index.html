@@ -1174,10 +1174,18 @@ if(retraso > 0){
     .toLowerCase()
     .trim();
 
-    if(
-        asesorActual &&
-        asesorCliente === asesorActual
-    ){
+    // 🔥 ADMIN VE TODO
+    if(asesorActual === "admin"){
+
+        miMora += monto;
+        misMorosos++;
+
+    }
+   
+   }
+
+    // 🔥 ASESOR NORMAL
+    else if(asesorCliente === asesorActual){
 
         miMora += monto;
         misMorosos++;

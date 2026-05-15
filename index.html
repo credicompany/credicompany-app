@@ -1117,7 +1117,7 @@ if(key.includes("asesor")){
 
     obj.asesor = nombre;
 }
-if(key.includes("cuota_mora")) obj.monto=val;
+if( key.includes("saldocapitalvencido") ||key.includes("saldo_capital_vencido")){obj.monto = parseFloat(val) || 0;}
 if(key.includes("dias") || key.includes("retraso")) obj.retraso=parseFloat(val)||0;
 if(key.includes("cuota") && key.includes("venc")) obj.cuotasVencidas = parseFloat(val)||0;   
 if(key.includes("telefono") || key.includes("celular")) obj.celular=val;

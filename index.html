@@ -1108,8 +1108,8 @@ if(!h)return;
 let key=h.toString().toLowerCase().replace(/\s+/g,"");
 let val=r[i]||"";
 
-if(key.includes("nombre")) obj.nombre=val;
 if(key.includes("asesor")){
+
     let nombre = (val || "").toLowerCase().trim();
 
     if(nombre.includes("benites")) nombre = "ebenites";
@@ -1117,6 +1117,10 @@ if(key.includes("asesor")){
     if(nombre.includes("leon")) nombre = "tleon";
 
     obj.asesor = nombre;
+
+}
+
+// 🔥 SALDO CAPITAL VENCIDO
 if(
     key.includes("saldo") &&
     key.includes("capital") &&
@@ -1225,9 +1229,10 @@ if(retraso >= 1){
     .trim();
 
     // 🔥 SOLO SALDO VENCIDO REAL
-   let saldoPendiente =
+  let saldoPendiente =
 (parseFloat(c.saldoVencido) || 0)
-- (parseFloat(c.pagado_monto) || 0);
+-
+(parseFloat(c.pagado_monto) || 0);
 
     if(saldoPendiente < 0){
         saldoPendiente = 0;

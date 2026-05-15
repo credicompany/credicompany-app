@@ -1400,7 +1400,7 @@ lista.innerHTML+=`
 <div class="item" style="border-left:4px solid ${color}">
 <b style="font-size:11px;">${c.nombre}</b>
 <div style="margin-top:4px;font-weight:bold;color:#27ae60;">
-💰 S/${parseFloat(c.monto).toFixed(2)}
+💰 S/${parseFloat(c.cuotaMora || c.monto).toFixed(2)}
 </div>
 
 <div style="font-size:13px;color:#555;">

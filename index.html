@@ -221,7 +221,7 @@ Asesor: <span id="nombreAsesor">-</span>
   </div>
 
   <div class="card-resumen">
-    <div>📉 Mora</div>
+   <div>💸 Saldo Vencido</div>
     <div id="porcentajeMora">0%</div>
   </div>
 
@@ -1177,12 +1177,6 @@ function actualizarResumen(){
 let pagado = parseFloat(c.pagado_monto) || 0;
 let cuota = parseFloat(c.monto) || 0;
 
-
-// mora recuperada
-if(retraso > 0 && pagado > 0){
-    moraRecuperada += pagado;
-}
-
 // ranking asesor
 let asesorNombre = c.asesor || "Sin asesor";
 
@@ -1211,7 +1205,8 @@ if(c.pagado_hoy){
     control[asesorNombre].pagados++;
 
 }
-if(retraso > 0){
+
+if(retraso >= 1){
 
     mora++;
 
@@ -1223,10 +1218,17 @@ if(retraso > 0){
     .toLowerCase()
     .trim();
 
+    // 🔥 SOLO SALDO VENCIDO REAL
+    let saldoPendiente = monto - (parseFloat(c.pagado_monto) || 0);
+
+    if(saldoPendiente < 0){
+        saldoPendiente = 0;
+    }
+
     // 🔥 ADMIN VE TODO
     if(asesorActual === "admin"){
 
-        miMora += monto;
+        miMora += saldoPendiente;
         misMorosos++;
 
     }
@@ -1234,7 +1236,7 @@ if(retraso > 0){
     // 🔥 ASESOR NORMAL
     else if(asesorCliente === asesorActual){
 
-        miMora += monto;
+        miMora += saldoPendiente;
         misMorosos++;
 
     }

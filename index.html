@@ -12,6 +12,7 @@
 body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}
 .header{display:flex;flex-direction:column;align-items:center;padding:20px;}
 .header img{width:180px;}
+.fotoAsesor{width:180px;height:180px;border-radius:50%;border:5px solid #00ff66;object-fit:cover;margin-top:10px;box-shadow:0 0 15px rgba(0,255,100,0.5);}
 .card{background:#f2f2f2;color:#333;margin:15px;padding:20px;border-radius:15px;}
 .volver{position:sticky;top:0;background:#0a2f5c;color:white;padding:14px;border-radius:12px;text-align:center;font-weight:bold;margin-bottom:15px;cursor:pointer;}
 input, select{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:none;}
@@ -176,10 +177,17 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 <body>
 
 <div class="header">
-<img src="logo.png">
-<div class="perfilAsesor">
 
-<img id="fotoAsesor"
+<img src="logo.png">
+
+<img id="fotoPerfil" class="fotoAsesor">
+
+<div>
+Asesor: 
+<span id="nombreAsesor">-</span>
+</div>
+
+</div>
 src=""
 style="
 width:120px;

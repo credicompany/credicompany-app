@@ -1128,6 +1128,15 @@ if(
 ){
     obj.saldoVencido = parseFloat(val) || 0;
 }
+  // 🔥 CUOTA MORA
+if(key.includes("cuota_mora")){
+
+    obj.cuotaMora = parseFloat(val) || 0;
+
+    // 🔥 monto visible cliente
+    obj.monto = parseFloat(val) || 0;
+
+}
 if(key.includes("dias") || key.includes("retraso")) obj.retraso=parseFloat(val)||0;
 if(key.includes("cuota") && key.includes("venc")) obj.cuotasVencidas = parseFloat(val)||0;   
 if(key.includes("telefono") || key.includes("celular")) obj.celular=val;

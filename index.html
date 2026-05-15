@@ -1795,12 +1795,6 @@ lista.innerHTML += `
 });
 
 }
-
-function cargarPerfilAsesor(usuario){
-
-let foto = document.getElementById("fotoPerfil");
-let nombreCompleto = document.getElementById("nombreCompletoAsesor");
-
 function cargarPerfilAsesor(usuario){
 
 let foto = document.getElementById("fotoPerfil");
@@ -1811,6 +1805,7 @@ if(usuario === "admin"){
 
 foto.src = "admin.png";
 nombreCompleto.innerText = "Área de Cobranzas";
+nombreAsesor.innerText = "admin";
 
 }
 
@@ -1819,6 +1814,7 @@ else if(usuario === "ebenites"){
 
 foto.src = "ebenites.png";
 nombreCompleto.innerText = "Edgar Benites";
+nombreAsesor.innerText = "ebenites";
 
 }
 
@@ -1827,6 +1823,7 @@ else if(usuario === "emedina"){
 
 foto.src = "emedina.png";
 nombreCompleto.innerText = "Erick Medina";
+nombreAsesor.innerText = "emedina";
 
 }
 
@@ -1835,6 +1832,7 @@ else if(usuario === "tleon"){
 
 foto.src = "tleon.png";
 nombreCompleto.innerText = "Alessandra Leon";
+nombreAsesor.innerText = "tleon";
 
 }
 
@@ -1843,12 +1841,14 @@ else{
 
 foto.src = "logo.png";
 nombreCompleto.innerText = usuario;
+nombreAsesor.innerText = usuario;
 
 }
 
 foto.style.display = "block";
 
 }
+
 /* 🔚 FIN */   
 </script>
 

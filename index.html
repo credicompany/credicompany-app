@@ -1259,7 +1259,8 @@ if(retraso >= 1){
   let porcentajeMora = totalClientes ? ((mora / totalClientes) * 100).toFixed(1) : 0;
 
   document.getElementById("totalCartera").innerText = "S/ " + total.toFixed(2);
-  document.getElementById("porcentajeMora").innerText = porcentajeMora + "%";
+  document.getElementById("porcentajeMora").innerText =
+"S/ " + miMora.toFixed(2);
   document.getElementById("cobradoHoy").innerText = "S/ " + hoy.toFixed(2);
   document.getElementById("vencenHoy").innerText = vencenHoy;
   document.getElementById("criticos").innerText = criticos;

@@ -1093,6 +1093,7 @@ let obj={
 nombre:"",
 asesor:"",
 monto:"",
+saldoVencido:0,
 retraso:0,
 cuotasVencidas:0,
 celular:"",
@@ -1116,12 +1117,12 @@ if(key.includes("asesor")){
     if(nombre.includes("leon")) nombre = "tleon";
 
     obj.asesor = nombre;
-}if(
-   key.includes("saldo") &&
-   key.includes("capital") &&
-   key.includes("venc")
+if(
+    key.includes("saldo") &&
+    key.includes("capital") &&
+    key.includes("venc")
 ){
-   obj.monto = parseFloat(val) || 0;
+    obj.saldoVencido = parseFloat(val) || 0;
 }
 if(key.includes("dias") || key.includes("retraso")) obj.retraso=parseFloat(val)||0;
 if(key.includes("cuota") && key.includes("venc")) obj.cuotasVencidas = parseFloat(val)||0;   
@@ -1224,7 +1225,9 @@ if(retraso >= 1){
     .trim();
 
     // 🔥 SOLO SALDO VENCIDO REAL
-    let saldoPendiente = monto - (parseFloat(c.pagado_monto) || 0);
+   let saldoPendiente =
+(parseFloat(c.saldoVencido) || 0)
+- (parseFloat(c.pagado_monto) || 0);
 
     if(saldoPendiente < 0){
         saldoPendiente = 0;

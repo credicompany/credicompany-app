@@ -1760,7 +1760,7 @@ let historial = JSON.parse(localStorage.getItem("historialPagos")) || [];
 historial.push({
     cliente: nombre,
     celular: celular,
-    monto: clientePagado.monto || 0,
+    monto: clientePagado.cuotaMora || 0,
     fecha: new Date().toLocaleString(),
     asesor: clientePagado.asesor || "Sin asesor"
 });

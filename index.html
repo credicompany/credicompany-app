@@ -19,24 +19,40 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 .btn-verde{background:#10c251;}
 .btn-azul{background:#123B63;}
 .btn-naranja{background:#ff9800;}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:20px;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px;}
 .box{
 background:white;
 color:#123B63;
-padding:10px;
-border-radius:15px;
-text-align:center;
-font-weight:bold;
-cursor:pointer;
-transition:0.3s;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
 
-height:110px;
-min-height:110px;
+padding:4px;
+
+border-radius:12px;
+
+text-align:center;
+
+font-weight:bold;
+
+font-size:10px;
+
+line-height:12px;
+
+cursor:pointer;
+
+transition:0.3s;
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+justify-content:center;
+
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
+
+height:60px;
+
+min-height:60px;
 }
 .box:hover{
 transform:translateY(-5px);
@@ -202,23 +218,23 @@ Asesor:
 <div id="dashboard" style="display:none">
 <div class="grid">
 <div class="box" onclick="mostrar('simulador')">
-<div style="font-size:20px;">💰</div>
+<div style="font-size:16px;">💰</div>
 <div>Simulación y Promocion</div>
 </div>
 <div class="box" onclick="mostrar('clientes')">
-<div style="font-size:10px;">👥</div>
+<div style="font-size:16px;">👥</div>
 <div>Cobranza</div>
 </div>
 <div class="box" onclick="mostrar('pagos')">
-<div style="font-size:20px;">💳</div>
+<div style="font-size:16px;">💳</div>
 <div>Medios pagos</div>
 </div>
 <div class="box" onclick="mostrar('admin')">
-<div style="font-size:20px;">⚙️</div>
+<div style="font-size:16px;">⚙️</div>
 <div>Usuarios</div>
 </div>
   <div class="box" onclick="verHistorialPagos()">
-    <div style="font-size:20px;">📋</div>
+    <div style="font-size:16px;">📋</div>
     <div>Bono diario</div>
   </div>
 </div>

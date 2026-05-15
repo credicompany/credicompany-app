@@ -530,6 +530,7 @@ let encontrado=usuarios.find(u=>u.user===user && u.pass===pass);
 if(encontrado){
 asesor = user.toLowerCase().trim();
 nombreAsesor.innerText=asesor;
+cargarPerfilAsesor(asesor);
 loginDiv.style.display="none";
 dashboard.style.display="block";
 actualizarResumen();  
@@ -1800,33 +1801,16 @@ function cargarPerfilAsesor(usuario){
 let foto = document.getElementById("fotoPerfil");
 let nombreCompleto = document.getElementById("nombreCompletoAsesor");
 
+function cargarPerfilAsesor(usuario){
+
+let foto = document.getElementById("fotoPerfil");
+let nombreCompleto = document.getElementById("nombreCompletoAsesor");
+
 // ADMIN
 if(usuario === "admin"){
 
 foto.src = "admin.png";
-
-nombreCompleto.innerText =
-"Área de Cobranzas";
-
-}
-
-// ERICK
-else if(usuario === "emedina"){
-
-foto.src = "emedina.png";
-
-nombreCompleto.innerText =
-"Erick Medina";
-
-}
-
-// ALESSANDRA
-else if(usuario === "tleon"){
-
-foto.src = "tleon.png";
-
-nombreCompleto.innerText =
-"Alessandra Leon";
+nombreCompleto.innerText = "Área de Cobranzas";
 
 }
 
@@ -1834,16 +1818,30 @@ nombreCompleto.innerText =
 else if(usuario === "ebenites"){
 
 foto.src = "ebenites.png";
-
-nombreCompleto.innerText =
-"Edgar Benites";
+nombreCompleto.innerText = "Edgar Benites";
 
 }
 
+// ERICK
+else if(usuario === "emedina"){
+
+foto.src = "emedina.png";
+nombreCompleto.innerText = "Erick Medina";
+
+}
+
+// ALESSANDRA
+else if(usuario === "tleon"){
+
+foto.src = "tleon.png";
+nombreCompleto.innerText = "Alessandra Leon";
+
+}
+
+// OTROS
 else{
 
 foto.src = "logo.png";
-
 nombreCompleto.innerText = usuario;
 
 }

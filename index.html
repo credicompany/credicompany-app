@@ -12,7 +12,6 @@
 body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}
 .header{display:flex;flex-direction:column;align-items:center;padding:20px;}
 .header img{width:180px;}
-.fotoAsesor{width:220px;height:220px;border-radius:50%;border:5px solid #00ff66;object-fit:cover;margin-top:10px;box-shadow:0 0 15px rgba(0,255,100,0.5);}
 .card{background:#f2f2f2;color:#333;margin:15px;padding:20px;border-radius:15px;}
 .volver{position:sticky;top:0;background:#0a2f5c;color:white;padding:14px;border-radius:12px;text-align:center;font-weight:bold;margin-bottom:15px;cursor:pointer;}
 input, select{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:none;}
@@ -20,25 +19,21 @@ button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;
 .btn-verde{background:#10c251;}
 .btn-azul{background:#123B63;}
 .btn-naranja{background:#ff9800;}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:20px;}
 .box{
 background:white;
 color:#123B63;
-padding:4px;
-border-radius:12px;
+padding:20px;
+border-radius:15px;
 text-align:center;
 font-weight:bold;
-font-size:22px;
-line-height:24px;
 cursor:pointer;
 transition:0.3s;
 display:flex;
 flex-direction:column;
 align-items:center;
 justify-content:center;
-box-shadow:0 2px 6px rgba(0,0,0,0.1);
-height:60px;
-min-height:60px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
 }
 .box:hover{
 transform:translateY(-5px);
@@ -162,15 +157,8 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 <body>
 
 <div class="header">
-
 <img src="logo.png">
-
-<img id="fotoPerfil" class="fotoAsesor" style="display:none;">
-
-<div>
-Asesor: <span id="nombreAsesor">-</span>
-</div>
-
+<div>Asesor: <span id="nombreAsesor">-</span></div>
 </div>
 <div id="rankingContainer">
 
@@ -191,23 +179,23 @@ Asesor: <span id="nombreAsesor">-</span>
 <div id="dashboard" style="display:none">
 <div class="grid">
 <div class="box" onclick="mostrar('simulador')">
-<div style="font-size:16px;">💰</div>
+<div style="font-size:28px;">💰</div>
 <div>Simulación y Promocion</div>
 </div>
 <div class="box" onclick="mostrar('clientes')">
-<div style="font-size:16px;">👥</div>
+<div style="font-size:28px;">👥</div>
 <div>Cobranza</div>
 </div>
 <div class="box" onclick="mostrar('pagos')">
-<div style="font-size:16px;">💳</div>
+<div style="font-size:28px;">💳</div>
 <div>Medios pagos</div>
 </div>
 <div class="box" onclick="mostrar('admin')">
-<div style="font-size:16px;">⚙️</div>
+<div style="font-size:28px;">⚙️</div>
 <div>Usuarios</div>
 </div>
   <div class="box" onclick="verHistorialPagos()">
-    <div style="font-size:16px;">📋</div>
+    <div style="font-size:28px;">📋</div>
     <div>Bono diario</div>
   </div>
 </div>
@@ -221,7 +209,7 @@ Asesor: <span id="nombreAsesor">-</span>
   </div>
 
   <div class="card-resumen">
-   <div>💸 Saldo Vencido</div>
+    <div>📉 Mora</div>
     <div id="porcentajeMora">0%</div>
   </div>
 
@@ -478,7 +466,6 @@ let pass=clave.value.trim();
 if(user==="admin" && pass==="1234"){
 asesor = user.toLowerCase().trim();
 nombreAsesor.innerText=asesor;
-mostrarFotoAsesor();
 loginDiv.style.display="none";
 dashboard.style.display="block";
 actualizarResumen();
@@ -497,48 +484,12 @@ let encontrado=usuarios.find(u=>u.user===user && u.pass===pass);
 if(encontrado){
 asesor = user.toLowerCase().trim();
 nombreAsesor.innerText=asesor;
-mostrarFotoAsesor();
 loginDiv.style.display="none";
 dashboard.style.display="block";
 actualizarResumen();  
 }else{
 alert("❌ Usuario o clave incorrectos");
 }
-}
-  function mostrarFotoAsesor(){
-
-let foto = document.getElementById("fotoPerfil");
-
-foto.style.display = "block";
-
-// ADMIN
-if(asesor === "admin"){
-
-foto.src = "ebenites.png";
-
-}
-
-// ERICK MEDINA
-else if(asesor === "emedina"){
-
-foto.src = "emedina.png";
-
-}
-
-// ALESSANDRA LEON
-else if(asesor === "tleon"){
-
-foto.src = "tleon.png";
-
-}
-
-// DEFAULT
-else{
-
-foto.src = "logo.png";
-
-}
-
 }
 function eliminarUsuarioManual(){
 
@@ -1092,9 +1043,7 @@ let json=dataRows.map(r=>{
 let obj={
 nombre:"",
 asesor:"",
-montoTotal:0,
-cuotaMora:0,
-saldoVencido:0,
+monto:"",
 retraso:0,
 cuotasVencidas:0,
 celular:"",
@@ -1109,8 +1058,8 @@ if(!h)return;
 let key=h.toString().toLowerCase().replace(/\s+/g,"");
 let val=r[i]||"";
 
+if(key.includes("nombre")) obj.nombre=val;
 if(key.includes("asesor")){
-
     let nombre = (val || "").toLowerCase().trim();
 
     if(nombre.includes("benites")) nombre = "ebenites";
@@ -1118,29 +1067,8 @@ if(key.includes("asesor")){
     if(nombre.includes("leon")) nombre = "tleon";
 
     obj.asesor = nombre;
-
 }
-
-// 🔥 SALDO CAPITAL VENCIDO
-if(
-    key.includes("saldo") &&
-    key.includes("capital") &&
-    key.includes("venc")
-){
-    obj.saldoVencido = parseFloat(val) || 0;
-}
-  // 🔥 CUOTA MORA
-if(key.includes("cuota_mora")){
-
-    obj.cuotaMora = parseFloat(val) || 0;
-
-}
-  if(
-    key.includes("saldo") &&
-    !key.includes("venc")
-){
-    obj.montoTotal = parseFloat(val) || 0;
-}
+if(key.includes("cuota_mora")) obj.monto=val;
 if(key.includes("dias") || key.includes("retraso")) obj.retraso=parseFloat(val)||0;
 if(key.includes("cuota") && key.includes("venc")) obj.cuotasVencidas = parseFloat(val)||0;   
 if(key.includes("telefono") || key.includes("celular")) obj.celular=val;
@@ -1192,13 +1120,19 @@ function actualizarResumen(){
 
   data.forEach(c=>{
 
-   let monto = parseFloat(c.montoTotal) || 0;
+    let monto = parseFloat(c.monto) || 0;
     total += monto;
 
   let retraso = parseFloat(c.retraso) || 0;
 
 let pagado = parseFloat(c.pagado_monto) || 0;
 let cuota = parseFloat(c.monto) || 0;
+
+
+// mora recuperada
+if(retraso > 0 && pagado > 0){
+    moraRecuperada += pagado;
+}
 
 // ranking asesor
 let asesorNombre = c.asesor || "Sin asesor";
@@ -1216,7 +1150,7 @@ if(!control[asesorNombre]){
     };
 }
 // 🔥 META DEL DÍA
-if(retraso === 0 && !c.pagado_hoy){
+if(!c.pagado_hoy){
 
     control[asesorNombre].total++;
 
@@ -1228,8 +1162,7 @@ if(c.pagado_hoy){
     control[asesorNombre].pagados++;
 
 }
-
-if(retraso >= 1){
+if(retraso > 0){
 
     mora++;
 
@@ -1241,28 +1174,12 @@ if(retraso >= 1){
     .toLowerCase()
     .trim();
 
-    // 🔥 SOLO SALDO VENCIDO REAL
-  let saldoPendiente =
-(parseFloat(c.saldoVencido) || 0)
--
-(parseFloat(c.pagado_monto) || 0);
+    if(
+        asesorActual &&
+        asesorCliente === asesorActual
+    ){
 
-    if(saldoPendiente < 0){
-        saldoPendiente = 0;
-    }
-
-    // 🔥 ADMIN VE TODO
-    if(asesorActual === "admin"){
-
-        miMora += saldoPendiente;
-        misMorosos++;
-
-    }
-
-    // 🔥 ASESOR NORMAL
-    else if(asesorCliente === asesorActual){
-
-        miMora += saldoPendiente;
+        miMora += monto;
         misMorosos++;
 
     }
@@ -1285,8 +1202,7 @@ if(retraso >= 1){
   let porcentajeMora = totalClientes ? ((mora / totalClientes) * 100).toFixed(1) : 0;
 
   document.getElementById("totalCartera").innerText = "S/ " + total.toFixed(2);
-  document.getElementById("porcentajeMora").innerText =
-"S/ " + miMora.toFixed(2);
+  document.getElementById("porcentajeMora").innerText = porcentajeMora + "%";
   document.getElementById("cobradoHoy").innerText = "S/ " + hoy.toFixed(2);
   document.getElementById("vencenHoy").innerText = vencenHoy;
   document.getElementById("criticos").innerText = criticos;
@@ -1413,7 +1329,7 @@ lista.innerHTML+=`
 <div class="item" style="border-left:4px solid ${color}">
 <b style="font-size:11px;">${c.nombre}</b>
 <div style="margin-top:4px;font-weight:bold;color:#27ae60;">
-💰 S/${parseFloat(c.cuotaMora || c.monto).toFixed(2)}
+💰 S/${parseFloat(c.monto).toFixed(2)}
 </div>
 
 <div style="font-size:13px;color:#555;">
@@ -1426,7 +1342,7 @@ onclick='enviarCobranzaDesdeLista(
 "${encodeURIComponent(c.nombre)}",
 "${c.celular}",
 "${c.retraso}",
-"${c.cuotaMora}"
+"${c.monto}"
 ); return false;'
 style="color:#25D366;font-weight:bold;text-decoration:none;">
 ${c.celular}
@@ -1620,31 +1536,14 @@ window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 function enviarCobranzaDesdeLista(nombre, celular, dias, monto){
 
 nombre = decodeURIComponent(nombre);
-celular = (celular || "").replace(/\D/g,"");
+celular = (celular || "").replace(/\D/g,""); // limpia espacios
 
 dias = parseFloat(dias) || 0;
 
 let msg = "";
 
-// 🔥 FIRMA
-let firma = "";
-
-if(
-asesor === "ebenites" ||
-asesor === "admin"
-){
-
-    firma = "Área de Cobranzas\nCREDICOMPANY";
-
-}else{
-
-    firma = `Asesor(a): ${asesor}\nCREDICOMPANY`;
-
-}
-
 // 🟢 VENCE HOY
 if(dias === 0){
-
 msg = `📌 RECORDATORIO - CREDICOMPANY
 
 Estimado(a) ${nombre},
@@ -1655,15 +1554,11 @@ Hoy corresponde el pago de su cuota programada. 💼
 
 Le recomendamos realizar el pago dentro del día para mantener su crédito al día y evitar cargos por mora.
 
-Quedamos atentos a su confirmación.
-
-${firma}`;
-
+Quedamos atentos a su confirmación.`;
 }
 
 // 🟡 1–8 días
 else if(dias <= 8){
-
 msg = `🟡 AVISO - CREDICOMPANY
 
 Estimado(a) ${nombre},
@@ -1674,15 +1569,11 @@ Registra ${dias} días de atraso.
 
 Le solicitamos regularizar el pago a la brevedad para evitar mayores cargos.
 
-Quedamos atentos a su confirmación.
-
-${firma}`;
-
+Quedamos atentos a su confirmación.`;
 }
 
 // 🟠 9–30 días
 else if(dias <= 30){
-
 msg = `🟠 SEGUIMIENTO - CREDICOMPANY
 
 Estimado(a) ${nombre},
@@ -1693,15 +1584,11 @@ Registra ${dias} días de atraso.
 
 Le solicitamos regularizar el pago lo antes posible.
 
-Quedamos atentos a su confirmación.
-
-${firma}`;
-
+Quedamos atentos a su confirmación.`;
 }
 
 // 🔴 +30 días
 else{
-
 msg = `🔴 URGENTE - CREDICOMPANY
 
 Estimado(a) ${nombre},
@@ -1712,18 +1599,11 @@ Su crédito registra ${dias} días de atraso.
 
 Es importante regularizar de inmediato para evitar acciones adicionales.
 
-Quedamos atentos a su confirmación.
-
-${firma}`;
-
+Agradecemos su pronta respuesta.`;
 }
 
-// 🔥 ENVÍO WHATSAPP
-window.open(
-"https://wa.me/51" + celular +
-"?text=" + encodeURIComponent(msg)
-);
-
+// 🔥 AQUÍ ESTÁ LA CLAVE
+window.open("https://wa.me/51" + celular + "?text=" + encodeURIComponent(msg));
 }
 
 // ✅ CANCELADO (ELIMINAR)
@@ -1736,7 +1616,7 @@ let data = JSON.parse(localStorage.getItem("cartera")) || [];
 data = data.map(c=>{
 
 if(c.nombre === nombre && c.celular === celular){
-c.pagado_monto = parseFloat(c.cuotaMora) || 0;
+c.pagado_monto = parseFloat(c.monto) || 0;
 c.ultimo_pago = new Date().toLocaleString();
 c.estado_gestion = "PAGADO";
 
@@ -1760,7 +1640,7 @@ let historial = JSON.parse(localStorage.getItem("historialPagos")) || [];
 historial.push({
     cliente: nombre,
     celular: celular,
-    monto: clientePagado.cuotaMora || 0,
+    monto: clientePagado.monto || 0,
     fecha: new Date().toLocaleString(),
     asesor: clientePagado.asesor || "Sin asesor"
 });

@@ -408,9 +408,67 @@ Mensual
 </button>
 
 </div>
+<div id="panelRecordatorios"
+style="
+background:#123B63;
+padding:10px;
+border-radius:12px;
+margin-top:10px;
+color:white;
+">
+
+<div style="font-weight:bold;font-size:14px;">
+🔔 Recordatorios automáticos
+</div>
+
+<div style="display:flex;gap:5px;margin-top:8px;">
+
+<button id="btnHoy"
+onclick="enviarRecordatorios(0,0)"
+style="
+background:#2ecc71;
+color:white;
+flex:1;
+padding:10px;
+border:none;
+border-radius:8px;
+font-size:12px;
+">
+🟢 Hoy (0)
+</button>
+
+<button id="btnMora"
+onclick="enviarRecordatorios(1,8)"
+style="
+background:#f1c40f;
+color:black;
+flex:1;
+padding:10px;
+border:none;
+border-radius:8px;
+font-size:12px;
+">
+🟡 Mora (0)
+</button>
+
+<button id="btnCriticos"
+onclick="enviarRecordatorios(9,1000)"
+style="
+background:#e74c3c;
+color:white;
+flex:1;
+padding:10px;
+border:none;
+border-radius:8px;
+font-size:12px;
+">
+🔴 Críticos (0)
+</button>
+
+</div>
+</div>
 
 <div id="listaClientes"></div>
-</div>
 <div id="admin" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -1164,14 +1222,26 @@ function actualizarResumen(){
   let control = {};
   let bonos = {};
   let hoyFecha = new Date().toLocaleDateString();
-
+let hoyCount = 0;
+let moraCount = 0;
+let criticoCount = 0;
   data.forEach(c=>{
 
     let monto = parseFloat(c.monto) || 0;
     total += monto;
 
   let retraso = parseFloat(c.retraso) || 0;
+if(retraso === 0 && !c.pagado_hoy){
+    hoyCount++;
+}
 
+if(retraso >= 1 && retraso <= 8 && !c.pagado_hoy){
+    moraCount++;
+}
+
+if(retraso >= 9 && !c.pagado_hoy){
+    criticoCount++;
+}
 let pagado = parseFloat(c.pagado_monto) || 0;
 let cuota = parseFloat(c.monto) || 0;
 
@@ -1315,6 +1385,21 @@ ${medalla} ${item[0]} → S/${item[1].toFixed(2)}
 
 document.getElementById("rankingAsesores").innerHTML = rankingHTML;
 }  
+let btnHoy = document.getElementById("btnHoy");
+let btnMora = document.getElementById("btnMora");
+let btnCriticos = document.getElementById("btnCriticos");
+
+if(btnHoy){
+btnHoy.innerHTML = `🟢 Hoy (${hoyCount})`;
+}
+
+if(btnMora){
+btnMora.innerHTML = `🟡 Mora (${moraCount})`;
+}
+
+if(btnCriticos){
+btnCriticos.innerHTML = `🔴 Críticos (${criticoCount})`;
+}
 function filtrarMora(min,max){
 
 let lista = document.getElementById("listaClientes");
@@ -1580,6 +1665,58 @@ window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 
 }
 // 📩 COBRANZA WHATSAPP
+function enviarRecordatorios(min,max){
+
+let data = JSON.parse(localStorage.getItem("cartera")) || [];
+
+let filtrados = data.filter(c=>{
+
+if(c.pagado_hoy) return false;
+
+let r = parseFloat(c.retraso) || 0;
+
+return r >= min && r <= max;
+
+});
+
+if(filtrados.length === 0){
+
+alert("✅ No hay clientes pendientes");
+
+return;
+
+}
+
+let index = 0;
+
+function abrirWhatsApp(){
+
+if(index >= filtrados.length){
+
+alert("✅ Recordatorios completados");
+
+return;
+
+}
+
+let c = filtrados[index];
+
+enviarCobranzaDesdeLista(
+encodeURIComponent(c.nombre),
+c.celular,
+c.retraso,
+c.monto
+);
+
+index++;
+
+setTimeout(abrirWhatsApp,2500);
+
+}
+
+abrirWhatsApp();
+
+}
 function enviarCobranzaDesdeLista(nombre, celular, dias, monto){
 
 nombre = decodeURIComponent(nombre);

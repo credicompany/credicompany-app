@@ -1399,7 +1399,6 @@ document.getElementById("rankingAsesores").innerHTML = rankingHTML;
 let btnHoy = document.getElementById("btnHoy");
 let btnMora = document.getElementById("btnMora");
 let btnCriticos = document.getElementById("btnCriticos");
-
 if(btnHoy){
 btnHoy.innerHTML = `🟢 Hoy (${hoyCount})`;
 }
@@ -1410,6 +1409,8 @@ btnMora.innerHTML = `🟡 Mora (${moraCount})`;
 
 if(btnCriticos){
 btnCriticos.innerHTML = `🔴 Críticos (${criticoCount})`;
+}
+
 }
 function filtrarMora(min,max){
 

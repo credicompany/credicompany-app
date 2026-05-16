@@ -1228,9 +1228,6 @@ let criticoCount = 0;
   data.forEach(c=>{
 
     let monto = parseFloat(c.monto) || 0;
-    if(retraso === 0 && !c.pagado_hoy){
-    hoyCount++;
-}
 
 if(retraso >= 1 && retraso <= 8 && !c.pagado_hoy){
     moraCount++;

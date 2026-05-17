@@ -250,6 +250,16 @@ Asesor:
 <div class="resumen">
 
   <div class="card-resumen">
+    <div>💰 Cartera</div>
+    <div id="totalCartera">S/ 0</div>
+  </div>
+
+  <div class="card-resumen">
+    <div>📉 Mora</div>
+    <div id="porcentajeMora">0%</div>
+  </div>
+
+  <div class="card-resumen">
     <div>💵 Hoy</div>
     <div id="cobradoHoy">S/ 0</div>
   </div>
@@ -268,6 +278,18 @@ Asesor:
     <div>👥 Clientes</div>
     <div id="totalClientes">0</div>
   </div>
+<div class="card-resumen">
+    <div>🚨 Mi Mora</div>
+    <div id="miMora">S/0</div>
+</div>
+
+<div class="card-resumen">
+    <div>📌 Mis Morosos</div>
+    <div id="misMorosos">0</div>
+</div>
+<div class="card-resumen">
+    <div>💸 Mora Recuperada</div>
+    <div id="moraRecuperada">S/0</div>
 </div>
 </div>
 
@@ -1127,7 +1149,6 @@ let obj={
 nombre:"",
 asesor:"",
 monto:"",
-saldoCapital:0,
 retraso:0,
 cuotasVencidas:0,
 celular:"",
@@ -1153,9 +1174,6 @@ if(key.includes("asesor")){
     obj.asesor = nombre;
 }
 if(key.includes("cuota_mora")) obj.monto=val;
-if(key.includes("saldo") && key.includes("capital") && key.includes("vencido")){
-    obj.saldoCapital = parseFloat(val) || 0;
-}
 if(key.includes("dias") || key.includes("retraso")) obj.retraso=parseFloat(val)||0;
 if(key.includes("cuota") && key.includes("venc")) obj.cuotasVencidas = parseFloat(val)||0;   
 if(key.includes("telefono") || key.includes("celular")) obj.celular=val;
@@ -1194,7 +1212,6 @@ function actualizarResumen(){
 
   let total = 0;
   let mora = 0;
-  let saldoCapitalVencido = 0;
   let hoy = 0;
   let vencenHoy = 0;
   let criticos = 0;
@@ -1223,13 +1240,6 @@ if(retraso >= 1 && retraso <= 8 && !c.pagado_hoy){
 
 if(retraso >= 9 && !c.pagado_hoy){
     criticoCount++;
-}
-
-if(retraso >= 1){
-
-    mora++;
-
-    saldoCapitalVencido += parseFloat(c.saldoCapital || 0);
 
 }
 let pagado = parseFloat(c.pagado_monto) || 0;
@@ -1309,8 +1319,7 @@ if(retraso > 0){
   let porcentajeMora = totalClientes ? ((mora / totalClientes) * 100).toFixed(1) : 0;
 
   document.getElementById("totalCartera").innerText = "S/ " + total.toFixed(2);
-document.getElementById("porcentajeMora").innerText =
-"S/ " + saldoCapitalVencido.toFixed(2);
+  document.getElementById("porcentajeMora").innerText = porcentajeMora + "%";
   document.getElementById("cobradoHoy").innerText = "S/ " + hoy.toFixed(2);
   document.getElementById("vencenHoy").innerText = vencenHoy;
   document.getElementById("criticos").innerText = criticos;
@@ -1728,13 +1737,9 @@ Hoy corresponde el pago de su cuota programada. 💼
 
 💰 Monto a pagar: S/ ${monto}
 
-Estimado(a) cliente, le recordamos amablemente realizar su pago dentro del día para mantener su crédito al día y evitar cargos por mora.
+Le recomendamos realizar el pago dentro del día para mantener su crédito al día y evitar cargos por mora.
 
-Quedamos atentos a su confirmación.
-
-Atte.
-${asesor.toUpperCase()}
-Área de Cobranzas`;
+Quedamos atentos a su confirmación.`;
 }
 
 // 🟡 1–8 días
@@ -1747,13 +1752,9 @@ Registra ${dias} días de atraso.
 
 💰 Deuda pendiente: S/ ${monto}
 
-Estimado(a) cliente, le recordamos amablemente realizar su pago dentro del día para mantener su crédito al día y evitar cargos por mora.
+Le solicitamos regularizar el pago a la brevedad para evitar mayores cargos.
 
-Quedamos atentos a su confirmación.
-
-Atte.
-${asesor.toUpperCase()}
-Área de Cobranzas`;
+Quedamos atentos a su confirmación.`;
 }
 
 // 🟠 9–30 días
@@ -1768,11 +1769,7 @@ Registra ${dias} días de atraso.
 
 Le solicitamos regularizar el pago lo antes posible.
 
-Quedamos atentos a su confirmación.
-
-Atte.
-${asesor.toUpperCase()}
-Área de Cobranzas`;
+Quedamos atentos a su confirmación.`;
 }
 
 // 🔴 +30 días
@@ -1787,11 +1784,7 @@ Su crédito registra ${dias} días de atraso.
 
 Es importante regularizar de inmediato para evitar acciones adicionales.
 
-Quedamos atentos a su confirmación.
-
-Atte.
-${asesor.toUpperCase()}
-Área de Cobranzas`;
+Agradecemos su pronta respuesta.`;
 }
 
 // 🔥 AQUÍ ESTÁ LA CLAVE

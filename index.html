@@ -1257,12 +1257,17 @@ if(retraso > 0 && pagado > 0){
 }
 
 // ranking asesor
-let asesorNombre = c.asesor || "Sin asesor";
-
+let asesorNombre = c.asesor || "Sin 
 if(!ranking[asesorNombre]){
     ranking[asesorNombre] = 0;
 }
-ranking[asesorNombre] += pagado;
+
+// 🔥 SOLO CLIENTES DEL DÍA
+if(retraso === 0 && c.pagado_hoy){
+
+    ranking[asesorNombre] += pagado;
+
+}
 
 // CONTROL GERENCIAL
 if(!control[asesorNombre]){

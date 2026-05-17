@@ -1215,6 +1215,7 @@ function actualizarResumen(){
 
   let total = 0;
   let mora = 0;
+  let saldoCapitalVencido = 0;
   let hoy = 0;
   let vencenHoy = 0;
   let criticos = 0;
@@ -1282,9 +1283,11 @@ if(c.pagado_hoy){
     control[asesorNombre].pagados++;
 
 }
-if(retraso > 0){
+if(retraso >= 1){
 
     mora++;
+
+    saldoCapitalVencido += parseFloat(c.saldoCapital) || 0;
 
     let asesorCliente = (c.asesor || "")
     .toLowerCase()
@@ -1299,7 +1302,7 @@ if(retraso > 0){
         asesorCliente === asesorActual
     ){
 
-        miMora += monto;
+        miMora += parseFloat(c.saldoCapital) || 0;
         misMorosos++;
 
     }
@@ -1319,10 +1322,12 @@ if(retraso > 0){
 
   let totalClientes = data.filter(c => !c.pagado_hoy).length;
 
-  let porcentajeMora = totalClientes ? ((mora / totalClientes) * 100).toFixed(1) : 0;
+ let porcentajeMora =
+saldoCapitalVencido.toFixed(2);
 
   document.getElementById("totalCartera").innerText = "S/ " + total.toFixed(2);
-  document.getElementById("porcentajeMora").innerText = porcentajeMora + "%";
+  document.getElementById("porcentajeMora").innerText =
+"S/ " + porcentajeMora;
   document.getElementById("cobradoHoy").innerText = "S/ " + hoy.toFixed(2);
   document.getElementById("vencenHoy").innerText = vencenHoy;
   document.getElementById("criticos").innerText = criticos;

@@ -1263,7 +1263,7 @@ if(!ranking[asesorNombre]){
 }
 
 // 🔥 SOLO CLIENTES DEL DÍA
-if(c.eraHoy && c.pagado_hoy){
+if(retraso === 0 && c.pagado_hoy){
 
     ranking[asesorNombre] += pagado;
 

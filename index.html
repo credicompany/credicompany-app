@@ -469,7 +469,6 @@ font-size:12px;
 </div>
 
 <div id="listaClientes"></div>
-</div>
 <div id="admin" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -1235,7 +1234,7 @@ let criticoCount = 0;
 let retraso = parseFloat(c.retraso) || 0;
 let monto = parseFloat(c.monto) || 0;
 
-if(c.eraHoy && c.pagado_hoy){
+if(retraso === 0 && !c.pagado_hoy){
     hoyCount++;
 }
 
@@ -1258,16 +1257,11 @@ if(retraso > 0 && pagado > 0){
 
 // ranking asesor
 let asesorNombre = c.asesor || "Sin asesor";
+
 if(!ranking[asesorNombre]){
     ranking[asesorNombre] = 0;
 }
-
-// 🔥 SOLO CLIENTES DEL DÍA
-if(retraso === 0 && c.pagado_hoy){
-
-    ranking[asesorNombre] += pagado;
-
-}
+ranking[asesorNombre] += pagado;
 
 // CONTROL GERENCIAL
 if(!control[asesorNombre]){
@@ -1318,12 +1312,11 @@ if(retraso >= 1){
     let saldo = parseFloat(c.saldo || c.monto) || 0;
      
     // 🔥 CLIENTES AL DÍA
-    if(c.eraHoy && c.pagado_hoy){
-    hoy += pagado;
-}
-if(c.eraHoy && c.pagado_hoy){
+    if(retraso === 0 && !c.pagado_hoy){
+    hoy += saldo;
+      
     vencenHoy++;
-}
+    }
 
     });
 
@@ -1816,7 +1809,6 @@ let data = JSON.parse(localStorage.getItem("cartera")) || [];
 data = data.map(c=>{
 
 if(c.nombre === nombre && c.celular === celular){
-c.eraHoy = (parseFloat(c.retraso) || 0) === 0;
 c.pagado_monto = parseFloat(c.monto) || 0;
 c.ultimo_pago = new Date().toLocaleString();
 c.estado_gestion = "PAGADO";

@@ -1235,7 +1235,7 @@ let criticoCount = 0;
 let retraso = parseFloat(c.retraso) || 0;
 let monto = parseFloat(c.monto) || 0;
 
-if(retraso === 0 && !c.pagado_hoy){
+if(c.eraHoy && c.pagado_hoy){
     hoyCount++;
 }
 
@@ -1263,7 +1263,7 @@ if(!ranking[asesorNombre]){
 }
 
 // 🔥 SOLO CLIENTES DEL DÍA
-if(retraso === 0 && c.pagado_hoy){
+if(c.eraHoy && c.pagado_hoy){
 
     ranking[asesorNombre] += pagado;
 
@@ -1318,11 +1318,13 @@ if(retraso >= 1){
     let saldo = parseFloat(c.saldo || c.monto) || 0;
      
     // 🔥 CLIENTES AL DÍA
-    if(retraso === 0 && !c.pagado_hoy){
-    hoy += saldo;
-      
+    if(c.eraHoy && c.pagado_hoy){
+    hoy += pagado;
+}
+
+if(retraso === 0 && !c.pagado_hoy){
     vencenHoy++;
-    }
+}
 
     });
 
@@ -1815,6 +1817,7 @@ let data = JSON.parse(localStorage.getItem("cartera")) || [];
 data = data.map(c=>{
 
 if(c.nombre === nombre && c.celular === celular){
+c.eraHoy = (parseFloat(c.retraso) || 0) === 0;
 c.pagado_monto = parseFloat(c.monto) || 0;
 c.ultimo_pago = new Date().toLocaleString();
 c.estado_gestion = "PAGADO";

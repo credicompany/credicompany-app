@@ -1321,8 +1321,7 @@ if(retraso >= 1){
     if(c.eraHoy && c.pagado_hoy){
     hoy += pagado;
 }
-
-if(retraso === 0 && !c.pagado_hoy){
+if(c.eraHoy && c.pagado_hoy){
     vencenHoy++;
 }
 

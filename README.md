@@ -1,2 +1,1 @@
-# credicompany-app
-Simulador de créditos - Credicompany
+ Credicompany 2026

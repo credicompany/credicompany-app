@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+8<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -469,6 +469,7 @@ font-size:12px;
 </div>
 
 <div id="listaClientes"></div>
+<div 
 <div id="admin" class="card" style="display:none">
 <div class="volver" onclick="volver()">← Volver</div>
 
@@ -1161,7 +1162,7 @@ headers.forEach((h,i)=>{
 if(!h)return;
 
 let key=h.toString().toLowerCase().replace(/\s+/g,"");
-let val=r[i]||"";
+let val=r[i]||"";⁸í
 
 if(key.includes("nombre")) obj.nombre=val;
 if(key.includes("asesor")){
@@ -1611,6 +1612,10 @@ if(p==="admin") renderUsuarios();
 function volver(){
 
 app.style.display="none";
+["simulador","clientes","pagos","admin","historialDiv"]
+.forEach(id=>{
+document.getElementById(id).style.display="none";
+});  
 
 document.querySelector(".resumen").style.display = "grid";
 
@@ -1897,6 +1902,9 @@ function enviarFiltro(){
   function verHistorialPagos(){
 
 document.getElementById("dashboard").style.display="none";
+document.querySelector(".resumen").style.display = "none";
+
+app.style.display = "block";    
 ["simulador","clientes","pagos","admin"].forEach(id=>{
 document.getElementById(id).style.display="none";
 });

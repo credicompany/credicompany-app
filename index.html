@@ -418,7 +418,7 @@ color:white;
 ">
 
 <div style="font-weight:bold;font-size:14px;">
-🔔 Recordatorios automáticos
+📨 Enviar Recordatorios de Cobranza
 </div>
 
 <div style="display:flex;gap:5px;margin-top:8px;">
@@ -434,7 +434,7 @@ border:none;
 border-radius:8px;
 font-size:12px;
 ">
-🟢 Hoy (0)
+🟢 Clientes al día (0)
 </button>
 
 <button id="btnMora"
@@ -448,7 +448,7 @@ border:none;
 border-radius:8px;
 font-size:12px;
 ">
-🟡 Mora (0)
+🟡 Mora leve (0)
 </button>
 
 <button id="btnCriticos"
@@ -462,7 +462,7 @@ border:none;
 border-radius:8px;
 font-size:12px;
 ">
-🔴 Críticos (0)
+🔴 Mora crítica (0)
 </button>
 
 </div>
@@ -1747,12 +1747,10 @@ let firma = "";
 if(asesor === "admin"){
 
 firma = `
-━━━━━━━━━━━━━━
+*Atte.*
 *Área de Cobranzas*
-
 🏦 *Credicompany*
 _Crecemos juntos_
-
 *2026*`;
 
 }
@@ -1761,13 +1759,10 @@ _Crecemos juntos_
 else if(asesor === "ebenites"){
 
 firma = `
-━━━━━━━━━━━━━━
 *Atte.*
 EDGAR BENITES
-
 🏦 *Credicompany*
 _Crecemos juntos_
-
 *2026*`;
 
 }
@@ -1776,13 +1771,10 @@ _Crecemos juntos_
 else if(asesor === "emedina"){
 
 firma = `
-━━━━━━━━━━━━━━
 *Atte.*
 ERICK MEDINA
-
 🏦 *Credicompany*
 _Crecemos juntos_
-
 *2026*`;
 
 }
@@ -1791,13 +1783,10 @@ _Crecemos juntos_
 else if(asesor === "tleon"){
 
 firma = `
-━━━━━━━━━━━━━━
 *Atte.*
 ALESSANDRA LEON
-
 🏦 *Credicompany*
 _Crecemos juntos_
-
 *2026*`;
 
 }

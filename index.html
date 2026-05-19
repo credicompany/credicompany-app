@@ -1741,6 +1741,66 @@ celular = (celular || "").replace(/\D/g,""); // limpia espacios
 dias = parseFloat(dias) || 0;
 
 let msg = "";
+let firma = "";
+
+// ADMIN
+if(asesor === "admin"){
+
+firma = `
+━━━━━━━━━━━━━━
+*Área de Cobranzas*
+
+🏦 *Credicompany*
+_Crecemos juntos_
+
+*2026*`;
+
+}
+
+// EDGAR
+else if(asesor === "ebenites"){
+
+firma = `
+━━━━━━━━━━━━━━
+*Atte.*
+EDGAR BENITES
+
+🏦 *Credicompany*
+_Crecemos juntos_
+
+*2026*`;
+
+}
+
+// ERICK
+else if(asesor === "emedina"){
+
+firma = `
+━━━━━━━━━━━━━━
+*Atte.*
+ERICK MEDINA
+
+🏦 *Credicompany*
+_Crecemos juntos_
+
+*2026*`;
+
+}
+
+// ALESSANDRA
+else if(asesor === "tleon"){
+
+firma = `
+━━━━━━━━━━━━━━
+*Atte.*
+ALESSANDRA LEON
+
+🏦 *Credicompany*
+_Crecemos juntos_
+
+*2026*`;
+
+}
 
 // 🟢 VENCE HOY
 if(dias === 0){
@@ -1753,8 +1813,9 @@ Hoy corresponde el pago de su cuota programada. 💼
 💰 Monto a pagar: S/ ${monto}
 
 Le recomendamos realizar el pago dentro del día para mantener su crédito al día y evitar cargos por mora.
+Quedamos atentos a su confirmación.
 
-Quedamos atentos a su confirmación.`;
+${firma}`;
 }
 
 // 🟡 1–8 días
@@ -1768,8 +1829,9 @@ Registra ${dias} días de atraso.
 💰 Deuda pendiente: S/ ${monto}
 
 Le solicitamos regularizar el pago a la brevedad para evitar mayores cargos.
+Quedamos atentos a su confirmación.
 
-Quedamos atentos a su confirmación.`;
+${firma}`;
 }
 
 // 🟠 9–30 días
@@ -1784,7 +1846,9 @@ Registra ${dias} días de atraso.
 
 Le solicitamos regularizar el pago lo antes posible.
 
-Quedamos atentos a su confirmación.`;
+Quedamos atentos a su confirmación.
+
+${firma}`;
 }
 
 // 🔴 +30 días
@@ -1799,7 +1863,9 @@ Su crédito registra ${dias} días de atraso.
 
 Es importante regularizar de inmediato para evitar acciones adicionales.
 
-Agradecemos su pronta respuesta.`;
+Agradecemos su pronta respuesta.
+
+${firma}`;
 }
 
 // 🔥 AQUÍ ESTÁ LA CLAVE

@@ -1399,15 +1399,18 @@ let btnHoy = document.getElementById("btnHoy");
 let btnMora = document.getElementById("btnMora");
 let btnCriticos = document.getElementById("btnCriticos");
 if(btnHoy){
-btnHoy.innerHTML = `🟢 Hoy (${hoyCount})`;
+btnHoy.innerHTML =
+`🟢 Clientes al día (${hoyCount})`;
 }
 
 if(btnMora){
-btnMora.innerHTML = `🟡 Mora (${moraCount})`;
+btnMora.innerHTML =
+`🟡 Mora leve (${moraCount})`;
 }
 
 if(btnCriticos){
-btnCriticos.innerHTML = `🔴 Críticos (${criticoCount})`;
+btnCriticos.innerHTML =
+`🔴 Mora crítica (${criticoCount})`;
 }
 
 }
@@ -1886,6 +1889,12 @@ Solicitamos regularizar su pago de manera inmediata para evitar acciones adicion
 Le pedimos comunicarse a la brevedad con nuestra área de cobranzas.
 
 ${firma}`;
+
+}
+
+window.open(
+`https://wa.me/51${celular}?text=${encodeURIComponent(msg)}`
+);
 
 }
 

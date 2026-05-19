@@ -1793,72 +1793,100 @@ _Crecemos juntos_
 
 // 🟢 VENCE HOY
 if(dias === 0){
-msg = `📌 RECORDATORIO - CREDICOMPANY
 
-Estimado(a) ${nombre},
+msg = `🟢 *RECORDATORIO DE PAGO*
+🏦 *CREDICOMPANY*
 
-Hoy corresponde el pago de su cuota programada. 💼
+━━━━━━━━━━━━━━
 
-💰 Monto a pagar: S/ ${monto}
+Estimado(a):
+*${nombre}*
+
+📌 Hoy corresponde el pago de su cuota programada.
+
+💰 *Monto a pagar:*
+S/ ${monto}
 
 Le recomendamos realizar el pago dentro del día para mantener su crédito al día y evitar cargos por mora.
-Quedamos atentos a su confirmación.
+
+Agradecemos su puntualidad y quedamos atentos a su confirmación.
 
 ${firma}`;
+
 }
 
 // 🟡 1–8 días
 else if(dias <= 8){
-msg = `🟡 AVISO - CREDICOMPANY
 
-Estimado(a) ${nombre},
+msg = `🟡 *AVISO DE COBRANZA*
+🏦 *CREDICOMPANY*
 
-Registra ${dias} días de atraso.
+━━━━━━━━━━━━━━
 
-💰 Deuda pendiente: S/ ${monto}
+Estimado(a):
+*${nombre}*
 
-Le solicitamos regularizar el pago a la brevedad para evitar mayores cargos.
-Quedamos atentos a su confirmación.
+📌 Su crédito registra:
+*${dias} días de atraso*
+
+💰 *Deuda pendiente:*
+S/ ${monto}
+
+Le solicitamos regularizar su pago a la brevedad para evitar mayores cargos e inconvenientes en su evaluación crediticia.
+
+Agradecemos su pronta atención y quedamos atentos a su confirmación.
 
 ${firma}`;
-}
 
+}
 // 🟠 9–30 días
 else if(dias <= 30){
-msg = `🟠 SEGUIMIENTO - CREDICOMPANY
 
-Estimado(a) ${nombre},
+msg = `🟠 *SEGUIMIENTO DE COBRANZA*
+🏦 *CREDICOMPANY*
 
-Registra ${dias} días de atraso.
+━━━━━━━━━━━━━━
 
-💰 Deuda pendiente: S/ ${monto}
+Estimado(a):
+*${nombre}*
 
-Le solicitamos regularizar el pago lo antes posible.
+📌 Su crédito registra:
+*${dias} días de atraso*
 
-Quedamos atentos a su confirmación.
+💰 *Deuda pendiente:*
+S/ ${monto}
+
+Es importante regularizar su pago lo antes posible para evitar restricciones y mayores cargos administrativos.
+
+Agradecemos su pronta atención y quedamos atentos a su confirmación.
 
 ${firma}`;
+
 }
 
 // 🔴 +30 días
 else{
-msg = `🔴 URGENTE - CREDICOMPANY
 
-Estimado(a) ${nombre},
+msg = `🔴 *URGENTE — COBRANZA PRIORITARIA*
+🏦 *CREDICOMPANY*
 
-Su crédito registra ${dias} días de atraso.
+━━━━━━━━━━━━━━
 
-💰 Deuda pendiente: S/ ${monto}
+Estimado(a):
+*${nombre}*
 
-Es importante regularizar de inmediato para evitar acciones adicionales.
+📌 Su crédito registra:
+*${dias} días de atraso*
 
-Agradecemos su pronta respuesta.
+💰 *Deuda pendiente:*
+S/ ${monto}
+
+Solicitamos regularizar su pago de manera inmediata para evitar acciones adicionales y afectaciones en su evaluación crediticia.
+
+Le pedimos comunicarse a la brevedad con nuestra área de cobranzas.
 
 ${firma}`;
-}
 
-// 🔥 AQUÍ ESTÁ LA CLAVE
-window.open("https://wa.me/51" + celular + "?text=" + encodeURIComponent(msg));
 }
 
 // ✅ CANCELADO (ELIMINAR)

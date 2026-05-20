@@ -1,4 +1,4 @@
-8<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -467,7 +467,19 @@ font-size:12px;
 
 </div>
 </div>
-
+<input
+id="buscadorClientes"
+placeholder="🔎 Buscar cliente, DNI o celular"
+onkeyup="buscarClienteRapido()"
+style="
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:10px;
+font-size:14px;
+box-sizing:border-box;
+">
 <div id="listaClientes"></div>
 
 </div>
@@ -1507,6 +1519,29 @@ style="flex:1;background:#2ecc71;color:white;border:none;padding:10px;border-rad
 </div>`;
 });
 }
+function buscarClienteRapido(){
+
+let texto = document
+.getElementById("buscadorClientes")
+.value
+.toLowerCase()
+.trim();
+
+let items = document.querySelectorAll("#listaClientes .item");
+
+items.forEach(item=>{
+
+let contenido = item.innerText.toLowerCase();
+
+if(contenido.includes(texto)){
+item.style.display = "block";
+}else{
+item.style.display = "none";
+}
+
+});
+
+}  
 function filtrarPorAsesor(nombreAsesor){
     filtroAsesor = nombreAsesor;
     filtrarMora(filtroMin, filtroMax);

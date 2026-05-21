@@ -1,4 +1,4 @@
-pi<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -419,6 +419,10 @@ Mensual
 👤 Tleon
 </button>
 
+<button class="btn-verde"
+onclick="filtrarPorAsesor('operaciones')">
+👤 Operaciones
+</button>
 </div>
 <div id="panelRecordatorios"
 style="
@@ -1206,7 +1210,7 @@ if(key.includes("asesor")){
     if(nombre.includes("benites")) nombre = "ebenites";
     if(nombre.includes("medina")) nombre = "emedina";
     if(nombre.includes("leon")) nombre = "tleon";
-
+    if(nombre.includes("operaciones")) nombre = "operaciones";
     obj.asesor = nombre;
 }
 if(key.includes("cuota_mora")) obj.monto=val;

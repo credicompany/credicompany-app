@@ -248,7 +248,19 @@ Asesor:
 </div>
 
 <div class="resumen">
+<div id="panelIA" class="card" style="margin:10px;">
 
+<h3 style="margin-top:0;">
+🤖 Credicompany IA
+</h3>
+
+<div id="alertasIA">
+
+⚡ Analizando cartera...
+
+</div>
+
+</div>
   <div class="card-resumen">
     <div>💰 Cartera</div>
     <div id="totalCartera">S/ 0</div>
@@ -1227,6 +1239,7 @@ localStorage.setItem("cartera", JSON.stringify(dataReset));
 // 🔥 MOSTRAR
 filtrarMora(0,1000);
 actualizarResumen();
+analizarCarteraIA();
 alert("✅ Cartera cargada y guardada correctamente");
 };
 
@@ -2163,7 +2176,85 @@ nombreAsesor.innerText = usuario;
 foto.style.display = "block";
 
 }
+function analizarCarteraIA(){
 
+let data = JSON.parse(localStorage.getItem("cartera")) || [];
+
+let riesgosos = [];
+let recuperables = [];
+let vip = [];
+
+data.forEach(c=>{
+
+let atraso = parseFloat(c.retraso) || 0;
+let cuotas = parseFloat(c.cuotasVencidas) || 0;
+let cuota = parseFloat(c.cuotaMora) || 0;
+
+// 🚨 RIESGO ALTO
+if(
+atraso >= 30 &&
+cuotas >= 3 &&
+cuota >= 500
+){
+riesgosos.push(c.nombre);
+}
+
+// 💰 RECUPERABLE
+if(
+atraso >= 1 &&
+atraso <= 8 &&
+cuota >= 300
+){
+recuperables.push(c.nombre);
+}
+
+// 🌟 VIP
+if(
+atraso === 0 &&
+cuota >= 1000
+){
+vip.push(c.nombre);
+}
+
+});
+
+let html = "";
+
+// 🚨 RIESGOSOS
+html += `
+<div class="item">
+🚨 <b>Riesgo Alto:</b>
+${riesgosos.length}
+</div>`;
+
+// 💰 RECUPERABLES
+html += `
+<div class="item">
+💰 <b>Recuperables Hoy:</b>
+${recuperables.length}
+</div>`;
+
+// 🌟 VIP
+html += `
+<div class="item">
+🌟 <b>Clientes VIP:</b>
+${vip.length}
+</div>`;
+
+// 🔥 TOP ALERTA
+if(riesgosos.length > 0){
+
+html += `
+<div class="item"
+style="background:#ffebee;color:#c62828;">
+⚠️ Priorizar clientes críticos hoy
+</div>`;
+
+}
+
+document.getElementById("alertasIA").innerHTML = html;
+
+}
 /* 🔚 FIN */   
 </script>
 

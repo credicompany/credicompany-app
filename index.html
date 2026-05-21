@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+pi<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -1504,6 +1504,20 @@ filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
 
 filtrados.forEach((c,index)=>{
 let color="#2ecc71";
+let riesgoIA = "🟢 Normal";
+
+if(c.retraso > 8){
+riesgoIA = "🟠 Riesgo";
+}
+
+if(c.retraso > 30){
+riesgoIA = "🔴 Alto";
+}
+
+if(c.retraso > 60){
+riesgoIA = "⚫ Crítico";
+}
+  
 if(c.retraso>8) color="#f1c40f";
 if(c.retraso>30) color="#e74c3c";
 if(c.retraso>60) color="black";
@@ -1519,6 +1533,7 @@ lista.innerHTML+=`
 📅 ${c.retraso}d
 </div>
 🚨 ${c.cuotasVencidas || 0} cuotas<br>
+
 👤 ${c.asesor}<br>
 📞 <a href="#"
 onclick='enviarCobranzaDesdeLista(

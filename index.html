@@ -343,7 +343,7 @@ Preferencial / Gerencia
 <select id="producto">
 
 <option value="">
-Producto
+Product
 </option>
 
 <option value="diario">
@@ -1802,8 +1802,61 @@ nombre = decodeURIComponent(nombre);
 celular = (celular || "").replace(/\D/g,""); // limpia espacios
 
 dias = parseFloat(dias) || 0;
+let nivelIA = "";
+let emojiIA = "";
+let accionIA = "";
 
+// 🟢 NORMAL
+if(dias === 0){
+
+nivelIA = "Preventivo";
+emojiIA = "🟢";
+accionIA = "Evitar mora";
+
+}
+
+// 🟡 LEVE
+else if(dias <= 8){
+
+nivelIA = "Seguimiento";
+emojiIA = "🟡";
+accionIA = "Recuperación rápida";
+
+}
+
+// 🟠 MEDIO
+else if(dias <= 30){
+
+nivelIA = "Riesgo Medio";
+emojiIA = "🟠";
+accionIA = "Prioridad cobranza";
+
+}
+
+// 🔴 ALTO
+else if(dias <= 60){
+
+nivelIA = "Riesgo Alto";
+emojiIA = "🔴";
+accionIA = "Cobranza urgente";
+
+}
+
+// ⚫ CRÍTICO
+else{
+
+nivelIA = "Crítico";
+emojiIA = "⚫";
+accionIA = "Posible prejudicial";
+
+}
 let msg = "";
+  msg += `🤖 CREDICOMPANY IA
+
+${emojiIA} Nivel: ${nivelIA}
+⚠️ Acción sugerida: ${accionIA}
+
+`;
 let firma = "";
 
 // ADMIN

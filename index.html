@@ -579,6 +579,7 @@ window.onload = function(){
     }
 
     actualizarResumen();
+    filtrarMora(0,1000);
 };
 // LOGIN
 function login(){
@@ -594,6 +595,7 @@ cargarPerfilAsesor(asesor);
 loginDiv.style.display="none";
 dashboard.style.display="block";
 actualizarResumen();
+  filtrarMora(0,1000);
 // 🔥 ESTA LÍNEA ACTIVA LOS BOTONES
 if(
 asesor === "admin" ||
@@ -619,6 +621,7 @@ cargarPerfilAsesor(asesor);
 loginDiv.style.display="none";
 dashboard.style.display="block";
 actualizarResumen();  
+filtrarMora(0,1000);
 }else{
 alert("❌ Usuario o clave incorrectos");
 }

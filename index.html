@@ -1644,7 +1644,6 @@ actualizarBotonesAsesores();
 alert("✅ Usuario creado correctamente");
 
 }
-function renderUsuarios(){
 function actualizarBotonesAsesores(){
 
 let panel = document.getElementById("panelAsesores");
@@ -1695,6 +1694,9 @@ style="width:auto;white-space:nowrap;">
 panel.innerHTML = html;
 
 }
+
+function renderUsuarios(){
+
 let lista = listaUsuarios;
 
 let usuarios = JSON.parse(

@@ -548,6 +548,10 @@ let filtroMin = 0;
 let filtroMax = 1000;
 window.onload = function(){
 
+document.getElementById("boxAdmin").style.display = "none";
+
+let hoy = new Date().toLocaleDateString('en-CA');
+
     let hoy = new Date().toLocaleDateString('en-CA');
     let ultimo = localStorage.getItem("fechaSistema");
 
@@ -594,14 +598,7 @@ asesor = user.toLowerCase().trim();
 cargarPerfilAsesor(asesor);
 loginDiv.style.display="none";
 dashboard.style.display="block";
- if(
-asesor !== "admin" &&
-asesor !== "operaciones"
-){
-document.getElementById("boxAdmin").style.display="none";
-}else{
 document.getElementById("boxAdmin").style.display="flex";
- } 
 document.getElementById("rankingContainer").style.display = "flex";
 actualizarResumen();
   filtrarMora(0,1000);
@@ -629,14 +626,7 @@ nombreAsesor.innerText=asesor;
 cargarPerfilAsesor(asesor);
 loginDiv.style.display="none";
 dashboard.style.display="block";
- if(
-asesor !== "admin" &&
-asesor !== "operaciones"
-){
 document.getElementById("boxAdmin").style.display="none";
-}else{
-document.getElementById("boxAdmin").style.display="flex";
-} 
 actualizarResumen();  
 filtrarMora(0,1000);
 }else{

@@ -260,7 +260,7 @@ Asesor:
 <div style="font-size:28px;">💳</div>
 <div>Medios pagos</div>
 </div>
-<div class="box" onclick="mostrar('admin')">
+<div class="box" id="boxAdmin" onclick="mostrar('admin')">
 <div style="font-size:28px;">⚙️</div>
 <div>Usuarios</div>
 </div>
@@ -594,6 +594,14 @@ asesor = user.toLowerCase().trim();
 cargarPerfilAsesor(asesor);
 loginDiv.style.display="none";
 dashboard.style.display="block";
+ if(
+asesor !== "admin" &&
+asesor !== "operaciones"
+){
+document.getElementById("boxAdmin").style.display="none";
+}else{
+document.getElementById("boxAdmin").style.display="flex";
+ } 
 document.getElementById("rankingContainer").style.display = "flex";
 actualizarResumen();
   filtrarMora(0,1000);
@@ -621,6 +629,14 @@ nombreAsesor.innerText=asesor;
 cargarPerfilAsesor(asesor);
 loginDiv.style.display="none";
 dashboard.style.display="block";
+ if(
+asesor !== "admin" &&
+asesor !== "operaciones"
+){
+document.getElementById("boxAdmin").style.display="none";
+}else{
+document.getElementById("boxAdmin").style.display="flex";
+} 
 actualizarResumen();  
 filtrarMora(0,1000);
 }else{

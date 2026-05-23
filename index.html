@@ -426,30 +426,52 @@ Mensual
 
 <button style="background:black;color:white" onclick="filtrarMora(61,1000)">61+ días</button>
 </div>
+<div id="panelAsesores"
+style="
+display:none;
+flex-wrap:wrap;
+gap:8px;
+margin-top:10px;
+">
 
-<div id="panelAsesores" style="display:none;">
-
-<button class="btn-azul" onclick="resetFiltros()">
+<button class="btn-azul"
+onclick="resetFiltros()"
+style="flex:1;min-width:140px;">
 📋 Todos los clientes
 </button>
-<button class="btn-verde" onclick="filtrarPorAsesor('ebenites')">
+
+<button class="btn-verde"
+onclick="filtrarPorAsesor('ebenites')"
+style="flex:1;min-width:120px;">
 👤 Ebenites
 </button>
-<button class="btn-verde" onclick="filtrarPorAsesor('emedina')">
+
+<button class="btn-verde"
+onclick="filtrarPorAsesor('emedina')"
+style="flex:1;min-width:120px;">
 👤 Emedina
 </button>
 
-<button class="btn-verde" onclick="filtrarPorAsesor('tleon')">
+<button class="btn-verde"
+onclick="filtrarPorAsesor('tleon')"
+style="flex:1;min-width:120px;">
 👤 Tleon
 </button>
-<button class="btn-verde" onclick="filtrarPorAsesor('bhuerta')">
+
+<button class="btn-verde"
+onclick="filtrarPorAsesor('bhuerta')"
+style="flex:1;min-width:120px;">
 👤 Bhuerta
 </button>
+
 <button class="btn-verde"
-onclick="filtrarPorAsesor('operaciones')">
+onclick="filtrarPorAsesor('operaciones')"
+style="flex:1;min-width:140px;">
 👤 Operaciones
 </button>
+
 </div>
+
 <div id="listaClientes"></div>
 
 </div>

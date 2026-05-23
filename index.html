@@ -442,7 +442,9 @@ Mensual
 <button class="btn-verde" onclick="filtrarPorAsesor('tleon')">
 👤 Tleon
 </button>
-
+<button class="btn-verde" onclick="filtrarPorAsesor('bhuerta')">
+👤 Bhuerta
+</button>
 <button class="btn-verde"
 onclick="filtrarPorAsesor('operaciones')">
 👤 Operaciones
@@ -1242,6 +1244,7 @@ if(key.includes("asesor")){
     if(nombre.includes("benites")) nombre = "ebenites";
     if(nombre.includes("medina")) nombre = "emedina";
     if(nombre.includes("leon")) nombre = "tleon";
+    if(nombre.includes("huerta")) nombre = "bhuerta";
     if(nombre.includes("operaciones")) nombre = "operaciones";
     obj.asesor = nombre;
 }

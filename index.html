@@ -599,20 +599,28 @@ window.onload = function(){
     // 🔥 SI ES UN NUEVO DÍA → RESET
     if(ultimo !== hoy){
 
-        let data = JSON.parse(localStorage.getItem("cartera")) || [];
+    let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
-        data.forEach(c=>{
-            c.pagado_hoy = false;
-            c.pagado_monto = 0;
-        });
+    data.forEach(c=>{
 
-        localStorage.setItem("cartera", JSON.stringify(data));
+        c.pagado_hoy = false;
+        c.pagado_monto = 0;
+        c.ultimo_pago = "";
+        c.estado_gestion = "";
 
-        // 🔥 limpiar bonos diarios
-        localStorage.setItem("bonosHoy", JSON.stringify({}));
+    });
 
-        // guardar fecha actual
-        localStorage.setItem("fechaSistema", hoy);
+    localStorage.setItem("cartera", JSON.stringify(data));
+
+    // 🔥 RESET TOTAL BONOS
+    localStorage.removeItem("bonosHoy");
+
+    // 🔥 RESET HISTORIAL DIARIO
+    localStorage.removeItem("historialPagos");
+
+    // 🔥 NUEVA FECHA
+    localStorage.setItem("fechaSistema", hoy);
+
     }
 
     actualizarResumen();

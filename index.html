@@ -437,42 +437,6 @@ margin-top:10px;
 padding-bottom:5px;
 ">
 
-<button class="btn-azul"
-onclick="resetFiltros()"
-style="width:auto;white-space:nowrap;">
-📋 Asesores _ operaciones
-</button>
-
-<button class="btn-verde"
-onclick="filtrarPorAsesor('ebenites')"
-style="width:auto;white-space:nowrap;">
-👤 Ebenites
-</button>
-
-<button class="btn-verde"
-onclick="filtrarPorAsesor('emedina')"
-style="width:auto;white-space:nowrap;">
-👤 Emedina
-</button>
-
-<button class="btn-verde"
-onclick="filtrarPorAsesor('tleon')"
-style="width:auto;white-space:nowrap;">
-👤 Tleon
-</button>
-
-<button class="btn-verde"
-onclick="filtrarPorAsesor('bhuerta')"
-style="width:auto;white-space:nowrap;">
-👤 Bhuerta
-</button>
-
-<button class="btn-verde"
-onclick="filtrarPorAsesor('operaciones')"
-style="width:auto;white-space:nowrap;">
-👤 Operaciones
-</button>
-
 </div>
 
 <div id="listaClientes"></div>
@@ -582,6 +546,7 @@ document.getElementById("boxAdmin").style.display = "none";
 
     actualizarResumen();
     filtrarMora(0,1000);
+    actualizarBotonesAsesores();
 };
 // LOGIN
 function login(){
@@ -1633,32 +1598,124 @@ function cargarResumen(){
 }
 // USUARIOS
 function crearUsuario(){
-let user=nuevoUser.value.trim();
-let pass=nuevoPass.value.trim();
 
-if(!user || !pass) return alert("Completar");
+let user = nuevoUser.value.trim().toLowerCase();
+let pass = nuevoPass.value.trim();
 
-let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+if(!user || !pass){
+alert("Completar");
+return;
+}
 
-if(usuarios.find(u=>u.user===user)) return alert("Existe");
+let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
-usuarios.push({user,pass});
-localStorage.setItem("usuarios",JSON.stringify(usuarios));
+if(usuarios.find(u=>u.user===user)){
+alert("Existe");
+return;
+}
+
+// 🔥 NUEVO FORMATO
+usuarios.push({
+
+user:user,
+pass:pass,
+
+nombre:user,
+foto:"logo.png",
+
+firma:user.toUpperCase(),
+
+activo:true
+
+});
+
+localStorage.setItem(
+"usuarios",
+JSON.stringify(usuarios)
+);
 
 nuevoUser.value="";
 nuevoPass.value="";
 
 renderUsuarios();
+
+actualizarBotonesAsesores();
+
+alert("✅ Usuario creado correctamente");
+
 }
-
 function renderUsuarios(){
-let lista=listaUsuarios;
-let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+function actualizarBotonesAsesores(){
 
-lista.innerHTML="";
+let panel = document.getElementById("panelAsesores");
+
+if(!panel) return;
+
+let usuarios = JSON.parse(
+localStorage.getItem("usuarios")
+) || [];
+
+// 🔥 BOTÓN PRINCIPAL
+let html = `
+
+<button class="btn-azul"
+onclick="resetFiltros()"
+style="width:auto;white-space:nowrap;">
+📋 Todos
+</button>
+
+`;
+
+// 🔥 BOTONES DINÁMICOS
 usuarios.forEach(u=>{
-lista.innerHTML+=`<div class="item">${u.user}</div>`;
+
+html += `
+
+<button class="btn-verde"
+onclick="filtrarPorAsesor('${u.user}')"
+style="width:auto;white-space:nowrap;">
+👤 ${u.user}
+</button>
+
+`;
+
 });
+
+// 🔥 OPERACIONES
+html += `
+
+<button class="btn-verde"
+onclick="filtrarPorAsesor('operaciones')"
+style="width:auto;white-space:nowrap;">
+👤 Operaciones
+</button>
+
+`;
+
+panel.innerHTML = html;
+
+}
+let lista = listaUsuarios;
+
+let usuarios = JSON.parse(
+localStorage.getItem("usuarios")
+) || [];
+
+lista.innerHTML = "";
+
+usuarios.forEach(u=>{
+
+lista.innerHTML += `
+<div class="item">
+👤 ${u.user}
+</div>
+`;
+
+});
+
+// 🔥 ACTUALIZA BOTONES
+actualizarBotonesAsesores();
+
 }
 function verTodosClientes(){
 

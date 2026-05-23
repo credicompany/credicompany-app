@@ -230,7 +230,7 @@ Asesor:
 
 </div>
 </div>
-<div id="rankingContainer">
+<div id="rankingContainer" style="display:none;">
 
     <div class="card" id="rankingBox">
         <h3>🏆 Ranking Asesores del Día</h3>
@@ -594,6 +594,7 @@ asesor = user.toLowerCase().trim();
 cargarPerfilAsesor(asesor);
 loginDiv.style.display="none";
 dashboard.style.display="block";
+document.getElementById("rankingContainer").style.display = "flex";
 actualizarResumen();
   filtrarMora(0,1000);
 // 🔥 ESTA LÍNEA ACTIVA LOS BOTONES

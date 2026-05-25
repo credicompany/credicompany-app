@@ -2030,7 +2030,9 @@ return c;
 
 });
 
-localStorage.setItem("cartera", JSON.stringify(data));
+set(ref(window.db, 'cartera'), data);
+
+window.carteraGlobal = data;
 let clientePagado = data.find(c => 
     c.nombre === nombre && c.celular === celular
 );
@@ -2046,6 +2048,7 @@ historial.push({
 });
 
 localStorage.setItem("historialPagos", JSON.stringify(historial));
+set(ref(window.db, 'historialPagos'), historial);
 filtrarMora(0,1000);
 actualizarResumen();
 

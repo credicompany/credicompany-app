@@ -552,6 +552,15 @@ window.onload = function(){
 
     actualizarResumen();
     filtrarMora(0,1000);
+  onValue(ref(window.db, 'cartera'), (snapshot) => {
+
+window.carteraGlobal = snapshot.val() || [];
+
+actualizarResumen();
+
+filtrarMora(0,1000);
+
+});
 };
 // LOGIN
 function login(){
@@ -1210,16 +1219,16 @@ return obj;
 });
 
 // 🔥 GUARDADO REAL
-localStorage.setItem("cartera", JSON.stringify(json));
+set(ref(window.db, 'cartera'), json);
 localStorage.setItem("cartera_backup", JSON.stringify(json));
 // 🔥 RESET DIARIO (LÍNEA 357)
-let dataReset = JSON.parse(localStorage.getItem("cartera")) || [];
+let dataReset = json;
 
 dataReset.forEach(c=>{
 c.pagado_hoy = false;
 });
 
-localStorage.setItem("cartera", JSON.stringify(dataReset));
+window.carteraGlobal = dataReset;
 // 🔥 MOSTRAR
 filtrarMora(0,1000);
 actualizarResumen();
@@ -1231,7 +1240,7 @@ reader.readAsArrayBuffer(file);
 // CLIENTES + RESUMEN
 function actualizarResumen(){
 
-  let data = JSON.parse(localStorage.getItem("cartera")) || [];
+  let data = window.carteraGlobal || [];
 
   let total = 0;
   let mora = 0;
@@ -1436,7 +1445,7 @@ function filtrarMora(min,max){
 let lista = document.getElementById("listaClientes");
 lista.innerHTML="";
 
-let data = JSON.parse(localStorage.getItem("cartera")) || [];
+let data = window.carteraGlobal || [];
 filtroMin = min;
 filtroMax = max;
 
@@ -2201,6 +2210,47 @@ foto.style.display = "block";
 }
 /* 🔚 FIN */   
 </script>
+<script type="module">
 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+
+import {
+getDatabase,
+ref,
+set,
+onValue
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyB5G2MyTkYZT0b7RMfLoBe9cfAY4-ewdkc",
+
+authDomain: "credicompany-88693.firebaseapp.com",
+
+databaseURL: "https://credicompany-88693-default-rtdb.firebaseio.com",
+
+projectId: "credicompany-88693",
+
+storageBucket: "credicompany-88693.firebasestorage.app",
+
+messagingSenderId: "890359636696",
+
+appId: "1:890359636696:web:1e9f4ca349606817212dad"
+
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+window.db = getDatabase(app);
+
+window.ref = ref;
+
+window.set = set;
+
+window.onValue = onValue;
+
+</script>
 </body>
   </html>

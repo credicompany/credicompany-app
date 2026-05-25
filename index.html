@@ -9,14 +9,7 @@
 <title>Credicompany</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 <style>
-body{
-margin:0;
-font-family:Arial;
-background:#123B63;
-color:white;
-padding-bottom:120px;
-scroll-behavior:smooth;
-}
+body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}
 .header{display:flex;flex-direction:column;align-items:center;padding:20px;}
 .header img{width:180px;}
   .perfilBox{
@@ -49,23 +42,10 @@ font-size:16px;
 font-weight:bold;
 color:white;
 }
-.card{
-background:#f2f2f2;
-color:#333;
-margin:15px;
-padding:20px;
-border-radius:15px;
-animation:fadeUp .35s ease;
-box-shadow:0 4px 12px rgba(0,0,0,.12);
-}
+.card{background:#f2f2f2;color:#333;margin:15px;padding:20px;border-radius:15px;}
 .volver{position:sticky;top:0;background:#0a2f5c;color:white;padding:14px;border-radius:12px;text-align:center;font-weight:bold;margin-bottom:15px;cursor:pointer;}
-input, select{
-width:100%;
-padding:12px;
-margin-top:10px;
-border-radius:10px;
-border:none;
-}
+input, select{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:none;}
+button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;width:100%;}
 .btn-verde{background:#10c251;}
 .btn-azul{background:#123B63;}
 .btn-naranja{background:#ff9800;}
@@ -88,23 +68,6 @@ box-shadow:0 4px 10px rgba(0,0,0,0.1);
 .box:hover{
 transform:translateY(-5px);
 box-shadow:0 8px 20px rgba(0,0,0,0.2);
-}
-
-button:hover{
-transform:translateY(-2px);
-box-shadow:0 6px 18px rgba(0,0,0,.15);
-}
-
-.card:active{
-transform:scale(.98);
-}
-transform:translateY(-2px);
-box-shadow:0 6px 18px rgba(0,0,0,.15);
-}
-
-.card:active{
-transform:scale(.98);
-} 
 }
 .fila{display:flex;gap:6px;margin-top:6px;}
 .fila button{width:50%;}
@@ -148,16 +111,18 @@ transform:scale(.98);
   margin-top:2px;
   font-weight:bold;
 }
-#rankingBox{
-background:white;
-width:100%;
-max-width:380px;
-padding:10px;
-border-radius:18px;
-text-align:center;
-min-height:55px;
-box-shadow:0 2px 6px rgba(0,0,0,0.08);
-}
+  #rankingBox{
+  background:white;
+  width:100%;
+  max-width:380px;
+  padding:10px;
+  border-radius:18px;
+  text-align:center;
+  min-height:55px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.08);
+  box-sizing:border-box;
+  margin:0;
+  }
 
 #rankingBox h3{
   margin:0;
@@ -222,29 +187,24 @@ box-shadow:0 2px 6px rgba(0,0,0,0.08);
     cursor:pointer;
     color:#001f5b;
 }
-  
+  #panelIA{
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+border:1px solid rgba(255,255,255,0.1);
+box-shadow:0 4px 12px rgba(0,0,0,0.25);
+}
+
+#panelIA .item{
+background:rgba(255,255,255,0.08);
+color:white;
+border-radius:10px;
+padding:8px;
+margin-top:6px;
+font-size:13px;
+}
   *{
   box-sizing:border-box;
-  transition:
-    background-color .25s ease,
-    color .25s ease,
-    transform .2s ease,
-    box-shadow .25s ease,
-    opacity .25s ease;
   }
- @keyframes fadeUp{
-
-from{
-opacity:0;
-transform:translateY(10px);
-}
-
-to{
-opacity:1;
-transform:translateY(0);
-}
-
- }   
 </style>
 </head>
 
@@ -312,7 +272,19 @@ Asesor:
 </div>
 
 <div class="resumen">
+<div id="panelIA" class="card" style="margin:10px;">
 
+<h3 style="margin-top:0;">
+🤖 Credicompany IA
+</h3>
+
+<div id="alertasIA">
+
+🧠 Analizando comportamiento financiero...
+
+</div>
+
+</div>
   <div class="card-resumen">
     <div>💰 Cartera</div>
     <div id="totalCartera">S/ 0</div>
@@ -465,6 +437,42 @@ margin-top:10px;
 padding-bottom:5px;
 ">
 
+<button class="btn-azul"
+onclick="resetFiltros()"
+style="width:auto;white-space:nowrap;">
+📋 Asesores _ operaciones
+</button>
+
+<button class="btn-verde"
+onclick="filtrarPorAsesor('ebenites')"
+style="width:auto;white-space:nowrap;">
+👤 Ebenites
+</button>
+
+<button class="btn-verde"
+onclick="filtrarPorAsesor('emedina')"
+style="width:auto;white-space:nowrap;">
+👤 Emedina
+</button>
+
+<button class="btn-verde"
+onclick="filtrarPorAsesor('tleon')"
+style="width:auto;white-space:nowrap;">
+👤 Tleon
+</button>
+
+<button class="btn-verde"
+onclick="filtrarPorAsesor('bhuerta')"
+style="width:auto;white-space:nowrap;">
+👤 Bhuerta
+</button>
+
+<button class="btn-verde"
+onclick="filtrarPorAsesor('operaciones')"
+style="width:auto;white-space:nowrap;">
+👤 Operaciones
+</button>
+
 </div>
 
 <div id="listaClientes"></div>
@@ -540,8 +548,6 @@ let filtroMin = 0;
 let filtroMax = 1000;
 window.onload = function(){
 
-document.getElementById("boxAdmin").style.display = "none";
-
     let hoy = new Date().toLocaleDateString('en-CA');
     let ultimo = localStorage.getItem("fechaSistema");
 
@@ -574,7 +580,6 @@ document.getElementById("boxAdmin").style.display = "none";
 
     actualizarResumen();
     filtrarMora(0,1000);
-    actualizarBotonesAsesores();
 };
 // LOGIN
 function login(){
@@ -589,7 +594,14 @@ asesor = user.toLowerCase().trim();
 cargarPerfilAsesor(asesor);
 loginDiv.style.display="none";
 dashboard.style.display="block";
+ if(
+asesor !== "admin" &&
+asesor !== "operaciones"
+){
+document.getElementById("boxAdmin").style.display="none";
+}else{
 document.getElementById("boxAdmin").style.display="flex";
+ } 
 document.getElementById("rankingContainer").style.display = "flex";
 actualizarResumen();
   filtrarMora(0,1000);
@@ -617,7 +629,14 @@ nombreAsesor.innerText=asesor;
 cargarPerfilAsesor(asesor);
 loginDiv.style.display="none";
 dashboard.style.display="block";
+ if(
+asesor !== "admin" &&
+asesor !== "operaciones"
+){
 document.getElementById("boxAdmin").style.display="none";
+}else{
+document.getElementById("boxAdmin").style.display="flex";
+} 
 actualizarResumen();  
 filtrarMora(0,1000);
 }else{
@@ -1232,6 +1251,7 @@ localStorage.setItem("cartera", JSON.stringify(dataReset));
 // 🔥 MOSTRAR
 filtrarMora(0,1000);
 actualizarResumen();
+analizarCarteraIA();
 alert("✅ Cartera cargada y guardada correctamente");
 };
 
@@ -1625,126 +1645,32 @@ function cargarResumen(){
 }
 // USUARIOS
 function crearUsuario(){
+let user=nuevoUser.value.trim();
+let pass=nuevoPass.value.trim();
 
-let user = nuevoUser.value.trim().toLowerCase();
-let pass = nuevoPass.value.trim();
+if(!user || !pass) return alert("Completar");
 
-if(!user || !pass){
-alert("Completar");
-return;
-}
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+if(usuarios.find(u=>u.user===user)) return alert("Existe");
 
-if(usuarios.find(u=>u.user===user)){
-alert("Existe");
-return;
-}
-
-// 🔥 NUEVO FORMATO
-usuarios.push({
-
-user:user,
-pass:pass,
-
-nombre:user,
-foto:"logo.png",
-
-firma:user.toUpperCase(),
-
-activo:true
-
-});
-
-localStorage.setItem(
-"usuarios",
-JSON.stringify(usuarios)
-);
+usuarios.push({user,pass});
+localStorage.setItem("usuarios",JSON.stringify(usuarios));
 
 nuevoUser.value="";
 nuevoPass.value="";
 
 renderUsuarios();
-
-actualizarBotonesAsesores();
-
-alert("✅ Usuario creado correctamente");
-
-}
-function actualizarBotonesAsesores(){
-
-let panel = document.getElementById("panelAsesores");
-
-if(!panel) return;
-
-let usuarios = JSON.parse(
-localStorage.getItem("usuarios")
-) || [];
-
-// 🔥 BOTÓN PRINCIPAL
-let html = `
-
-<button class="btn-azul"
-onclick="resetFiltros()"
-style="width:auto;white-space:nowrap;">
-📋 Todos
-</button>
-
-`;
-
-// 🔥 BOTONES DINÁMICOS
-usuarios.forEach(u=>{
-
-html += `
-
-<button class="btn-verde"
-onclick="filtrarPorAsesor('${u.user}')"
-style="width:auto;white-space:nowrap;">
-👤 ${u.user}
-</button>
-
-`;
-
-});
-
-// 🔥 OPERACIONES
-html += `
-
-<button class="btn-verde"
-onclick="filtrarPorAsesor('operaciones')"
-style="width:auto;white-space:nowrap;">
-👤 Operaciones
-</button>
-
-`;
-
-panel.innerHTML = html;
-
 }
 
 function renderUsuarios(){
+let lista=listaUsuarios;
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
-let lista = listaUsuarios;
-
-let usuarios = JSON.parse(
-localStorage.getItem("usuarios")
-) || [];
-
-lista.innerHTML = "";
-
+lista.innerHTML="";
 usuarios.forEach(u=>{
-
-lista.innerHTML += `
-<div class="item">
-👤 ${u.user}
-</div>
-`;
-
+lista.innerHTML+=`<div class="item">${u.user}</div>`;
 });
-
-// 🔥 ACTUALIZA BOTONES
-actualizarBotonesAsesores();
-
 }
 function verTodosClientes(){
 
@@ -2343,7 +2269,87 @@ nombreCompleto.innerText = usuario;
 nombreAsesor.innerText = usuario;
 
 }
+
 foto.style.display = "block";
+
+}
+function analizarCarteraIA(){
+
+let data = JSON.parse(localStorage.getItem("cartera")) || [];
+
+let riesgosos = [];
+let recuperables = [];
+let vip = [];
+
+data.forEach(c=>{
+
+let atraso = parseFloat(c.retraso) || 0;
+let cuotas = parseFloat(c.cuotasVencidas) || 0;
+let cuota = parseFloat(c.monto) || 0;
+
+// 🚨 RIESGO ALTO
+if(
+atraso >= 30 &&
+cuotas >= 3 &&
+cuota >= 500
+){
+riesgosos.push(c.nombre);
+}
+
+// 💰 RECUPERABLE
+if(
+atraso >= 1 &&
+atraso <= 8 &&
+cuota >= 300
+){
+recuperables.push(c.nombre);
+}
+
+// 🌟 VIP
+if(
+atraso === 0 &&
+cuota >= 1000
+){
+vip.push(c.nombre);
+}
+
+});
+
+let html = "";
+
+// 🚨 RIESGOSOS
+html += `
+<div class="item">
+🚨 <b>Riesgo Alto:</b>
+${riesgosos.length}
+</div>`;
+
+// 💰 RECUPERABLES
+html += `
+<div class="item">
+💰 <b>Recuperables Hoy:</b>
+${recuperables.length}
+</div>`;
+
+// 🌟 VIP
+html += `
+<div class="item">
+🌟 <b>Clientes VIP:</b>
+${vip.length}
+</div>`;
+
+// 🔥 TOP ALERTA
+if(riesgosos.length > 0){
+
+html += `
+<div class="item"
+style="background:#ffebee;color:#c62828;">
+⚠️ Priorizar clientes críticos hoy
+</div>`;
+
+}
+
+document.getElementById("alertasIA").innerHTML = html;
 
 }
 /* 🔚 FIN */   

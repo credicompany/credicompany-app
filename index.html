@@ -2033,6 +2033,10 @@ return c;
 set(ref(window.db, 'cartera'), data);
 
 window.carteraGlobal = data;
+
+actualizarResumen();
+
+filtrarMora(0,1000);
 let clientePagado = data.find(c => 
     c.nombre === nombre && c.celular === celular
 );

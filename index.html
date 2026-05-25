@@ -383,10 +383,10 @@ Mensual
 </div>
 
 <div id="clientes" class="card" style="display:none">
-
+<div id="bloqueExcel" style="display:none;">
 <input type="file" id="excelFile" accept=".csv,.xlsx" style="margin-top:15px;">
 <button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>
-
+</div>
 <div class="fila">
 <button style="background:#2ecc71;color:white" onclick="filtrarMora(0,0)">0 días</button>
 
@@ -575,6 +575,17 @@ asesor = user.toLowerCase().trim();
 cargarPerfilAsesor(asesor);
 loginDiv.style.display="none";
 dashboard.style.display="block";
+  let bloqueExcel = document.getElementById("bloqueExcel");
+
+if(user === "operaciones" || user === "admin"){
+
+bloqueExcel.style.display = "block";
+
+}else{
+
+bloqueExcel.style.display = "none";
+
+}
  if(
 asesor !== "admin" &&
 asesor !== "operaciones"

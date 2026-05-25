@@ -9,7 +9,14 @@
 <title>Credicompany</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 <style>
-body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}
+body{
+margin:0;
+font-family:Arial;
+background:#123B63;
+color:white;
+padding-bottom:120px;
+scroll-behavior:smooth;
+}
 .header{display:flex;flex-direction:column;align-items:center;padding:20px;}
 .header img{width:180px;}
   .perfilBox{
@@ -42,10 +49,17 @@ font-size:16px;
 font-weight:bold;
 color:white;
 }
-.card{background:#f2f2f2;color:#333;margin:15px;padding:20px;border-radius:15px;}
+.card{
+background:#f2f2f2;
+color:#333;
+margin:15px;
+padding:20px;
+border-radius:15px;
+animation:fadeUp .35s ease;
+box-shadow:0 4px 12px rgba(0,0,0,.12);
+}
 .volver{position:sticky;top:0;background:#0a2f5c;color:white;padding:14px;border-radius:12px;text-align:center;font-weight:bold;margin-bottom:15px;cursor:pointer;}
-input, select{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:none;}
-button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;width:100%;}
+input, select{width:100%;padding:12px;margin-top:10px;border-radius:10px;bo
 .btn-verde{background:#10c251;}
 .btn-azul{background:#123B63;}
 .btn-naranja{background:#ff9800;}
@@ -68,6 +82,14 @@ box-shadow:0 4px 10px rgba(0,0,0,0.1);
 .box:hover{
 transform:translateY(-5px);
 box-shadow:0 8px 20px rgba(0,0,0,0.2);
+ button:hover{
+transform:translateY(-2px);
+box-shadow:0 6px 18px rgba(0,0,0,.15);
+}
+
+.card:active{
+transform:scale(.98);
+} 
 }
 .fila{display:flex;gap:6px;margin-top:6px;}
 .fila button{width:50%;}
@@ -120,9 +142,15 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
   text-align:center;
   min-height:55px;
   box-shadow:0 2px 6px rgba(0,0,0,0.08);
+*{
   box-sizing:border-box;
-  margin:0;
-  }
+  transition:
+    background-color .25s ease,
+    color .25s ease,
+    transform .2s ease,
+    box-shadow .25s ease,
+    opacity .25s ease;
+}
 
 #rankingBox h3{
   margin:0;
@@ -190,7 +218,26 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
   
   *{
   box-sizing:border-box;
+  transition:
+    background-color .25s ease,
+    color .25s ease,
+    transform .2s ease,
+    box-shadow .25s ease,
+    opacity .25s ease;
   }
+ @keyframes fadeUp{
+
+from{
+opacity:0;
+transform:translateY(10px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+ }   
 </style>
 </head>
 

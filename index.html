@@ -524,7 +524,11 @@ window.onload = function(){
 
     onValue(ref(window.db, 'cartera'), (snapshot) => {
 
-        let data = snapshot.val() || [];
+        let raw = snapshot.val() || {};
+
+let data = Array.isArray(raw)
+? raw
+: Object.values(raw);
 
         let hoy = new Date().toLocaleDateString('en-CA');
         let ultimo = localStorage.getItem("fechaSistema");

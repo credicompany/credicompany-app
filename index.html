@@ -519,51 +519,47 @@ let filtroAsesor = "";
 let filtroMin = 0;
 let filtroMax = 1000;
 
- window.onload = function(){
-
-    let hoy = new Date().toLocaleDateString('en-CA');
-    let ultimo = localStorage.getItem("fechaSistema");
-
-    // 🔥 NUEVO DÍA
-    if(ultimo !== hoy){
-
-        let data = JSON.parse(localStorage.getItem("cartera")) || [];
-
-        data.forEach(c=>{
-
-            c.pagado_hoy = false;
-            c.pagado_monto = 0;
-            c.ultimo_pago = "";
-            c.estado_gestion = "";
-
-        });
-
-        // 🔥 GUARDAR RESET
-        localStorage.setItem("cartera", JSON.stringify(data));
-// 🔥 RESET EN FIREBASE
-set(ref(window.db, 'cartera'), data);
-        // 🔥 LIMPIAR TODO
-        localStorage.removeItem("bonosHoy");
-        localStorage.removeItem("historialPagos");
-        localStorage.removeItem("rankingAsesores");
-        localStorage.removeItem("clientesGestionados");
-        localStorage.removeItem("resumenCobranza");
-        localStorage.removeItem("estadisticasAsesores");
-
-        // 🔥 NUEVA FECHA
-        localStorage.setItem("fechaSistema", hoy);
-
-        console.log("✅ Reinicio diario ejecutado");
-
-    }
-
-    actualizarResumen();
-
-    filtrarMora(0,1000);
+ 
+window.onload = function(){
 
     onValue(ref(window.db, 'cartera'), (snapshot) => {
 
-        window.carteraGlobal = snapshot.val() || [];
+        let data = snapshot.val() || [];
+
+        let hoy = new Date().toLocaleDateString('en-CA');
+        let ultimo = localStorage.getItem("fechaSistema");
+
+        // 🔥 NUEVO DÍA
+        if(ultimo !== hoy){
+
+            data.forEach(c=>{
+
+                c.pagado_hoy = false;
+                c.pagado_monto = 0;
+                c.ultimo_pago = "";
+                c.estado_gestion = "";
+
+            });
+
+            // 🔥 RESET FIREBASE
+            set(ref(window.db, 'cartera'), data);
+
+            // 🔥 LIMPIAR STORAGE
+            localStorage.removeItem("bonosHoy");
+            localStorage.removeItem("historialPagos");
+            localStorage.removeItem("rankingAsesores");
+            localStorage.removeItem("clientesGestionados");
+            localStorage.removeItem("resumenCobranza");
+            localStorage.removeItem("estadisticasAsesores");
+
+            // 🔥 NUEVA FECHA
+            localStorage.setItem("fechaSistema", hoy);
+
+            console.log("✅ Reinicio diario ejecutado");
+
+        }
+
+        window.carteraGlobal = data;
 
         actualizarResumen();
 
@@ -571,7 +567,7 @@ set(ref(window.db, 'cartera'), data);
 
     });
 
-};   
+};
 // LOGIN
 function login(){
 let user=usuario.value.trim();

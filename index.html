@@ -540,7 +540,8 @@ let filtroMax = 1000;
 
         // 🔥 GUARDAR RESET
         localStorage.setItem("cartera", JSON.stringify(data));
-
+// 🔥 RESET EN FIREBASE
+set(ref(window.db, 'cartera'), data);
         // 🔥 LIMPIAR TODO
         localStorage.removeItem("bonosHoy");
         localStorage.removeItem("historialPagos");

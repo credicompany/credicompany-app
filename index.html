@@ -1448,7 +1448,7 @@ btnMora.innerHTML =
 if(btnCriticos){
 btnCriticos.innerHTML =
 `🔴 Mora crítica (${criticoCount})`;
-}
+
 
 }
 function filtrarMora(min,max){
@@ -1551,12 +1551,17 @@ ${c.celular}
 📦 ${c.producto}<br>
 📍 ${c.direccion}<br>
 🏙️ ${c.distrito}
-
 <div style="display:flex;gap:5px;margin-top:5px;">
+
+${asesor === "admin" || asesor === "operaciones" ? `
+
 <button onclick='registrarPago("${c.nombre}|${c.celular}")'
 style="flex:1;background:#2ecc71;color:white;border:none;padding:10px;border-radius:8px;">
 💵 Registrar pago
 </button>
+
+` : ``}
+
 </div>
 
 </div>`;

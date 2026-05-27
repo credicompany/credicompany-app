@@ -518,50 +518,59 @@ let asesor="";
 let filtroAsesor = "";
 let filtroMin = 0;
 let filtroMax = 1000;
-window.onload = function(){
+
+ window.onload = function(){
 
     let hoy = new Date().toLocaleDateString('en-CA');
     let ultimo = localStorage.getItem("fechaSistema");
 
-    // 🔥 SI ES UN NUEVO DÍA → RESET
+    // 🔥 NUEVO DÍA
     if(ultimo !== hoy){
 
-    let data = JSON.parse(localStorage.getItem("cartera")) || [];
+        let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
-    data.forEach(c=>{
+        data.forEach(c=>{
 
-        c.pagado_hoy = false;
-        c.pagado_monto = 0;
-        c.ultimo_pago = "";
-        c.estado_gestion = "";
+            c.pagado_hoy = false;
+            c.pagado_monto = 0;
+            c.ultimo_pago = "";
+            c.estado_gestion = "";
 
-    });
+        });
 
-    localStorage.setItem("cartera", JSON.stringify(data));
+        // 🔥 GUARDAR RESET
+        localStorage.setItem("cartera", JSON.stringify(data));
 
-    // 🔥 RESET TOTAL BONOS
-    localStorage.removeItem("bonosHoy");
+        // 🔥 LIMPIAR TODO
+        localStorage.removeItem("bonosHoy");
+        localStorage.removeItem("historialPagos");
+        localStorage.removeItem("rankingAsesores");
+        localStorage.removeItem("clientesGestionados");
+        localStorage.removeItem("resumenCobranza");
+        localStorage.removeItem("estadisticasAsesores");
 
-    // 🔥 RESET HISTORIAL DIARIO
-    localStorage.removeItem("historialPagos");
+        // 🔥 NUEVA FECHA
+        localStorage.setItem("fechaSistema", hoy);
 
-    // 🔥 NUEVA FECHA
-    localStorage.setItem("fechaSistema", hoy);
+        console.log("✅ Reinicio diario ejecutado");
 
     }
 
     actualizarResumen();
+
     filtrarMora(0,1000);
-  onValue(ref(window.db, 'cartera'), (snapshot) => {
 
-window.carteraGlobal = snapshot.val() || [];
+    onValue(ref(window.db, 'cartera'), (snapshot) => {
 
-actualizarResumen();
+        window.carteraGlobal = snapshot.val() || [];
 
-filtrarMora(0,1000);
+        actualizarResumen();
 
-});
-};
+        filtrarMora(0,1000);
+
+    });
+
+};   
 // LOGIN
 function login(){
 let user=usuario.value.trim();

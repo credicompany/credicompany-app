@@ -666,19 +666,25 @@ if(encontrado){
 asesor = user.toLowerCase().trim();
 nombreAsesor.innerText=asesor;
 cargarPerfilAsesor(asesor);
+
 loginDiv.style.display="none";
 dashboard.style.display="block";
- document.getElementById("panelAsesores").style.display = "none"; 
- if(
+
+document.getElementById("rankingContainer").style.display = "flex";
+document.getElementById("panelAsesores").style.display = "none";
+
+if(
 asesor !== "admin" &&
 asesor !== "operaciones"
 ){
 document.getElementById("boxAdmin").style.display="none";
 }else{
 document.getElementById("boxAdmin").style.display="flex";
-} 
-actualizarResumen();  
+}
+
+actualizarResumen();
 filtrarMora(0,1000);
+}
 }else{
 alert("❌ Usuario o clave incorrectos");
 }

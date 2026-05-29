@@ -11,24 +11,27 @@
 <style>
 body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}
 .header{display:flex;flex-direction:column;align-items:center;padding:20px;}
-.header img{width:180px;}
+.header > img{width:180px;}
   .perfilBox{
 display:flex;
 flex-direction:column;
 align-items:center;
-margin-top:10px;
+margin-top:5px;
 }
 
 .fotoAsesor{
-width:120px;
-height:120px;
+width:260px;
+height:260px;
 border-radius:50%;
 object-fit:cover;
-border:4px solid #10c251;
-box-shadow:0 4px 12px rgba(0,0,0,0.25);
+object-position:center top;
+border:5px solid #10c251;
+box-shadow:0 6px 18px rgba(0,0,0,0.30);
 background:white;
 }
-
+#fotoPerfil{
+transform:scale(1.15);
+}
 .nombreCompleto{
 margin-top:8px;
 font-size:18px;

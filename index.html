@@ -403,7 +403,7 @@ Mensual
 </div>
 <div id="panelAsesores"
 style="
-display:flex;
+display:none;
 flex-direction:row;
 flex-wrap:nowrap;
 overflow-x:auto;
@@ -616,9 +616,7 @@ asesor === "admin" ||
 asesor === "operaciones"
 ){
 
-setTimeout(()=>{
-document.getElementById("panelAsesores").style.display = "block";
-},300);
+document.getElementById("panelAsesores").style.display = "flex";
 
 }
 return;
@@ -634,6 +632,7 @@ nombreAsesor.innerText=asesor;
 cargarPerfilAsesor(asesor);
 loginDiv.style.display="none";
 dashboard.style.display="block";
+ document.getElementById("panelAsesores").style.display = "none"; 
  if(
 asesor !== "admin" &&
 asesor !== "operaciones"

@@ -663,6 +663,7 @@ let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 let encontrado=usuarios.find(u=>u.user===user && u.pass===pass);
 
 if(encontrado){
+
 asesor = user.toLowerCase().trim();
 nombreAsesor.innerText=asesor;
 cargarPerfilAsesor(asesor);
@@ -684,9 +685,11 @@ document.getElementById("boxAdmin").style.display="flex";
 
 actualizarResumen();
 filtrarMora(0,1000);
-}
+
 }else{
+
 alert("❌ Usuario o clave incorrectos");
+
 }
 }
 function eliminarUsuarioManual(){
@@ -1701,20 +1704,34 @@ if(p==="clientes"){filtrarMora(0,1000);actualizarResumen();
 
 if(p==="admin") renderUsuarios();
 }
-
 function volver(){
 
 app.style.display="none";
+
 ["simulador","clientes","pagos","admin","historialDiv"]
 .forEach(id=>{
 document.getElementById(id).style.display="none";
-});  
+});
 
 document.querySelector(".resumen").style.display = "grid";
 
 document.getElementById("historialDiv").style.display="none";
 
 dashboard.style.display="block";
+
+// PEGAR DESDE AQUÍ
+
+document.getElementById("rankingContainer").style.display = "flex";
+
+if(
+asesor === "admin" ||
+asesor === "operaciones"
+){
+document.getElementById("panelAsesores").style.display = "flex";
+}
+
+// HASTA AQUÍ
+
 }
 
 // QR

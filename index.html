@@ -1544,11 +1544,16 @@ filtrados.forEach(c=>{
     else if(r <= 60) medio++;
     else critico++;
 });
-
+let totalResumen =
+hoy +
+alDia +
+leve +
+medio +
+critico;
 lista.innerHTML+=`
 <div class="item" style="background:#123B63;color:white">
 <b>📊 Resumen</b><br>
-🟢 ${hoy} | 🟢 ${alDia} | 🟡 ${leve} | 🔴 ${medio} | ⚫ ${critico}
+🟢 ${hoy} | 🟢 ${alDia} | 🟡 ${leve} | 🔴 ${medio} | ⚫ ${critico} | 📊 ${totalResumen}
 </div>`;
 
 filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));

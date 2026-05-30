@@ -1775,14 +1775,13 @@ let msg = `📊 SIMULACIÓN CREDICOMPANY
 
 💼 Producto: ${simData.producto.toUpperCase()}
 💰 Monto aprobado: S/ ${simData.monto}
+📅 Plazo: ${document.getElementById("plazo").value} cuotas
 💳 Cuota ${simData.producto === "diario" ? "diaria" : simData.producto === "semanal" ? "semanal" : simData.producto === "quincenal" ? "quincenal" : "mensual"}: S/ ${simData.cuota}
 
 ✅ SIN TRÁMITES COMPLICADOS
 ✅ DESEMBOLSO ÍNTEGRO Y RÁPIDO
 ✅ *SIN RETENCIÓN DEL 10%*
-
 ¿Deseas que activemos tu crédito hoy mismo? 🚀
-
 Gracias por confiar en Credicompany 🤝`;
 
 window.open("https://wa.me/?text=" + encodeURIComponent(msg));

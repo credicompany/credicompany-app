@@ -2202,7 +2202,7 @@ document.getElementById("dashboard").style.display="none";
 document.querySelector(".resumen").style.display = "none";
 
 app.style.display = "block";    
-["simulador","clientes","pagos","admin"].forEach(id=>{
+["simulador","clientes","pagos","admin","productividadDiv"].forEach(id=>{
 document.getElementById(id).style.display="none";
 });
 document.getElementById("historialDiv").style.display="block";
@@ -2321,7 +2321,7 @@ document.querySelector(".resumen").style.display="none";
 
 app.style.display="block";
 
-["simulador","clientes","pagos","admin","historialDiv"]
+["simulador","clientes","pagos","admin","historialDiv","productividadDiv"]
 .forEach(id=>{
 document.getElementById(id).style.display="none";
 });
@@ -2334,11 +2334,20 @@ document.getElementById("contenidoProductividad");
 let historial =
 JSON.parse(localStorage.getItem("historialPagos")) || [];
 
-let misPagos = historial.filter(p =>
-(asesor==="admin" || asesor==="operaciones")
+let misPagos = historial.filter(p => {
+
+let asesorPago = (p.asesor || "")
+.toLowerCase()
+.trim();
+
+return (
+asesor==="admin" ||
+asesor==="operaciones"
+)
 ? true
-: p.asesor === asesor
-);
+: asesorPago === asesor;
+
+});
 
 let totalRecuperado = 0;
 

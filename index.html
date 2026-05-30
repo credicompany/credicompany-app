@@ -538,7 +538,20 @@ Eliminar Usuario
 
 <h3>📋 Historial de Pagos</h3>
 <h3>💰 Historial de Bonos</h3>
+
 <div id="listaHistorial"></div>
+
+</div>
+
+<div id="productividadDiv" class="card" style="display:none;">
+
+<div class="volver" onclick="volver()">← Volver</div>
+
+<h3>📊 Historial de Productividad</h3>
+
+<div id="contenidoProductividad"></div>
+
+</div>
 </div>
 <div id="modalQR" class="modal" onclick="cerrarQR()">
 <img id="imgQR">
@@ -1697,7 +1710,7 @@ document.querySelector(".resumen").style.display = "none";
 
 app.style.display="block";
 
-["simulador","clientes","pagos","admin","historialDiv"].forEach(id=>{
+["simulador","clientes","pagos","admin","historialDiv","productividadDiv"].forEach(id=>{
 document.getElementById(id).style.display="none";
 });
 
@@ -1712,7 +1725,7 @@ function volver(){
 
 app.style.display="none";
 
-["simulador","clientes","pagos","admin","historialDiv"]
+["simulador","clientes","pagos","admin","historialDiv","productividadDiv"]
 .forEach(id=>{
 document.getElementById(id).style.display="none";
 });
@@ -2299,6 +2312,56 @@ nombreAsesor.innerText = usuario;
 }
 
 foto.style.display = "block";
+
+}
+function verProductividad(){
+
+document.getElementById("dashboard").style.display="none";
+document.querySelector(".resumen").style.display="none";
+
+app.style.display="block";
+
+["simulador","clientes","pagos","admin","historialDiv"]
+.forEach(id=>{
+document.getElementById(id).style.display="none";
+});
+
+document.getElementById("productividadDiv").style.display="block";
+
+let contenido =
+document.getElementById("contenidoProductividad");
+
+let historial =
+JSON.parse(localStorage.getItem("historialPagos")) || [];
+
+let misPagos = historial.filter(p =>
+(asesor==="admin" || asesor==="operaciones")
+? true
+: p.asesor === asesor
+);
+
+let totalRecuperado = 0;
+
+misPagos.forEach(p=>{
+totalRecuperado += parseFloat(p.monto) || 0;
+});
+
+contenido.innerHTML = `
+<div class="item">
+👤 Asesor: ${asesor}<br><br>
+
+💰 Recuperado:
+S/${totalRecuperado.toFixed(2)}<br><br>
+
+📋 Pagos Registrados:
+${misPagos.length}<br><br>
+
+🏆 Promedio:
+S/${misPagos.length ?
+(totalRecuperado/misPagos.length).toFixed(2)
+: "0.00"}
+</div>
+`;
 
 }
 /* 🔚 FIN */   

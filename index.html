@@ -1277,6 +1277,9 @@ let key=h.toString().toLowerCase().replace(/\s+/g,"");
  let val = r[i] || "";
 
 if(key.includes("nombre")) obj.nombre=val;
+  if(key.includes("dni")){
+    obj.dni = String(val).trim();
+}
 if(key.includes("asesor")){
     let nombre = (val || "").toLowerCase().trim();
 

@@ -1369,6 +1369,45 @@ alert("✅ Cartera cargada y guardada correctamente");
 
 reader.readAsArrayBuffer(file);
 }
+function cargarIngresos(){
+
+let file =
+document.getElementById("excelIngresos").files[0];
+
+if(!file){
+alert("Seleccione archivo de ingresos");
+return;
+}
+
+let reader = new FileReader();
+
+reader.onload = function(e){
+
+let data = new Uint8Array(e.target.result);
+
+let workbook =
+XLSX.read(data,{type:'array'});
+
+let hoja =
+workbook.Sheets[
+workbook.SheetNames[0]
+];
+
+let json =
+XLSX.utils.sheet_to_json(hoja);
+
+localStorage.setItem(
+"ingresosMes",
+JSON.stringify(json)
+);
+
+alert("✅ Ingresos cargados correctamente");
+
+};
+
+reader.readAsArrayBuffer(file);
+
+}  
 // CLIENTES + RESUMEN
 function actualizarResumen(){
 

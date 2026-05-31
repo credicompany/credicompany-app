@@ -1522,6 +1522,15 @@ metaDiaria.asesores[a].length;
 
 }
   Object.keys(control).forEach(a=>{
+let prod = calcularCumplimiento(a);
+
+control[a].total = prod.meta;
+
+control[a].pagados = prod.recuperados;
+
+});
+
+Object.keys(control).forEach(a=>{
 
 let t = control[a].total;
 let p = control[a].pagados;

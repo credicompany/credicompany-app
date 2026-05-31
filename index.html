@@ -1340,11 +1340,14 @@ let asesorNombre =
 .toLowerCase()
 .trim();
 
-meta[asesorNombre] =
-(meta[asesorNombre] || 0) + 1;
-
+if(!meta[asesorNombre]){
+   meta[asesorNombre] = [];
 }
 
+meta[asesorNombre].push(
+   String(c.dni).trim()
+);
+} 
 });
 
 localStorage.setItem(
@@ -1513,7 +1516,7 @@ pagados:0
 }
 
 control[a].total =
-metaDiaria.asesores[a];
+metaDiaria.asesores[a].length;
 
 });
 
@@ -2436,36 +2439,26 @@ JSON.parse(
 localStorage.getItem("metaDiaria")
 ) || {};
 
-let metaInicial = 0;
+let prod =
+calcularCumplimiento(asesor);
 
-if(
-metaDiaria.asesores &&
-metaDiaria.asesores[asesor]
-){
+let metaInicial =
+prod.meta;
 
-metaInicial =
-metaDiaria.asesores[asesor];
+let recuperados =
+prod.recuperados;
 
-}
+let pendientes =
+prod.pendientes;
+
+let cumplimiento =
+prod.porcentaje;
+
 let totalRecuperado = 0;
 
 misPagos.forEach(p=>{
 totalRecuperado += parseFloat(p.monto) || 0;
 });
-let recuperados =
-misPagos.length;
-
-let pendientes =
-Math.max(
-0,
-metaInicial - recuperados
-);
-
-let cumplimiento =
-metaInicial > 0
-? ((recuperados/metaInicial)*100)
-.toFixed(1)
-: 0;
 contenido.innerHTML = `
 
 <div class="item">
@@ -2501,6 +2494,83 @@ S/${totalRecuperado.toFixed(2)}
 </div>
 
 `;
+}
+  function calcularCumplimiento(nombreAsesor){
+
+let metaDiaria =
+JSON.parse(
+localStorage.getItem("metaDiaria")
+) || {};
+
+if(
+!metaDiaria.asesores ||
+!metaDiaria.asesores[nombreAsesor]
+){
+return {
+meta:0,
+pendientes:0,
+recuperados:0,
+porcentaje:0
+};
+}
+
+let dniIniciales =
+metaDiaria.asesores[nombreAsesor];
+
+let actuales = [];
+
+(window.carteraGlobal || [])
+.forEach(c=>{
+
+let retraso =
+parseFloat(c.retraso) || 0;
+
+let asesorCliente =
+(c.asesor || "")
+.toLowerCase()
+.trim();
+
+if(
+asesorCliente === nombreAsesor &&
+retraso === 0
+){
+
+actuales.push(
+String(c.dni).trim()
+);
+
+}
+
+});
+
+let meta =
+dniIniciales.length;
+
+let pendientes =
+actuales.length;
+
+let recuperados =
+meta - pendientes;
+
+if(recuperados < 0){
+recuperados = 0;
+}
+
+let porcentaje =
+meta > 0
+? ((recuperados/meta)*100)
+.toFixed(1)
+: 0;
+
+return{
+
+meta,
+pendientes,
+recuperados,
+porcentaje
+
+};
+
 }
 /* 🔚 FIN */   
 </script>

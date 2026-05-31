@@ -1314,6 +1314,47 @@ c.pagado_hoy = false;
 });
 
 window.carteraGlobal = dataReset;
+  let hoy = new Date().toLocaleDateString('en-CA');
+
+let metaGuardada =
+JSON.parse(localStorage.getItem("metaDiaria"));
+
+if(
+!metaGuardada ||
+metaGuardada.fecha !== hoy
+){
+
+let meta = {};
+
+dataReset.forEach(c=>{
+
+let retraso = parseFloat(c.retraso) || 0;
+
+if(retraso === 0){
+
+let asesorNombre =
+(c.asesor || "")
+.toLowerCase()
+.trim();
+
+meta[asesorNombre] =
+(meta[asesorNombre] || 0) + 1;
+
+}
+
+});
+
+localStorage.setItem(
+"metaDiaria",
+JSON.stringify({
+fecha:hoy,
+asesores:meta
+})
+);
+
+console.log("🎯 Meta inicial creada",meta);
+
+}
 // 🔥 MOSTRAR
 filtrarMora(0,1000);
 actualizarResumen();
@@ -1385,12 +1426,7 @@ if(!control[asesorNombre]){
     };
 }
 // 🔥 META DEL DÍA
-if(retraso === 0 || c.eraHoy){
-
-    control[asesorNombre].total++;
-
-}
-
+    
 // 🔥 PAGOS REALIZADOS
 if(c.pagado_hoy){
 
@@ -1454,16 +1490,45 @@ document.getElementById("miMora").innerText =
 
 document.getElementById("misMorosos").innerText =
 misMorosos;
+  let metaDiaria =
+JSON.parse(
+localStorage.getItem("metaDiaria")
+) || {};
+
+if(metaDiaria.asesores){
+
+Object.keys(metaDiaria.asesores)
+.forEach(a=>{
+
+if(!control[a]){
+
+control[a] = {
+total:0,
+pagados:0
+};
+
+}
+
+control[a].total =
+metaDiaria.asesores[a];
+
+});
+
+}
   Object.keys(control).forEach(a=>{
 
 let t = control[a].total;
 let p = control[a].pagados;
 
 // 🔥 BONO SOLO SI CUMPLE META COMPLETA
-if(t > 0 && p === t){
-    bonos[a] = 15;
+if(t > 0 && p >= t){
+
+bonos[a] = 15;
+
 }else{
-    bonos[a] = 0;
+
+bonos[a] = 0;
+
 }
 
 });
@@ -1493,9 +1558,24 @@ if(index === 1) medalla = "🥈";
 let bono = bonos[item[0]] || 0;
 let bonosHoy = JSON.parse(localStorage.getItem("bonosHoy")) || {};
 let bonoAcumulado = bonosHoy[item[0]] || 0;  
-let prog = control[item[0]] 
-? `${control[item[0]].pagados}/${control[item[0]].total}`
-: "0/0";
+let totalMeta =
+control[item[0]]
+? control[item[0]].total
+: 0;
+
+let totalPagados =
+control[item[0]]
+? control[item[0]].pagados
+: 0;
+
+let porcentaje =
+totalMeta > 0
+? ((totalPagados/totalMeta)*100)
+.toFixed(1)
+: 0;
+
+let prog =
+`${totalPagados}/${totalMeta} (${porcentaje}%)`;
 
 rankingHTML += `
 <div style="font-size:12px;margin-top:4px;">
@@ -2348,30 +2428,76 @@ asesor==="operaciones"
 : asesorPago === asesor;
 
 });
+let metaDiaria =
+JSON.parse(
+localStorage.getItem("metaDiaria")
+) || {};
 
+let metaInicial = 0;
+
+if(
+metaDiaria.asesores &&
+metaDiaria.asesores[asesor]
+){
+
+metaInicial =
+metaDiaria.asesores[asesor];
+
+}
 let totalRecuperado = 0;
 
 misPagos.forEach(p=>{
 totalRecuperado += parseFloat(p.monto) || 0;
 });
+let recuperados =
+misPagos.length;
 
+let pendientes =
+Math.max(
+0,
+metaInicial - recuperados
+);
+
+let cumplimiento =
+metaInicial > 0
+? ((recuperados/metaInicial)*100)
+.toFixed(1)
+: 0;
 contenido.innerHTML = `
+
 <div class="item">
-👤 Asesor: ${asesor}<br><br>
+
+👤 Asesor:
+${asesor}
+
+<br><br>
+
+🎯 Meta Inicial:
+${metaInicial}
+
+<br><br>
+
+✅ Recuperados:
+${recuperados}
+
+<br><br>
+
+❌ Pendientes:
+${pendientes}
+
+<br><br>
+
+📈 Cumplimiento:
+${cumplimiento}%
+
+<br><br>
 
 💰 Recuperado:
-S/${totalRecuperado.toFixed(2)}<br><br>
+S/${totalRecuperado.toFixed(2)}
 
-📋 Pagos Registrados:
-${misPagos.length}<br><br>
-
-🏆 Promedio:
-S/${misPagos.length ?
-(totalRecuperado/misPagos.length).toFixed(2)
-: "0.00"}
 </div>
-`;
 
+`;
 }
 /* 🔚 FIN */   
 </script>

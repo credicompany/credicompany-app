@@ -2447,7 +2447,40 @@ let metaDiaria =
 JSON.parse(
 localStorage.getItem("metaDiaria")
 ) || {};
+if(
+asesor==="admin" ||
+asesor==="operaciones"
+){
 
+let metaDiaria =
+JSON.parse(
+localStorage.getItem("metaDiaria")
+) || {};
+
+let html = "";
+
+Object.keys(
+metaDiaria.asesores || {}
+).forEach(a=>{
+
+let prod =
+calcularCumplimiento(a);
+
+html += `
+<div class="item">
+👤 ${a}<br>
+🎯 ${prod.meta}<br>
+✅ ${prod.recuperados}<br>
+❌ ${prod.pendientes}<br>
+📈 ${prod.porcentaje}%
+</div>
+`;
+});
+
+contenido.innerHTML = html;
+
+return;
+}
 let prod =
 calcularCumplimiento(asesor);
 

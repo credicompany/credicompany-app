@@ -2458,7 +2458,7 @@ localStorage.getItem("metaDiaria")
 ) || {};
 
 let html = "";
-
+contenido.innerHTML = "";
 Object.keys(
 metaDiaria.asesores || {}
 ).forEach(a=>{
@@ -2466,14 +2466,144 @@ metaDiaria.asesores || {}
 let prod =
 calcularCumplimiento(a);
 
+let colorBarra="#dc2626";
+
+if(prod.porcentaje >= 50)
+colorBarra="#f59e0b";
+
+if(prod.porcentaje >= 80)
+colorBarra="#16a34a";
+
 html += `
-<div class="item">
-👤 ${a}<br>
-🎯 ${prod.meta}<br>
-✅ ${prod.recuperados}<br>
-❌ ${prod.pendientes}<br>
-📈 ${prod.porcentaje}%
+
+<div style="
+background:white;
+border-radius:18px;
+padding:15px;
+margin-bottom:15px;
+box-shadow:0 4px 12px rgba(0,0,0,.12);
+color:#123B63;
+">
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
+">
+
+<div>
+<div style="
+font-size:20px;
+font-weight:bold;
+">
+👤 ${a}
 </div>
+
+<div style="
+font-size:12px;
+color:#666;
+">
+Asesor de Cobranza
+</div>
+
+</div>
+
+<div style="
+font-size:28px;
+font-weight:bold;
+color:#6c3bd1;
+">
+${prod.porcentaje}%
+</div>
+
+</div>
+
+<div style="
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:8px;
+">
+
+<div style="
+background:#eef5ff;
+padding:10px;
+border-radius:10px;
+text-align:center;
+">
+🎯<br>
+<b>${prod.meta}</b>
+</div>
+
+<div style="
+background:#eefcf1;
+padding:10px;
+border-radius:10px;
+text-align:center;
+">
+✅<br>
+<b>${prod.recuperados}</b>
+</div>
+
+<div style="
+background:#fff1f1;
+padding:10px;
+border-radius:10px;
+text-align:center;
+">
+❌<br>
+<b>${prod.pendientes}</b>
+</div>
+
+<div style="
+background:#f4efff;
+padding:10px;
+border-radius:10px;
+text-align:center;
+">
+📈<br>
+<b>${prod.porcentaje}%</b>
+</div>
+
+</div>
+
+<div style="
+margin-top:15px;
+height:14px;
+background:#e5e7eb;
+border-radius:20px;
+overflow:hidden;
+">
+
+<div style="
+width:${prod.porcentaje}%;
+height:100%;
+background:${colorBarra};
+">
+</div>
+
+</div>
+
+<div style="
+display:flex;
+justify-content:space-between;
+font-size:12px;
+margin-top:8px;
+color:#666;
+">
+
+<span>
+${prod.recuperados}/${prod.meta}
+</span>
+
+<span>
+${prod.pendientes} pendientes
+</span>
+
+</div>
+
+</div>
+
 `;
 });
 

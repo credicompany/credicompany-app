@@ -1855,7 +1855,7 @@ document.querySelector(".resumen").style.display = "none";
 
 app.style.display="block";
 
-["simulador","clientes","pagos","admin","historialDiv","productividadDiv"].forEach(id=>{
+["simulador","clientes","pagos","admin","historialDiv","productividadDiv","kpiIngresosDiv"].forEach(id=>{
 document.getElementById(id).style.display="none";
 });
 
@@ -1865,12 +1865,15 @@ if(p==="clientes"){filtrarMora(0,1000);actualizarResumen();
 }
 
 if(p==="admin") renderUsuarios();
-}
+
+if(p==="kpiIngresos"){
+verKPIIngresos();
+}  
 function volver(){
 
 app.style.display="none";
 
-["simulador","clientes","pagos","admin","historialDiv","productividadDiv"]
+["simulador","clientes","pagos","admin","historialDiv","productividadDiv","kpiIngresosDiv"]
 .forEach(id=>{
 document.getElementById(id).style.display="none";
 });
@@ -2717,6 +2720,102 @@ S/${totalRecuperado.toFixed(2)}
 
 `;
 }
+function verKPIIngresos(){
+
+document.getElementById("dashboard").style.display="none";
+document.querySelector(".resumen").style.display="none";
+
+app.style.display="block";
+
+[
+"simulador",
+"clientes",
+"pagos",
+"admin",
+"historialDiv",
+"productividadDiv"
+].forEach(id=>{
+
+let el = document.getElementById(id);
+if(el) el.style.display="none";
+
+});
+
+document.getElementById("kpiIngresosDiv").style.display="block";
+
+let contenido =
+document.getElementById("contenidoKPI");
+
+let historial =
+JSON.parse(localStorage.getItem("historialPagos")) || [];
+
+let totalCobrado = 0;
+let cantidad = historial.length;
+
+let ranking = {};
+
+historial.forEach(p=>{
+
+let monto =
+parseFloat(p.monto) || 0;
+
+totalCobrado += monto;
+
+let a = p.asesor || "Sin asesor";
+
+if(!ranking[a]){
+ranking[a]=0;
+}
+
+ranking[a]+=monto;
+
+});
+
+let ticketPromedio =
+cantidad > 0
+? totalCobrado / cantidad
+: 0;
+
+let rankingHtml = "";
+
+Object.entries(ranking)
+.sort((a,b)=>b[1]-a[1])
+.forEach(r=>{
+
+rankingHtml += `
+<div class="item">
+👤 ${r[0]}
+<br>
+💰 S/${r[1].toFixed(2)}
+</div>
+`;
+
+});
+
+contenido.innerHTML = `
+
+<div class="item">
+💰 Total Cobrado:
+<b>S/${totalCobrado.toFixed(2)}</b>
+</div>
+
+<div class="item">
+📊 Ticket Promedio:
+<b>S/${ticketPromedio.toFixed(2)}</b>
+</div>
+
+<div class="item">
+📋 Operaciones:
+<b>${cantidad}</b>
+</div>
+
+<h4>🏆 Ranking de Ingresos</h4>
+
+${rankingHtml}
+
+`;
+
+}  
   function calcularCumplimiento(nombreAsesor){
 
 let metaDiaria =

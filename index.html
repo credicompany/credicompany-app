@@ -1422,19 +1422,66 @@ workbook.SheetNames[0]
 let raw =
 XLSX.utils.sheet_to_json(hoja,{header:1});
 
-let headers = raw[3];
+let filaCabecera = raw.findIndex(row => {
 
-let json = raw.slice(4).map(row=>{
+let texto = (row || [])
+.join(" ")
+.toUpperCase();
+
+return (
+texto.includes("INTERES") &&
+texto.includes("MORA")
+);
+
+});
+
+let headers = raw[filaCabecera];
+
+let json = raw
+.slice(filaCabecera + 1)
+
+.filter(row =>
+row &&
+row.length > 0
+)
+
+.map(row => {
 
 let obj = {};
 
 headers.forEach((h,i)=>{
+
+if(h){
+
 obj[String(h).trim()] = row[i];
+
+}
+
 });
 
 return obj;
 
+})
+
+// eliminar filas vacías
+.filter(r => {
+
+return (
+
+(parseFloat(r["INTERES"]) || 0) > 0 ||
+
+(parseFloat(r["MORA REAL"]) || 0) > 0 ||
+
+(parseFloat(r["TOTAL"]) || 0) > 0
+
+);
+
 });
+
+console.log(
+"OPERACIONES CARGADAS:",
+json.length
+);
 
 localStorage.setItem(
 "ingresosMes",
@@ -2793,11 +2840,11 @@ return;
 let totalInteres = 0;
 let totalMoraReal = 0;
 let totalGeneral = 0;
-let operaciones = ingresos.length;
+let operaciones = 0;
 
 let ranking = {};
 let dias = {};
-
+let controlOperaciones = new Set();
 ingresos.forEach(r=>{
 
 let interes =
@@ -2817,7 +2864,18 @@ let asesor =
 let fecha =
 (r["FECHA DE PAGO"] || "")
 .toString();
+let clave =
+fecha + "|" +
+(r["CLIENTE"] || "") + "|" +
+total;
 
+if(controlOperaciones.has(clave)){
+return;
+}
+
+controlOperaciones.add(clave);
+
+operaciones++;
 totalInteres += interes;
 totalMoraReal += moraReal;
 totalGeneral += total;

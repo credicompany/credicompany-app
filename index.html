@@ -564,6 +564,17 @@ Eliminar Usuario
 
 <h3>💰 KPI Ingresos</h3>
 
+<input type="file"
+id="excelIngresos"
+accept=".xlsx,.xls,.csv"
+style="margin-bottom:10px;">
+
+<button
+class="btn-verde"
+onclick="cargarIngresos()">
+📂 Cargar Ingresos
+</button>
+
 <div id="contenidoKPI"></div>
 
  </div> 
@@ -2741,7 +2752,7 @@ app.style.display="block";
 "productividadDiv"
 ].forEach(id=>{
 
-let el = document.getElementById(id);
+let el=document.getElementById(id);
 if(el) el.style.display="none";
 
 });
@@ -2751,45 +2762,95 @@ document.getElementById("kpiIngresosDiv").style.display="block";
 let contenido =
 document.getElementById("contenidoKPI");
 
-let historial =
-JSON.parse(localStorage.getItem("historialPagos")) || [];
+let ingresos =
+JSON.parse(localStorage.getItem("ingresosMes")) || [];
 
-let totalCobrado = 0;
-let cantidad = historial.length;
+if(ingresos.length===0){
 
-let ranking = {};
+contenido.innerHTML=`
+<div class="item">
+⚠️ No hay archivo de ingresos cargado.
+</div>
+`;
 
-historial.forEach(p=>{
-
-let monto =
-parseFloat(p.monto) || 0;
-
-totalCobrado += monto;
-
-let a = p.asesor || "Sin asesor";
-
-if(!ranking[a]){
-ranking[a]=0;
+return;
 }
 
-ranking[a]+=monto;
+let totalInteres = 0;
+let totalMoraReal = 0;
+let totalGeneral = 0;
+let operaciones = ingresos.length;
+
+let ranking = {};
+let dias = {};
+
+ingresos.forEach(r=>{
+
+let interes =
+parseFloat(r["INTERES"]) || 0;
+
+let moraReal =
+parseFloat(r["MORA REAL"]) || 0;
+
+let total =
+parseFloat(r["TOTAL"]) || 0;
+
+let asesor =
+(r["ASESOR"] || "Sin asesor")
+.toString()
+.toUpperCase();
+
+let fecha =
+(r["FECHA DE PAGO"] || "")
+.toString();
+
+totalInteres += interes;
+totalMoraReal += moraReal;
+totalGeneral += total;
+
+if(!ranking[asesor]){
+ranking[asesor]=0;
+}
+
+ranking[asesor]+=interes;
+
+if(fecha){
+
+if(!dias[fecha]){
+dias[fecha]=0;
+}
+
+dias[fecha]+=interes;
+
+}
 
 });
 
 let ticketPromedio =
-cantidad > 0
-? totalCobrado / cantidad
+operaciones > 0
+? totalInteres / operaciones
 : 0;
 
-let rankingHtml = "";
+let promedioDiario =
+Object.keys(dias).length > 0
+? totalInteres / Object.keys(dias).length
+: 0;
+
+let rankingHtml="";
 
 Object.entries(ranking)
 .sort((a,b)=>b[1]-a[1])
-.forEach(r=>{
+.forEach((r,index)=>{
+
+let medalla="🏅";
+
+if(index===0) medalla="🥇";
+if(index===1) medalla="🥈";
+if(index===2) medalla="🥉";
 
 rankingHtml += `
 <div class="item">
-👤 ${r[0]}
+${medalla} ${r[0]}
 <br>
 💰 S/${r[1].toFixed(2)}
 </div>
@@ -2797,30 +2858,45 @@ rankingHtml += `
 
 });
 
-contenido.innerHTML = `
+contenido.innerHTML=`
 
 <div class="item">
-💰 Total Cobrado:
-<b>S/${totalCobrado.toFixed(2)}</b>
+💰 Intereses Generados
+<br>
+<b>S/${totalInteres.toFixed(2)}</b>
 </div>
 
 <div class="item">
-📊 Ticket Promedio:
+🚨 Mora Real Recuperada
+<br>
+<b>S/${totalMoraReal.toFixed(2)}</b>
+</div>
+
+<div class="item">
+📊 Ticket Promedio Interés
+<br>
 <b>S/${ticketPromedio.toFixed(2)}</b>
 </div>
 
 <div class="item">
-📋 Operaciones:
-<b>${cantidad}</b>
+📅 Promedio Diario
+<br>
+<b>S/${promedioDiario.toFixed(2)}</b>
 </div>
 
-<h4>🏆 Ranking de Ingresos</h4>
+<div class="item">
+📋 Operaciones
+<br>
+<b>${operaciones}</b>
+</div>
+
+<h4>🏆 Ranking por Intereses</h4>
 
 ${rankingHtml}
 
 `;
 
-}  
+}
   function calcularCumplimiento(nombreAsesor){
 
 let metaDiaria =

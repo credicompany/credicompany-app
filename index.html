@@ -1444,6 +1444,25 @@ let json = raw
 row &&
 row.length > 0
 )
+let json = raw
+.slice(filaCabecera + 1)
+
+.filter(row => {
+
+if(!row || row.length === 0){
+return false;
+}
+
+let textoFila =
+row.join(" ").toUpperCase();
+
+if(textoFila.includes("TOTAL")){
+return false;
+}
+
+return true;
+
+})
 
 .map(row => {
 

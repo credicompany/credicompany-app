@@ -593,7 +593,7 @@ Eliminar Usuario
 <div id="modalTarifario" class="modalTarifario">
 
     <div class="contenidoTarifario">
-
+if(
         <span class="cerrarTarifario" onclick="cerrarTarifario()">
             &times;
         </span>
@@ -713,12 +713,23 @@ cargarPerfilAsesor(asesor);
 loginDiv.style.display="none";
 dashboard.style.display="block";
 if(
+if(
 asesor === "admin" ||
 asesor === "operaciones"
 ){
-document.getElementById("boxAdmin").style.display="flex";
+    document.getElementById("boxAdmin").style.display="flex";
+    document.getElementById("panelAsesores").style.display="grid";
+
+}else if(asesor === "slopez"){
+
+    document.getElementById("boxAdmin").style.display="none";
+    document.getElementById("panelAsesores").style.display="grid";
+
 }else{
-document.getElementById("boxAdmin").style.display="none";
+
+    document.getElementById("boxAdmin").style.display="none";
+    document.getElementById("panelAsesores").style.display="none";
+
 }
 document.getElementById("panelExcel").style.display="none";
 actualizarResumen();  
@@ -1779,6 +1790,8 @@ document.querySelector(".resumen").style.display = "grid";
 document.getElementById("historialDiv").style.display="none";
 
 dashboard.style.display="block";
+  if(asesor === "slopez"){
+    document.getElementById("panelAsesores").style.display="grid";
 }
 
 // QR

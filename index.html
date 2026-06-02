@@ -398,6 +398,39 @@ grid-template-columns:repeat(4,1fr);
 gap:8px;
 margin-top:10px;
 ">
+
+<button class="btn-azul" onclick="resetFiltros()">
+🏆 Team Credicompany
+</button>
+
+<button class="btn-verde" ...
+class="btn-verde"
+style="width:100%;"
+onclick="filtrarPorAsesor('ebenites')">
+👤 Ebenites
+</button>
+
+<button
+class="btn-verde"
+style="width:100%;"
+onclick="filtrarPorAsesor('emedina')">
+👤 Emedina
+</button>
+
+<button
+class="btn-verde"
+style="width:100%;"
+onclick="filtrarPorAsesor('tleon')">
+👤 Tleon
+</button>
+
+<button
+class="btn-verde"
+style="width:100%;"
+onclick="filtrarPorAsesor('bhuerta')">
+👤 Bhuerta
+</button>
+
 </div>
 <div id="panelRecordatorios" style="display:none;"
 style="
@@ -476,7 +509,6 @@ font-size:12px;
 
 <button class="btn-verde" onclick="crearUsuario()">Crear Usuario</button>
 <button class="btn-naranja" onclick="eliminarUsuarioManual()">
-  
 Eliminar Usuario
 </button>
 <button class="btn-azul" onclick="exportarUsuarios()">Exportar Usuarios</button>
@@ -576,7 +608,7 @@ asesor = user.toLowerCase().trim();
 window.esAdmin = true;
 
 cargarPerfilAsesor(asesor);
-cargarPanelAsesores();
+
 loginDiv.style.display="none";
 dashboard.style.display="block";
 
@@ -630,34 +662,7 @@ usuarios.splice(index,1);
 localStorage.setItem("usuarios", JSON.stringify(usuarios));
 
 renderUsuarios();
-function cargarPanelAsesores(){
 
-let panel = document.getElementById("panelAsesores");
-
-let usuarios =
-JSON.parse(localStorage.getItem("usuarios")) || [];
-
-let html = `
-<button class="btn-azul"
-onclick="resetFiltros()">
-🏆 Team Credicompany
-</button>
-`;
-
-usuarios.forEach(u=>{
-
-html += `
-<button class="btn-verde"
-onclick="filtrarPorAsesor('${u.user}')">
-👤 ${u.nombre || u.user}
-</button>
-`;
-
-});
-
-panel.innerHTML = html;
-
-}renderUsuarios();
 alert("✅ Usuario eliminado");
 
 }
@@ -1610,7 +1615,6 @@ nuevoNombre.value="";
 nuevoFoto.value="";
 
 renderUsuarios();
-cargarPanelAsesores();
 }
 
 function renderUsuarios(){

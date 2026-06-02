@@ -498,7 +498,12 @@ font-size:12px;
 <div class="volver" onclick="volver()">← Volver</div>
 
 <input id="nuevoUser" placeholder="Usuario">
+
 <input id="nuevoPass" placeholder="Clave">
+
+<input id="nuevoNombre" placeholder="Nombre completo">
+
+<input id="nuevoFoto" placeholder="Foto (ej: jperez.png)">
 
 <button class="btn-verde" onclick="crearUsuario()">Crear Usuario</button>
 <button class="btn-naranja" onclick="eliminarUsuarioManual()">
@@ -1594,11 +1599,18 @@ let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
 if(usuarios.find(u=>u.user===user)) return alert("Existe");
 
-usuarios.push({user,pass});
+usuarios.push({
+user:user,
+pass:pass,
+nombre:nuevoNombre.value.trim(),
+foto:nuevoFoto.value.trim()
+});
 localStorage.setItem("usuarios",JSON.stringify(usuarios));
 
 nuevoUser.value="";
 nuevoPass.value="";
+nuevoNombre.value="";
+nuevoFoto.value="";
 
 renderUsuarios();
 }

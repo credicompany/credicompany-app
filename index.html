@@ -703,7 +703,11 @@ return;
 
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
-let encontrado=usuarios.find(u=>u.user===user && u.pass===pass);
+let encontrado = usuarios.find(
+    u =>
+    (u.user || "").toLowerCase().trim() === user.toLowerCase().trim() &&
+    (u.pass || "").trim() === pass.trim()
+);
 
 if(encontrado){
 asesor = user.toLowerCase().trim();
@@ -1710,7 +1714,7 @@ let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 if(usuarios.find(u=>u.user===user)) return alert("Existe");
 
 usuarios.push({
-user:user,
+user:user.toLowerCase().trim(),
 pass:pass,
 nombre:nuevoNombre.value.trim(),
 foto:nuevoFoto.value.trim()
@@ -2232,8 +2236,11 @@ let nombreCompleto = document.getElementById("nombreCompletoAsesor");
 let usuarios =
 JSON.parse(localStorage.getItem("usuarios")) || [];
 
-let u = usuarios.find(x => x.user === usuario);
-
+let u = usuarios.find(x => x.user === usuario);let u = usuarios.find(
+    x =>
+    (x.user || "").toLowerCase().trim() ===
+    (usuario || "").toLowerCase().trim()
+);
 if(u){
 
 foto.src = u.foto || "logo.png";

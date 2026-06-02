@@ -2171,6 +2171,14 @@ foto.style.display = "block";
 
 /* 🔚 FIN */   
 </script>
-
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw-v2.js")
+      .then(() => console.log("✅ Service Worker registrado"))
+      .catch(err => console.log("❌ Error SW:", err));
+  });
+}
+</script>
 </body>
   </html>

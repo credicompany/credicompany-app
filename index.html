@@ -2236,7 +2236,7 @@ let nombreCompleto = document.getElementById("nombreCompletoAsesor");
 let usuarios =
 JSON.parse(localStorage.getItem("usuarios")) || [];
 
-let u = usuarios.find(x => x.user === usuario);let u = usuarios.find(
+let u = usuarios.find(
     x =>
     (x.user || "").toLowerCase().trim() ===
     (usuario || "").toLowerCase().trim()

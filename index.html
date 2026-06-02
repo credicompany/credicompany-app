@@ -1567,8 +1567,19 @@ btnCriticos.innerHTML =
 
 }
 function filtrarMora(min,max){
-if(asesor === "slopez" && min < 9){
-    min = 9;
+
+if(asesor === "slopez"){
+
+    // Ocultar 0 y 1-8
+    document.getElementById("btn0dias").style.display="none";
+    document.getElementById("btn1a8dias").style.display="none";
+
+    // Si intenta abrir 0 o 1-8, mostrar 9-30
+    if(max <= 8){
+        min = 9;
+        max = 30;
+    }
+
 }
 let lista = document.getElementById("listaClientes");
 lista.innerHTML="";
@@ -1598,7 +1609,17 @@ asesor === "operaciones"
 }
 
 // 🔥 ASESOR NORMAL
-let esMio = (c.asesor || "").toLowerCase() === asesor.toLowerCase();
+let asesorCliente = (c.asesor || "")
+    .toString()
+    .toLowerCase()
+    .trim();
+
+let asesorActual = (asesor || "")
+    .toString()
+    .toLowerCase()
+    .trim();
+
+let esMio = asesorCliente === asesorActual;
 
 return r>=filtroMin && r<=filtroMax && esMio;
 });
@@ -1772,7 +1793,15 @@ document.getElementById(id).style.display="none";
 
 document.getElementById(p).style.display="block";
 
-if(p==="clientes"){filtrarMora(0,1000);actualizarResumen();
+if(p==="clientes"){
+
+    if(asesor === "slopez"){
+        filtrarMora(9,1000);
+    }else{
+        filtrarMora(0,1000);
+    }
+
+    actualizarResumen();
 }
 
 if(p==="admin") renderUsuarios();

@@ -2852,13 +2852,23 @@ let controlOperaciones = new Set();
 ingresos.forEach(r=>{
 
 let interes =
-parseFloat(r["INTERES"]) || 0;
+parseFloat(
+r["INTERES"] ||
+r["INTERESES"] ||
+r["INTERÉS"]
+) || 0;
 
 let moraReal =
-parseFloat(r["MORA REAL"]) || 0;
+parseFloat(
+r["MORA REAL"]
+) || 0;
 
 let total =
-parseFloat(r["TOTAL"]) || 0;
+parseFloat(
+r["TOTAL"] ||
+r["TOTAL INGRESO"] ||
+r["TOTAL GENERAL"]
+) || 0;
 
 let asesor =
 (r["ASESOR"] || "Sin asesor")

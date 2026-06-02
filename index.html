@@ -723,7 +723,17 @@ nombreAsesor.innerText=asesor;
 cargarPerfilAsesor(asesor);
 loginDiv.style.display="none";
 dashboard.style.display="block";
+if(asesor === "slopez"){
 
+    document.getElementById("btn0dias").style.display = "none";
+    document.getElementById("btn1a8dias").style.display = "none";
+
+}else{
+
+    document.getElementById("btn0dias").style.display = "";
+    document.getElementById("btn1a8dias").style.display = "";
+
+}
 if(
 asesor === "admin" ||
 asesor === "operaciones"

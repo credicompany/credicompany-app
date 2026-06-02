@@ -1437,9 +1437,6 @@ texto.includes("MORA")
 
 let headers = raw[filaCabecera];
 
-let json = raw
-.slice(filaCabecera + 1)
-
 .filter(row =>
 row &&
 row.length > 0
@@ -1506,11 +1503,6 @@ console.log(
 json.length
 );
 
-console.log(
-"OPERACIONES LIMPIAS:",
-ingresosLimpios.length
-);
-
 let controlCarga = new Set();
 
 let ingresosLimpios = json.filter(r => {
@@ -1525,7 +1517,10 @@ controlCarga.add(clave);
 return true;
 
 });
-
+console.log(
+"OPERACIONES LIMPIAS:",
+ingresosLimpios.length
+);
 localStorage.setItem(
 "ingresosMes",
 JSON.stringify(ingresosLimpios)

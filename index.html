@@ -24,7 +24,7 @@ margin-top:10px;
 .fotoAsesor{
 width:120px;
 height:120px;
-border-radius:50%;<script>
+border-radius:50%;
 object-fit:cover;
 border:4px solid #10c251;
 box-shadow:0 4px 12px rgba(0,0,0,0.25);
@@ -593,7 +593,6 @@ Eliminar Usuario
 <div id="modalTarifario" class="modalTarifario">
 
     <div class="contenidoTarifario">
-if(
         <span class="cerrarTarifario" onclick="cerrarTarifario()">
             &times;
         </span>
@@ -713,15 +712,11 @@ cargarPerfilAsesor(asesor);
 loginDiv.style.display="none";
 dashboard.style.display="block";
 if(
-if(
 asesor === "admin" ||
 asesor === "operaciones"
 ){
     document.getElementById("boxAdmin").style.display="flex";
     document.getElementById("panelAsesores").style.display="grid";
-
-}else if(asesor === "slopez"){
-
     document.getElementById("boxAdmin").style.display="none";
     document.getElementById("panelAsesores").style.display="grid";
 
@@ -1793,7 +1788,7 @@ dashboard.style.display="block";
   if(asesor === "slopez"){
     document.getElementById("panelAsesores").style.display="grid";
 }
-
+}
 // QR
 function abrirQR(el){
 imgQR.src=el.querySelector("img").src;

@@ -446,7 +446,20 @@ style="width:100%;"
 onclick="filtrarPorAsesor('bhuerta')">
 👤 Bhuerta
 </button>
+  
+<button
+class="btn-verde"
+style="width:100%;"
+onclick="filtrarPorAsesor('daraindia')">
+👤 Daraindia
+</button>
 
+<button
+class="btn-verde"
+style="width:100%;"
+onclick="filtrarPorAsesor('slopez')">
+👤 Slopez
+</button>
 </div>
 <div id="panelRecordatorios" style="display:none;"
 style="
@@ -1237,6 +1250,8 @@ if(key.includes("asesor")){
     if(nombre.includes("medina")) nombre = "emedina";
     if(nombre.includes("leon")) nombre = "tleon";
     if(nombre.includes("huerta")) nombre = "bhuerta";
+    if(nombre.includes("araindia")) nombre = "daraindia";
+    if(nombre.includes("lopez")) nombre = "slopez";
     obj.asesor = nombre;
 }
 if(key.includes("cuota_mora")) obj.monto=val;
@@ -1854,7 +1869,29 @@ _Crecemos juntos_
 *2026*`;
 
 }
+// DIEGO
+else if(asesor === "daraindia"){
 
+firma = `
+*Atte.*
+DIEGO ARAINDIA
+🏦 *Credicompany*
+_Crecemos juntos_
+*2026*`;
+
+}
+
+// SEGUNDO
+else if(asesor === "slopez"){
+
+firma = `
+*Atte.*
+SEGUNDO LOPEZ
+🏦 *Credicompany*
+_Crecemos juntos_
+*2026*`;
+
+}
 // ALESSANDRA
 else if(asesor === "tleon"){
 
@@ -2175,7 +2212,23 @@ nombreCompleto.innerText = "Alessandra Leon";
 nombreAsesor.innerText = "tleon";
 
 }
+// DIEGO
+else if(usuario === "daraindia"){
 
+foto.src = "daraindia.png";
+nombreCompleto.innerText = "Diego Araindia";
+nombreAsesor.innerText = "daraindia";
+
+}
+
+// SEGUNDO
+else if(usuario === "slopez"){
+
+foto.src = "slopez.png";
+nombreCompleto.innerText = "Segundo Lopez";
+nombreAsesor.innerText = "slopez";
+
+}
 // OTROS
 else{
 

@@ -236,9 +236,14 @@ Asesor:
 <div style="font-size:28px;">💳</div>
 <div>Medios pagos</div>
 </div>
-<div class="box" onclick="mostrar('admin')">
+<div id="boxAdmin"
+class="box"
+style="display:none"
+onclick="mostrar('admin')">
+
 <div style="font-size:28px;">⚙️</div>
 <div>Usuarios</div>
+
 </div>
   <div class="box" onclick="verHistorialPagos()">
     <div style="font-size:28px;">📋</div>
@@ -616,21 +621,20 @@ if(
 ){
 
 asesor = user.toLowerCase().trim();
+
 window.esAdmin = true;
 
 cargarPerfilAsesor(asesor);
 
 loginDiv.style.display="none";
 dashboard.style.display="block";
+
+document.getElementById("boxAdmin").style.display="flex";
 document.getElementById("panelExcel").style.display="block";
+
 actualizarResumen();
 
-setTimeout(()=>{
-document.getElementById("panelAsesores").style.display = "grid";
-},300);
-
 return;
-
 }
 
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
@@ -643,6 +647,15 @@ nombreAsesor.innerText=asesor;
 cargarPerfilAsesor(asesor);
 loginDiv.style.display="none";
 dashboard.style.display="block";
+
+if(
+asesor === "admin" ||
+asesor === "operaciones"
+){
+document.getElementById("boxAdmin").style.display="flex";
+}else{
+document.getElementById("boxAdmin").style.display="none";
+}
 document.getElementById("panelExcel").style.display="none";
 actualizarResumen();  
 }else{
@@ -1648,7 +1661,14 @@ console.log("Vista general activada");
 }
 // UI
 function mostrar(p){
-
+if(
+p === "admin" &&
+asesor !== "admin" &&
+asesor !== "operaciones"
+){
+alert("Acceso restringido");
+return;
+}
 dashboard.style.display="none";
 
 document.querySelector(".resumen").style.display = "none";

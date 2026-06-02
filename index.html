@@ -391,24 +391,41 @@ Mensual
 <button style="background:black;color:white" onclick="filtrarMora(61,1000)">61+ días</button>
 </div>
 
-<div id="panelAsesores" style="display:none;">
+<div id="panelAsesores"
+style="
+display:none;
+grid-template-columns:repeat(4,1fr);
+gap:8px;
+margin-top:10px;
+">
 
 <button class="btn-azul" onclick="resetFiltros()">
 📋 Todos los clientes
-</button>
-<button class="btn-verde" onclick="filtrarPorAsesor('ebenites')">
+<button
+class="btn-verde"
+style="width:100%;"
+onclick="filtrarPorAsesor('ebenites')">
 👤 Ebenites
 </button>
 
-<button class="btn-verde" onclick="filtrarPorAsesor('emedina')">
+<button
+class="btn-verde"
+style="width:100%;"
+onclick="filtrarPorAsesor('emedina')">
 👤 Emedina
 </button>
 
-<button class="btn-verde" onclick="filtrarPorAsesor('tleon')">
+<button
+class="btn-verde"
+style="width:100%;"
+onclick="filtrarPorAsesor('tleon')">
 👤 Tleon
 </button>
 
-<button class="btn-verde" onclick="filtrarPorAsesor('bhuerta')">
+<button
+class="btn-verde"
+style="width:100%;"
+onclick="filtrarPorAsesor('bhuerta')">
 👤 Bhuerta
 </button>
 
@@ -591,7 +608,7 @@ dashboard.style.display="block";
 actualizarResumen();
 
 setTimeout(()=>{
-document.getElementById("panelAsesores").style.display="block";
+document.getElementById("panelAsesores").style.display = "grid";
 },300);
 
 return;

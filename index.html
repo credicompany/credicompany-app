@@ -376,8 +376,19 @@ Mensual
 
 <div id="clientes" class="card" style="display:none">
 
-<input type="file" id="excelFile" accept=".csv,.xlsx" style="margin-top:15px;">
-<button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>
+<div id="panelExcel">
+
+<input type="file"
+id="excelFile"
+accept=".csv,.xlsx"
+style="margin-top:15px;">
+
+<button class="btn-azul"
+onclick="cargarExcel()">
+📂 Cargar Excel
+</button>
+
+</div>
 
 <div class="fila">
 <button style="background:#2ecc71;color:white" onclick="filtrarMora(0,0)">0 días</button>
@@ -611,7 +622,7 @@ cargarPerfilAsesor(asesor);
 
 loginDiv.style.display="none";
 dashboard.style.display="block";
-
+document.getElementById("panelExcel").style.display="block";
 actualizarResumen();
 
 setTimeout(()=>{
@@ -632,6 +643,7 @@ nombreAsesor.innerText=asesor;
 cargarPerfilAsesor(asesor);
 loginDiv.style.display="none";
 dashboard.style.display="block";
+document.getElementById("panelExcel").style.display="none";
 actualizarResumen();  
 }else{
 alert("❌ Usuario o clave incorrectos");

@@ -1,4 +1,4 @@
-8<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -575,18 +575,27 @@ function login(){
 let user=usuario.value.trim();
 let pass=clave.value.trim();
 
-if(user==="admin" && pass==="1234"){
+if(
+(user==="admin" && pass==="1234") ||
+(user==="operaciones" && pass==="1234")
+){
+
 asesor = user.toLowerCase().trim();
+window.esAdmin = true;
+
 cargarPerfilAsesor(asesor);
+
 loginDiv.style.display="none";
 dashboard.style.display="block";
+
 actualizarResumen();
-// 🔥 ESTA LÍNEA ACTIVA LOS BOTONES
+
 setTimeout(()=>{
-    document.getElementById("panelAsesores").style.display = "block";
+document.getElementById("panelAsesores").style.display="block";
 },300);
 
 return;
+
 }
 
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
@@ -1435,7 +1444,10 @@ if(c.pagado_hoy) return false;
 let r = parseFloat(c.retraso)||0;
 
 // 🔥 ADMIN con filtro combinado
-if(asesor === "admin"){
+if(
+asesor === "admin" ||
+asesor === "operaciones"
+){
 
     if(filtroAsesor){
         return r>=filtroMin && r<=filtroMax &&

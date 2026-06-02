@@ -1,4 +1,4 @@
-⁸<!DOCTYPE html>  <html lang="es">  
+<!DOCTYPE html>  <html lang="es">  
 <head>  
 <meta charset="UTF-8">  
 <meta name="viewport" content="width=device-width, initial-scale=1.0">  
@@ -461,16 +461,13 @@ onclick="cargarIngresos()">
 <img src="tarifario.jpeg" class="imgTarifario">  </div>
 
 </div>  
-<script>  
-let asesor="";
+<script>  let asesor="";
 let filtroAsesor = "";
 let filtroMin = 0;
 let filtroMax = 1000;
+
 window.onload = function(){
 
-return;
-
-console.log("DB:", window.db);
 onValue(ref(window.db, 'cartera'), (snapshot) => {  
 
     let raw = snapshot.val() || {};

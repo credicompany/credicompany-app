@@ -2086,7 +2086,26 @@ function cargarPerfilAsesor(usuario){
 
 let foto = document.getElementById("fotoPerfil");
 let nombreCompleto = document.getElementById("nombreCompletoAsesor");
+let usuarios =
+JSON.parse(localStorage.getItem("usuarios")) || [];
 
+let u = usuarios.find(x => x.user === usuario);
+
+if(u){
+
+foto.src = u.foto || "logo.png";
+
+nombreCompleto.innerText =
+u.nombre || usuario;
+
+nombreAsesor.innerText =
+u.user;
+
+foto.style.display = "block";
+
+return;
+
+}
 // ADMIN
 if(usuario === "admin"){
 

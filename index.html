@@ -693,18 +693,7 @@ cargarPerfilAsesor(asesor);
 
 loginDiv.style.display="none";
 dashboard.style.display="block";
-// Restricción SLOPEZ
-if(asesor === "slopez"){
 
-    document.getElementById("btn0dias").style.display = "none";
-    document.getElementById("btn1a8dias").style.display = "none";
-
-}else{
-
-    document.getElementById("btn0dias").style.display = "";
-    document.getElementById("btn1a8dias").style.display = "";
-
-}
 document.getElementById("boxAdmin").style.display="flex";
 document.getElementById("panelExcel").style.display="block";
 document.getElementById("panelAsesores").style.display="grid";
@@ -723,17 +712,6 @@ nombreAsesor.innerText=asesor;
 cargarPerfilAsesor(asesor);
 loginDiv.style.display="none";
 dashboard.style.display="block";
-if(asesor === "slopez"){
-
-    document.getElementById("btn0dias").style.display = "none";
-    document.getElementById("btn1a8dias").style.display = "none";
-
-}else{
-
-    document.getElementById("btn0dias").style.display = "";
-    document.getElementById("btn1a8dias").style.display = "";
-
-}
 if(
 asesor === "admin" ||
 asesor === "operaciones"
@@ -1568,19 +1546,6 @@ btnCriticos.innerHTML =
 }
 function filtrarMora(min,max){
 
-if(asesor === "slopez"){
-
-    // Ocultar 0 y 1-8
-    document.getElementById("btn0dias").style.display="none";
-    document.getElementById("btn1a8dias").style.display="none";
-
-    // Si intenta abrir 0 o 1-8, mostrar 9-30
-    if(max <= 8){
-        min = 9;
-        max = 30;
-    }
-
-}
 let lista = document.getElementById("listaClientes");
 lista.innerHTML="";
 
@@ -1792,18 +1757,12 @@ document.getElementById(id).style.display="none";
 });
 
 document.getElementById(p).style.display="block";
-
 if(p==="clientes"){
 
-    if(asesor === "slopez"){
-        filtrarMora(9,1000);
-    }else{
-        filtrarMora(0,1000);
-    }
+    filtrarMora(0,1000);
 
     actualizarResumen();
 }
-
 if(p==="admin") renderUsuarios();
 }
 

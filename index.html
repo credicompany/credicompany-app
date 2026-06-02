@@ -407,9 +407,9 @@ onclick="cargarExcel()">
 </div>
 
 <div class="fila">
-<button style="background:#2ecc71;color:white" onclick="filtrarMora(0,0)">0 días</button>
+<button id="btn0dias" style="background:#2ecc71;color:white" onclick="filtrarMora(0,0)">0 días</button>
 
-<button style="background:#27ae60;color:white" onclick="filtrarMora(1,8)">1-8 días</button>
+<button id="btn1a8dias" style="background:#27ae60;color:white" onclick="filtrarMora(1,8)">1-8 días</button>
 
 <button style="background:#f1c40f;color:black" onclick="filtrarMora(9,30)">9-30 días</button>
 
@@ -693,7 +693,18 @@ cargarPerfilAsesor(asesor);
 
 loginDiv.style.display="none";
 dashboard.style.display="block";
+// Restricción SLOPEZ
+if(asesor === "slopez"){
 
+    document.getElementById("btn0dias").style.display = "none";
+    document.getElementById("btn1a8dias").style.display = "none";
+
+}else{
+
+    document.getElementById("btn0dias").style.display = "";
+    document.getElementById("btn1a8dias").style.display = "";
+
+}
 document.getElementById("boxAdmin").style.display="flex";
 document.getElementById("panelExcel").style.display="block";
 document.getElementById("panelAsesores").style.display="grid";
@@ -1546,7 +1557,9 @@ btnCriticos.innerHTML =
 
 }
 function filtrarMora(min,max){
-
+if(asesor === "slopez" && min < 9){
+    min = 9;
+}
 let lista = document.getElementById("listaClientes");
 lista.innerHTML="";
 

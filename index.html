@@ -406,9 +406,7 @@ Mensual
 <button class="btn-verde" onclick="filtrarPorAsesor('tleon')">
 👤 Tleon
 </button>
-<button class="btn-verde" onclick="filtrarPorAsesor('bhuerta')">
-👤 Bhuerta
-</button>
+
 </div>
 <div id="panelRecordatorios"
 style="
@@ -1175,7 +1173,6 @@ if(key.includes("asesor")){
     if(nombre.includes("benites")) nombre = "ebenites";
     if(nombre.includes("medina")) nombre = "emedina";
     if(nombre.includes("leon")) nombre = "tleon";
-    if(nombre.includes("huerta")) nombre = "bhuerta";
 
     obj.asesor = nombre;
 }
@@ -2086,12 +2083,7 @@ nombreCompleto.innerText = "Alessandra Leon";
 nombreAsesor.innerText = "tleon";
 
 }
-// BERNIE
-else if(usuario === "bhuerta"){
 
-foto.src = "Bhuerta.png";
-nombreCompleto.innerText = "Bernie Huerta";
-nombreAsesor.innerText = "bhuerta";
 // OTROS
 else{
 

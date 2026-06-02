@@ -1307,25 +1307,6 @@ let json = raw
 row &&
 row.length > 0
 )
-let json = raw
-.slice(filaCabecera + 1)
-
-.filter(row => {
-
-if(!row || row.length === 0){
-return false;
-}
-
-let textoFila =
-row.join(" ").toUpperCase();
-
-if(textoFila.includes("TOTAL")){
-return false;
-}
-
-return true;
-
-})
 
 .map(row => {
 
@@ -1365,33 +1346,13 @@ console.log(headers);
 console.log("PRIMER REGISTRO:");
 console.log(json[0]);
 console.log(
-"OPERACIONES ORIGINALES:",
+"OPERACIONES CARGADAS:",
 json.length
 );
 
-console.log(
-"OPERACIONES LIMPIAS:",
-ingresosLimpios.length
-);
-
-let controlCarga = new Set();
-
-let ingresosLimpios = json.filter(r => {
-
-let clave = JSON.stringify(r);
-
-if(controlCarga.has(clave)){
-return false;
-}
-
-controlCarga.add(clave);
-return true;
-
-});
-
 localStorage.setItem(
 "ingresosMes",
-JSON.stringify(ingresosLimpios)
+JSON.stringify(json)
 );
 
 alert("✅ Ingresos cargados correctamente");
@@ -2905,4 +2866,4 @@ window.set = set;
 window.onValue = onValue;  
   
 </script>  </body>  
-                                                         </html>
+  </html>

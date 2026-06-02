@@ -1483,13 +1483,33 @@ console.log(headers);
 console.log("PRIMER REGISTRO:");
 console.log(json[0]);
 console.log(
-"OPERACIONES CARGADAS:",
+"OPERACIONES ORIGINALES:",
 json.length
 );
 
+console.log(
+"OPERACIONES LIMPIAS:",
+ingresosLimpios.length
+);
+
+let controlCarga = new Set();
+
+let ingresosLimpios = json.filter(r => {
+
+let clave = JSON.stringify(r);
+
+if(controlCarga.has(clave)){
+return false;
+}
+
+controlCarga.add(clave);
+return true;
+
+});
+
 localStorage.setItem(
 "ingresosMes",
-JSON.stringify(json)
+JSON.stringify(ingresosLimpios)
 );
 
 alert("✅ Ingresos cargados correctamente");

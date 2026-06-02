@@ -1,38 +1,36 @@
-Leo, identifica, por que no puedo entrar con mi login <!DOCTYPE html>
+8<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest-v2.json">
+<meta name="theme-color" content="#0a3a63">
+<meta http-equiv="Cache-Control" content="no-cache">
+<title>Credicompany</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<style>
+body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}
+.header{display:flex;flex-direction:column;align-items:center;padding:20px;}
+.header img{width:180px;}
+  .perfilBox{
+display:flex;
+flex-direction:column;
+align-items:center;
+margin-top:10px;
+}
 
-<html lang="es">  
-<head>  
-<meta charset="UTF-8">  
-<meta name="viewport" content="width=device-width, initial-scale=1.0">  
-<link rel="manifest" href="manifest-v2.json">  
-<meta name="theme-color" content="#0a3a63">  
-<meta http-equiv="Cache-Control" content="no-cache">  
-<title>Credicompany</title>  
-<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>  
-<style>  
-body{margin:0;font-family:Arial;background:#123B63;color:white;padding-bottom:120px;}  
-.header{display:flex;flex-direction:column;align-items:center;padding:20px;}  
-.header > img{width:180px;}  
-  .perfilBox{  
-display:flex;  
-flex-direction:column;  
-align-items:center;  
-margin-top:5px;  
-}  .fotoAsesor{
-width:170px;
-height:170px;
+.fotoAsesor{
+width:120px;
+height:120px;
 border-radius:50%;
 object-fit:cover;
-object-position:center top;
-border:5px solid #10c251;
-box-shadow:0 6px 18px rgba(0,0,0,0.30);
+border:4px solid #10c251;
+box-shadow:0 4px 12px rgba(0,0,0,0.25);
 background:white;
 }
-#fotoPerfil{
-transform:scale(1.05);
-}
+
 .nombreCompleto{
-margin-top:15px;
+margin-top:8px;
 font-size:18px;
 font-weight:bold;
 color:white;
@@ -74,496 +72,515 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 .fila{display:flex;gap:6px;margin-top:6px;}
 .fila button{width:50%;}
 .item{background:white;padding:6px;margin-top:6px;border-radius:8px;color:#333;font-size:12px;line-height:1.1;
-}
+} 
 .pagos-container{display:flex;flex-direction:column;gap:20px;}
 .pago-box{background:white;padding:6px;border-radius:12px;cursor:pointer;}
 .pago-box img{width:100%;height:auto;max-height:500px;object-fit:contain;}
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;justify-content:center;align-items:center;z-index:999;}
 .modal img{width:95%;max-width:450px;}
 .resumen{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-margin:10px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin:10px;
 }
 
 .card-resumen{
-background:white;
-color:#123B63;
-padding:4px;
-border-radius:10px;
-text-align:center;
-font-weight:bold;
-height:50px;
-display:flex;
-flex-direction:column;
-justify-content:flex-start;
-align-items:center;
-padding-top:8px;
-box-shadow:0 2px 6px rgba(0,0,0,0.08);
-overflow:hidden;
+  background:white;
+  color:#123B63;
+  padding:4px;
+  border-radius:10px;
+  text-align:center;
+  font-weight:bold;
+  height:50px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:center;
+  padding-top:8px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.08);
+  overflow:hidden;
 }
 
-.card-resumen div:first-child{
-font-size:12px;
-line-height:14px;
+ .card-resumen div:first-child{
+  font-size:12px;
+  line-height:14px;
+} 
+  .card-resumen div:last-child{
+  font-size:13px;
+  margin-top:2px;
+  font-weight:bold;
 }
-.card-resumen div:last-child{
-font-size:13px;
-margin-top:2px;
-font-weight:bold;
-}
-#rankingBox{
-background:white;
-width:100%;
-max-width:380px;
-padding:10px;
-border-radius:18px;
-text-align:center;
-min-height:55px;
-box-shadow:0 2px 6px rgba(0,0,0,0.08);
-box-sizing:border-box;
-margin:0;
+  #rankingBox{
+  background:white;
+  margin:10px 15px;
+  padding:10px;
+  border-radius:18px;
+  text-align:center;
+  min-height:55px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.08);
 }
 
 #rankingBox h3{
-margin:0;
-font-size:18px;
-text-align:center;
-color:#333;
+  margin:0;
+  font-size:18px;
+  text-align:center;
+  color:#333;
 }
-#rankingContainer{
-display:flex;
-flex-direction:column;
-align-items:center;
-gap:10px;
-margin:10px 15px;
-width:100%;
-box-sizing:border-box;
-}
-#btnVolverTop{
-background:#25D366;
-color:white;
-border:none;
-padding:8px 12px;
-border-radius:12px;
-font-size:13px;
-font-weight:bold;
-width:100%;
-max-width:180px;
+ #rankingContainer{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:10px 15px;
 }
 
-.modalTarifario{
-display:none;
-position:fixed;
-z-index:99999;
-left:0;
-top:0;
-width:100%;
-height:100%;
-overflow:auto;
-background:rgba(0,0,0,0.75);
+#btnVolverTop{
+  background:#25D366;
+  color:white;
+  border:none;
+  padding:8px 12px;
+  border-radius:12px;
+  font-size:13px;
+  font-weight:bold;
+  width:auto;
+  min-width:90px;
+} 
+  .modalTarifario{
+    display:none;
+    position:fixed;
+    z-index:99999;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    overflow:auto;
+    background:rgba(0,0,0,0.75);
 }
 
 .contenidoTarifario{
-background:#fff;
-margin:1% auto;
-padding:10px;
-width:95%;
-max-width:1600px;
-border-radius:12px;
-position:relative;
+    background:#fff;
+    margin:1% auto;
+    padding:10px;
+    width:95%;
+    max-width:1600px;
+    border-radius:12px;
+    position:relative;
 }
 
 .imgTarifario{
-width:100%;
-border-radius:10px;
+    width:100%;
+    border-radius:10px;
 }
 
 .cerrarTarifario{
-position:absolute;
-right:15px;
-top:5px;
-font-size:38px;
-font-weight:bold;
-cursor:pointer;
-color:#001f5b;
-}
-*{
-box-sizing:border-box;
+    position:absolute;
+    right:15px;
+    top:5px;
+    font-size:38px;
+    font-weight:bold;
+    cursor:pointer;
+    color:#001f5b;
 }
 </style>
+</head>
 
-</head>  <body>  <div class="header">  
-<img src="logo.png">  
-<div class="perfilBox">  <img id="fotoPerfil"  
-src=""  
+<body>
+
+<div class="header">
+<img src="logo.png">
+<div class="perfilBox">
+
+<img id="fotoPerfil"
+src=""
 class="fotoAsesor">
 
-<div id="nombreCompletoAsesor"  
-class="nombreCompleto">  
-Asesor  
-</div>  <div class="asesorTexto">  
-Asesor:  
-<span id="nombreAsesor">-</span>  
-</div>  </div>  
-</div>  
-<div id="rankingContainer" style="display:none;">  <div class="card" id="rankingBox">  
-    <h3>🏆 Ranking Asesores del Día</h3>  
-    <div id="rankingAsesores"></div>  
-</div>  
+<div id="nombreCompletoAsesor"
+class="nombreCompleto">
+Asesor
+</div>
 
-<button id="btnVolverTop" onclick="volver()">← Volver</button>
+<div class="asesorTexto">
+Asesor:
+<span id="nombreAsesor">-</span>
+</div>
 
-</div>  
-<div id="loginDiv" class="card">  
-<input id="usuario" placeholder="Usuario">  
-<input id="clave" type="password" placeholder="Clave">  
-<button class="btn-verde" onclick="login()">Ingresar</button>  
-</div>  <div id="dashboard" style="display:none">  
-<div class="grid">  
-<div class="box" onclick="mostrar('simulador')">  
-<div style="font-size:28px;">💰</div>  
-<div>Simulación y Promocion</div>  
-</div>  
-<div class="box" onclick="mostrar('clientes')">  
-<div style="font-size:28px;">👥</div>  
-<div>Cobranza</div>  
-</div>  
-<div class="box" onclick="mostrar('pagos')">  
-<div style="font-size:28px;">💳</div>  
-<div>Medios pagos</div>  
-</div>  
-<div class="box" id="boxAdmin" onclick="mostrar('admin')">  
-<div style="font-size:28px;">⚙️</div>  
-<div>Usuarios</div>  
-</div>  
-  <div class="box" onclick="verHistorialPagos()">  
-    <div style="font-size:28px;">📋</div>  
-    <div>Bono diario</div>  
-  </div>  
-  <div class="box" onclick="verProductividad()">  
-    <div style="font-size:28px;">📊</div>  
-    <div>Mi Productividad</div>  
-</div>  
-  <div class="box" onclick="verKPIIngresos()">  
-    <div style="font-size:28px;">💰</div>  
-    <div>KPI Ingresos</div>  
-  </div>  
-</div>  
-</div>  <div class="resumen">  
-  <div class="card-resumen">  
-    <div>💰 Cartera</div>  
-    <div id="totalCartera">S/ 0</div>  
-  </div>    <div class="card-resumen">  
-   <div>🚨 Saldo Vencido</div>  
-    <div id="porcentajeMora">0%</div>  
-  </div>    <div class="card-resumen">  
-    <div>💵 Hoy</div>  
-    <div id="cobradoHoy">S/ 0</div>  
-  </div>    <div class="card-resumen">  
-    <div>⏰ Vencen Hoy</div>  
-    <div id="vencenHoy">0</div>  
-  </div>    <div class="card-resumen">  
-    <div>🚨 +30 días</div>  
-    <div id="criticos">0</div>  
-  </div>    <div class="card-resumen">  
-    <div>👥 Clientes</div>  
-    <div id="totalClientes">0</div>  
-  </div>  
-<div class="card-resumen">  
-    <div>🚨 Mi Mora</div>  
-    <div id="miMora">S/0</div>  
-</div>  <div class="card-resumen">  
-    <div>📌 Mis Morosos</div>  
-    <div id="misMorosos">0</div>  
-</div>  
-<div class="card-resumen">  
-    <div>💸 Mora Recuperada</div>  
-    <div id="moraRecuperada">S/0</div>  
-</div>  
-</div>  <div id="app" style="display:none">  <div id="simulador" class="card">  
-<div class="volver" onclick="volver()">← Volver</div>  <input id="cliente" placeholder="Nombre">  
-<input id="apellidos" placeholder="Apellidos">  
-<input id="dni" placeholder="DNI">  <!-- TIPO CLIENTE -->  <select id="tipoCliente">  <option value="">  
-Tipo Cliente  
-</option>  <option value="nuevo">  
-Nuevo  
-</option>  <option value="recurrente">  
-Recurrente  
-</option>  <option value="a1">  
-Recurrente A1  
-</option>  <option value="gerencia">  
-Preferencial / Gerencia  
-</option>  </select>  <!-- PRODUCTO -->  <select id="producto">  <option value="">  
-Product  
-</option>  <option value="diario">  
-Diario  
-</option>  <option value="semanal">  
-Semanal  
-</option>  <option value="quincenal">  
-Quincenal  
-</option>  <option value="mensual">  
-Mensual  
-</option>  </select>  <input id="monto" placeholder="Monto">  
-<input id="tasa" placeholder="Tasa (%)">  
-<input id="plazo" placeholder="Cuotas">  <button class="btn-verde" onclick="calcular()">🧮 Calcular</button>
+</div>
+</div>
+<div id="rankingContainer">
 
-<div id="resultado"></div>  
-<div id="cronograma"></div>  <div class="fila">  
-<button class="btn-verde" onclick="enviarSimulacion()">📊 Simulación</button>  <button class="btn-azul" onclick="abrirTarifario()">  
-📋 Tarifario  
-</button>  <button class="btn-verde" onclick="enviarFiltro()">🔎 Filtro</button>
+    <div class="card" id="rankingBox">
+        <h3>🏆 Ranking Asesores del Día</h3>
+        <div id="rankingAsesores"></div>
+    </div>
 
-</div>  <button class="btn-azul" onclick="limpiar()">🧹 Limpiar</button>
+    <button id="btnVolverTop" onclick="volver()">← Volver</button>
 
-</div>  <div id="clientes" class="card" style="display:none">  
-<div id="bloqueExcel" style="display:none;">  
-<input type="file" id="excelFile" accept=".csv,.xlsx" style="margin-top:15px;">  
-<button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>  
-</div>  
-<div class="fila">  
-<button style="background:#2ecc71;color:white" onclick="filtrarMora(0,0)">0 días</button>  <button style="background:#27ae60;color:white" onclick="filtrarMora(1,8)">1-8 días</button>
+</div>
+<div id="loginDiv" class="card">
+<input id="usuario" placeholder="Usuario">
+<input id="clave" type="password" placeholder="Clave">
+<button class="btn-verde" onclick="login()">Ingresar</button>
+</div>
+
+<div id="dashboard" style="display:none">
+<div class="grid">
+<div class="box" onclick="mostrar('simulador')">
+<div style="font-size:28px;">💰</div>
+<div>Simulación y Promocion</div>
+</div>
+<div class="box" onclick="mostrar('clientes')">
+<div style="font-size:28px;">👥</div>
+<div>Cobranza</div>
+</div>
+<div class="box" onclick="mostrar('pagos')">
+<div style="font-size:28px;">💳</div>
+<div>Medios pagos</div>
+</div>
+<div class="box" onclick="mostrar('admin')">
+<div style="font-size:28px;">⚙️</div>
+<div>Usuarios</div>
+</div>
+  <div class="box" onclick="verHistorialPagos()">
+    <div style="font-size:28px;">📋</div>
+    <div>Bono diario</div>
+  </div>
+</div>
+</div>
+
+<div class="resumen">
+
+  <div class="card-resumen">
+    <div>💰 Cartera</div>
+    <div id="totalCartera">S/ 0</div>
+  </div>
+
+  <div class="card-resumen">
+    <div>📉 Mora</div>
+    <div id="porcentajeMora">0%</div>
+  </div>
+
+  <div class="card-resumen">
+    <div>💵 Hoy</div>
+    <div id="cobradoHoy">S/ 0</div>
+  </div>
+
+  <div class="card-resumen">
+    <div>⏰ Vencen Hoy</div>
+    <div id="vencenHoy">0</div>
+  </div>
+
+  <div class="card-resumen">
+    <div>🚨 +30 días</div>
+    <div id="criticos">0</div>
+  </div>
+
+  <div class="card-resumen">
+    <div>👥 Clientes</div>
+    <div id="totalClientes">0</div>
+  </div>
+<div class="card-resumen">
+    <div>🚨 Mi Mora</div>
+    <div id="miMora">S/0</div>
+</div>
+
+<div class="card-resumen">
+    <div>📌 Mis Morosos</div>
+    <div id="misMorosos">0</div>
+</div>
+<div class="card-resumen">
+    <div>💸 Mora Recuperada</div>
+    <div id="moraRecuperada">S/0</div>
+</div>
+</div>
+
+<div id="app" style="display:none">
+
+<div id="simulador" class="card">
+<div class="volver" onclick="volver()">← Volver</div>
+
+<input id="cliente" placeholder="Nombre">
+<input id="apellidos" placeholder="Apellidos">
+<input id="dni" placeholder="DNI">
+
+<!-- TIPO CLIENTE -->
+<select id="tipoCliente">
+
+<option value="">
+Tipo Cliente
+</option>
+
+<option value="nuevo">
+Nuevo
+</option>
+
+<option value="recurrente">
+Recurrente
+</option>
+
+<option value="a1">
+Recurrente A1
+</option>
+
+<option value="gerencia">
+Preferencial / Gerencia
+</option>
+
+</select>
+
+<!-- PRODUCTO -->
+<select id="producto">
+
+<option value="">
+Producto
+</option>
+
+<option value="diario">
+Diario
+</option>
+
+<option value="semanal">
+Semanal
+</option>
+
+<option value="quincenal">
+Quincenal
+</option>
+
+<option value="mensual">
+Mensual
+</option>
+
+</select>
+
+<input id="monto" placeholder="Monto">
+<input id="tasa" placeholder="Tasa (%)">
+<input id="plazo" placeholder="Cuotas">
+
+<button class="btn-verde" onclick="calcular()">🧮 Calcular</button>
+
+<div id="resultado"></div>
+<div id="cronograma"></div>
+
+<div class="fila">
+<button class="btn-verde" onclick="enviarSimulacion()">📊 Simulación</button>
+
+<button class="btn-azul" onclick="abrirTarifario()">
+📋 Tarifario
+</button>
+
+<button class="btn-verde" onclick="enviarFiltro()">🔎 Filtro</button>
+</div>
+
+<button class="btn-azul" onclick="limpiar()">🧹 Limpiar</button>
+</div>
+
+<div id="clientes" class="card" style="display:none">
+
+<input type="file" id="excelFile" accept=".csv,.xlsx" style="margin-top:15px;">
+<button class="btn-azul" onclick="cargarExcel()">📂 Cargar Excel</button>
+
+<div class="fila">
+<button style="background:#2ecc71;color:white" onclick="filtrarMora(0,0)">0 días</button>
+
+<button style="background:#27ae60;color:white" onclick="filtrarMora(1,8)">1-8 días</button>
 
 <button style="background:#f1c40f;color:black" onclick="filtrarMora(9,30)">9-30 días</button>
 
 <button style="background:#e74c3c;color:white" onclick="filtrarMora(31,60)">31-60 días</button>
 
 <button style="background:black;color:white" onclick="filtrarMora(61,1000)">61+ días</button>
+</div>
 
-</div>  
-<div id="panelAsesores"  
-style="  
-display:flex;  
-flex-direction:row;  
-flex-wrap:nowrap;  
-overflow-x:auto;  
-gap:4px;  
-margin-top:5px;  
-padding-bottom:3px;  
-">  <button class="btn-azul"  
-onclick="resetFiltros()"  
-style="  
-width:auto;  
-white-space:nowrap;  
-padding:6px 8px;  
-font-size:11px;  
-border-radius:8px;  
-">
-📋 Asesores
+<div id="panelAsesores" style="display:none;">
+
+<button class="btn-azul" onclick="resetFiltros()">
+📋 Todos los clientes
 </button>
-
-<button class="btn-verde"  
-onclick="filtrarPorAsesor('ebenites')"  
-style="  
-width:auto;  
-white-space:nowrap;  
-padding:8px 10px;  
-font-size:12px;  
-border-radius:10px;  
-">
+<button class="btn-verde" onclick="filtrarPorAsesor('ebenites')">
 👤 Ebenites
 </button>
-
-<button class="btn-verde"  
-onclick="filtrarPorAsesor('emedina')"  
-style="  
-width:auto;  
-white-space:nowrap;  
-padding:6px 8px;  
-font-size:11px;  
-border-radius:8px;  
-">
+<button class="btn-verde" onclick="filtrarPorAsesor('emedina')">
 👤 Emedina
 </button>
 
-<button class="btn-verde"  
-onclick="filtrarPorAsesor('tleon')"  
-style="  
-width:auto;  
-white-space:nowrap;  
-padding:6px 8px;  
-font-size:11px;  
-border-radius:8px;  
-">
+<button class="btn-verde" onclick="filtrarPorAsesor('tleon')">
 👤 Tleon
 </button>
 
-<button class="btn-verde"  
-onclick="filtrarPorAsesor('bhuerta')"  
-style="  
-width:auto;  
-white-space:nowrap;  
-padding:6px 8px;  
-font-size:11px;  
-border-radius:8px;  
+</div>
+<div id="panelRecordatorios"
+style="
+background:#123B63;
+padding:10px;
+border-radius:12px;
+margin-top:10px;
+color:white;
 ">
-👤 Bhuerta
+
+<div style="font-weight:bold;font-size:14px;">
+📨 Enviar Recordatorios de Cobranza
+</div>
+
+<div style="display:flex;gap:5px;margin-top:8px;">
+
+<button id="btnHoy"
+onclick="enviarRecordatorios(0,0)"
+style="
+background:#2ecc71;
+color:white;
+flex:1;
+padding:10px;
+border:none;
+border-radius:8px;
+font-size:12px;
+">
+🟢 Clientes al día (0)
 </button>
 
-<button class="btn-verde"  
-onclick="filtrarPorAsesor('operaciones')"  
-style="  
-width:auto;  
-white-space:nowrap;  
-padding:6px 8px;  
-font-size:11px;  
-border-radius:8px;  
+<button id="btnMora"
+onclick="enviarRecordatorios(1,8)"
+style="
+background:#f1c40f;
+color:black;
+flex:1;
+padding:10px;
+border:none;
+border-radius:8px;
+font-size:12px;
 ">
-👤 Oper.
+🟡 Mora leve (0)
 </button>
 
-</div>  <div id="listaClientes"></div>  </div>  <div id="admin" class="card" style="display:none">  
-<div class="volver" onclick="volver()">← Volver</div>  <input id="nuevoUser" placeholder="Usuario">  
-<input id="nuevoPass" placeholder="Clave">  <button class="btn-verde" onclick="crearUsuario()">Crear Usuario</button>
+<button id="btnCriticos"
+onclick="enviarRecordatorios(9,1000)"
+style="
+background:#e74c3c;
+color:white;
+flex:1;
+padding:10px;
+border:none;
+border-radius:8px;
+font-size:12px;
+">
+🔴 Mora crítica (0)
+</button>
+
+</div>
+</div>
+
+<div id="listaClientes"></div>
+
+</div>
+
+<div id="admin" class="card" style="display:none">
+<div class="volver" onclick="volver()">← Volver</div>
+
+<input id="nuevoUser" placeholder="Usuario">
+<input id="nuevoPass" placeholder="Clave">
+
+<button class="btn-verde" onclick="crearUsuario()">Crear Usuario</button>
 <button class="btn-naranja" onclick="eliminarUsuarioManual()">
 Eliminar Usuario
 </button>
 <button class="btn-azul" onclick="exportarUsuarios()">Exportar Usuarios</button>
-<button class="btn-verde" onclick="importarUsuarios()">Importar Usuarios</button>
+<button class="btn-verde" onclick="importarUsuarios()">Importar Usuarios</button>   
+<div id="listaUsuarios"></div>
+</div>
+<div id="pagos" class="card" style="display:none">
+<div class="volver" onclick="volver()">← Volver</div>
 
-<div id="listaUsuarios"></div>  
-</div>  
-<div id="pagos" class="card" style="display:none">  
-<div class="volver" onclick="volver()">← Volver</div>  <div class="pagos-container">  <div class="pago-box" onclick="abrirQR(this)">  
-<img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg">  
-</div>  <div class="pago-box" onclick="abrirQR(this)">  
-<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg">  
-</div>  <div class="pago-box" onclick="abrirQR(this)">  
-<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg">  
-</div>  <div class="pago-box" onclick="abrirQR(this)">  
-<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg">  </div>  
-</div>  </div>  
-<div id="historialDiv" class="card" style="display:none;">  <div class="volver" onclick="volver()">← Volver</div>  <h3>📋 Historial de Pagos</h3>  
-<h3>💰 Historial de Bonos</h3>  <div id="listaHistorial"></div>  </div>  <div id="productividadDiv" class="card" style="display:none;">  <div class="volver" onclick="volver()">← Volver</div>  <h3>📊 Historial de Productividad</h3>  <div id="contenidoProductividad"></div>  </div>  
- <div id="kpiIngresosDiv" class="card" style="display:none;">  <div class="volver" onclick="volver()">  
-← Volver  
-</div>  <h3>💰 KPI Ingresos</h3>  <input type="file"  
-id="excelIngresos"  
-accept=".xlsx,.xls,.csv"  
-style="margin-bottom:10px;">
+<div class="pagos-container">
 
-<button  
-class="btn-verde"  
-onclick="cargarIngresos()">
-📂 Cargar Ingresos
-</button>
+<div class="pago-box" onclick="abrirQR(this)">
+<img src="https://i.postimg.cc/BZyGX4PQ/Whats-App-Image-2026-04-02-at-12-36-51-PM-(1).jpg">
+</div>
 
-<div id="contenidoKPI"></div>   </div>   
-</div>  
-<div id="modalQR" class="modal" onclick="cerrarQR()">  
-<img id="imgQR">  
-</div>  
-<div id="modalTarifario" class="modalTarifario">  <div class="contenidoTarifario">  
+<div class="pago-box" onclick="abrirQR(this)">
+<img src="https://i.postimg.cc/DfDK8n4v/Whats-App-Image-2026-04-02-at-12-36-52-PM.jpg">
+</div>
 
-    <span class="cerrarTarifario" onclick="cerrarTarifario()">  
-        &times;  
-    </span>
+<div class="pago-box" onclick="abrirQR(this)">
+<img src="https://i.postimg.cc/BZyGX4P0/Whats-App-Image-2026-04-02-at-12-36-52-PM-(1).jpg">
+</div>
 
-<img src="tarifario.jpeg" class="imgTarifario">  </div>
+<div class="pago-box" onclick="abrirQR(this)">
+<img src="https://i.postimg.cc/qBYdz46B/Whats-App-Image-2026-04-02-at-12-36-51-PM.jpg">
 
-</div>  
-<script>  let asesor="";
+</div>
+</div>
+
+</div>
+<div id="historialDiv" class="card" style="display:none;">
+
+<div class="volver" onclick="volver()">← Volver</div>
+
+<h3>📋 Historial de Pagos</h3>
+<h3>💰 Historial de Bonos</h3>
+<div id="listaHistorial"></div>
+</div>
+<div id="modalQR" class="modal" onclick="cerrarQR()">
+<img id="imgQR">
+</div>
+<div id="modalTarifario" class="modalTarifario">
+
+    <div class="contenidoTarifario">
+
+        <span class="cerrarTarifario" onclick="cerrarTarifario()">
+            &times;
+        </span>
+<img src="tarifario.jpeg" class="imgTarifario">
+
+    </div>
+
+</div>
+<script>
+
+let asesor="";
 let filtroAsesor = "";
 let filtroMin = 0;
 let filtroMax = 1000;
-
 window.onload = function(){
 
-onValue(ref(window.db, 'cartera'), (snapshot) => {  
+    let hoy = new Date().toLocaleDateString('en-CA');
+    let ultimo = localStorage.getItem("fechaSistema");
 
-    let raw = snapshot.val() || {};
+    // 🔥 SI ES UN NUEVO DÍA → RESET
+    if(ultimo !== hoy){
 
-let data = Array.isArray(raw)
-? raw
-: Object.values(raw);
+        let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
-let hoy = new Date().toLocaleDateString('en-CA');  
-    let ultimo = localStorage.getItem("fechaSistema");  
+        data.forEach(c=>{
+            c.pagado_hoy = false;
+            c.pagado_monto = 0;
+        });
 
-    // 🔥 NUEVO DÍA  
-    if(ultimo !== hoy){  
+        localStorage.setItem("cartera", JSON.stringify(data));
 
-        data.forEach(c=>{  
+        // 🔥 limpiar bonos diarios
+        localStorage.setItem("bonosHoy", JSON.stringify({}));
 
-            c.pagado_hoy = false;  
-            c.pagado_monto = 0;  
-            c.ultimo_pago = "";  
-            c.estado_gestion = "";  
+        // guardar fecha actual
+        localStorage.setItem("fechaSistema", hoy);
+    }
 
-        });  
-
-        // 🔥 RESET FIREBASE  
-        set(ref(window.db, 'cartera'), data);  
-
-        // 🔥 LIMPIAR STORAGE  
-        localStorage.removeItem("bonosHoy");  
-        localStorage.removeItem("historialPagos");  
-        localStorage.removeItem("rankingAsesores");  
-        localStorage.removeItem("clientesGestionados");  
-        localStorage.removeItem("resumenCobranza");  
-        localStorage.removeItem("estadisticasAsesores");  
-
-        // 🔥 NUEVA FECHA  
-        localStorage.setItem("fechaSistema", hoy);  
-
-        console.log("✅ Reinicio diario ejecutado");  
-
-    }  
-
-    window.carteraGlobal = data;  
-
-    actualizarResumen();  
-
-    filtrarMora(0,1000);  
-
-});
-
+    actualizarResumen();
 };
 // LOGIN
 function login(){
 let user=usuario.value.trim();
 let pass=clave.value.trim();
 
-if(
-(user==="admin" && pass==="1234") ||
-(user==="operaciones" && pass==="1234")
-){
+if(user==="admin" && pass==="1234"){
 asesor = user.toLowerCase().trim();
 cargarPerfilAsesor(asesor);
 loginDiv.style.display="none";
 dashboard.style.display="block";
-let bloqueExcel = document.getElementById("bloqueExcel");
-
-if(user === "operaciones" || user === "admin"){
-
-bloqueExcel.style.display = "block";
-
-}else{
-
-bloqueExcel.style.display = "none";
-
-}
-if(
-asesor !== "admin" &&
-asesor !== "operaciones"
-){
-document.getElementById("boxAdmin").style.display="none";
-}else{
-document.getElementById("boxAdmin").style.display="flex";
-}
-document.getElementById("rankingContainer").style.display = "flex";
 actualizarResumen();
-filtrarMora(0,1000);
 // 🔥 ESTA LÍNEA ACTIVA LOS BOTONES
-if(
-asesor === "admin" ||
-asesor === "operaciones"
-){
+setTimeout(()=>{
+    document.getElementById("panelAsesores").style.display = "block";
+},300);
 
-document.getElementById("panelAsesores").style.display = "flex";
-
-}
 return;
 }
 
@@ -572,33 +589,14 @@ let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 let encontrado=usuarios.find(u=>u.user===user && u.pass===pass);
 
 if(encontrado){
-
 asesor = user.toLowerCase().trim();
 nombreAsesor.innerText=asesor;
 cargarPerfilAsesor(asesor);
-
 loginDiv.style.display="none";
 dashboard.style.display="block";
-
-document.getElementById("rankingContainer").style.display = "flex";
-document.getElementById("panelAsesores").style.display = "none";
-
-if(
-asesor !== "admin" &&
-asesor !== "operaciones"
-){
-document.getElementById("boxAdmin").style.display="none";
+actualizarResumen();  
 }else{
-document.getElementById("boxAdmin").style.display="flex";
-}
-
-actualizarResumen();
-filtrarMora(0,1000);
-
-}else{
-
 alert("❌ Usuario o clave incorrectos");
-
 }
 }
 function eliminarUsuarioManual(){
@@ -923,7 +921,7 @@ config = {tem:7, plazo:8};
 }
 
 return config;
-}
+}  
 // SIMULADOR
 function calcular(){
 if(!tipoCliente.value){
@@ -938,7 +936,7 @@ if(!producto.value){
 alert("Seleccione producto");
 return;
 
-}
+}  
 let P = parseFloat(monto.value);
 
 let tipo = document.getElementById("tipoCliente").value;
@@ -947,7 +945,7 @@ let tarifa = obtenerTarifario(producto.value, P, tipo);
 if(!tarifa){
 alert("❌ Monto fuera de tarifario");
 return;
-}
+}  
 let tasaIngresada = parseFloat(
 document.getElementById("tasa").value
 );
@@ -965,11 +963,12 @@ document.getElementById("tasa").value = tarifa.tem;
 
 return;
 
-}
+}  
 
 if(!document.getElementById("tasa").value){
 
 document.getElementById("tasa").value = tarifa.tem;
+
 
 document.getElementById("plazo").value = tarifa.plazo;
 
@@ -992,7 +991,7 @@ return;
 let i = 0;
 let dias = 0;
 
-if(producto.value==="diario"){
+if(producto.value==="diario"){ 
 
 // 🔥 conversión financiera real
 i = Math.pow(1 + t, 1/30) - 1;
@@ -1025,13 +1024,13 @@ if(producto.value==="mensual"){ i=t; dias=30; }
 let comision = 0;
 
 if(P >= 300 && P <= 2000){
-comision = 5;
+    comision = 5;
 }
 else if(P >= 2001 && P <= 5000){
-comision = 10;
+    comision = 10;
 }
 else if(P >= 5001){
-comision = 15;
+    comision = 15;
 }
 
 // 🔥 capital financiado
@@ -1049,7 +1048,7 @@ capitalFinanciado * i
 
 let total = cuota * n;
 
-let interes = total - capitalFinanciado;
+let interes = total - capitalFinanciado;  
 // 🔥 resumen completo
 resultado.innerHTML = `
 
@@ -1092,14 +1091,15 @@ saldo -= capital;
 fecha.setDate(fecha.getDate()+dias);
 
 html += `
+<div class="item">
+Cuota ${c}<br>
+Fecha: ${fecha.toLocaleDateString()}<br>
+Cuota: S/ ${cuota.toFixed(2)}<br>
+Saldo: S/ ${saldo.toFixed(2)}
+</div>`;
+}
 
-<div class="item">  
-Cuota ${c}<br>  
-Fecha: ${fecha.toLocaleDateString()}<br>  
-Cuota: S/ ${cuota.toFixed(2)}<br>  
-Saldo: S/ ${saldo.toFixed(2)}  
-</div>`;  
-}  cronograma.innerHTML = html;
+cronograma.innerHTML = html;
 
 // guardar para WhatsApp
 window.simData = {
@@ -1164,29 +1164,24 @@ headers.forEach((h,i)=>{
 if(!h)return;
 
 let key=h.toString().toLowerCase().replace(/\s+/g,"");
-let val = r[i] || "";
+ let val = r[i] || "";
 
 if(key.includes("nombre")) obj.nombre=val;
-if(key.includes("dni")){
-obj.dni = String(val).trim();
-}
 if(key.includes("asesor")){
-let nombre = (val || "").toLowerCase().trim();
+    let nombre = (val || "").toLowerCase().trim();
 
-if(nombre.includes("benites")) nombre = "ebenites";  
-if(nombre.includes("medina")) nombre = "emedina";  
-if(nombre.includes("leon")) nombre = "tleon";  
-if(nombre.includes("huerta")) nombre = "bhuerta";  
-if(nombre.includes("operaciones")) nombre = "operaciones";  
-obj.asesor = nombre;
+    if(nombre.includes("benites")) nombre = "ebenites";
+    if(nombre.includes("medina")) nombre = "emedina";
+    if(nombre.includes("leon")) nombre = "tleon";
 
+    obj.asesor = nombre;
 }
 if(key.includes("cuota_mora")) obj.monto=val;
 if(key.includes("saldo") && key.includes("capital") && key.includes("vencido")){
-obj.saldoCapital = parseFloat(val) || 0;
+    obj.saldoCapital = parseFloat(val) || 0;
 }
 if(key.includes("dias") || key.includes("retraso")) obj.retraso=parseFloat(val)||0;
-if(key.includes("cuota") && key.includes("venc")) obj.cuotasVencidas = parseFloat(val)||0;
+if(key.includes("cuota") && key.includes("venc")) obj.cuotasVencidas = parseFloat(val)||0;   
 if(key.includes("telefono") || key.includes("celular")) obj.celular=val;
 if(key.includes("producto")) obj.producto=val;
 if(key.includes("direccion")) obj.direccion=val;
@@ -1198,60 +1193,16 @@ return obj;
 });
 
 // 🔥 GUARDADO REAL
-set(ref(window.db, 'cartera'), json);
+localStorage.setItem("cartera", JSON.stringify(json));
 localStorage.setItem("cartera_backup", JSON.stringify(json));
 // 🔥 RESET DIARIO (LÍNEA 357)
-let dataReset = json;
+let dataReset = JSON.parse(localStorage.getItem("cartera")) || [];
 
 dataReset.forEach(c=>{
 c.pagado_hoy = false;
 });
 
-window.carteraGlobal = dataReset;
-let hoy = new Date().toLocaleDateString('en-CA');
-
-let metaGuardada =
-JSON.parse(localStorage.getItem("metaDiaria"));
-
-if(
-!metaGuardada ||
-metaGuardada.fecha !== hoy
-){
-
-let meta = {};
-
-dataReset.forEach(c=>{
-
-let retraso = parseFloat(c.retraso) || 0;
-
-if(retraso === 0){
-
-let asesorNombre =
-(c.asesor || "")
-.toLowerCase()
-.trim();
-
-if(!meta[asesorNombre]){
-meta[asesorNombre] = [];
-}
-
-meta[asesorNombre].push(
-String(c.dni).trim()
-);
-}
-});
-
-localStorage.setItem(
-"metaDiaria",
-JSON.stringify({
-fecha:hoy,
-asesores:meta
-})
-);
-
-console.log("🎯 Meta inicial creada",meta);
-
-}
+localStorage.setItem("cartera", JSON.stringify(dataReset));
 // 🔥 MOSTRAR
 filtrarMora(0,1000);
 actualizarResumen();
@@ -1260,263 +1211,130 @@ alert("✅ Cartera cargada y guardada correctamente");
 
 reader.readAsArrayBuffer(file);
 }
-function cargarIngresos(){
-
-let file =
-document.getElementById("excelIngresos").files[0];
-
-if(!file){
-alert("Seleccione archivo de ingresos");
-return;
-}
-
-let reader = new FileReader();
-
-reader.onload = function(e){
-
-let data = new Uint8Array(e.target.result);
-
-let workbook =
-XLSX.read(data,{type:'array'});
-
-let hoja =
-workbook.Sheets[
-workbook.SheetNames[0]
-];
-
-let raw =
-XLSX.utils.sheet_to_json(hoja,{header:1});
-
-let filaCabecera = raw.findIndex(row => {
-
-let texto = (row || [])
-.join(" ")
-.toUpperCase();
-
-return (
-texto.includes("INTERES") &&
-texto.includes("MORA")
-);
-
-});
-
-let headers = raw[filaCabecera];
-
-.filter(row =>
-row &&
-row.length > 0
-)
-let json = raw
-.slice(filaCabecera + 1)
-
-.filter(row => {
-
-if(!row || row.length === 0){
-return false;
-}
-
-let textoFila =
-row.join(" ").toUpperCase();
-
-if(textoFila.includes("TOTAL")){
-return false;
-}
-
-return true;
-
-})
-
-.map(row => {
-
-let obj = {};
-
-headers.forEach((h,i)=>{
-
-if(h){
-
-obj[String(h).trim()] = row[i];
-
-}
-
-});
-
-return obj;
-
-})
-
-// eliminar filas vacías
-.filter(r => {
-
-return (
-
-(parseFloat(r["INTERES"]) || 0) > 0 ||
-
-(parseFloat(r["MORA REAL"]) || 0) > 0 ||
-
-(parseFloat(r["TOTAL"]) || 0) > 0
-
-);
-
-});
-console.log("CABECERAS:");
-console.log(headers);
-
-console.log("PRIMER REGISTRO:");
-console.log(json[0]);
-console.log(
-"OPERACIONES ORIGINALES:",
-json.length
-);
-
-let controlCarga = new Set();
-
-let ingresosLimpios = json.filter(r => {
-
-let clave = JSON.stringify(r);
-
-if(controlCarga.has(clave)){
-return false;
-}
-
-controlCarga.add(clave);
-return true;
-
-});
-console.log(
-"OPERACIONES LIMPIAS:",
-ingresosLimpios.length
-);
-localStorage.setItem(
-"ingresosMes",
-JSON.stringify(ingresosLimpios)
-);
-
-alert("✅ Ingresos cargados correctamente");
-
-};
-
-reader.readAsArrayBuffer(file);
-
-}
 // CLIENTES + RESUMEN
 function actualizarResumen(){
 
-let data = window.carteraGlobal || [];
+  let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
-let total = 0;
-let mora = 0;
-let saldoCapitalVencido = 0;
-let hoy = 0;
-let vencenHoy = 0;
-let criticos = 0;
-let moraRecuperada = 0;
-let miMora = 0;
-let misMorosos = 0;
-let ranking = {};
-let control = {};
-let bonos = {};
-let hoyFecha = new Date().toLocaleDateString();
+  let total = 0;
+  let mora = 0;
+  let saldoCapitalVencido = 0;
+  let hoy = 0;
+  let vencenHoy = 0;
+  let criticos = 0;
+  let moraRecuperada = 0;
+  let miMora = 0;
+  let misMorosos = 0;
+  let ranking = {};
+  let control = {};
+  let bonos = {};
+  let hoyFecha = new Date().toLocaleDateString();
 let hoyCount = 0;
 let moraCount = 0;
 let criticoCount = 0;
-data.forEach(c=>{
+  data.forEach(c=>{
 
 let retraso = parseFloat(c.retraso) || 0;
 let monto = parseFloat(c.monto) || 0;
 
 if(retraso === 0 && !c.pagado_hoy){
-hoyCount++;
+    hoyCount++;
 }
 
 if(retraso >= 1 && retraso <= 8 && !c.pagado_hoy){
-moraCount++;
+    moraCount++;
 }
 
 if(retraso >= 9 && !c.pagado_hoy){
-criticoCount++;
+    criticoCount++;
 
 }
 let pagado = parseFloat(c.pagado_monto) || 0;
 let cuota = parseFloat(c.monto) || 0;
-total += cuota;
+
 
 // mora recuperada
 if(retraso > 0 && pagado > 0){
-moraRecuperada += pagado;
+    moraRecuperada += pagado;
 }
 
 // ranking asesor
 let asesorNombre = c.asesor || "Sin asesor";
 
 if(!ranking[asesorNombre]){
-ranking[asesorNombre] = 0;
+    ranking[asesorNombre] = 0;
 }
 ranking[asesorNombre] += pagado;
 
 // CONTROL GERENCIAL
 if(!control[asesorNombre]){
-control[asesorNombre] = {
-total: 0,
-pagados: 0
-};
+    control[asesorNombre] = {
+        total: 0,
+        pagados: 0
+    };
 }
 // 🔥 META DEL DÍA
+if(retraso === 0 || c.eraHoy){
+
+    control[asesorNombre].total++;
+
+}
 
 // 🔥 PAGOS REALIZADOS
 if(c.pagado_hoy){
 
-control[asesorNombre].pagados++;
+    control[asesorNombre].pagados++;
 
 }
 if(retraso >= 1){
 
-mora++;  
+    mora++;
 
-saldoCapitalVencido += parseFloat(c.saldoCapital) || 0;  
+    saldoCapitalVencido += parseFloat(c.saldoCapital) || 0;
 
-let asesorCliente = (c.asesor || "")  
-.toLowerCase()  
-.trim();  
+    let asesorCliente = (c.asesor || "")
+    .toLowerCase()
+    .trim();
 
-let asesorActual = (asesor || "")  
-.toLowerCase()  
-.trim();  
+    let asesorActual = (asesor || "")
+    .toLowerCase()
+    .trim();
 
-if(  
-    asesorActual &&  
-    asesorCliente === asesorActual  
-){  
+    if(
+        asesorActual &&
+        asesorCliente === asesorActual
+    ){
 
-    miMora += parseFloat(c.saldoCapital) || 0;  
-    misMorosos++;  
+        miMora += parseFloat(c.saldoCapital) || 0;
+        misMorosos++;
+
+    }
 
 }
+    if(retraso > 30) criticos++;
+    let saldo = parseFloat(c.saldo || c.monto) || 0;
+     
+    // 🔥 CLIENTES AL DÍA
+    if(retraso === 0 && !c.pagado_hoy){
+    hoy += saldo;
+      
+    vencenHoy++;
+    }
 
-}
-if(retraso > 30) criticos++;
-let saldo = parseFloat(c.saldo || c.monto) || 0;
+    });
 
-// 🔥 CLIENTES AL DÍA  
-if(retraso === 0 && !c.pagado_hoy){  
-hoy += saldo;  
-    
-vencenHoy++;  
-}  
+  let totalClientes = data.filter(c => !c.pagado_hoy).length;
 
-});
-
-let totalClientes = data.filter(c => !c.pagado_hoy).length;
-
-let porcentajeMora =
+ let porcentajeMora =
 saldoCapitalVencido.toFixed(2);
 
-document.getElementById("totalCartera").innerText = "S/ " + total.toFixed(2);
-document.getElementById("porcentajeMora").innerText =
+  document.getElementById("totalCartera").innerText = "S/ " + total.toFixed(2);
+  document.getElementById("porcentajeMora").innerText =
 "S/ " + porcentajeMora;
-document.getElementById("cobradoHoy").innerText = "S/ " + hoy.toFixed(2);
-document.getElementById("vencenHoy").innerText = vencenHoy;
-document.getElementById("criticos").innerText = criticos;
-document.getElementById("totalClientes").innerText = totalClientes;
+  document.getElementById("cobradoHoy").innerText = "S/ " + hoy.toFixed(2);
+  document.getElementById("vencenHoy").innerText = vencenHoy;
+  document.getElementById("criticos").innerText = criticos;
+  document.getElementById("totalClientes").innerText = totalClientes;
 
 document.getElementById("moraRecuperada").innerText =
 "S/ " + moraRecuperada.toFixed(2);
@@ -1525,69 +1343,31 @@ document.getElementById("miMora").innerText =
 
 document.getElementById("misMorosos").innerText =
 misMorosos;
-let metaDiaria =
-JSON.parse(
-localStorage.getItem("metaDiaria")
-) || {};
-
-if(metaDiaria.asesores){
-
-Object.keys(metaDiaria.asesores)
-.forEach(a=>{
-
-if(!control[a]){
-
-control[a] = {
-total:0,
-pagados:0
-};
-
-}
-
-control[a].total =
-metaDiaria.asesores[a].length;
-
-});
-
-}
-Object.keys(control).forEach(a=>{
-let prod = calcularCumplimiento(a);
-
-control[a].total = prod.meta;
-
-control[a].pagados = prod.recuperados;
-
-});
-
-Object.keys(control).forEach(a=>{
+  Object.keys(control).forEach(a=>{
 
 let t = control[a].total;
 let p = control[a].pagados;
 
 // 🔥 BONO SOLO SI CUMPLE META COMPLETA
-if(t > 0 && p >= t){
-
-bonos[a] = 15;
-
+if(t > 0 && p === t){
+    bonos[a] = 15;
 }else{
-
-bonos[a] = 0;
-
+    bonos[a] = 0;
 }
 
 });
-let bonosHoy = JSON.parse(localStorage.getItem("bonosHoy")) || {};
+  let bonosHoy = JSON.parse(localStorage.getItem("bonosHoy")) || {};
 
 Object.keys(bonos).forEach(a=>{
-if(!bonosHoy[a]) bonosHoy[a] = 0;
+  if(!bonosHoy[a]) bonosHoy[a] = 0;
 
-if(bonos[a] > 0){
-bonosHoy[a] = bonos[a];
-}
+  if(bonos[a] > 0){
+    bonosHoy[a] = bonos[a];
+  }
 });
 
 localStorage.setItem("bonosHoy", JSON.stringify(bonosHoy));
-let rankingHTML = "";
+  let rankingHTML = "";
 
 Object.entries(ranking)
 .filter(([asesor]) => asesor !== "admin") // 👈 línea nueva
@@ -1601,33 +1381,20 @@ if(index === 0) medalla = "🥇";
 if(index === 1) medalla = "🥈";
 let bono = bonos[item[0]] || 0;
 let bonosHoy = JSON.parse(localStorage.getItem("bonosHoy")) || {};
-let bonoAcumulado = bonosHoy[item[0]] || 0;
-let totalMeta =
-control[item[0]]
-? control[item[0]].total
-: 0;
+let bonoAcumulado = bonosHoy[item[0]] || 0;  
+let prog = control[item[0]] 
+? `${control[item[0]].pagados}/${control[item[0]].total}`
+: "0/0";
 
-let totalPagados =
-control[item[0]]
-? control[item[0]].pagados
-: 0;
-
-let porcentaje =
-totalMeta > 0
-? ((totalPagados/totalMeta)*100)
-.toFixed(1)
-: 0;
-
-let prog =
-`${totalPagados}/${totalMeta} (${porcentaje}%)`;
 rankingHTML += `
+<div style="font-size:12px;margin-top:4px;">
+${medalla} ${item[0]} → S/${item[1].toFixed(2)}
+<br>🎯 ${prog} | 💰 Bono: S/${bono}
+</div>
+`;
+});
 
-<div style="font-size:12px;margin-top:4px;">  
-${medalla} ${item[0]} → S/${item[1].toFixed(2)}  
-<br>🎯 ${prog} | 💰 Bono: S/${bono}  
-</div>  
-`;  
-});  document.getElementById("rankingAsesores").innerHTML = rankingHTML;
+document.getElementById("rankingAsesores").innerHTML = rankingHTML; 
 let btnHoy = document.getElementById("btnHoy");
 let btnMora = document.getElementById("btnMora");
 let btnCriticos = document.getElementById("btnCriticos");
@@ -1652,7 +1419,7 @@ function filtrarMora(min,max){
 let lista = document.getElementById("listaClientes");
 lista.innerHTML="";
 
-let data = window.carteraGlobal || [];
+let data = JSON.parse(localStorage.getItem("cartera")) || [];
 filtroMin = min;
 filtroMax = max;
 
@@ -1663,18 +1430,14 @@ if(c.pagado_hoy) return false;
 let r = parseFloat(c.retraso)||0;
 
 // 🔥 ADMIN con filtro combinado
-if(
-asesor === "admin" ||
-asesor === "operaciones"
-){
+if(asesor === "admin"){
 
-if(filtroAsesor){  
-    return r>=filtroMin && r<=filtroMax &&  
-    (c.asesor || "").toLowerCase() === filtroAsesor.toLowerCase();  
-}  
+    if(filtroAsesor){
+        return r>=filtroMin && r<=filtroMax &&
+        (c.asesor || "").toLowerCase() === filtroAsesor.toLowerCase();
+    }
 
-return r>=filtroMin && r<=filtroMax;
-
+    return r>=filtroMin && r<=filtroMax;
 }
 
 // 🔥 ASESOR NORMAL
@@ -1685,109 +1448,114 @@ return r>=filtroMin && r<=filtroMax && esMio;
 
 let hoy=0, alDia=0, leve=0, medio=0, critico=0;
 filtrados.forEach(c=>{
-let r=parseFloat(c.retraso)||0;
+    let r=parseFloat(c.retraso)||0;
 
-if(r === 0) hoy++;  
-else if(r <= 8) alDia++;  
-else if(r <= 30) leve++;  
-else if(r <= 60) medio++;  
-else critico++;
-
+    if(r === 0) hoy++;
+    else if(r <= 8) alDia++;
+    else if(r <= 30) leve++;
+    else if(r <= 60) medio++;
+    else critico++;
 });
-let totalResumen =
-hoy +
-alDia +
-leve +
-medio +
-critico;
-lista.innerHTML+=`
 
-<div class="item" style="background:#123B63;color:white">  
-<b>📊 Resumen</b><br>  
-🟢 ${hoy} | 🟢 ${alDia} | 🟡 ${leve} | 🔴 ${medio} | ⚫ ${critico} | 📊 ${totalResumen}  
-</div>`;  filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
+lista.innerHTML+=`
+<div class="item" style="background:#123B63;color:white">
+<b>📊 Resumen</b><br>
+🟢 ${hoy} | 🟢 ${alDia} | 🟡 ${leve} | 🔴 ${medio} | ⚫ ${critico}
+</div>`;
+
+filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
 
 filtrados.forEach((c,index)=>{
 let color="#2ecc71";
-let riesgoIA = "🟢 Normal";
-
-if(c.retraso > 8){
-riesgoIA = "🟠 Riesgo";
-}
-
-if(c.retraso > 30){
-riesgoIA = "🔴 Alto";
-}
-
-if(c.retraso > 60){
-riesgoIA = "⚫ Crítico";
-}
-
 if(c.retraso>8) color="#f1c40f";
 if(c.retraso>30) color="#e74c3c";
 if(c.retraso>60) color="black";
 
 lista.innerHTML+=`
+<div class="item" style="border-left:4px solid ${color}">
+<b style="font-size:11px;">${c.nombre}</b>
+<div style="margin-top:4px;font-weight:bold;color:#27ae60;">
+💰 S/${parseFloat(c.monto).toFixed(2)}
+</div>
 
-<div class="item" style="border-left:4px solid ${color}">  
-<b style="font-size:11px;">${c.nombre}</b>  
-<div style="margin-top:4px;font-weight:bold;color:#27ae60;">  
-💰 S/${parseFloat(c.monto).toFixed(2)}  
-</div>  <div style="font-size:13px;color:#555;">  
-📅 ${c.retraso}d  
-</div>  
-🚨 ${c.cuotasVencidas || 0} cuotas<br>  
-🤖 ${riesgoIA}<br>  
-👤 ${c.asesor}<br>  
-📞 <a href="#"  
-onclick='enviarCobranzaDesdeLista(  
-"${encodeURIComponent(c.nombre)}",  
-"${c.celular}",  
-"${c.retraso}",  
-"${c.monto}"  
-); return false;'  
-style="color:#25D366;font-weight:bold;text-decoration:none;">  
-${c.celular}  
-</a><br>  
-📦 ${c.producto}<br>  
-📍 ${c.direccion}<br>  
-🏙️ ${c.distrito}  
-<div style="display:flex;gap:5px;margin-top:5px;">  </div>  </div>`;  
-});  
-}  
-function buscarClienteRapido(){  let texto = document
-.getElementById("buscadorClientes")
-.value
-.toLowerCase()
-.trim();
+<div style="font-size:13px;color:#555;">
+📅 ${c.retraso}d
+</div>
+🚨 ${c.cuotasVencidas || 0} cuotas<br>
+👤 ${c.asesor}<br>
+📞 <a href="#"
+onclick='enviarCobranzaDesdeLista(
+"${encodeURIComponent(c.nombre)}",
+"${c.celular}",
+"${c.retraso}",
+"${c.monto}"
+); return false;'
+style="color:#25D366;font-weight:bold;text-decoration:none;">
+${c.celular}
+</a><br>
+📦 ${c.producto}<br>
+📍 ${c.direccion}<br>
+🏙️ ${c.distrito}
 
-let items = document.querySelectorAll("#listaClientes .item");
+<div style="display:flex;gap:5px;margin-top:5px;">
+<button onclick='registrarPago("${c.nombre}|${c.celular}")'
+style="flex:1;background:#2ecc71;color:white;border:none;padding:10px;border-radius:8px;">
+💵 Registrar pago
+</button>
+</div>
 
-items.forEach(item=>{
-
-let contenido = item.innerText.toLowerCase();
-
-if(contenido.includes(texto)){
-item.style.display = "block";
-}else{
-item.style.display = "none";
-}
-
+</div>`;
 });
-
 }
 function filtrarPorAsesor(nombreAsesor){
-filtroAsesor = nombreAsesor;
-filtrarMora(filtroMin, filtroMax);
+    filtroAsesor = nombreAsesor;
+    filtrarMora(filtroMin, filtroMax);
 }
 
 function resetFiltros(){
-filtroAsesor = "";
-filtroMin = 0;
-filtroMax = 1000;
-filtrarMora(0,1000);
+    filtroAsesor = "";
+    filtroMin = 0;
+    filtroMax = 1000;
+    filtrarMora(0,1000);
 }
+function cargarResumen(){
+  let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
+  let total = 0;
+  let vencido = 0;
+  let hoy = 0;
+  let vencenHoy = 0;
+  let criticos = 0;
+
+  let hoyFecha = new Date().toISOString().split("T")[0];
+
+  data.forEach(c=>{
+    let deuda = Number(c.deuda || 0);
+    let dias = Number(c.dias_mora || 0);
+
+    total += deuda;
+
+    if(dias > 0) vencido += deuda;
+    if(dias > 30) criticos++;
+
+    if(c.pagado_hoy === true){
+      hoy += deuda;
+    }
+
+    if(c.fecha_pago === hoyFecha){
+      vencenHoy++;
+    }
+  });
+
+  let moraPorcentaje = total > 0 ? (vencido / total * 100).toFixed(1) : 0;
+
+  document.getElementById("totalCartera").innerText = "S/ " + total.toFixed(2);
+  document.getElementById("porcentajeMora").innerText = moraPorcentaje + "%";
+  document.getElementById("cobradoHoy").innerText = "S/ " + hoy.toFixed(2);
+  document.getElementById("vencenHoy").innerText = vencenHoy;
+  document.getElementById("criticos").innerText = criticos;
+  document.getElementById("totalClientes").innerText = data.length;
+}
 // USUARIOS
 function crearUsuario(){
 let user=nuevoUser.value.trim();
@@ -1814,8 +1582,16 @@ let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
 lista.innerHTML="";
 usuarios.forEach(u=>{
-lista.innerHTML += `<div class="item">${u.user}</div>`;
+lista.innerHTML+=`<div class="item">${u.user}</div>`;
 });
+}
+function verTodosClientes(){
+
+// Mostrar toda la cartera
+filtrarMora(0,1000);
+cargarResumen();
+console.log("Vista general activada");
+
 }
 // UI
 function mostrar(p){
@@ -1826,7 +1602,7 @@ document.querySelector(".resumen").style.display = "none";
 
 app.style.display="block";
 
-["simulador","clientes","pagos","admin","historialDiv","productividadDiv","kpiIngresosDiv"].forEach(id=>{
+["simulador","clientes","pagos","admin","historialDiv"].forEach(id=>{
 document.getElementById(id).style.display="none";
 });
 
@@ -1836,39 +1612,21 @@ if(p==="clientes"){filtrarMora(0,1000);actualizarResumen();
 }
 
 if(p==="admin") renderUsuarios();
+}
 
-if(p==="kpiIngresos"){
-verKPIIngresos();
-}
-}
 function volver(){
 
 app.style.display="none";
-
-["simulador","clientes","pagos","admin","historialDiv","productividadDiv","kpiIngresosDiv"]
+["simulador","clientes","pagos","admin","historialDiv"]
 .forEach(id=>{
 document.getElementById(id).style.display="none";
-});
+});  
 
 document.querySelector(".resumen").style.display = "grid";
 
 document.getElementById("historialDiv").style.display="none";
 
 dashboard.style.display="block";
-
-// PEGAR DESDE AQUÍ
-
-document.getElementById("rankingContainer").style.display = "flex";
-
-if(
-asesor === "admin" ||
-asesor === "operaciones"
-){
-document.getElementById("panelAsesores").style.display = "flex";
-}
-
-// HASTA AQUÍ
-
 }
 
 // QR
@@ -1893,8 +1651,7 @@ document.getElementById("modalTarifario").style.display = "none";
 function enviarUbicacion(){
 navigator.geolocation.getCurrentPosition(
 pos=>{
-let link =
-`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+let link=`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
 window.open("https://wa.me/?text="+encodeURIComponent(link));
 },
 ()=>alert("No se pudo obtener ubicación")
@@ -1913,13 +1670,14 @@ let msg = `📊 SIMULACIÓN CREDICOMPANY
 
 💼 Producto: ${simData.producto.toUpperCase()}
 💰 Monto aprobado: S/ ${simData.monto}
-📅 Plazo: ${document.getElementById("plazo").value} cuotas
 💳 Cuota ${simData.producto === "diario" ? "diaria" : simData.producto === "semanal" ? "semanal" : simData.producto === "quincenal" ? "quincenal" : "mensual"}: S/ ${simData.cuota}
 
 ✅ SIN TRÁMITES COMPLICADOS
 ✅ DESEMBOLSO ÍNTEGRO Y RÁPIDO
-✅ SIN RETENCIÓN DEL 10%
+✅ *SIN RETENCIÓN DEL 10%*
+
 ¿Deseas que activemos tu crédito hoy mismo? 🚀
+
 Gracias por confiar en Credicompany 🤝`;
 
 window.open("https://wa.me/?text=" + encodeURIComponent(msg));
@@ -1984,117 +1742,72 @@ nombre = decodeURIComponent(nombre);
 celular = (celular || "").replace(/\D/g,""); // limpia espacios
 
 dias = parseFloat(dias) || 0;
-let nivelIA = "";
-let emojiIA = "";
-let accionIA = "";
 
-// 🟢 NORMAL
-if(dias === 0){
-
-nivelIA = "Preventivo";
-emojiIA = "🟢";
-accionIA = "Evitar mora";
-
-}
-
-// 🟡 LEVE
-else if(dias <= 8){
-
-nivelIA = "Seguimiento";
-emojiIA = "🟡";
-accionIA = "Recuperación rápida";
-
-}
-
-// 🟠 MEDIO
-else if(dias <= 30){
-
-nivelIA = "Riesgo Medio";
-emojiIA = "🟠";
-accionIA = "Prioridad cobranza";
-
-}
-
-// 🔴 ALTO
-else if(dias <= 60){
-
-nivelIA = "Riesgo Alto";
-emojiIA = "🔴";
-accionIA = "Cobranza urgente";
-
-}
-
-// ⚫ CRÍTICO
-else{
-
-nivelIA = "Crítico";
-emojiIA = "⚫";
-accionIA = "Posible prejudicial";
-
-}
 let msg = "";
-msg += `🤖 CREDICOMPANY IA
-
-${emojiIA} Nivel: ${nivelIA}
-⚠️ Acción sugerida: ${accionIA}
-
-`;
 let firma = "";
 
 // ADMIN
 if(asesor === "admin"){
 
-firma =    *Atte.*   *Área de Cobranzas*   🏦 *Credicompany*   _Crecemos juntos_   *2026*;
-
-}
-
-// OPERACIONES
-else if(asesor === "operaciones"){
-
-firma =    *Atte.*   *Área de Operaciones*   🏦 *Credicompany*   _Crecemos juntos_   *2026*;
+firma = `
+*Atte.*
+*Área de Cobranzas*
+🏦 *Credicompany*
+_Crecemos juntos_
+*2026*`;
 
 }
 
 // EDGAR
 else if(asesor === "ebenites"){
 
-firma =    *Atte.*   EDGAR BENITES   🏦 *Credicompany*   _Crecemos juntos_   *2026*;
+firma = `
+*Atte.*
+EDGAR BENITES
+🏦 *Credicompany*
+_Crecemos juntos_
+*2026*`;
 
 }
 
 // ERICK
 else if(asesor === "emedina"){
 
-firma =    *Atte.*   ERICK MEDINA   🏦 *Credicompany*   _Crecemos juntos_   *2026*;
+firma = `
+*Atte.*
+ERICK MEDINA
+🏦 *Credicompany*
+_Crecemos juntos_
+*2026*`;
 
 }
 
 // ALESSANDRA
 else if(asesor === "tleon"){
 
-firma =    *Atte.*   ALESSANDRA LEON   🏦 *Credicompany*   _Crecemos juntos_   *2026*;
+firma = `
+*Atte.*
+ALESSANDRA LEON
+🏦 *Credicompany*
+_Crecemos juntos_
+*2026*`;
 
 }
-//Bernie
-else if(asesor === "bhuerta"){
 
-firma =    *Atte.*   BERNIE HUERTA   🏦 *Credicompany*   _Crecemos juntos_   *2026*;
-
-}
 // 🟢 VENCE HOY
 if(dias === 0){
 
-msg = `🟢 RECORDATORIO DE PAGO
-🏦 CREDICOMPANY
+msg = `🟢 *RECORDATORIO DE PAGO*
+🏦 *CREDICOMPANY*
 
 ━━━━━━━━━━━━━━
 
 Estimado(a):
-${nombre}
+*${nombre}*
 
 📌 Hoy corresponde el pago de su cuota programada.
 
-💰 Monto a pagar:
+💰 *Monto a pagar:*
 S/ ${monto}
 
 Le recomendamos realizar el pago dentro del día para mantener su crédito al día y evitar cargos por mora.
@@ -2108,18 +1821,18 @@ ${firma}`;
 // 🟡 1–8 días
 else if(dias <= 8){
 
-msg = `🟡 AVISO DE COBRANZA
-🏦 CREDICOMPANY
+msg = `🟡 *AVISO DE COBRANZA*
+🏦 *CREDICOMPANY*
 
 ━━━━━━━━━━━━━━
 
 Estimado(a):
-${nombre}
+*${nombre}*
 
 📌 Su crédito registra:
-${dias} días de atraso
+*${dias} días de atraso*
 
-💰 Deuda pendiente:
+💰 *Deuda pendiente:*
 S/ ${monto}
 
 Le solicitamos regularizar su pago a la brevedad para evitar mayores cargos e inconvenientes en su evaluación crediticia.
@@ -2132,18 +1845,18 @@ ${firma}`;
 // 🟠 9–30 días
 else if(dias <= 30){
 
-msg = `🟠 SEGUIMIENTO DE COBRANZA
-🏦 CREDICOMPANY
+msg = `🟠 *SEGUIMIENTO DE COBRANZA*
+🏦 *CREDICOMPANY*
 
 ━━━━━━━━━━━━━━
 
 Estimado(a):
-${nombre}
+*${nombre}*
 
 📌 Su crédito registra:
-${dias} días de atraso
+*${dias} días de atraso*
 
-💰 Deuda pendiente:
+💰 *Deuda pendiente:*
 S/ ${monto}
 
 Es importante regularizar su pago lo antes posible para evitar restricciones y mayores cargos administrativos.
@@ -2157,18 +1870,18 @@ ${firma}`;
 // 🔴 +30 días
 else{
 
-msg = `🔴 URGENTE — COBRANZA PRIORITARIA
-🏦 CREDICOMPANY
+msg = `🔴 *URGENTE — COBRANZA PRIORITARIA*
+🏦 *CREDICOMPANY*
 
 ━━━━━━━━━━━━━━
 
 Estimado(a):
-${nombre}
+*${nombre}*
 
 📌 Su crédito registra:
-${dias} días de atraso
+*${dias} días de atraso*
 
-💰 Deuda pendiente:
+💰 *Deuda pendiente:*
 S/ ${monto}
 
 Solicitamos regularizar su pago de manera inmediata para evitar acciones adicionales y afectaciones en su evaluación crediticia.
@@ -2209,29 +1922,22 @@ return c;
 
 });
 
-set(ref(window.db, 'cartera'), data);
-
-window.carteraGlobal = data;
-
-actualizarResumen();
-
-filtrarMora(0,1000);
-let clientePagado = data.find(c =>
-c.nombre === nombre && c.celular === celular
+localStorage.setItem("cartera", JSON.stringify(data));
+let clientePagado = data.find(c => 
+    c.nombre === nombre && c.celular === celular
 );
 
 let historial = JSON.parse(localStorage.getItem("historialPagos")) || [];
 
 historial.push({
-cliente: nombre,
-celular: celular,
-monto: clientePagado.monto || 0,
-fecha: new Date().toLocaleString(),
-asesor: clientePagado.asesor || "Sin asesor"
+    cliente: nombre,
+    celular: celular,
+    monto: clientePagado.monto || 0,
+    fecha: new Date().toLocaleString(),
+    asesor: clientePagado.asesor || "Sin asesor"
 });
 
 localStorage.setItem("historialPagos", JSON.stringify(historial));
-set(ref(window.db, 'historialPagos'), historial);
 filtrarMora(0,1000);
 actualizarResumen();
 
@@ -2272,28 +1978,28 @@ input.click();
 }
 function enviarFiltro(){
 
-let nombre = cliente.value || "";
-let apellidosVal = apellidos.value || "";
-let dniVal = dni.value || "";
+  let nombre = cliente.value || "";
+  let apellidosVal = apellidos.value || "";
+  let dniVal = dni.value || "";
 
-let msg = "🔎 FILTRO DE CLIENTE - CREDICOMPANY\n\n";
+  let msg = "🔎 FILTRO DE CLIENTE - CREDICOMPANY\n\n";
 
-if(nombre) msg += `👤 Nombre: ${nombre}\n`;
-if(apellidosVal) msg += 👥 Apellidos: ${apellidosVal}\n;
-if(dniVal) msg += 🆔 DNI: ${dniVal}\n;
+  if(nombre) msg += `👤 Nombre: ${nombre}\n`;
+  if(apellidosVal) msg += `👥 Apellidos: ${apellidosVal}\n`;
+  if(dniVal) msg += `🆔 DNI: ${dniVal}\n`;
 
-msg += \n👨‍💼 Asesor: ${asesor}\n;
-msg += "\nApoyo filtro de cliente gracias.";
+  msg += `\n👨‍💼 Asesor: ${asesor}\n`;
+  msg += "\nApoyo filtro de cliente gracias.";
 
-window.open("https://wa.me/?text=" + encodeURIComponent(msg));
+  window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 }
-function verHistorialPagos(){
+  function verHistorialPagos(){
 
 document.getElementById("dashboard").style.display="none";
 document.querySelector(".resumen").style.display = "none";
 
-app.style.display = "block";
-["simulador","clientes","pagos","admin","productividadDiv"].forEach(id=>{
+app.style.display = "block";    
+["simulador","clientes","pagos","admin"].forEach(id=>{
 document.getElementById(id).style.display="none";
 });
 document.getElementById("historialDiv").style.display="block";
@@ -2310,11 +2016,12 @@ lista.innerHTML += "<h4>💰 Bonos del día</h4>";
 
 Object.keys(bonosHoy).forEach(a=>{
 lista.innerHTML += `
+<div class="item">
+👤 ${a} → S/${bonosHoy[a]}
+</div>`;
+});
 
-<div class="item">  
-👤 ${a} → S/${bonosHoy[a]}  
-</div>`;  
-});  // 🔥 PAGOS
+// 🔥 PAGOS
 let historial = JSON.parse(localStorage.getItem("historialPagos")) || [];
 
 lista.innerHTML += "<h4>📋 Pagos registrados</h4>";
@@ -2326,15 +2033,16 @@ return;
 
 historial.slice().reverse().forEach(p=>{
 lista.innerHTML += `
+<div class="item">
+<b>${p.cliente}</b><br>
+💰 S/${p.monto}<br>
+👤 ${p.asesor}<br>
+📞 ${p.celular}<br>
+🕒 ${p.fecha}
+</div>`;
+});
 
-<div class="item">  
-<b>${p.cliente}</b><br>  
-💰 S/${p.monto}<br>  
-👤 ${p.asesor}<br>  
-📞 ${p.celular}<br>  
-🕒 ${p.fecha}  
-</div>`;  
-});  }
+}
 function cargarPerfilAsesor(usuario){
 
 let foto = document.getElementById("fotoPerfil");
@@ -2343,24 +2051,16 @@ let nombreCompleto = document.getElementById("nombreCompletoAsesor");
 // ADMIN
 if(usuario === "admin"){
 
-foto.src = "ebenites.jpeg";
+foto.src = "admin.png";
 nombreCompleto.innerText = "Área de Cobranzas";
 nombreAsesor.innerText = "admin";
 
 }
 
-// OPERACIONES
-else if(usuario === "operaciones"){
-
-foto.src = "ebenites.jpeg";
-nombreCompleto.innerText = "Edgar Benites";
-nombreAsesor.innerText = "admin";
-
-}
 // EDGAR
 else if(usuario === "ebenites"){
 
-foto.src = "ebenites.jpg";
+foto.src = "ebenites.png";
 nombreCompleto.innerText = "Edgar Benites";
 nombreAsesor.innerText = "ebenites";
 
@@ -2383,14 +2083,7 @@ nombreCompleto.innerText = "Alessandra Leon";
 nombreAsesor.innerText = "tleon";
 
 }
-// BERNIE
-else if(usuario === "bhuerta"){
 
-foto.src = "Bhuerta.png";
-nombreCompleto.innerText = "Bernie Huerta";
-nombreAsesor.innerText = "bhuerta";
-
-}
 // OTROS
 else{
 
@@ -2403,503 +2096,9 @@ nombreAsesor.innerText = usuario;
 foto.style.display = "block";
 
 }
-function verProductividad(){
 
-document.getElementById("dashboard").style.display="none";
-document.querySelector(".resumen").style.display="none";
-
-app.style.display="block";
-
-["simulador","clientes","pagos","admin","historialDiv","productividadDiv"]
-.forEach(id=>{
-document.getElementById(id).style.display="none";
-});
-
-document.getElementById("productividadDiv").style.display="block";
-
-let contenido =
-document.getElementById("contenidoProductividad");
-
-let historial =
-JSON.parse(localStorage.getItem("historialPagos")) || [];
-
-let misPagos = historial.filter(p => {
-
-let asesorPago = (p.asesor || "")
-.toLowerCase()
-.trim();
-
-return (
-asesor==="admin" ||
-asesor==="operaciones"
-)
-? true
-: asesorPago === asesor;
-
-});
-let metaDiaria =
-JSON.parse(
-localStorage.getItem("metaDiaria")
-) || {};
-if(
-asesor==="admin" ||
-asesor==="operaciones"
-){
-
-let metaDiaria =
-JSON.parse(
-localStorage.getItem("metaDiaria")
-) || {};
-
-let html = "";
-contenido.innerHTML = "";
-Object.keys(
-metaDiaria.asesores || {}
-).forEach(a=>{
-
-let prod =
-calcularCumplimiento(a);
-
-let colorBarra="#dc2626";
-
-if(prod.porcentaje >= 50)
-colorBarra="#f59e0b";
-
-if(prod.porcentaje >= 80)
-colorBarra="#16a34a";
-
-html += `
-
-<div style="  
-background:white;  
-border-radius:18px;  
-padding:15px;  
-margin-bottom:15px;  
-box-shadow:0 4px 12px rgba(0,0,0,.12);  
-color:#123B63;  
-">  <div style="  
-display:flex;  
-justify-content:space-between;  
-align-items:center;  
-margin-bottom:15px;  
-">  <div>  
-<div style="  
-font-size:20px;  
-font-weight:bold;  
-">  
-👤 ${a}  
-</div>  <div style="  
-font-size:12px;  
-color:#666;  
-">  
-Asesor de Cobranza  
-</div>  </div>  <div style="  
-font-size:28px;  
-font-weight:bold;  
-color:#6c3bd1;  
-">  
-${prod.porcentaje}%  
-</div>  </div>  <div style="  
-display:grid;  
-grid-template-columns:repeat(4,1fr);  
-gap:8px;  
-">  <div style="  
-background:#eef5ff;  
-padding:10px;  
-border-radius:10px;  
-text-align:center;  
-">  
-🎯<br>  
-<b>${prod.meta}</b>  
-</div>  <div style="  
-background:#eefcf1;  
-padding:10px;  
-border-radius:10px;  
-text-align:center;  
-">  
-✅<br>  
-<b>${prod.recuperados}</b>  
-</div>  <div style="  
-background:#fff1f1;  
-padding:10px;  
-border-radius:10px;  
-text-align:center;  
-">  
-❌<br>  
-<b>${prod.pendientes}</b>  
-</div>  <div style="  
-background:#f4efff;  
-padding:10px;  
-border-radius:10px;  
-text-align:center;  
-">  
-📈<br>  
-<b>${prod.porcentaje}%</b>  
-</div>  </div>  <div style="  
-margin-top:15px;  
-height:14px;  
-background:#e5e7eb;  
-border-radius:20px;  
-overflow:hidden;  
-">  <div style="  
-width:${prod.porcentaje}%;  
-height:100%;  
-background:${colorBarra};  
-">  
-</div>  </div>  <div style="  
-display:flex;  
-justify-content:space-between;  
-font-size:12px;  
-margin-top:8px;  
-color:#666;  
-">  <span>  
-${prod.recuperados}/${prod.meta}  
-</span>  <span>  
-${prod.pendientes} pendientes  
-</span>  </div>  </div>  `;
-});
-
-contenido.innerHTML = html;
-
-return;
-}
-let prod =
-calcularCumplimiento(asesor);
-
-let metaInicial =
-prod.meta;
-
-let recuperados =
-prod.recuperados;
-
-let pendientes =
-prod.pendientes;
-
-let cumplimiento =
-prod.porcentaje;
-
-let totalRecuperado = 0;
-
-misPagos.forEach(p=>{
-totalRecuperado += parseFloat(p.monto) || 0;
-});
-contenido.innerHTML = `
-
-<div class="item">  👤 Asesor:
-${asesor}
-
-<br><br>
-
-🎯 Meta Inicial:
-${metaInicial}
-
-<br><br>
-
-✅ Recuperados:
-${recuperados}
-
-<br><br>
-
-❌ Pendientes:
-${pendientes}
-
-<br><br>
-
-📈 Cumplimiento:
-${cumplimiento}%
-
-<br><br>
-
-💰 Recuperado:
-S/${totalRecuperado.toFixed(2)}
-
-</div>  `;
-}
-function verKPIIngresos(){
-
-document.getElementById("dashboard").style.display="none";
-document.querySelector(".resumen").style.display="none";
-
-app.style.display="block";
-
-[
-"simulador",
-"clientes",
-"pagos",
-"admin",
-"historialDiv",
-"productividadDiv"
-].forEach(id=>{
-
-let el=document.getElementById(id);
-if(el) el.style.display="none";
-
-});
-
-document.getElementById("kpiIngresosDiv").style.display="block";
-
-let contenido =
-document.getElementById("contenidoKPI");
-
-let ingresos =
-JSON.parse(localStorage.getItem("ingresosMes")) || [];
-
-if(ingresos.length===0){
-
-contenido.innerHTML=`
-
-<div class="item">  
-⚠️ No hay archivo de ingresos cargado.  
-</div>  
-`;  return;
-}
-
-let totalInteres = 0;
-let totalMoraReal = 0;
-let totalGeneral = 0;
-let operaciones = 0;
-
-let ranking = {};
-let dias = {};
-let controlOperaciones = new Set();
-ingresos.forEach(r=>{
-
-let interes =
-parseFloat(
-r["INTERES"] ||
-r["INTERESES"] ||
-r["INTERÉS"]
-) || 0;
-
-let moraReal =
-parseFloat(
-r["MORA REAL"]
-) || 0;
-
-let total =
-parseFloat(
-r["TOTAL"] ||
-r["TOTAL INGRESO"] ||
-r["TOTAL GENERAL"]
-) || 0;
-
-let asesor =
-(r["ASESOR"] || "Sin asesor")
-.toString()
-.toUpperCase();
-
-let fecha =
-(r["FECHA DE PAGO"] || "")
-.toString();
-let clave = JSON.stringify(r);
-
-if(controlOperaciones.has(clave)){
-return;
-}
-
-controlOperaciones.add(clave);
-
-operaciones++;
-totalInteres += interes;
-totalMoraReal += moraReal;
-totalGeneral += total;
-
-if(!ranking[asesor]){
-ranking[asesor]=0;
-}
-
-ranking[asesor]+=interes;
-
-if(fecha){
-
-if(!dias[fecha]){
-dias[fecha]=0;
-}
-
-dias[fecha]+=interes;
-
-}
-
-});
-
-let ticketPromedio =
-operaciones > 0
-? totalInteres / operaciones
-: 0;
-
-let promedioDiario =
-Object.keys(dias).length > 0
-? totalInteres / Object.keys(dias).length
-: 0;
-
-let rankingHtml="";
-
-Object.entries(ranking)
-.sort((a,b)=>b[1]-a[1])
-.forEach((r,index)=>{
-
-let medalla="🏅";
-
-if(index===0) medalla="🥇";
-if(index===1) medalla="🥈";
-if(index===2) medalla="🥉";
-
-rankingHtml += `
-
-<div class="item">  
-${medalla} ${r[0]}  
-<br>  
-💰 S/${r[1].toFixed(2)}  
-</div>  
-`;  });
-
-contenido.innerHTML=`
-
-<div class="item">  
-💰 Intereses Generados  
-<br>  
-<b>S/${totalInteres.toFixed(2)}</b>  
-</div>  <div class="item">  
-🚨 Mora Real Recuperada  
-<br>  
-<b>S/${totalMoraReal.toFixed(2)}</b>  
-</div>  <div class="item">  
-📊 Ticket Promedio Interés  
-<br>  
-<b>S/${ticketPromedio.toFixed(2)}</b>  
-</div>  <div class="item">  
-📅 Promedio Diario  
-<br>  
-<b>S/${promedioDiario.toFixed(2)}</b>  
-</div>  <div class="item">  
-📋 Operaciones  
-<br>  
-<b>${operaciones}</b>  
-</div>  <h4>🏆 Ranking por Intereses</h4>  ${rankingHtml}
-
-`;
-
-}
-function calcularCumplimiento(nombreAsesor){
-
-let metaDiaria =
-JSON.parse(
-localStorage.getItem("metaDiaria")
-) || {};
-
-if(
-!metaDiaria.asesores ||
-!metaDiaria.asesores[nombreAsesor]
-){
-return {
-meta:0,
-pendientes:0,
-recuperados:0,
-porcentaje:0
-};
-}
-
-let dniIniciales =
-metaDiaria.asesores[nombreAsesor];
-
-let actuales = [];
-
-(window.carteraGlobal || [])
-.forEach(c=>{
-
-let retraso =
-parseFloat(c.retraso) || 0;
-
-let asesorCliente =
-(c.asesor || "")
-.toLowerCase()
-.trim();
-
-if(
-asesorCliente === nombreAsesor &&
-retraso === 0
-){
-
-actuales.push(
-String(c.dni).trim()
-);
-
-}
-
-});
-
-let meta =
-dniIniciales.length;
-
-let pendientes =
-actuales.length;
-
-let recuperados =
-meta - pendientes;
-
-if(recuperados < 0){
-recuperados = 0;
-}
-
-let porcentaje =
-meta > 0
-? ((recuperados/meta)*100)
-.toFixed(1)
-: 0;
-
-return{
-
-meta,
-pendientes,
-recuperados,
-porcentaje
-
-};
-
-}
-/* 🔚 FIN */
+/* 🔚 FIN */   
 </script>
 
-<script type="module">  
-  
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";  
-  
-import {  
-getDatabase,  
-ref,  
-set,  
-onValue  
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";  
-  
-  
-const firebaseConfig = {  
-  
-apiKey: "AIzaSyB5G2MyTkYZT0b7RMfLoBe9cfAY4-ewdkc",  
-  
-authDomain: "credicompany-88693.firebaseapp.com",  
-  
-databaseURL: "https://credicompany-88693-default-rtdb.firebaseio.com",  
-  
-projectId: "credicompany-88693",  
-  
-storageBucket: "credicompany-88693.firebasestorage.app",  
-  
-messagingSenderId: "890359636696",  
-  
-appId: "1:890359636696:web:1e9f4ca349606817212dad"  
-  
-};  
-  
-  
-const app = initializeApp(firebaseConfig);  
-  
-window.db = getDatabase(app);  
-  
-window.ref = ref;  
-  
-window.set = set;  
-  
-window.onValue = onValue;  
-  
-</script>  </body>  
+</body>
   </html>

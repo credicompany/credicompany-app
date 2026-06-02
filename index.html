@@ -399,12 +399,17 @@ Mensual
 <button class="btn-verde" onclick="filtrarPorAsesor('ebenites')">
 👤 Ebenites
 </button>
+
 <button class="btn-verde" onclick="filtrarPorAsesor('emedina')">
 👤 Emedina
 </button>
 
 <button class="btn-verde" onclick="filtrarPorAsesor('tleon')">
 👤 Tleon
+</button>
+
+<button class="btn-verde" onclick="filtrarPorAsesor('bhuerta')">
+👤 Bhuerta
 </button>
 
 </div>
@@ -1173,7 +1178,7 @@ if(key.includes("asesor")){
     if(nombre.includes("benites")) nombre = "ebenites";
     if(nombre.includes("medina")) nombre = "emedina";
     if(nombre.includes("leon")) nombre = "tleon";
-
+    if(nombre.includes("huerta")) nombre = "bhuerta";
     obj.asesor = nombre;
 }
 if(key.includes("cuota_mora")) obj.monto=val;

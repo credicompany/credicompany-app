@@ -2878,10 +2878,7 @@ let asesor =
 let fecha =
 (r["FECHA DE PAGO"] || "")
 .toString();
-let clave =
-fecha + "|" +
-(r["CLIENTE"] || "") + "|" +
-total;
+ let clave = JSON.stringify(r); 
 
 if(controlOperaciones.has(clave)){
 return;

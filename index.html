@@ -649,7 +649,31 @@ window.onload = function(){
         localStorage.setItem("fechaSistema", hoy);
     }
 
-    actualizarResumen();
+  actualizarResumen();
+
+// 🔥 SINCRONIZAR DESDE FIREBASE
+db.ref("cartera").on("value", (snapshot)=>{
+
+    let dataFirebase = snapshot.val();
+
+    if(dataFirebase){
+
+        localStorage.setItem(
+            "cartera",
+            JSON.stringify(dataFirebase)
+        );
+
+        actualizarResumen();
+
+        if(document.getElementById("listaClientes")){
+            filtrarMora(filtroMin, filtroMax);
+        }
+
+        console.log("✅ Cartera sincronizada Firebase");
+    }
+
+});
+
 };
 // LOGIN
 function login(){
@@ -1299,6 +1323,7 @@ return obj;
 });
 
 // 🔥 GUARDADO REAL
+db.ref("cartera").set(json);
 localStorage.setItem("cartera", JSON.stringify(json));
 localStorage.setItem("cartera_backup", JSON.stringify(json));
 // 🔥 RESET DIARIO (LÍNEA 357)

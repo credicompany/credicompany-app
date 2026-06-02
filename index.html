@@ -1620,7 +1620,6 @@ totalMeta > 0
 
 let prog =
 `${totalPagados}/${totalMeta} (${porcentaje}%)`;
-
 rankingHTML += `
 
 <div style="font-size:12px;margin-top:4px;">  
@@ -1634,17 +1633,17 @@ let btnMora = document.getElementById("btnMora");
 let btnCriticos = document.getElementById("btnCriticos");
 if(btnHoy){
 btnHoy.innerHTML =
-🟢 Clientes al día (${hoyCount});
+`🟢 Clientes al día (${hoyCount})`;
 }
 
 if(btnMora){
 btnMora.innerHTML =
-🟡 Mora leve (${moraCount});
+`🟡 Mora leve (${moraCount})`;
 }
 
 if(btnCriticos){
 btnCriticos.innerHTML =
-🔴 Mora crítica (${criticoCount});
+`🔴 Mora crítica (${criticoCount})`;
 }
 
 }
@@ -1815,7 +1814,7 @@ let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
 
 lista.innerHTML="";
 usuarios.forEach(u=>{
-lista.innerHTML+=<div class="item">${u.user}</div>;
+lista.innerHTML += `<div class="item">${u.user}</div>`;
 });
 }
 // UI
@@ -1894,7 +1893,8 @@ document.getElementById("modalTarifario").style.display = "none";
 function enviarUbicacion(){
 navigator.geolocation.getCurrentPosition(
 pos=>{
-let link=https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude};
+let link =
+`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
 window.open("https://wa.me/?text="+encodeURIComponent(link));
 },
 ()=>alert("No se pudo obtener ubicación")
@@ -2180,7 +2180,7 @@ ${firma}`;
 }
 
 window.open(
-https://wa.me/51${celular}?text=${encodeURIComponent(msg)}
+`https://wa.me/51${celular}?text=${encodeURIComponent(msg)}`
 );
 
 }
@@ -2278,7 +2278,7 @@ let dniVal = dni.value || "";
 
 let msg = "🔎 FILTRO DE CLIENTE - CREDICOMPANY\n\n";
 
-if(nombre) msg += 👤 Nombre: ${nombre}\n;
+if(nombre) msg += `👤 Nombre: ${nombre}\n`;
 if(apellidosVal) msg += 👥 Apellidos: ${apellidosVal}\n;
 if(dniVal) msg += 🆔 DNI: ${dniVal}\n;
 

@@ -183,6 +183,11 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
     cursor:pointer;
     color:#001f5b;
 }
+#panelAsesores button{
+    padding:8px !important;
+    font-size:12px !important;
+    min-height:65px;
+}  
 </style>
  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -422,11 +427,12 @@ onclick="cargarExcel()">
 style="
 display:none;
 grid-template-columns:repeat(4,1fr);
-gap:8px;
+gap:4px;
 margin-top:10px;
 ">
-
-<button class="btn-azul" onclick="resetFiltros()">
+<button class="btn-azul"
+style="padding:8px;font-size:12px;border-radius:12px;"
+onclick="resetFiltros()">
 🏆 Team Credicompany
 </button>
 
@@ -439,7 +445,7 @@ onclick="filtrarPorAsesor('ebenites')">
 
 <button
 class="btn-verde"
-style="width:100%;"
+style="width:100%;padding:8px;font-size:12px;border-radius:12px;"
 onclick="filtrarPorAsesor('emedina')">
 👤 Emedina
 </button>

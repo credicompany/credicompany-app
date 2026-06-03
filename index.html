@@ -733,9 +733,12 @@ asesor === "operaciones"
 }else{
 
     document.getElementById("boxAdmin").style.display="none";
+    if(asesor === "slopez"){
+    document.getElementById("panelAsesores").style.display="grid";
+}else{
     document.getElementById("panelAsesores").style.display="none";
-
 }
+
 document.getElementById("panelExcel").style.display="none";
 actualizarResumen();  
 }else{
@@ -1599,6 +1602,11 @@ let asesorActual = (asesor || "")
     .toString()
     .toLowerCase()
     .trim();
+
+// SLOPEZ puede ver toda la cartera
+if(asesorActual === "slopez"){
+    return r>=filtroMin && r<=filtroMax;
+}
 
 let esMio = asesorCliente === asesorActual;
 

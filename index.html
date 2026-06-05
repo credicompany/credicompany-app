@@ -590,9 +590,14 @@ Eliminar Usuario
 
 </div>
 <div id="historialDiv" class="card" style="display:none;">
+...
+</div>
+
 <div id="historialGestionesDiv"
 class="card"
 style="display:none;">
+...
+</div>
 
 <div class="volver" onclick="volver()">
 ← Volver
@@ -2377,21 +2382,20 @@ function enviarFiltro(){
 
   window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 }
-  function verHistorialPagos(){
-function verHistorialGestiones(){
+ function verHistorialGestiones(){
 
 document.getElementById("dashboard").style.display="none";
-
 document.querySelector(".resumen").style.display="none";
 
 app.style.display="block";
 
-["simulador",
+[
+"simulador",
 "clientes",
 "pagos",
 "admin",
-"historialDiv"]
-.forEach(id=>{
+"historialDiv"
+].forEach(id=>{
 
 let el=document.getElementById(id);
 
@@ -2450,17 +2454,25 @@ lista.innerHTML += `
 });
 
 }
+  
 document.getElementById("dashboard").style.display="none";
 document.querySelector(".resumen").style.display = "none";
 
-app.style.display = "block";    
-["simulador","clientes","pagos","admin"].forEach(id=>{
+app.style.display = "block";
+
+["simulador","clientes","pagos","admin"]
+.forEach(id=>{
 document.getElementById(id).style.display="none";
 });
+
 document.getElementById("historialDiv").style.display="block";
 
 let lista = document.getElementById("listaHistorial");
 
+lista.innerHTML = "";
+
+// resto de tu código actual...
+}
 // 🔥 LIMPIAR
 lista.innerHTML = "";
 

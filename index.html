@@ -1327,7 +1327,13 @@ if(key.includes("cuota_mora")) obj.monto=val;
 if(key.includes("saldo") && key.includes("capital") && key.includes("vencido")){
     obj.saldoCapital = parseFloat(val) || 0;
 }
-if(key.includes("dias") || key.includes("retraso")) obj.retraso=parseFloat(val)||0;
+if(
+   key.includes("diasretraso") ||
+   key.includes("díasretraso") ||
+   (key.includes("dias") && key.includes("retraso"))
+){
+   obj.retraso = parseFloat(val) || 0;
+}
 if(key.includes("cuota") && key.includes("venc")) obj.cuotasVencidas = parseFloat(val)||0;   
 if(key.includes("telefono") || key.includes("celular")) obj.celular=val;
 if(key.includes("producto")) obj.producto=val;
@@ -1645,7 +1651,19 @@ lista.innerHTML+=`
 </div>
 
 <div style="font-size:13px;color:#555;">
-📅 ${c.retraso}d
+<div style="
+background:${color};
+color:white;
+padding:6px 10px;
+border-radius:10px;
+display:inline-block;
+font-weight:bold;
+font-size:14px;
+margin-top:4px;
+margin-bottom:4px;
+">
+⏰ DÍAS ATRASO: ${parseInt(c.retraso || 0)}
+</div>
 </div>
 🚨 ${c.cuotasVencidas || 0} cuotas<br>
 👤 ${c.asesor}<br>

@@ -2166,7 +2166,70 @@ window.open(
 
 // ✅ CANCELADO (ELIMINAR)
 function registrarPago(id){
+function abrirGestion(nombre,celular){
 
+let estado = prompt(
+`Seleccione:
+
+1 = Visitado
+2 = No encontrado
+3 = Reprogramado
+4 = Negativa
+5 = Pago realizado`
+);
+
+if(!estado) return;
+
+let comentario =
+prompt("Comentario de gestión");
+
+let estados = {
+1:"VISITADO",
+2:"NO ENCONTRADO",
+3:"REPROGRAMADO",
+4:"NEGATIVA",
+5:"PAGO REALIZADO"
+};
+
+let data =
+JSON.parse(localStorage.getItem("cartera")) || [];
+
+data.forEach(c=>{
+
+if(
+c.nombre === nombre &&
+c.celular === celular
+){
+
+c.estadoGestion =
+estados[estado] || "";
+
+c.comentarioGestion =
+comentario || "";
+
+c.fechaGestion =
+new Date().toLocaleString();
+
+c.usuarioGestion =
+asesor;
+
+}
+
+});
+
+localStorage.setItem(
+"cartera",
+JSON.stringify(data)
+);
+
+alert("✅ Gestión guardada");
+
+filtrarMora(
+filtroMin,
+filtroMax
+);
+
+}
 let [nombre, celular] = id.split("|");
 
 let data = JSON.parse(localStorage.getItem("cartera")) || [];

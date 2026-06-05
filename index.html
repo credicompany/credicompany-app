@@ -2226,47 +2226,55 @@ function registrarPago(id){
 
 let [nombre, celular] = id.split("|");
 
-}
-
 let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
 data = data.map(c=>{
 
-if(c.nombre === nombre && c.celular === celular){
-c.pagado_monto = parseFloat(c.monto) || 0;
-c.ultimo_pago = new Date().toLocaleString();
-c.estado_gestion = "PAGADO";
+    if(c.nombre === nombre && c.celular === celular){
 
-// pago completo
-c.retraso = 0;
-c.cuotasVencidas = 0;
-c.pagado_hoy = true;
-}
+        c.pagado_monto = parseFloat(c.monto) || 0;
+        c.ultimo_pago = new Date().toLocaleString();
+        c.estado_gestion = "PAGADO";
 
-return c;
+        c.retraso = 0;
+        c.cuotasVencidas = 0;
+        c.pagado_hoy = true;
+    }
+
+    return c;
 
 });
 
 localStorage.setItem("cartera", JSON.stringify(data));
-let clientePagado = data.find(c => 
+
+let clientePagado = data.find(c =>
     c.nombre === nombre && c.celular === celular
 );
 
-let historial = JSON.parse(localStorage.getItem("historialPagos")) || [];
+let historial =
+JSON.parse(localStorage.getItem("historialPagos")) || [];
 
-historial.push({
-    cliente: nombre,
-    celular: celular,
-    monto: clientePagado.monto || 0,
-    fecha: new Date().toLocaleString(),
-    asesor: clientePagado.asesor || "Sin asesor"
-});
+if(clientePagado){
 
-localStorage.setItem("historialPagos", JSON.stringify(historial));
+    historial.push({
+        cliente: nombre,
+        celular: celular,
+        monto: clientePagado.monto || 0,
+        fecha: new Date().toLocaleString(),
+        asesor: clientePagado.asesor || "Sin asesor"
+    });
+
+    localStorage.setItem(
+        "historialPagos",
+        JSON.stringify(historial)
+    );
+}
+
 filtrarMora(0,1000);
 actualizarResumen();
 
 alert("✅ Pago registrado correctamente");
+
 }
 function exportarUsuarios(){
 let data = localStorage.getItem("usuarios") || "[]";

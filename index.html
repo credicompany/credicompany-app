@@ -262,6 +262,10 @@ onclick="mostrar('admin')">
 
 </div>
   <div class="box" onclick="verHistorialPagos()">
+    <div class="box" onclick="verHistorialGestiones()">
+<div style="font-size:28px;">📝</div>
+<div>Gestiones</div>
+</div>
     <div style="font-size:28px;">📋</div>
     <div>Bono diario</div>
   </div>
@@ -586,7 +590,16 @@ Eliminar Usuario
 
 </div>
 <div id="historialDiv" class="card" style="display:none;">
+<div id="historialGestionesDiv" class="card" style="display:none;">
+<div class="volver" onclick="volver()">
+← Volver
+</div>
 
+<h3>📝 Historial de Gestiones</h3>
+
+<div id="listaGestiones"></div>
+
+</div>
 <div class="volver" onclick="volver()">← Volver</div>
 
 <h3>📋 Historial de Pagos</h3>
@@ -1695,6 +1708,28 @@ ${c.celular}
 📍 ${c.direccion}<br>
 🏙️ ${c.distrito}
 
+<div class="fila" style="margin-top:8px;">
+
+<button
+style="background:#3498db;color:white;"
+onclick="abrirGestion(
+'${c.nombre}',
+'${c.celular}'
+)">
+📝 Gestión
+</button>
+
+<button
+style="background:#27ae60;color:white;"
+onclick="registrarVisita(
+'${c.nombre}',
+'${c.celular}'
+)">
+🚗 Visita
+</button>
+
+</div>
+
 </div>`;
 });
 }
@@ -2271,6 +2306,148 @@ lista.innerHTML += `
 📞 ${p.celular}<br>
 🕒 ${p.fecha}
 </div>`;
+});
+
+}
+  function abrirGestion(nombre, celular){
+
+let comentario = prompt(
+"Ingrese gestión realizada:"
+);
+
+if(!comentario) return;
+
+let historial =
+JSON.parse(
+localStorage.getItem("historialGestiones")
+) || [];
+
+historial.unshift({
+
+cliente:nombre,
+celular:celular,
+tipo:"GESTIÓN",
+
+comentario:comentario,
+
+asesor:asesor,
+
+fecha:new Date().toLocaleString()
+
+});
+
+localStorage.setItem(
+"historialGestiones",
+JSON.stringify(historial)
+);
+
+alert("✅ Gestión guardada");
+
+}
+
+function registrarVisita(nombre, celular){
+
+let comentario = prompt(
+"Resultado de la visita:"
+);
+
+if(!comentario) return;
+
+let historial =
+JSON.parse(
+localStorage.getItem("historialGestiones")
+) || [];
+
+historial.unshift({
+
+cliente:nombre,
+celular:celular,
+tipo:"VISITA",
+
+comentario:comentario,
+
+asesor:asesor,
+
+fecha:new Date().toLocaleString()
+
+});
+
+localStorage.setItem(
+"historialGestiones",
+JSON.stringify(historial)
+);
+
+alert("✅ Visita registrada");
+
+}
+
+function verHistorialGestiones(){
+
+document.getElementById("dashboard").style.display="none";
+
+document.querySelector(".resumen").style.display="none";
+
+app.style.display="block";
+
+[
+"simulador",
+"clientes",
+"pagos",
+"admin",
+"historialDiv"
+].forEach(id=>{
+
+document.getElementById(id).style.display="none";
+
+});
+
+document.getElementById(
+"historialGestionesDiv"
+).style.display="block";
+
+let lista =
+document.getElementById(
+"listaGestiones"
+);
+
+lista.innerHTML="";
+
+let historial =
+JSON.parse(
+localStorage.getItem(
+"historialGestiones"
+)
+) || [];
+
+if(historial.length===0){
+
+lista.innerHTML=
+"<p>No existen gestiones registradas</p>";
+
+return;
+
+}
+
+historial.forEach(g=>{
+
+lista.innerHTML += `
+<div class="item">
+
+<b>${g.cliente}</b><br>
+
+📞 ${g.celular}<br>
+
+📌 ${g.tipo}<br>
+
+📝 ${g.comentario}<br>
+
+👤 ${g.asesor}<br>
+
+🕒 ${g.fecha}
+
+</div>
+`;
+
 });
 
 }

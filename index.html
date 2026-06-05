@@ -2163,9 +2163,7 @@ window.open(
 );
 
 }
-
-// ✅ CANCELADO (ELIMINAR)
-function registrarPago(id){
+// GESTIÓN DE COBRANZA
 function abrirGestion(nombre,celular){
 
 let estado = prompt(
@@ -2228,9 +2226,7 @@ function registrarPago(id){
 
 let [nombre, celular] = id.split("|");
 
-...
 }
-let [nombre, celular] = id.split("|");
 
 let data = JSON.parse(localStorage.getItem("cartera")) || [];
 

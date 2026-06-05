@@ -2382,7 +2382,8 @@ function enviarFiltro(){
 
   window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 }
- function verHistorialGestiones(){
+function cargarPerfilAsesor(usuario){
+function verHistorialGestiones(){
 
 document.getElementById("dashboard").style.display="none";
 document.querySelector(".resumen").style.display="none";
@@ -2396,88 +2397,64 @@ app.style.display="block";
 "admin",
 "historialDiv"
 ].forEach(id=>{
-
 let el=document.getElementById(id);
-
 if(el) el.style.display="none";
-
 });
 
-document.getElementById(
-"historialGestionesDiv"
-).style.display="block";
+document.getElementById("historialGestionesDiv").style.display="block";
 
-let lista =
-document.getElementById("listaGestiones");
+let lista=document.getElementById("listaGestiones");
 
 lista.innerHTML="";
 
-let historial =
-JSON.parse(
-localStorage.getItem("historialGestiones")
-) || [];
+let historial=
+JSON.parse(localStorage.getItem("historialGestiones")) || [];
 
 if(historial.length===0){
-
-lista.innerHTML=
-"<p>No existen gestiones registradas</p>";
-
+lista.innerHTML="<p>No existen gestiones registradas</p>";
 return;
-
 }
 
-historial
-.slice()
-.reverse()
-.forEach(g=>{
+historial.slice().reverse().forEach(g=>{
 
 lista.innerHTML += `
-
 <div class="item">
-
 <b>👤 ${g.cliente}</b><br>
-
 📞 ${g.celular}<br>
-
 📌 ${g.estado}<br>
-
 💬 ${g.comentario}<br>
-
 👨‍💼 ${g.usuario}<br>
-
 🕒 ${g.fecha}
-
-</div>
-
-`;
-
+</div>`;
 });
 
 }
-  
+function verHistorialPagos(){
+
 document.getElementById("dashboard").style.display="none";
-document.querySelector(".resumen").style.display = "none";
+document.querySelector(".resumen").style.display="none";
 
-app.style.display = "block";
+app.style.display="block";
 
-["simulador","clientes","pagos","admin"]
-.forEach(id=>{
-document.getElementById(id).style.display="none";
+[
+"simulador",
+"clientes",
+"pagos",
+"admin",
+"historialGestionesDiv"
+].forEach(id=>{
+let el=document.getElementById(id);
+if(el) el.style.display="none";
 });
 
 document.getElementById("historialDiv").style.display="block";
 
-let lista = document.getElementById("listaHistorial");
+let lista=document.getElementById("listaHistorial");
 
-lista.innerHTML = "";
+lista.innerHTML="";
 
-// resto de tu código actual...
-}
-// 🔥 LIMPIAR
-lista.innerHTML = "";
-
-// 🔥 BONOS
-let bonosHoy = JSON.parse(localStorage.getItem("bonosHoy")) || {};
+let bonosHoy =
+JSON.parse(localStorage.getItem("bonosHoy")) || {};
 
 lista.innerHTML += "<h4>💰 Bonos del día</h4>";
 
@@ -2488,12 +2465,12 @@ lista.innerHTML += `
 </div>`;
 });
 
-// 🔥 PAGOS
-let historial = JSON.parse(localStorage.getItem("historialPagos")) || [];
+let historial =
+JSON.parse(localStorage.getItem("historialPagos")) || [];
 
 lista.innerHTML += "<h4>📋 Pagos registrados</h4>";
 
-if(historial.length === 0){
+if(historial.length===0){
 lista.innerHTML += "<p>No hay pagos registrados</p>";
 return;
 }
@@ -2510,8 +2487,6 @@ lista.innerHTML += `
 });
 
 }
-function cargarPerfilAsesor(usuario){
-
 let foto = document.getElementById("fotoPerfil");
 let nombreCompleto = document.getElementById("nombreCompletoAsesor");
 let usuarios =

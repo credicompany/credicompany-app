@@ -1665,7 +1665,13 @@ margin-bottom:4px;
 ⏰ DÍAS ATRASO: ${parseInt(c.retraso || 0)}
 </div>
 </div>
-🚨 ${c.cuotasVencidas || 0} cuotas<br>
+<div style="
+color:#e74c3c;
+font-weight:bold;
+margin-top:4px;
+">
+🚨 Cuotas vencidas: ${c.cuotasVencidas || 0}
+</div>
 👤 ${c.asesor}<br>
 📞 <a href="#"
 onclick='enviarCobranzaDesdeLista(

@@ -1715,6 +1715,30 @@ onclick="abrirGestion('${c.nombre}','${c.celular}')">
 </button>
 ${c.estadoGestion ? `
 <div style="
+margin-top:8px;
+background:#eef8ff;
+border-left:4px solid #3498db;
+padding:8px;
+border-radius:8px;
+font-size:12px;
+color:#333;
+">
+
+<b>📝 Gestión:</b> ${c.estadoGestion}<br>
+
+<b>💬 Comentario:</b>
+${c.comentarioGestion || "Sin comentario"}<br>
+
+<b>👤 Usuario:</b>
+${c.usuarioGestion || ""}<br>
+
+<b>🕒 Fecha:</b>
+${c.fechaGestion || ""}
+
+</div>
+` : ""}
+${c.estadoGestion ? `
+<div style="
 margin-top:6px;
 background:#f8f8f8;
 padding:6px;

@@ -240,6 +240,10 @@ Asesor:
 
 <div id="dashboard" style="display:none">
 <div class="grid">
+<div class="box" onclick="verHistorialGestiones()">
+<div style="font-size:28px;">📝</div>
+<div>Gestiones</div>
+</div>
 <div class="box" onclick="mostrar('simulador')">
 <div style="font-size:28px;">💰</div>
 <div>Simulación y Promocion</div>
@@ -586,7 +590,19 @@ Eliminar Usuario
 
 </div>
 <div id="historialDiv" class="card" style="display:none;">
+<div id="historialGestionesDiv"
+class="card"
+style="display:none;">
 
+<div class="volver" onclick="volver()">
+← Volver
+</div>
+
+<h3>📝 Historial de Gestiones</h3>
+
+<div id="listaGestiones"></div>
+
+</div>
 <div class="volver" onclick="volver()">← Volver</div>
 
 <h3>📋 Historial de Pagos</h3>
@@ -1883,7 +1899,14 @@ if(p==="admin") renderUsuarios();
 function volver(){
 
 app.style.display="none";
-["simulador","clientes","pagos","admin","historialDiv"]
+[
+"simulador",
+"clientes",
+"pagos",
+"admin",
+"historialDiv",
+"historialGestionesDiv"
+]
 .forEach(id=>{
 document.getElementById(id).style.display="none";
 });  
@@ -2231,7 +2254,28 @@ c.usuarioGestion = asesor;
 }
 
 });
+// HISTORIAL DE GESTIONES
 
+let historialGestiones =
+JSON.parse(
+localStorage.getItem("historialGestiones")
+) || [];
+
+historialGestiones.push({
+
+cliente: nombre,
+celular: celular,
+estado: estados[estado] || "",
+comentario: comentario || "",
+usuario: asesor,
+fecha: new Date().toLocaleString()
+
+});
+
+localStorage.setItem(
+"historialGestiones",
+JSON.stringify(historialGestiones)
+);
 localStorage.setItem(
 "cartera",
 JSON.stringify(data)
@@ -2351,7 +2395,78 @@ function enviarFiltro(){
   window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 }
   function verHistorialPagos(){
+function verHistorialGestiones(){
 
+document.getElementById("dashboard").style.display="none";
+
+document.querySelector(".resumen").style.display="none";
+
+app.style.display="block";
+
+["simulador",
+"clientes",
+"pagos",
+"admin",
+"historialDiv"]
+.forEach(id=>{
+
+let el=document.getElementById(id);
+
+if(el) el.style.display="none";
+
+});
+
+document.getElementById(
+"historialGestionesDiv"
+).style.display="block";
+
+let lista =
+document.getElementById("listaGestiones");
+
+lista.innerHTML="";
+
+let historial =
+JSON.parse(
+localStorage.getItem("historialGestiones")
+) || [];
+
+if(historial.length===0){
+
+lista.innerHTML=
+"<p>No existen gestiones registradas</p>";
+
+return;
+
+}
+
+historial
+.slice()
+.reverse()
+.forEach(g=>{
+
+lista.innerHTML += `
+
+<div class="item">
+
+<b>👤 ${g.cliente}</b><br>
+
+📞 ${g.celular}<br>
+
+📌 ${g.estado}<br>
+
+💬 ${g.comentario}<br>
+
+👨‍💼 ${g.usuario}<br>
+
+🕒 ${g.fecha}
+
+</div>
+
+`;
+
+});
+
+}
 document.getElementById("dashboard").style.display="none";
 document.querySelector(".resumen").style.display = "none";
 

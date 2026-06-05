@@ -2380,9 +2380,8 @@ function enviarFiltro(){
 
   window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 }
-function cargarPerfilAsesor(usuario){
-function verHistorialGestiones(){
 
+function verHistorialGestiones(){
 document.getElementById("dashboard").style.display="none";
 document.querySelector(".resumen").style.display="none";
 
@@ -2485,6 +2484,7 @@ lista.innerHTML += `
 });
 
 }
+function cargarPerfilAsesor(usuario){  
 let foto = document.getElementById("fotoPerfil");
 let nombreCompleto = document.getElementById("nombreCompletoAsesor");
 let usuarios =

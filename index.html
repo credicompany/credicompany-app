@@ -2201,17 +2201,10 @@ c.nombre === nombre &&
 c.celular === celular
 ){
 
-c.estadoGestion =
-estados[estado] || "";
-
-c.comentarioGestion =
-comentario || "";
-
-c.fechaGestion =
-new Date().toLocaleString();
-
-c.usuarioGestion =
-asesor;
+c.estadoGestion = estados[estado] || "";
+c.comentarioGestion = comentario || "";
+c.fechaGestion = new Date().toLocaleString();
+c.usuarioGestion = asesor;
 
 }
 
@@ -2221,7 +2214,7 @@ localStorage.setItem(
 "cartera",
 JSON.stringify(data)
 );
-
+db.ref("cartera").set(data);
 alert("✅ Gestión guardada");
 
 filtrarMora(
@@ -2229,6 +2222,13 @@ filtroMin,
 filtroMax
 );
 
+}
+
+function registrarPago(id){
+
+let [nombre, celular] = id.split("|");
+
+...
 }
 let [nombre, celular] = id.split("|");
 

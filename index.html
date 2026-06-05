@@ -240,10 +240,6 @@ Asesor:
 
 <div id="dashboard" style="display:none">
 <div class="grid">
-<div class="box" onclick="verHistorialGestiones()">
-<div style="font-size:28px;">📝</div>
-<div>Gestiones</div>
-</div>
 <div class="box" onclick="mostrar('simulador')">
 <div style="font-size:28px;">💰</div>
 <div>Simulación y Promocion</div>
@@ -590,22 +586,7 @@ Eliminar Usuario
 
 </div>
 <div id="historialDiv" class="card" style="display:none;">
-</div>
 
-<div id="historialGestionesDiv"
-class="card"
-style="display:none;">
-</div>
-
-<div class="volver" onclick="volver()">
-← Volver
-</div>
-
-<h3>📝 Historial de Gestiones</h3>
-
-<div id="listaGestiones"></div>
-
-</div>
 <div class="volver" onclick="volver()">← Volver</div>
 
 <h3>📋 Historial de Pagos</h3>
@@ -1321,12 +1302,7 @@ cuotasVencidas:0,
 celular:"",
 producto:"",
 direccion:"",
-distrito:"",
-
-estadoGestion:"",
-comentarioGestion:"",
-fechaGestion:"",
-usuarioGestion:""
+distrito:""
 };
 
 headers.forEach((h,i)=>{
@@ -1718,45 +1694,8 @@ ${c.celular}
 📦 ${c.producto}<br>
 📍 ${c.direccion}<br>
 🏙️ ${c.distrito}
-<br><br>
 
-<button
-style="
-background:#3498db;
-color:white;
-padding:8px;
-border:none;
-border-radius:8px;
-font-size:12px;
-"
-onclick="abrirGestion('${c.nombre}','${c.celular}')">
-📝 Gestión
-</button>
-${c.estadoGestion ? `
-<div style="
-margin-top:8px;
-background:#eef8ff;
-border-left:4px solid #3498db;
-padding:8px;
-border-radius:8px;
-font-size:12px;
-color:#333;
-">
-
-<b>📝 Gestión:</b> ${c.estadoGestion}<br>
-
-<b>💬 Comentario:</b>
-${c.comentarioGestion || "Sin comentario"}<br>
-
-<b>👤 Usuario:</b>
-${c.usuarioGestion || ""}<br>
-
-<b>🕒 Fecha:</b>
-${c.fechaGestion || ""}
-
-</div>
-` : ""}
-
+</div>`;
 });
 }
 function filtrarPorAsesor(nombreAsesor){
@@ -1885,14 +1824,7 @@ if(p==="admin") renderUsuarios();
 function volver(){
 
 app.style.display="none";
-[
-"simulador",
-"clientes",
-"pagos",
-"admin",
-"historialDiv",
-"historialGestionesDiv"
-]
+["simulador","clientes","pagos","admin","historialDiv"]
 .forEach(id=>{
 document.getElementById(id).style.display="none";
 });  
@@ -2196,86 +2128,8 @@ window.open(
 );
 
 }
-// GESTIÓN DE COBRANZA
-function abrirGestion(nombre,celular){
 
-let estado = prompt(
-`Seleccione:
-
-1 = Visitado
-2 = No encontrado
-3 = Reprogramado
-4 = Negativa
-5 = Pago realizado`
-);
-
-if(!estado) return;
-
-let comentario =
-prompt("Comentario de gestión");
-
-let estados = {
-1:"VISITADO",
-2:"NO ENCONTRADO",
-3:"REPROGRAMADO",
-4:"NEGATIVA",
-5:"PAGO REALIZADO"
-};
-
-let data =
-JSON.parse(localStorage.getItem("cartera")) || [];
-
-data.forEach(c=>{
-
-if(
-c.nombre === nombre &&
-c.celular === celular
-){
-
-c.estadoGestion = estados[estado] || "";
-c.comentarioGestion = comentario || "";
-c.fechaGestion = new Date().toLocaleString();
-c.usuarioGestion = asesor;
-
-}
-
-});
-// HISTORIAL DE GESTIONES
-
-let historialGestiones =
-JSON.parse(
-localStorage.getItem("historialGestiones")
-) || [];
-
-historialGestiones.push({
-
-cliente: nombre,
-celular: celular,
-estado: estados[estado] || "",
-comentario: comentario || "",
-usuario: asesor,
-fecha: new Date().toLocaleString()
-
-});
-
-localStorage.setItem(
-"historialGestiones",
-JSON.stringify(historialGestiones)
-);
-localStorage.setItem(
-"cartera",
-JSON.stringify(data)
-);
-db.ref("cartera").set(data);
-alert("✅ Gestión guardada");
-
-filtrarMora(
-filtroMin,
-filtroMax
-);
-
-}
-
+// ✅ CANCELADO (ELIMINAR)
 function registrarPago(id){
 
 let [nombre, celular] = id.split("|");
@@ -2284,51 +2138,41 @@ let data = JSON.parse(localStorage.getItem("cartera")) || [];
 
 data = data.map(c=>{
 
-    if(c.nombre === nombre && c.celular === celular){
+if(c.nombre === nombre && c.celular === celular){
+c.pagado_monto = parseFloat(c.monto) || 0;
+c.ultimo_pago = new Date().toLocaleString();
+c.estado_gestion = "PAGADO";
 
-        c.pagado_monto = parseFloat(c.monto) || 0;
-        c.ultimo_pago = new Date().toLocaleString();
-        c.estado_gestion = "PAGADO";
+// pago completo
+c.retraso = 0;
+c.cuotasVencidas = 0;
+c.pagado_hoy = true;
+}
 
-        c.retraso = 0;
-        c.cuotasVencidas = 0;
-        c.pagado_hoy = true;
-    }
-
-    return c;
+return c;
 
 });
 
 localStorage.setItem("cartera", JSON.stringify(data));
-
-let clientePagado = data.find(c =>
+let clientePagado = data.find(c => 
     c.nombre === nombre && c.celular === celular
 );
 
-let historial =
-JSON.parse(localStorage.getItem("historialPagos")) || [];
+let historial = JSON.parse(localStorage.getItem("historialPagos")) || [];
 
-if(clientePagado){
+historial.push({
+    cliente: nombre,
+    celular: celular,
+    monto: clientePagado.monto || 0,
+    fecha: new Date().toLocaleString(),
+    asesor: clientePagado.asesor || "Sin asesor"
+});
 
-    historial.push({
-        cliente: nombre,
-        celular: celular,
-        monto: clientePagado.monto || 0,
-        fecha: new Date().toLocaleString(),
-        asesor: clientePagado.asesor || "Sin asesor"
-    });
-
-    localStorage.setItem(
-        "historialPagos",
-        JSON.stringify(historial)
-    );
-}
-
+localStorage.setItem("historialPagos", JSON.stringify(historial));
 filtrarMora(0,1000);
 actualizarResumen();
 
 alert("✅ Pago registrado correctamente");
-
 }
 function exportarUsuarios(){
 let data = localStorage.getItem("usuarios") || "[]";
@@ -2380,78 +2224,24 @@ function enviarFiltro(){
 
   window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 }
-
-function verHistorialGestiones(){
-document.getElementById("dashboard").style.display="none";
-document.querySelector(".resumen").style.display="none";
-
-app.style.display="block";
-
-[
-"simulador",
-"clientes",
-"pagos",
-"admin",
-"historialDiv"
-].forEach(id=>{
-let el=document.getElementById(id);
-if(el) el.style.display="none";
-});
-
-document.getElementById("historialGestionesDiv").style.display="block";
-
-let lista=document.getElementById("listaGestiones");
-
-lista.innerHTML="";
-
-let historial=
-JSON.parse(localStorage.getItem("historialGestiones")) || [];
-
-if(historial.length===0){
-lista.innerHTML="<p>No existen gestiones registradas</p>";
-return;
-}
-
-historial.slice().reverse().forEach(g=>{
-
-lista.innerHTML += `
-<div class="item">
-<b>👤 ${g.cliente}</b><br>
-📞 ${g.celular}<br>
-📌 ${g.estado}<br>
-💬 ${g.comentario}<br>
-👨‍💼 ${g.usuario}<br>
-🕒 ${g.fecha}
-</div>`;
-});
-
-}
-function verHistorialPagos(){
+  function verHistorialPagos(){
 
 document.getElementById("dashboard").style.display="none";
-document.querySelector(".resumen").style.display="none";
+document.querySelector(".resumen").style.display = "none";
 
-app.style.display="block";
-
-[
-"simulador",
-"clientes",
-"pagos",
-"admin",
-"historialGestionesDiv"
-].forEach(id=>{
-let el=document.getElementById(id);
-if(el) el.style.display="none";
+app.style.display = "block";    
+["simulador","clientes","pagos","admin"].forEach(id=>{
+document.getElementById(id).style.display="none";
 });
-
 document.getElementById("historialDiv").style.display="block";
 
-let lista=document.getElementById("listaHistorial");
+let lista = document.getElementById("listaHistorial");
 
-lista.innerHTML="";
+// 🔥 LIMPIAR
+lista.innerHTML = "";
 
-let bonosHoy =
-JSON.parse(localStorage.getItem("bonosHoy")) || {};
+// 🔥 BONOS
+let bonosHoy = JSON.parse(localStorage.getItem("bonosHoy")) || {};
 
 lista.innerHTML += "<h4>💰 Bonos del día</h4>";
 
@@ -2462,12 +2252,12 @@ lista.innerHTML += `
 </div>`;
 });
 
-let historial =
-JSON.parse(localStorage.getItem("historialPagos")) || [];
+// 🔥 PAGOS
+let historial = JSON.parse(localStorage.getItem("historialPagos")) || [];
 
 lista.innerHTML += "<h4>📋 Pagos registrados</h4>";
 
-if(historial.length===0){
+if(historial.length === 0){
 lista.innerHTML += "<p>No hay pagos registrados</p>";
 return;
 }
@@ -2484,7 +2274,8 @@ lista.innerHTML += `
 });
 
 }
-function cargarPerfilAsesor(usuario){  
+function cargarPerfilAsesor(usuario){
+
 let foto = document.getElementById("fotoPerfil");
 let nombreCompleto = document.getElementById("nombreCompletoAsesor");
 let usuarios =

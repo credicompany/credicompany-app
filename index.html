@@ -1302,7 +1302,12 @@ cuotasVencidas:0,
 celular:"",
 producto:"",
 direccion:"",
-distrito:""
+distrito:"",
+
+estadoGestion:"",
+comentarioGestion:"",
+fechaGestion:"",
+usuarioGestion:""
 };
 
 headers.forEach((h,i)=>{
@@ -1694,7 +1699,37 @@ ${c.celular}
 📦 ${c.producto}<br>
 📍 ${c.direccion}<br>
 🏙️ ${c.distrito}
+<br><br>
 
+<button
+style="
+background:#3498db;
+color:white;
+padding:8px;
+border:none;
+border-radius:8px;
+font-size:12px;
+"
+onclick="abrirGestion('${c.nombre}','${c.celular}')">
+📝 Gestión
+</button>
+${c.estadoGestion ? `
+<div style="
+margin-top:6px;
+background:#f8f8f8;
+padding:6px;
+border-radius:8px;
+font-size:11px;
+">
+
+<b>📝 ${c.estadoGestion}</b><br>
+
+${c.comentarioGestion || ""}<br>
+
+🕒 ${c.fechaGestion || ""}
+
+</div>
+` : ""}
 </div>`;
 });
 }

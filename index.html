@@ -2380,7 +2380,7 @@ lista.innerHTML += `
 });
 
 }
-  function abrirGestion(nombre, celular){
+ function abrirGestion(nombre, celular){
 
 let comentario = prompt(
 "Ingrese gestión realizada:"
@@ -2388,29 +2388,16 @@ let comentario = prompt(
 
 if(!comentario) return;
 
-let historial =
-JSON.parse(
-localStorage.getItem("historialGestiones")
-) || [];
+let gestion = {
+cliente: nombre,
+celular: celular,
+tipo: "GESTIÓN",
+comentario: comentario,
+asesor: asesor,
+fecha: new Date().toLocaleString()
+};
 
-historial.unshift({
-
-cliente:nombre,
-celular:celular,
-tipo:"GESTIÓN",
-
-comentario:comentario,
-
-asesor:asesor,
-
-fecha:new Date().toLocaleString()
-
-});
-
-localStorage.setItem(
-"historialGestiones",
-JSON.stringify(historial)
-);
+db.ref("gestiones").push(gestion);
 
 alert("✅ Gestión guardada");
 
@@ -2443,12 +2430,29 @@ document.getElementById(
 
 lista.innerHTML="";
 
-let historial =
-JSON.parse(
-localStorage.getItem(
-"historialGestiones"
-)
-) || [];
+db.ref("gestiones").once("value", snap => {
+
+let historial = [];
+
+snap.forEach(item=>{
+historial.push(item.val());
+});
+
+lista.innerHTML = "";
+
+historial.reverse().forEach(g=>{
+
+lista.innerHTML += `
+<div class="item">
+<b>${g.cliente}</b><br>
+📞 ${g.celular}<br>
+📝 ${g.comentario}<br>
+👤 ${g.asesor}<br>
+🕒 ${g.fecha}
+</div>`;
+});
+
+});
 
 if(historial.length===0){
 

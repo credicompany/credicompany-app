@@ -261,14 +261,15 @@ onclick="mostrar('admin')">
 <div>Usuarios</div>
 
 </div>
-  <div class="box" onclick="verHistorialPagos()">
-    <div class="box" onclick="verHistorialGestiones()">
-<div style="font-size:28px;">📝</div>
-<div>Gestiones</div>
+ <div class="box" onclick="verHistorialGestiones()">
+    <div style="font-size:28px;">📝</div>
+    <div>Gestiones</div>
 </div>
+
+<div class="box" onclick="verHistorialPagos()">
     <div style="font-size:28px;">📋</div>
     <div>Bono diario</div>
-  </div>
+</div>
 </div>
 </div>
 
@@ -2529,11 +2530,7 @@ lista.innerHTML += `
 
 📝 ${g.comentario}<br>
 
-👤 ${
-g.usuario ||
-g.asesor ||
-"Sin usuario"
-}<br>
+👤 ${g.asesor || "Sin usuario"}<br>
 
 🕒 ${g.fecha}
 

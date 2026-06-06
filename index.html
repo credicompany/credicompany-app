@@ -602,32 +602,22 @@ Eliminar Usuario
 
 </div>
 <div id="historialDiv" class="card" style="display:none;">
+    <div class="volver" onclick="volver()">← Volver</div>
+    <h3>📋 Historial de Pagos</h3>
+    <h3>💰 Historial de Bonos</h3>
+    <div id="listaHistorial"></div>
+</div>
+
 <div id="historialGestionesDiv" class="card" style="display:none;">
+    <div class="volver" onclick="volver()">← Volver</div>
+    <h3>📝 Historial de Gestiones</h3>
+    <div id="listaGestiones"></div>
+</div>
+
 <div id="historialClienteDiv" class="card" style="display:none;">
-<div class="volver"
-onclick="volverHistorialCliente()">
-← Volver
-</div>
-
-<h3>📋 Historial del Cliente</h3>
-
-<div id="historialClienteContenido"></div>
-
-</div>
-<div class="volver" onclick="volver()">
-← Volver
-</div>
-
-<h3>📝 Historial de Gestiones</h3>
-
-<div id="listaGestiones"></div>
-
-</div>
-<div class="volver" onclick="volver()">← Volver</div>
-
-<h3>📋 Historial de Pagos</h3>
-<h3>💰 Historial de Bonos</h3>
-<div id="listaHistorial"></div>
+    <div class="volver" onclick="volverHistorialCliente()">← Volver</div>
+    <h3>📋 Historial del Cliente</h3>
+    <div id="historialClienteContenido"></div>
 </div>
 <div id="modalQR" class="modal" onclick="cerrarQR()">
 <img id="imgQR">
@@ -1906,8 +1896,17 @@ document.querySelector(".resumen").style.display = "none";
 
 app.style.display="block";
 
-["simulador","clientes","pagos","admin","historialDiv"].forEach(id=>{
-document.getElementById(id).style.display="none";
+[
+"simulador",
+"clientes",
+"pagos",
+"admin",
+"historialDiv",
+"historialGestionesDiv",
+"historialClienteDiv"
+].forEach(id=>{
+let el = document.getElementById(id);
+if(el) el.style.display="none";
 });
 
 document.getElementById(p).style.display="block";
@@ -1923,10 +1922,18 @@ if(p==="admin") renderUsuarios();
 function volver(){
 
 app.style.display="none";
-["simulador","clientes","pagos","admin","historialDiv"]
-.forEach(id=>{
-document.getElementById(id).style.display="none";
-});  
+[
+"simulador",
+"clientes",
+"pagos",
+"admin",
+"historialDiv",
+"historialGestionesDiv",
+"historialClienteDiv"
+].forEach(id=>{
+let el=document.getElementById(id);
+if(el) el.style.display="none";
+});
 
 document.querySelector(".resumen").style.display = "grid";
 
@@ -2409,28 +2416,25 @@ alert("✅ Gestión guardada");
 
 }
 function verHistorialGestiones(){
-
+document.getElementById("historialDiv").style.display="none";
+document.getElementById("historialClienteDiv").style.display="none";
 document.getElementById("dashboard").style.display="none";
 
 document.querySelector(".resumen").style.display="none";
 
 app.style.display="block";
-
 [
 "simulador",
 "clientes",
 "pagos",
-"admin",
-"historialDiv"
+"admin"
 ].forEach(id=>{
 
 document.getElementById(id).style.display="none";
 
 });
 
-document.getElementById(
-"historialGestionesDiv"
-).style.display="block";
+document.getElementById("historialGestionesDiv").style.display="block";
 
 let lista =
 document.getElementById(

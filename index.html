@@ -600,7 +600,7 @@ Eliminar Usuario
 </div>
 
 </div>
-
+<div id="historialDiv" class="card" style="display:none;">
 <div id="historialGestionesDiv" class="card" style="display:none;">
 <div class="volver" onclick="volver()">
 ← Volver
@@ -1744,8 +1744,6 @@ ${c.celular}
 📍 ${c.direccion}<br>
 🏙️ ${c.distrito}
 
-${parseFloat(c.retraso) > 0 ? `
-
 <div class="fila" style="margin-top:8px;">
 
 <button
@@ -1757,9 +1755,17 @@ onclick="abrirGestion(
 📝 Gestión
 </button>
 
+<button
+style="background:#27ae60;color:white;"
+onclick="registrarVisita(
+'${c.nombre}',
+'${c.celular}'
+)">
+🚗 Visita
+</button>
+
 </div>
 
-` : ""}
 </div>`;
 });
 }
@@ -2341,32 +2347,8 @@ lista.innerHTML += `
 }
   function abrirGestion(nombre, celular){
 
-let tipo = prompt(
-`Seleccione:
-
-1 = Llamada efectiva
-2 = No contesta
-3 = Visita realizada
-4 = Promesa de pago
-5 = Pago realizado
-6 = Reprogramado
-7 = Negativa`
-);
-
-if(!tipo) return;
-
-let estado = "GESTIÓN";
-
-if(tipo=="1") estado="LLAMADA EFECTIVA";
-if(tipo=="2") estado="NO CONTESTA";
-if(tipo=="3") estado="VISITA REALIZADA";
-if(tipo=="4") estado="PROMESA DE PAGO";
-if(tipo=="5") estado="PAGO REALIZADO";
-if(tipo=="6") estado="REPROGRAMADO";
-if(tipo=="7") estado="NEGATIVA";
-
 let comentario = prompt(
-"Ingrese comentario:"
+"Ingrese gestión realizada:"
 );
 
 if(!comentario) return;
@@ -2380,12 +2362,11 @@ historial.unshift({
 
 cliente:nombre,
 celular:celular,
-
-tipo:estado,
+tipo:"GESTIÓN",
 
 comentario:comentario,
 
-usuario:asesor,
+asesor:asesor,
 
 fecha:new Date().toLocaleString()
 
@@ -2397,6 +2378,42 @@ JSON.stringify(historial)
 );
 
 alert("✅ Gestión guardada");
+
+}
+
+function registrarVisita(nombre, celular){
+
+let comentario = prompt(
+"Resultado de la visita:"
+);
+
+if(!comentario) return;
+
+let historial =
+JSON.parse(
+localStorage.getItem("historialGestiones")
+) || [];
+
+historial.unshift({
+
+cliente:nombre,
+celular:celular,
+tipo:"VISITA",
+
+comentario:comentario,
+
+asesor:asesor,
+
+fecha:new Date().toLocaleString()
+
+});
+
+localStorage.setItem(
+"historialGestiones",
+JSON.stringify(historial)
+);
+
+alert("✅ Visita registrada");
 
 }
 
@@ -2453,12 +2470,14 @@ lista.innerHTML += `
 <div class="item">
 
 <b>${g.cliente}</b><br>
+
 📞 ${g.celular}<br>
-📌 ${g.tipo || "GESTIÓN"}<br>
+
+📌 ${g.tipo}<br>
+
 📝 ${g.comentario}<br>
-<span style="color:#123B63;font-weight:bold;">
-👤 ${g.usuario || g.asesor || "Sin usuario"}
-</span><br>
+
+👤 ${g.asesor}<br>
 
 🕒 ${g.fecha}
 

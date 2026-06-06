@@ -2365,16 +2365,16 @@ historial.unshift({
 
 cliente:nombre,
 celular:celular,
+
 tipo:"GESTIÓN",
 
 comentario:comentario,
 
-asesor:asesor,
+usuario:asesor || "Sin usuario",
 
 fecha:new Date().toLocaleString()
 
 });
-
 localStorage.setItem(
 "historialGestiones",
 JSON.stringify(historial)
@@ -2405,7 +2405,7 @@ tipo:"VISITA",
 
 comentario:comentario,
 
-asesor:asesor,
+usuario:asesor || "Sin usuario",
 
 fecha:new Date().toLocaleString()
 
@@ -2473,14 +2473,12 @@ lista.innerHTML += `
 <div class="item">
 
 <b>${g.cliente}</b><br>
-
 📞 ${g.celular}<br>
-
-📌 ${g.tipo}<br>
-
+📌 ${g.tipo || "GESTIÓN"}<br>
 📝 ${g.comentario}<br>
-
-👤 ${g.asesor}<br>
+<span style="color:#123B63;font-weight:bold;">
+👤 ${g.usuario || g.asesor || "Sin usuario"}
+</span><br>
 
 🕒 ${g.fecha}
 

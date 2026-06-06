@@ -240,10 +240,6 @@ Asesor:
 
 <div id="dashboard" style="display:none">
 <div class="grid">
-  <div class="box" onclick="verKPIProduccion()">
-    <div style="font-size:28px;">📈</div>
-    <div>KPI Producción</div>
-</div>
 <div class="box" onclick="mostrar('simulador')">
 <div style="font-size:28px;">💰</div>
 <div>Simulación y Promocion</div>
@@ -619,19 +615,6 @@ Eliminar Usuario
 </div>
 
 <div id="historialClienteDiv" class="card" style="display:none;">
-  <div id="kpiProduccionDiv"
-class="card"
-style="display:none;">
-
-<div class="volver" onclick="volver()">
-← Volver
-</div>
-
-<h3>📈 KPI Producción</h3>
-
-<div id="listaKPIProduccion"></div>
-
-</div>
     <div class="volver" onclick="volverHistorialCliente()">← Volver</div>
     <h3>📋 Historial del Cliente</h3>
     <div id="historialClienteContenido"></div>
@@ -1921,9 +1904,7 @@ app.style.display="block";
 "historialDiv",
 "historialGestionesDiv",
 "historialClienteDiv"
-"kpiProduccionDiv"
-]
-.forEach(id=>{
+].forEach(id=>{
 let el = document.getElementById(id);
 if(el) el.style.display="none";
 });
@@ -2577,166 +2558,6 @@ document.getElementById(
 document.getElementById(
 "clientes"
 ).style.display="block";
-
-}
-function verKPIProduccion(){
-
-dashboard.style.display="none";
-
-document.querySelector(".resumen").style.display="none";
-
-app.style.display="block";
-
-[
-"simulador",
-"clientes",
-"pagos",
-"admin",
-"historialDiv",
-"historialGestionesDiv",
-"historialClienteDiv"
-].forEach(id=>{
-
-let el=document.getElementById(id);
-
-if(el) el.style.display="none";
-
-});
-
-document.getElementById(
-"kpiProduccionDiv"
-).style.display="block";
-
-let data =
-JSON.parse(localStorage.getItem("cartera")) || [];
-
-let asesores = {};
-
-let totalGeneral = 0;
-
-data.forEach(c=>{
-
-let asesor = c.asesor || "Sin asesor";
-
-let monto =
-parseFloat(c.monto) || 0;
-
-if(!asesores[asesor]){
-
-asesores[asesor] = {
-
-clientes:0,
-monto:0
-
-};
-
-}
-
-asesores[asesor].clientes++;
-
-asesores[asesor].monto += monto;
-
-totalGeneral += monto;
-
-});
-
-let lista =
-document.getElementById(
-"listaKPIProduccion"
-);
-
-lista.innerHTML = "";
-
-lista.innerHTML += `
-
-<div class="item"
-style="
-background:#123B63;
-color:white;
-font-size:14px;
-">
-
-📊 PRODUCCIÓN GENERAL<br><br>
-
-💰 Total cartera:
-S/${totalGeneral.toFixed(2)}
-
-</div>
-
-`;
-
-Object.entries(asesores)
-
-.sort((a,b)=>
-
-b[1].monto -
-a[1].monto
-
-)
-
-.forEach((item,index)=>{
-
-let nombre = item[0];
-
-let datos = item[1];
-
-let ticket =
-datos.clientes > 0
-? datos.monto /
-datos.clientes
-: 0;
-
-let ranking = "🏅";
-
-if(index===0)
-ranking="🥇";
-
-if(index===1)
-ranking="🥈";
-
-if(index===2)
-ranking="🥉";
-
-let participacion =
-totalGeneral > 0
-? (
-datos.monto /
-totalGeneral
-*100
-).toFixed(1)
-: 0;
-
-lista.innerHTML += `
-
-<div class="item">
-
-<b>
-${ranking}
-${nombre.toUpperCase()}
-</b>
-
-<br><br>
-
-💰 Colocado:
-S/${datos.monto.toFixed(2)}
-<br>
-
-👥 Clientes:
-${datos.clientes}
-<br>
-
-📈 Ticket promedio:
-S/${ticket.toFixed(2)}
-<br>
-
-📊 Participación:
-${participacion}%
-
-</div>
-
-`;
-
-});
 
 }
 function cargarPerfilAsesor(usuario){

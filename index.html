@@ -541,7 +541,30 @@ font-size:12px;
 
 </div>
 </div>
-
+<input
+id="buscarCliente"
+placeholder="🔍 Buscar cliente, celular o DNI"
+style="
+width:100%;
+padding:12px;
+border-radius:10px;
+border:none;
+margin-top:10px;
+margin-bottom:10px;
+"
+onkeyup="filtrarMora(filtroMin,filtroMax)">
+<input
+id="buscarCliente"
+placeholder="🔍 Buscar cliente, celular o dirección"
+style="
+width:100%;
+padding:12px;
+border-radius:10px;
+border:none;
+margin-top:10px;
+margin-bottom:10px;
+"
+onkeyup="filtrarMora(filtroMin,filtroMax)">
 <div id="listaClientes"></div>
 
 </div>
@@ -1589,13 +1612,34 @@ lista.innerHTML="";
 let data = JSON.parse(localStorage.getItem("cartera")) || [];
 filtroMin = min;
 filtroMax = max;
-
+let textoBusqueda =
+(document.getElementById("buscarCliente")?.value || "")
+.toLowerCase()
+.trim();
 let filtrados = data.filter(c=>{
 
 if(c.pagado_hoy) return false;
 
 let r = parseFloat(c.retraso)||0;
+let coincideBusqueda =
 
+!textoBusqueda ||
+
+(c.nombre || "")
+.toLowerCase()
+.includes(textoBusqueda)
+
+||
+
+(c.celular || "")
+.toString()
+.includes(textoBusqueda)
+
+||
+
+(c.direccion || "")
+.toLowerCase()
+.includes(textoBusqueda);
 // 🔥 ADMIN con filtro combinado
 if(
 asesor === "admin" ||
@@ -1607,7 +1651,9 @@ asesor === "operaciones"
         (c.asesor || "").toLowerCase() === filtroAsesor.toLowerCase();
     }
 
-    return r>=filtroMin && r<=filtroMax;
+    return r>=filtroMin &&
+r<=filtroMax &&
+coincideBusqueda;
 }
 
 // 🔥 ASESOR NORMAL
@@ -1623,7 +1669,9 @@ let asesorActual = (asesor || "")
 
 // SLOPEZ puede ver toda la cartera
 if(asesorActual === "slopez"){
-    return r>=filtroMin && r<=filtroMax;
+   return r>=filtroMin &&
+r<=filtroMax &&
+coincideBusqueda;
 }
 
 let esMio = asesorCliente === asesorActual;

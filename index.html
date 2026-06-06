@@ -1746,15 +1746,24 @@ ${c.celular}
 
 <div class="fila" style="margin-top:8px;">
 ${parseInt(c.retraso || 0) > 0 ? `
-<div class="fila" style="margin-top:8px;">
+<div style="margin-top:8px;">
 
 <button
-style="background:#3498db;color:white;"
+style="
+background:#3498db;
+color:white;
+width:100%;
+padding:12px;
+border:none;
+border-radius:12px;
+font-weight:bold;
+font-size:14px;
+"
 onclick="abrirGestion(
 '${c.nombre}',
 '${c.celular}'
 )">
-📝 Gestión
+📝 Registrar Gestión
 </button>
 
 </div>

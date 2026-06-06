@@ -600,7 +600,7 @@ Eliminar Usuario
 </div>
 
 </div>
-<div id="historialDiv" class="card" style="display:none;">
+
 <div id="historialGestionesDiv" class="card" style="display:none;">
 <div class="volver" onclick="volver()">
 ← Volver
@@ -1757,15 +1757,6 @@ onclick="abrirGestion(
 📝 Gestión
 </button>
 
-<button
-style="background:#27ae60;color:white;"
-onclick="registrarVisita(
-'${c.nombre}',
-'${c.celular}'
-)">
-🚗 Visita
-</button>
-
 </div>
 
 ` : ""}
@@ -2350,8 +2341,32 @@ lista.innerHTML += `
 }
   function abrirGestion(nombre, celular){
 
+let tipo = prompt(
+`Seleccione:
+
+1 = Llamada efectiva
+2 = No contesta
+3 = Visita realizada
+4 = Promesa de pago
+5 = Pago realizado
+6 = Reprogramado
+7 = Negativa`
+);
+
+if(!tipo) return;
+
+let estado = "GESTIÓN";
+
+if(tipo=="1") estado="LLAMADA EFECTIVA";
+if(tipo=="2") estado="NO CONTESTA";
+if(tipo=="3") estado="VISITA REALIZADA";
+if(tipo=="4") estado="PROMESA DE PAGO";
+if(tipo=="5") estado="PAGO REALIZADO";
+if(tipo=="6") estado="REPROGRAMADO";
+if(tipo=="7") estado="NEGATIVA";
+
 let comentario = prompt(
-"Ingrese gestión realizada:"
+"Ingrese comentario:"
 );
 
 if(!comentario) return;
@@ -2366,57 +2381,22 @@ historial.unshift({
 cliente:nombre,
 celular:celular,
 
-tipo:"GESTIÓN",
+tipo:estado,
 
 comentario:comentario,
 
-usuario:asesor || "Sin usuario",
+usuario:asesor,
 
 fecha:new Date().toLocaleString()
 
 });
+
 localStorage.setItem(
 "historialGestiones",
 JSON.stringify(historial)
 );
 
 alert("✅ Gestión guardada");
-
-}
-
-function registrarVisita(nombre, celular){
-
-let comentario = prompt(
-"Resultado de la visita:"
-);
-
-if(!comentario) return;
-
-let historial =
-JSON.parse(
-localStorage.getItem("historialGestiones")
-) || [];
-
-historial.unshift({
-
-cliente:nombre,
-celular:celular,
-tipo:"VISITA",
-
-comentario:comentario,
-
-usuario:asesor || "Sin usuario",
-
-fecha:new Date().toLocaleString()
-
-});
-
-localStorage.setItem(
-"historialGestiones",
-JSON.stringify(historial)
-);
-
-alert("✅ Visita registrada");
 
 }
 

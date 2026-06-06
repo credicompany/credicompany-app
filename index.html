@@ -1744,6 +1744,8 @@ ${c.celular}
 📍 ${c.direccion}<br>
 🏙️ ${c.distrito}
 
+${parseFloat(c.retraso) > 0 ? `
+
 <div class="fila" style="margin-top:8px;">
 
 <button
@@ -1766,6 +1768,7 @@ onclick="registrarVisita(
 
 </div>
 
+` : ""}
 </div>`;
 });
 }

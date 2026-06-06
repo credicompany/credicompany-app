@@ -1745,6 +1745,8 @@ ${c.celular}
 🏙️ ${c.distrito}
 
 <div class="fila" style="margin-top:8px;">
+${parseInt(c.retraso || 0) > 0 ? `
+<div class="fila" style="margin-top:8px;">
 
 <button
 style="background:#3498db;color:white;"
@@ -1755,14 +1757,8 @@ onclick="abrirGestion(
 📝 Gestión
 </button>
 
-<button
-style="background:#27ae60;color:white;"
-onclick="registrarVisita(
-'${c.nombre}',
-'${c.celular}'
-)">
-🚗 Visita
-</button>
+</div>
+` : ""}
 
 </div>
 
@@ -2380,43 +2376,6 @@ JSON.stringify(historial)
 alert("✅ Gestión guardada");
 
 }
-
-function registrarVisita(nombre, celular){
-
-let comentario = prompt(
-"Resultado de la visita:"
-);
-
-if(!comentario) return;
-
-let historial =
-JSON.parse(
-localStorage.getItem("historialGestiones")
-) || [];
-
-historial.unshift({
-
-cliente:nombre,
-celular:celular,
-tipo:"VISITA",
-
-comentario:comentario,
-
-asesor:asesor,
-
-fecha:new Date().toLocaleString()
-
-});
-
-localStorage.setItem(
-"historialGestiones",
-JSON.stringify(historial)
-);
-
-alert("✅ Visita registrada");
-
-}
-
 function verHistorialGestiones(){
 
 document.getElementById("dashboard").style.display="none";

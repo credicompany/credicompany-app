@@ -602,6 +602,17 @@ Eliminar Usuario
 </div>
 <div id="historialDiv" class="card" style="display:none;">
 <div id="historialGestionesDiv" class="card" style="display:none;">
+<div id="historialClienteDiv" class="card" style="display:none;">
+<div class="volver"
+onclick="volverHistorialCliente()">
+← Volver
+</div>
+
+<h3>📋 Historial del Cliente</h3>
+
+<div id="historialClienteContenido"></div>
+
+</div>
 <div class="volver" onclick="volver()">
 ← Volver
 </div>
@@ -1694,7 +1705,18 @@ if(c.retraso>60) color="black";
 
 lista.innerHTML+=`
 <div class="item" style="border-left:4px solid ${color}">
-<b style="font-size:11px;">${c.nombre}</b>
+<b
+style="
+font-size:11px;
+cursor:pointer;
+color:#123B63;
+"
+onclick="verHistorialCliente(
+'${c.nombre}',
+'${c.celular}'
+)">
+${c.nombre}
+</b>
 <div style="margin-top:4px;font-weight:bold;color:#27ae60;">
 💰 S/${parseFloat(c.monto).toFixed(2)}
 </div>
@@ -2453,6 +2475,84 @@ lista.innerHTML += `
 `;
 
 });
+
+}
+  function verHistorialCliente(nombre, celular){
+
+document.getElementById("clientes")
+.style.display="none";
+
+document.getElementById(
+"historialClienteDiv"
+).style.display="block";
+
+let historial =
+JSON.parse(
+localStorage.getItem(
+"historialGestiones"
+)
+) || [];
+
+let lista =
+document.getElementById(
+"historialClienteContenido"
+);
+
+lista.innerHTML = "";
+
+let registros =
+historial.filter(g=>
+
+g.cliente === nombre &&
+g.celular === celular
+
+);
+
+if(registros.length === 0){
+
+lista.innerHTML = `
+<div class="item">
+No existen gestiones registradas
+</div>
+`;
+
+return;
+}
+
+registros.forEach(g=>{
+
+lista.innerHTML += `
+
+<div class="item">
+
+<b>📌 ${g.tipo}</b><br>
+
+📝 ${g.comentario}<br>
+
+👤 ${
+g.usuario ||
+g.asesor ||
+"Sin usuario"
+}<br>
+
+🕒 ${g.fecha}
+
+</div>
+
+`;
+
+});
+
+}
+function volverHistorialCliente(){
+
+document.getElementById(
+"historialClienteDiv"
+).style.display="none";
+
+document.getElementById(
+"clientes"
+).style.display="block";
 
 }
 function cargarPerfilAsesor(usuario){

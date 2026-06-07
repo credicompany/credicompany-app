@@ -1,7 +1,6 @@
 // =====================
 // KPI CREDICOMPANY
 // =====================
-
 function cargarExcelKPI(){
 function cargarMetasKPI(){
 

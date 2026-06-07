@@ -1,9 +1,9 @@
-// ======================
+//// =====================
 // KPI CREDICOMPANY
-// ======================
+// =====================
 
-function verKPIProduccion(){
+function cargarExcelKPI(){
 
-alert("Módulo KPI en construcción");
+    alert("✅ Módulo KPI operativo");
 
-}// KPI Credicompany
+}

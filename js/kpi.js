@@ -1,7 +1,6 @@
 // =====================
 // KPI CREDICOMPANY
 // =====================
-function cargarExcelKPI(){
 function cargarMetasKPI(){
 
 let archivo =
@@ -40,6 +39,8 @@ alert("✅ Metas cargadas correctamente");
 lector.readAsArrayBuffer(archivo);
 
 }
+function cargarExcelKPI(){
+
 let archivo =
 document.getElementById("excelKPI")
 .files[0];

@@ -617,12 +617,16 @@ Eliminar Usuario
     <h3>📝 Historial de Gestiones</h3>
     <div id="listaGestiones"></div>
 </div>
+<div id="kpi" class="card" style="display:none">
 <div class="volver" onclick="volver()">
 ← Volver
 </div>
 
 <h3>📊 KPI Gerencial</h3>
-
+<input
+type="file"
+id="excelMetas"
+accept=".xlsx,.xls">
 <button
 class="btn-verde"
 onclick="cargarMetasKPI()">

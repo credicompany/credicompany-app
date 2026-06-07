@@ -270,6 +270,10 @@ onclick="mostrar('admin')">
     <div style="font-size:28px;">📋</div>
     <div>Bono diario</div>
 </div>
+  <div class="box" onclick="mostrar('kpi')">
+    <div style="font-size:28px;">📊</div>
+    <div>KPI Gerencial</div>
+</div>
 </div>
 </div>
 
@@ -613,7 +617,26 @@ Eliminar Usuario
     <h3>📝 Historial de Gestiones</h3>
     <div id="listaGestiones"></div>
 </div>
+<div class="volver" onclick="volver()">
+← Volver
+</div>
 
+<h3>📊 KPI Gerencial</h3>
+
+<input
+type="file"
+id="excelKPI"
+accept=".xlsx,.xls">
+
+<button
+class="btn-verde"
+onclick="cargarExcelKPI()">
+📂 Cargar KPI
+</button>
+
+<div id="kpiResumen"></div>
+
+</div>
 <div id="historialClienteDiv" class="card" style="display:none;">
     <div class="volver" onclick="volverHistorialCliente()">← Volver</div>
     <h3>📋 Historial del Cliente</h3>
@@ -1901,6 +1924,7 @@ app.style.display="block";
 "clientes",
 "pagos",
 "admin",
+"kpi",
 "historialDiv",
 "historialGestionesDiv",
 "historialClienteDiv"
@@ -1927,6 +1951,7 @@ app.style.display="none";
 "clientes",
 "pagos",
 "admin",
+"kpi",
 "historialDiv",
 "historialGestionesDiv",
 "historialClienteDiv"

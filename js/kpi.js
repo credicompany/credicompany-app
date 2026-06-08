@@ -117,22 +117,89 @@ let resumen = `
 json.forEach(c => {
 
 let asesor =
-c["Asesor(a)"] || "Sin Asesor";
+(c["Asesor(a)"] || "Sin Asesor")
+.trim()
+.toUpperCase();
 
-let capital =
-parseFloat(c["Saldo Capital"]) || 0;
+let monto =
+parseFloat(c["Monto Otorgado"]) || 0;
+
+let tem =
+parseFloat(c["TEM"]) || 0;
+
+let dni =
+(c["DNI"] || "").toString();
 
 if(!ranking[asesor]){
 ranking[asesor] = 0;
+operaciones[asesor] = 0;
+temPromedio[asesor] = [];
+clientes[asesor] = new Set();
 }
 
-ranking[asesor] += capital;
+ranking[asesor] += monto;
+
+operaciones[asesor]++;
+
+temPromedio[asesor].push(tem);
+
+if(dni){
+clientes[asesor].add(dni);
+}
 
 });
 
 let top = Object.entries(ranking)
 .sort((a,b)=>b[1]-a[1]);
+resumen += `
+<div class="card">
+<h3>🎯 KPI POR ASESOR</h3>
+`;
 
+Object.keys(ranking).forEach(asesor=>{
+
+let colocacion =
+ranking[asesor];
+
+let oper =
+operaciones[asesor];
+
+let tem =
+temPromedio[asesor].length
+?
+(
+temPromedio[asesor]
+.reduce((a,b)=>a+b,0)
+/
+temPromedio[asesor].length
+).toFixed(2)
+:
+0;
+
+let cli =
+clientes[asesor].size;
+
+resumen += `
+<hr>
+
+<b>👤 ${asesor}</b><br>
+
+💰 Colocación:
+S/ ${colocacion.toFixed(2)}<br>
+
+📋 Operaciones:
+${oper}<br>
+
+📈 TEM Promedio:
+${tem}<br>
+
+👥 Clientes:
+${cli}<br>
+`;
+
+});
+
+resumen += `</div>`;
 resumen += `
 <div class="card">
 

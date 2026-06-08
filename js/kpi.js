@@ -112,7 +112,10 @@ let resumen = `
 
 </div>
 `;
-  let ranking = {};
+let ranking = {};
+let operaciones = {};
+let temPromedio = {};
+let clientes = {};
 
 json.forEach(c => {
 

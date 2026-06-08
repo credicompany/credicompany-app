@@ -73,37 +73,6 @@ lista.innerHTML += `
 
 });
 
-if(historial.length===0){
-
-lista.innerHTML=
-"<p>No existen gestiones registradas</p>";
-
-return;
-
-}
-
-historial.forEach(g=>{
-
-lista.innerHTML += `
-<div class="item">
-
-<b>${g.cliente}</b><br>
-
-📞 ${g.celular}<br>
-
-📌 ${g.tipo}<br>
-
-📝 ${g.comentario}<br>
-
-👤 ${g.asesor}<br>
-
-🕒 ${g.fecha}
-
-</div>
-`;
-
-});
-
 }
   function verHistorialCliente(nombre, celular){
 

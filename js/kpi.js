@@ -26,8 +26,8 @@ wb.Sheets[wb.SheetNames[0]];
 
 let json =
 XLSX.utils.sheet_to_json(hoja);
-
-localStorage.setItem(
+console.log(json[0]);
+alert(JSON.stringify(Object.keys(json[0])));localStorage.setItem(
 "metasKPI",
 JSON.stringify(json)
 );

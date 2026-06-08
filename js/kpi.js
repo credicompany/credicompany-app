@@ -77,8 +77,10 @@ wb.SheetNames[0]
 
 let json =
 XLSX.utils.sheet_to_json(hoja);
-
-let totalClientes = json.length;
+let metas =
+JSON.parse(
+localStorage.getItem("metasKPI")
+) || [];let totalClientes = json.length;
 
 let saldoCapital = 0;
 let clientesMora = 0;
@@ -189,13 +191,38 @@ temPromedio[asesor].length
 
 let cli =
 clientes[asesor].size;
+let meta = metas.find(m =>
 
-resumen += `
+String(
+m["Asesor (A)"] ||
+m["ASESOR"] ||
+""
+)
+.trim()
+.toUpperCase() === asesor
+
+);
+
+let metaDesembolso =
+meta
+?
+parseFloat(
+String(
+meta["COLOCACION"] ||
+meta["COLOC."] ||
+0
+).replace(/,/g,"")
+)
+:
+0;resumen += `
 <hr>
 
 <b>👤 ${asesor}</b><br>
 
-💰 Colocación:
+🎯 Meta Desembolsos:
+S/ ${metaDesembolso.toLocaleString()}<br>
+
+💰 Desembolsos:
 S/ ${colocacion.toFixed(2)}<br>
 
 📋 Operaciones:

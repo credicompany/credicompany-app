@@ -31,7 +31,15 @@ localStorage.setItem(
 "metasKPI",
 JSON.stringify(json)
 );
+localStorage.setItem(
+"nombreMetaKPI",
+archivo.name
+);
 
+localStorage.setItem(
+"fechaMetaKPI",
+new Date().toLocaleString()
+);
 alert("✅ Metas cargadas correctamente");
 
 };

@@ -59,16 +59,46 @@ historial.push(item.val());
 
 lista.innerHTML = "";
 
+let agrupado = {};
+
 historial.reverse().forEach(g=>{
+
+let usuario = g.asesor || "Sin Usuario";
+
+if(!agrupado[usuario]){
+agrupado[usuario] = [];
+}
+
+agrupado[usuario].push(g);
+
+});
+
+Object.keys(agrupado).forEach(usuario=>{
+
+lista.innerHTML += `
+<div style="
+background:#0a3a63;
+color:white;
+padding:10px;
+margin-top:15px;
+border-radius:8px;
+font-weight:bold;
+">
+👤 ${usuario}
+</div>
+`;
+
+agrupado[usuario].forEach(g=>{
 
 lista.innerHTML += `
 <div class="item">
 <b>${g.cliente}</b><br>
 📞 ${g.celular}<br>
 📝 ${g.comentario}<br>
-👤 ${g.asesor}<br>
 🕒 ${g.fecha}
-</div>`;
+</div>
+`;
+
 });
 
 });

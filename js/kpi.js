@@ -241,3 +241,23 @@ archivo
 );
 
 }
+window.addEventListener("load",()=>{
+
+let nombre =
+localStorage.getItem("nombreMetaKPI");
+
+let fecha =
+localStorage.getItem("fechaMetaKPI");
+
+let div =
+document.getElementById("metaActivaKPI");
+
+if(div && nombre){
+
+div.innerHTML =
+`📅 Meta vigente: ${nombre}<br>
+🕒 Cargada: ${fecha}`;
+
+}
+
+});

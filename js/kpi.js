@@ -284,7 +284,10 @@ resumen += `
 
         <b>👤 ${asesor}</b><br>
 
-${colorEstado} Estado KPI<br>
+${colorEstado}
+${porcentajeDesembolso >= 100 ? "META CUMPLIDA" :
+porcentajeDesembolso >= 80 ? "EN RUTA" :
+"BAJO META"}<br>
 
 🎯 Meta Desembolsos:
 S/ ${metaDesembolso.toLocaleString()}<br>

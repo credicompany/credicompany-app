@@ -253,32 +253,62 @@ function generarKPI(json){
         )
         :
         0;
+        let porcentajeOperaciones =
+metaOperaciones > 0
+?
+((oper / metaOperaciones) * 100).toFixed(1)
+:
+0;
+let porcentajeDesembolso =
+metaDesembolso > 0
+?
+((colocacion / metaDesembolso) * 100).toFixed(1)
+:
+0;
 
-        resumen += `
+let colorEstado = "🔴";
+
+if(Number(porcentajeDesembolso) >= 100){
+
+   colorEstado = "🟢";
+
+}
+else if(Number(porcentajeDesembolso) >= 80){
+
+   colorEstado = "🟡";
+
+}
+
+resumen += `
         <hr>
 
         <b>👤 ${asesor}</b><br>
 
-        🎯 Meta Desembolsos:
-        S/ ${metaDesembolso.toLocaleString()}<br>
+${colorEstado} Estado KPI<br>
 
-        💰 Desembolsos:
-        S/ ${colocacion.toFixed(2)}<br>
+🎯 Meta Desembolsos:
+S/ ${metaDesembolso.toLocaleString()}<br>
 
-        🎯 Meta Operaciones:
-        ${metaOperaciones}<br>
+💰 Desembolsos:
+S/ ${colocacion.toFixed(2)}<br>
 
-        📋 Operaciones:
-        ${oper}<br>
+📊 Cumplimiento Desembolso:
+${porcentajeDesembolso}%<br>
 
-        📊 Avance:
-        ${oper}/${metaOperaciones}<br>
+🎯 Meta Operaciones:
+${metaOperaciones}<br>
 
-        📈 TEM Promedio:
-        ${tem}<br>
+📋 Operaciones:
+${oper}<br>
 
-        👥 Clientes:
-        ${cli}<br>
+📈 Cumplimiento Operaciones:
+${porcentajeOperaciones}%<br>
+
+📈 TEM Promedio:
+${tem}<br>
+
+👥 Clientes:
+${cli}<br>
         `;
 
     });

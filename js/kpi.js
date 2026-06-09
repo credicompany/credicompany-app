@@ -92,6 +92,8 @@ alert("ENTRO A PRODUCCION");
 
         let json =
         XLSX.utils.sheet_to_json(hoja);
+        console.log(json[0]);
+alert(JSON.stringify(Object.keys(json[0])));
 db.ref("kpi/produccion").set({
 
    data: json,

@@ -6,7 +6,9 @@ function cargarMetasKPI() {
 
     let archivo =
     document.getElementById("excelMetas").files[0];
-    alert("ARCHIVO META: " + archivo.name);
+   console.log("META =", archivo.name);
+    alert("META = " + archivo.name);
+
     if (!archivo) {
         alert("Seleccione archivo de metas");
         return;
@@ -72,7 +74,8 @@ function cargarExcelKPI(){
 
     let archivo =
     document.getElementById("excelKPI").files[0];
-    alert("ARCHIVO PRODUCCION: " + archivo.name);
+    console.log("PRODUCCION =", archivo.name);
+alert("PRODUCCION = " + archivo.name);
     if(!archivo){
         alert("Seleccione un Excel");
         return;

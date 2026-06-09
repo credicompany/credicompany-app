@@ -77,7 +77,25 @@ function cargarExcelKPI(){
 
         let json =
         XLSX.utils.sheet_to_json(hoja);
+alert("ANTES DE FIREBASE");
 
+db.ref("kpi/produccion").set({
+
+   data: json,
+   archivo: archivo.name,
+   fecha: new Date().toLocaleString()
+
+})
+.then(()=>{
+
+   alert("FIREBASE OK");
+
+})
+.catch(error=>{
+
+   alert("ERROR FIREBASE: " + error.message);
+
+});
         localStorage.setItem(
             "produccionKPI",
             JSON.stringify(json)

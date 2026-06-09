@@ -50,6 +50,23 @@ lector.readAsArrayBuffer(archivo);
 }
 function cargarExcelKPI(){
 
+let metas =
+JSON.parse(
+localStorage.getItem("metasKPI")
+) || [];
+
+// TODO EL CÓDIGO QUE HOY TIENES
+// DESDE:
+
+let totalClientes = json.length;
+
+// HASTA:
+
+document.getElementById(
+"kpiResumen"
+).innerHTML = resumen;
+
+}
 let archivo =
 document.getElementById("excelKPI")
 .files[0];
@@ -78,6 +95,21 @@ wb.SheetNames[0]
 
 let json =
 XLSX.utils.sheet_to_json(hoja);
+  // GUARDAR PRODUCCIÓN
+localStorage.setItem(
+   "produccionKPI",
+   JSON.stringify(json)
+);
+
+localStorage.setItem(
+   "nombreProduccionKPI",
+   archivo.name
+);
+
+localStorage.setItem(
+   "fechaProduccionKPI",
+   new Date().toLocaleString()
+);
 let metas =
 JSON.parse(
 localStorage.getItem("metasKPI")
@@ -261,7 +293,11 @@ resumen += `</div>`;
 document.getElementById(
 "kpiResumen"
 ).innerHTML = resumen;
-
+  
+localStorage.setItem(
+"resumenKPI",
+resumen
+);
 };
 
 lector.readAsArrayBuffer(
@@ -271,6 +307,72 @@ archivo
 }
 window.addEventListener("load",()=>{
 
+let div =
+document.getElementById("metaActivaKPI");
+
+// META ACTIVA
+let nombre =
+localStorage.getItem("nombreMetaKPI");
+
+let fecha =
+localStorage.getItem("fechaMetaKPI");
+
+if(div && nombre){
+
+div.innerHTML =
+`📅 Meta vigente: ${nombre}<br>
+🕒 Cargada: ${fecha}`;
+
+}
+
+// PRODUCCIÓN ACTIVA
+let nombreProd =
+localStorage.getItem("nombreProduccionKPI");
+
+let fechaProd =
+localStorage.getItem("fechaProduccionKPI");
+
+if(div && nombreProd){
+
+div.innerHTML +=
+`<br><br>
+📂 Producción vigente: ${nombreProd}<br>
+🕒 Cargada: ${fechaProd}`;
+
+}
+
+// KPI GUARDADO
+let resumenGuardado =
+localStorage.getItem("resumenKPI");
+
+if(
+resumenGuardado &&
+document.getElementById("kpiResumen")
+){
+
+document.getElementById(
+"kpiResumen"
+).innerHTML = resumenGuardado;
+
+}
+
+});
+let nombreProd =
+localStorage.getItem("nombreProduccionKPI");
+
+let fechaProd =
+localStorage.getItem("fechaProduccionKPI");
+
+if(div && nombreProd){
+
+div.innerHTML += `
+<br><br>
+📂 Producción vigente: ${nombreProd}
+<br>
+🕒 Cargada: ${fechaProd}
+`;
+
+}
 let nombre =
 localStorage.getItem("nombreMetaKPI");
 

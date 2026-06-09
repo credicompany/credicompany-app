@@ -546,21 +546,6 @@ window.addEventListener("load",()=>{
         🕒 Cargada: ${fechaProd}`;
 
     }
-
-    let resumenGuardado =
-    localStorage.getItem("resumenKPI");
-
-    if(
-        resumenGuardado &&
-        document.getElementById("kpiResumen")
-    ){
-
-        document.getElementById(
-            "kpiResumen"
-        ).innerHTML =
-        resumenGuardado;
-
-    }
 // KPI GUARDADO
 let resumenGuardado =
 localStorage.getItem("resumenKPI");
@@ -617,4 +602,4 @@ db.ref("kpi/produccion").on("value", snapshot=>{
 });
 
 });
-});
+

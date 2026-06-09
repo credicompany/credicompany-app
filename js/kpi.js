@@ -3,7 +3,7 @@
 // =====================
 
 function cargarMetasKPI() {
-alert("ENTRO A METAS");
+
     let archivo =
     document.getElementById("excelMetas").files[0];
 
@@ -27,23 +27,8 @@ alert("ENTRO A METAS");
 
         let json =
         XLSX.utils.sheet_to_json(hoja);
-db.ref("kpi/metas").set({
 
-   data: json,
-   archivo: archivo.name,
-   fecha: new Date().toLocaleString()
-
-})
-.then(()=>{
-
-   alert("META GUARDADA EN FIREBASE");
-
-})
-.catch(error=>{
-
-   alert(error.message);
-
-});        localStorage.setItem(
+        localStorage.setItem(
             "metasKPI",
             JSON.stringify(json)
         );
@@ -68,7 +53,7 @@ db.ref("kpi/metas").set({
 
 
 function cargarExcelKPI(){
-alert("ENTRO A PRODUCCION");
+
     let archivo =
     document.getElementById("excelKPI").files[0];
 
@@ -92,30 +77,8 @@ alert("ENTRO A PRODUCCION");
 
         let json =
         XLSX.utils.sheet_to_json(hoja);
-        alert(
-JSON.stringify(
-Object.keys(json[0])
-)
-);
-        console.log(json[0]);
-alert(JSON.stringify(Object.keys(json[0])));
-db.ref("kpi/produccion").set({
 
-   data: json,
-   archivo: archivo.name,
-   fecha: new Date().toLocaleString()
-
-})
-.then(()=>{
-
-   alert("PRODUCCION GUARDADA EN FIREBASE");
-
-})
-.catch(error=>{
-
-   alert(error.message);
-
-});        localStorage.setItem(
+        localStorage.setItem(
             "produccionKPI",
             JSON.stringify(json)
         );
@@ -521,6 +484,12 @@ window.addEventListener("load",()=>{
     let div =
     document.getElementById("metaActivaKPI");
 
+    let nombre =
+    localStorage.getItem("nombreMetaKPI");
+
+    let fecha =
+    localStorage.getItem("fechaMetaKPI");
+
     if(div && nombre){
 
         div.innerHTML =
@@ -529,12 +498,33 @@ window.addEventListener("load",()=>{
 
     }
 
+    let nombreProd =
+    localStorage.getItem("nombreProduccionKPI");
+
+    let fechaProd =
+    localStorage.getItem("fechaProduccionKPI");
+
     if(div && nombreProd){
 
         div.innerHTML +=
         `<br><br>
         📂 Producción vigente: ${nombreProd}<br>
         🕒 Cargada: ${fechaProd}`;
+
+    }
+
+    let resumenGuardado =
+    localStorage.getItem("resumenKPI");
+
+    if(
+        resumenGuardado &&
+        document.getElementById("kpiResumen")
+    ){
+
+        document.getElementById(
+            "kpiResumen"
+        ).innerHTML =
+        resumenGuardado;
 
     }
 

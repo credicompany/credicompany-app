@@ -27,7 +27,11 @@ wb.Sheets[wb.SheetNames[0]];
 let json =
 XLSX.utils.sheet_to_json(hoja);
 db.ref("kpi/metas").set({
-   prueba:"ok"
+
+   data: json,
+   archivo: archivo.name,
+   fecha: new Date().toLocaleString()
+
 })
 .then(()=>{
    alert("META GUARDADA");
@@ -90,7 +94,11 @@ let json =
 XLSX.utils.sheet_to_json(hoja);
   // GUARDAR PRODUCCIÓN
 db.ref("kpi/produccion").set({
-   prueba:"ok"
+
+   data: json,
+   archivo: archivo.name,
+   fecha: new Date().toLocaleString()
+
 })
 .then(()=>{
    alert("PRODUCCION GUARDADA");
@@ -321,9 +329,8 @@ archivo
 }
 window.addEventListener("load",()=>{
 
-let div =
-document.getElementById("metaActivaKPI");
-
+   let div =
+   document.getElementById("metaActivaKPI");
 // META ACTIVA
 let nombre =
 localStorage.getItem("nombreMetaKPI");

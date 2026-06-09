@@ -3,7 +3,7 @@
 // =====================
 
 function cargarMetasKPI() {
-
+alert("ENTRO A METAS");
     let archivo =
     document.getElementById("excelMetas").files[0];
 
@@ -68,7 +68,7 @@ db.ref("kpi/metas").set({
 
 
 function cargarExcelKPI(){
-
+alert("ENTRO A PRODUCCION");
     let archivo =
     document.getElementById("excelKPI").files[0];
 

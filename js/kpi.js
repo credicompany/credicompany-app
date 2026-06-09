@@ -205,7 +205,15 @@ m["ASESOR"] ||
 ""
 )
 .trim()
-.toUpperCase() === asesor
+.toUpperCase()
+.replace(/\s+/g,"")
+
+===
+
+asesor
+.trim()
+.toUpperCase()
+.replace(/\s+/g,"")
 
 );
 
@@ -221,16 +229,17 @@ meta["COLOC."] ||
 )
 :
 0;
-let metaOperaciones =
-meta
-?
-parseFloat(
-String(
-meta["OPERACIONES"] || 0
-).replace(/,/g,"")
-)
-:
-0;
+
+let metaOperaciones = 0;
+
+if(meta){
+
+metaOperaciones =
+Number(
+meta["OPERACIONES"]
+) || 0;
+
+}
   resumen += `
 <hr>
 
@@ -247,6 +256,9 @@ ${metaOperaciones}<br>
 
 📋 Operaciones:
 ${oper}<br>
+
+📊 Avance:
+${oper}/${metaOperaciones}<br>
 
 📈 TEM Promedio:
 ${tem}<br>

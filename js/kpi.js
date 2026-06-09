@@ -27,9 +27,13 @@ wb.Sheets[wb.SheetNames[0]];
 let json =
 XLSX.utils.sheet_to_json(hoja);
 db.ref("kpi/metas").set({
-   data: json,
-   archivo: archivo.name,
-   fecha: new Date().toLocaleString()
+   prueba:"ok"
+})
+.then(()=>{
+   alert("META GUARDADA");
+})
+.catch(error=>{
+   alert(error.message);
 });
 alert("META GUARDADA EN FIREBASE");
 alert(JSON.stringify(Object.keys(json[0])));
@@ -86,10 +90,15 @@ let json =
 XLSX.utils.sheet_to_json(hoja);
   // GUARDAR PRODUCCIÓN
 db.ref("kpi/produccion").set({
-   data: json,
-   archivo: archivo.name,
-   fecha: new Date().toLocaleString()
+   prueba:"ok"
+})
+.then(()=>{
+   alert("PRODUCCION GUARDADA");
+})
+.catch(error=>{
+   alert(error.message);
 });
+
 alert("PRODUCCION GUARDADA EN FIREBASE");
 localStorage.setItem(
    "nombreProduccionKPI",

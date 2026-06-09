@@ -49,24 +49,6 @@ lector.readAsArrayBuffer(archivo);
 
 }
 function cargarExcelKPI(){
-
-let metas =
-JSON.parse(
-localStorage.getItem("metasKPI")
-) || [];
-
-// TODO EL CÓDIGO QUE HOY TIENES
-// DESDE:
-
-let totalClientes = json.length;
-
-// HASTA:
-
-document.getElementById(
-"kpiResumen"
-).innerHTML = resumen;
-
-}
 let archivo =
 document.getElementById("excelKPI")
 .files[0];
@@ -353,40 +335,6 @@ document.getElementById("kpiResumen")
 document.getElementById(
 "kpiResumen"
 ).innerHTML = resumenGuardado;
-
-}
-
-});
-let nombreProd =
-localStorage.getItem("nombreProduccionKPI");
-
-let fechaProd =
-localStorage.getItem("fechaProduccionKPI");
-
-if(div && nombreProd){
-
-div.innerHTML += `
-<br><br>
-📂 Producción vigente: ${nombreProd}
-<br>
-🕒 Cargada: ${fechaProd}
-`;
-
-}
-let nombre =
-localStorage.getItem("nombreMetaKPI");
-
-let fecha =
-localStorage.getItem("fechaMetaKPI");
-
-let div =
-document.getElementById("metaActivaKPI");
-
-if(div && nombre){
-
-div.innerHTML =
-`📅 Meta vigente: ${nombre}<br>
-🕒 Cargada: ${fecha}`;
 
 }
 

@@ -43,7 +43,8 @@ alert("META GUARDADA EN FIREBASE");
 alert(JSON.stringify(Object.keys(json[0])));
 alert(JSON.stringify(json[0]));
 console.log(json[0]);
-alert(JSON.stringify(Object.keys(json[0])));localStorage.setItem(
+alert(JSON.stringify(Object.keys(json[0])));
+localStorage.setItem(
 "metasKPI",
 JSON.stringify(json)
 );
@@ -324,6 +325,10 @@ localStorage.setItem(
 "resumenKPI",
 resumen
 );
+db.ref("kpi/resumen").set({
+   html: resumen,
+   fecha: new Date().toLocaleString()
+});
 };
 
 lector.readAsArrayBuffer(
@@ -367,18 +372,17 @@ div.innerHTML +=
 }
 
 // KPI GUARDADO
-let resumenGuardado =
-localStorage.getItem("resumenKPI");
+db.ref("kpi/resumen").once("value")
+.then(snapshot=>{
 
-if(
-resumenGuardado &&
-document.getElementById("kpiResumen")
-){
+   if(snapshot.exists()){
 
-document.getElementById(
-"kpiResumen"
-).innerHTML = resumenGuardado;
+      document.getElementById("kpiResumen")
+      .innerHTML =
+      snapshot.val().html;
 
-}
+   }
+
+});
 
 });

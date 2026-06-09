@@ -64,6 +64,12 @@ lector.readAsArrayBuffer(archivo);
 
 }
 function cargarExcelKPI(){
+
+alert("ENTRE A CARGAR PRODUCCION");
+
+let archivo =
+document.getElementById("excelKPI")
+.files[0];
 let archivo =
 document.getElementById("excelKPI")
 .files[0];

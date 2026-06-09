@@ -328,6 +328,12 @@ resumen
 db.ref("kpi/resumen").set({
    html: resumen,
    fecha: new Date().toLocaleString()
+})
+.then(()=>{
+   alert("RESUMEN GUARDADO");
+})
+.catch(error=>{
+   alert("ERROR RESUMEN: " + error.message);
 });
 };
 

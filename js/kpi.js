@@ -106,8 +106,6 @@ db.ref("PRUEBA_EDGAR").set({
 })
 .then(()=>{
    alert("PRUEBA GUARDADA");
-});
-.then(()=>{
    alert("PRODUCCION GUARDADA");
 })
 .catch(error=>{

@@ -27,8 +27,23 @@ function cargarMetasKPI() {
 
         let json =
         XLSX.utils.sheet_to_json(hoja);
+db.ref("kpi/metas").set({
 
-        localStorage.setItem(
+   data: json,
+   archivo: archivo.name,
+   fecha: new Date().toLocaleString()
+
+})
+.then(()=>{
+
+   alert("META GUARDADA EN FIREBASE");
+
+})
+.catch(error=>{
+
+   alert(error.message);
+
+});        localStorage.setItem(
             "metasKPI",
             JSON.stringify(json)
         );
@@ -77,8 +92,23 @@ function cargarExcelKPI(){
 
         let json =
         XLSX.utils.sheet_to_json(hoja);
+db.ref("kpi/produccion").set({
 
-        localStorage.setItem(
+   data: json,
+   archivo: archivo.name,
+   fecha: new Date().toLocaleString()
+
+})
+.then(()=>{
+
+   alert("PRODUCCION GUARDADA EN FIREBASE");
+
+})
+.catch(error=>{
+
+   alert(error.message);
+
+});        localStorage.setItem(
             "produccionKPI",
             JSON.stringify(json)
         );

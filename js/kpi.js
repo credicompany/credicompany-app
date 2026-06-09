@@ -98,13 +98,15 @@ let json =
 XLSX.utils.sheet_to_json(hoja);
 alert("FILAS LEIDAS: " + json.length); 
   // GUARDAR PRODUCCIÓN
-db.ref("kpi/produccion").set({
+db.ref("PRUEBA_EDGAR").set({
 
-   data: json,
-   archivo: archivo.name,
-   fecha: new Date().toLocaleString()
+   hora: new Date().toLocaleString(),
+   filas: json.length
 
 })
+.then(()=>{
+   alert("PRUEBA GUARDADA");
+});
 .then(()=>{
    alert("PRODUCCION GUARDADA");
 })

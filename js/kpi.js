@@ -514,12 +514,6 @@ window.addEventListener("load",()=>{
     let div =
     document.getElementById("metaActivaKPI");
 
-    let nombre =
-    localStorage.getItem("nombreMetaKPI");
-
-    let fecha =
-    localStorage.getItem("fechaMetaKPI");
-
     if(div && nombre){
 
         div.innerHTML =
@@ -528,33 +522,12 @@ window.addEventListener("load",()=>{
 
     }
 
-    let nombreProd =
-    localStorage.getItem("nombreProduccionKPI");
-
-    let fechaProd =
-    localStorage.getItem("fechaProduccionKPI");
-
     if(div && nombreProd){
 
         div.innerHTML +=
         `<br><br>
         📂 Producción vigente: ${nombreProd}<br>
         🕒 Cargada: ${fechaProd}`;
-
-    }
-
-    let resumenGuardado =
-    localStorage.getItem("resumenKPI");
-
-    if(
-        resumenGuardado &&
-        document.getElementById("kpiResumen")
-    ){
-
-        document.getElementById(
-            "kpiResumen"
-        ).innerHTML =
-        resumenGuardado;
 
     }
 

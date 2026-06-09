@@ -325,19 +325,68 @@ ${cli}<br>
     resumen += `
     <div class="card">
 
-        <h3>🏆 Ranking Cartera</h3>
+     <h3 style="
+background:#0d6efd;
+color:white;
+padding:10px;
+border-radius:8px;
+text-align:center;
+">
+🏆 Ranking de Colocación
+</h3>
     `;
 
-    top.forEach(r => {
+    let puesto = 1;
 
-        resumen += `
-        <p>
-        ${r[0]} :
-        S/ ${r[1].toFixed(2)}
-        </p>
-        `;
+top.forEach(r => {
 
-    });
+   let icono = "🏅";
+
+   if(puesto == 1) icono = "🥇";
+   if(puesto == 2) icono = "🥈";
+   if(puesto == 3) icono = "🥉";
+
+   resumen += `
+
+   <div style="
+      background:#f8f9fa;
+      border-left:6px solid #0d6efd;
+      padding:10px;
+      margin:8px 0;
+      border-radius:8px;
+      box-shadow:0 2px 4px rgba(0,0,0,0.10);
+   ">
+
+      <b style="font-size:18px;">
+         ${icono} #${puesto}
+      </b>
+
+      <br>
+
+      <span style="
+         font-size:16px;
+         font-weight:bold;
+         color:#1f2937;
+      ">
+         ${r[0]}
+      </span>
+
+      <br>
+
+      <span style="
+         color:green;
+         font-size:18px;
+         font-weight:bold;
+      ">
+         S/ ${r[1].toLocaleString()}
+      </span>
+
+   </div>
+   `;
+
+   puesto++;
+
+});
 
     resumen += `</div>`;
 

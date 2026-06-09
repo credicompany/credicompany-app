@@ -96,25 +96,17 @@ let metas =
 JSON.parse(
 localStorage.getItem("metasKPI")
 ) || [];let totalClientes = json.length;
-
-let saldoCapital = 0;
-let clientesMora = 0;
-let cuotaMoraTotal = 0;
+  
+let montoOtorgadoTotal = 0;
+let costoDesembolsoTotal = 0;
 
 json.forEach(c => {
 
-saldoCapital +=
-parseFloat(c["Saldo Capital"]) || 0;
+montoOtorgadoTotal +=
+parseFloat(c["Monto Otorgado"]) || 0;
 
-let atraso =
-parseFloat(c["Días Retraso"]) || 0;
-
-if(atraso > 0){
-clientesMora++;
-}
-
-cuotaMoraTotal +=
-parseFloat(c["Cuota Mora"]) || 0;
+costoDesembolsoTotal +=
+parseFloat(c["Costo por Desembolso"]) || 0;
 
 });
 
@@ -126,14 +118,11 @@ let resumen = `
 <p>👥 Clientes:
 <b>${totalClientes}</b></p>
 
-<p>💰 Saldo Capital:
-<b>S/ ${saldoCapital.toFixed(2)}</b></p>
+<p>💰 Monto Otorgado:
+<b>S/ ${montoOtorgadoTotal.toFixed(2)}</b></p>
 
-<p>🚨 Clientes en Mora:
-<b>${clientesMora}</b></p>
-
-<p>💵 Cuota Mora:
-<b>S/ ${cuotaMoraTotal.toFixed(2)}</b></p>
+<p>💸 Costo Desembolso:
+<b>S/ ${costoDesembolsoTotal.toFixed(2)}</b></p>
 
 </div>
 `;

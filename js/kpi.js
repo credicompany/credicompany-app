@@ -27,7 +27,23 @@ function cargarMetasKPI() {
 
         let json =
         XLSX.utils.sheet_to_json(hoja);
+db.ref("kpi/metas").set({
 
+   data: json,
+   archivo: archivo.name,
+   fecha: new Date().toLocaleString()
+
+})
+.then(()=>{
+
+   alert("META FIREBASE OK");
+
+})
+.catch(error=>{
+
+   alert("ERROR META: " + error.message);
+
+});
         localStorage.setItem(
             "metasKPI",
             JSON.stringify(json)
@@ -545,5 +561,60 @@ window.addEventListener("load",()=>{
         resumenGuardado;
 
     }
+// KPI GUARDADO
+let resumenGuardado =
+localStorage.getItem("resumenKPI");
 
+if(
+   resumenGuardado &&
+   document.getElementById("kpiResumen")
+){
+
+   document.getElementById(
+      "kpiResumen"
+   ).innerHTML =
+   resumenGuardado;
+
+}
+
+
+// ===== FIREBASE TIEMPO REAL =====
+
+db.ref("kpi/metas").on("value", snapshot=>{
+
+   if(snapshot.exists()){
+
+      let datos = snapshot.val();
+
+      localStorage.setItem(
+         "metasKPI",
+         JSON.stringify(datos.data || [])
+      );
+
+   }
+
+});
+
+db.ref("kpi/produccion").on("value", snapshot=>{
+
+   if(snapshot.exists()){
+
+      let datos = snapshot.val();
+
+      localStorage.setItem(
+         "produccionKPI",
+         JSON.stringify(datos.data || [])
+      );
+
+      if(datos.data){
+
+         generarKPI(datos.data);
+
+      }
+
+   }
+
+});
+
+});
 });

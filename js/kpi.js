@@ -124,22 +124,99 @@ function generarKPI(json){
 
     });
 
-    let resumen = `
-    <div class="card">
+    let totalOperaciones = json.length;
 
-        <h3>📊 KPI Gerencial</h3>
+let temGeneral =
+0;
 
-        <p>👥 Clientes:
-        <b>${totalClientes}</b></p>
+json.forEach(c=>{
 
-        <p>💰 Monto Otorgado:
-        <b>S/ ${montoOtorgadoTotal.toFixed(2)}</b></p>
+   temGeneral +=
+   parseFloat(c["TEM"]) || 0;
 
-        <p>💸 Costo Desembolso:
-        <b>S/ ${costoDesembolsoTotal.toFixed(2)}</b></p>
+});
 
-    </div>
-    `;
+temGeneral =
+totalClientes > 0
+?
+(temGeneral / totalClientes).toFixed(2)
+:
+0;
+
+let resumen = `
+
+<h3 style="
+text-align:center;
+margin-bottom:15px;
+">
+📊 KPI GERENCIAL
+</h3>
+
+<div style="
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:12px;
+margin-bottom:20px;
+">
+
+<div style="
+background:#0d6efd;
+color:white;
+padding:15px;
+border-radius:10px;
+text-align:center;
+">
+<div style="font-size:30px;">👥</div>
+<div>Clientes</div>
+<div style="font-size:22px;font-weight:bold;">
+${totalClientes}
+</div>
+</div>
+
+<div style="
+background:#198754;
+color:white;
+padding:15px;
+border-radius:10px;
+text-align:center;
+">
+<div style="font-size:30px;">💰</div>
+<div>Colocación</div>
+<div style="font-size:22px;font-weight:bold;">
+S/ ${montoOtorgadoTotal.toLocaleString()}
+</div>
+</div>
+
+<div style="
+background:#fd7e14;
+color:white;
+padding:15px;
+border-radius:10px;
+text-align:center;
+">
+<div style="font-size:30px;">📋</div>
+<div>Operaciones</div>
+<div style="font-size:22px;font-weight:bold;">
+${totalOperaciones}
+</div>
+</div>
+
+<div style="
+background:#6f42c1;
+color:white;
+padding:15px;
+border-radius:10px;
+text-align:center;
+">
+<div style="font-size:30px;">📈</div>
+<div>TEM Promedio</div>
+<div style="font-size:22px;font-weight:bold;">
+${temGeneral}%
+</div>
+</div>
+
+</div>
+`;
 
     let ranking = {};
     let operaciones = {};

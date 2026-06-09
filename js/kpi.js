@@ -220,7 +220,18 @@ meta["COLOC."] ||
 ).replace(/,/g,"")
 )
 :
-0;resumen += `
+0;
+let metaOperaciones =
+meta
+?
+parseFloat(
+String(
+meta["OPERACIONES"] || 0
+).replace(/,/g,"")
+)
+:
+0;
+  resumen += `
 <hr>
 
 <b>👤 ${asesor}</b><br>
@@ -230,6 +241,9 @@ S/ ${metaDesembolso.toLocaleString()}<br>
 
 💰 Desembolsos:
 S/ ${colocacion.toFixed(2)}<br>
+
+🎯 Meta Operaciones:
+${metaOperaciones}<br>
 
 📋 Operaciones:
 ${oper}<br>

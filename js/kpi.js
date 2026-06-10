@@ -154,7 +154,7 @@ margin-bottom:15px;
 
 <div style="
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
 gap:12px;
 margin-bottom:20px;
 ">
@@ -166,7 +166,7 @@ padding:15px;
 border-radius:10px;
 text-align:center;
 ">
-<div style="font-size:30px;">👥</div>
+<div style="font-size:22px;">👥</div>
 <div>Clientes</div>
 <div style="font-size:22px;font-weight:bold;">
 ${totalClientes}
@@ -182,7 +182,7 @@ text-align:center;
 ">
 <div style="font-size:30px;">💰</div>
 <div>Colocación</div>
-<div style="font-size:22px;font-weight:bold;">
+<div style="font-size:18px;font-weight:bold;">
 S/ ${montoOtorgadoTotal.toLocaleString()}
 </div>
 </div>
@@ -190,13 +190,13 @@ S/ ${montoOtorgadoTotal.toLocaleString()}
 <div style="
 background:#fd7e14;
 color:white;
-padding:15px;
+padding:10px;
 border-radius:10px;
 text-align:center;
 ">
 <div style="font-size:30px;">📋</div>
 <div>Operaciones</div>
-<div style="font-size:22px;font-weight:bold;">
+<div style="font-size:18px;font-weight:bold;">
 ${totalOperaciones}
 </div>
 </div>
@@ -204,7 +204,7 @@ ${totalOperaciones}
 <div style="
 background:#6f42c1;
 color:white;
-padding:15px;
+padding:10px;
 border-radius:10px;
 text-align:center;
 ">

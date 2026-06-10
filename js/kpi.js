@@ -154,21 +154,21 @@ margin-bottom:15px;
 
 <div style="
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
-gap:12px;
-margin-bottom:20px;
+grid-template-columns:repeat(2,1fr);
+gap:5px;
+margin-bottom:10px;
 ">
-
 <div style="
 background:#0d6efd;
 color:white;
-padding:15px;
-border-radius:10px;
+padding:6px;
+border-radius:8px;
 text-align:center;
+min-height:55px;
 ">
-<div style="font-size:22px;">👥</div>
-<div>Clientes</div>
-<div style="font-size:22px;font-weight:bold;">
+<div style="font-size:16px;">👥</div>
+<div style="font-size:11px;">Clientes</div>
+<div style="font-size:15px;font-weight:bold;">
 ${totalClientes}
 </div>
 </div>
@@ -176,27 +176,29 @@ ${totalClientes}
 <div style="
 background:#198754;
 color:white;
-padding:15px;
-border-radius:10px;
+padding:6px;
+border-radius:8px;
 text-align:center;
+min-height:55px;
 ">
-<div style="font-size:30px;">💰</div>
-<div>Colocación</div>
-<div style="font-size:18px;font-weight:bold;">
-S/ ${montoOtorgadoTotal.toLocaleString()}
+<div style="font-size:16px;">💰</div>
+<div style="font-size:11px;">Colocación</div>
+<div style="font-size:15px;font-weight:bold;">
+S/ ${(montoOtorgadoTotal/1000).toFixed(0)}K
 </div>
 </div>
 
 <div style="
 background:#fd7e14;
 color:white;
-padding:10px;
-border-radius:10px;
+padding:6px;
+border-radius:8px;
 text-align:center;
+min-height:55px;
 ">
-<div style="font-size:30px;">📋</div>
-<div>Operaciones</div>
-<div style="font-size:18px;font-weight:bold;">
+<div style="font-size:16px;">📋</div>
+<div style="font-size:11px;">Operaciones</div>
+<div style="font-size:15px;font-weight:bold;">
 ${totalOperaciones}
 </div>
 </div>
@@ -204,13 +206,14 @@ ${totalOperaciones}
 <div style="
 background:#6f42c1;
 color:white;
-padding:10px;
-border-radius:10px;
+padding:6px;
+border-radius:8px;
 text-align:center;
+min-height:55px;
 ">
-<div style="font-size:30px;">📈</div>
-<div>TEM Promedio</div>
-<div style="font-size:22px;font-weight:bold;">
+<div style="font-size:16px;">📈</div>
+<div style="font-size:11px;">TEM</div>
+<div style="font-size:15px;font-weight:bold;">
 ${temGeneral}%
 </div>
 </div>

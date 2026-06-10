@@ -376,13 +376,27 @@ Number(porcentajeDesembolso)>=100
 };
 ">
 
-<b>${colorEstado} ${asesor}</b><br>
+<b style="font-size:13px;">
+${colorEstado} ${asesor}
+</b>
 
-🎯 ${porcentajeDesembolso}% |
-💰 S/${(colocacion/1000).toFixed(0)}K |
-📋 ${oper} |
-👥 ${cli} |
-📈 ${tem}
+<br>
+
+🎯 Meta: S/${(metaDesembolso/1000).toFixed(0)}K
+&nbsp;&nbsp;
+💰 Real: S/${(colocacion/1000).toFixed(0)}K
+
+<br>
+
+📊 Cumpl.: ${porcentajeDesembolso}%
+&nbsp;&nbsp;
+📋 ${oper}/${metaOperaciones}
+
+<br>
+
+👥 ${cli}
+&nbsp;&nbsp;
+📈 TEM ${tem}
 
 </div>
 `;

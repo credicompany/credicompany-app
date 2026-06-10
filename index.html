@@ -632,10 +632,10 @@ border-radius:8px;
 font-weight:bold;
 ">
 </div>
-<input
-type="file"
-id="excelMetas"
-accept=".xlsx,.xls">
+<div id="panelCargaKPI">
+
+<input type="file" id="excelMetas" accept=".xlsx,.xls">
+
 <button
 class="btn-verde"
 onclick="cargarMetasKPI()">
@@ -654,6 +654,8 @@ class="btn-verde"
 onclick="cargarExcelKPI()">
 📂 Cargar Producción
 </button>
+
+</div>
 
 <div id="kpiResumen"></div>
 
@@ -1977,6 +1979,26 @@ if(el) el.style.display="none";
 });
 
 document.getElementById(p).style.display="block";
+  if(p==="kpi"){
+
+    if(
+        asesor !== "admin" &&
+        asesor !== "operaciones"
+    ){
+
+        document.getElementById(
+            "panelCargaKPI"
+        ).style.display="none";
+
+    }else{
+
+        document.getElementById(
+            "panelCargaKPI"
+        ).style.display="block";
+
+    }
+
+}
 if(p==="clientes"){
 
     filtrarMora(0,1000);

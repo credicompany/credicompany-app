@@ -363,11 +363,11 @@ resumen += `
 
 <div style="
 background:#f8f9fa;
-padding:6px;
-margin:4px 0;
+padding:3px;
+margin:2px 0;
 border-radius:8px;
-font-size:12px;
-line-height:1.2;
+font-size:10px;
+line-height:1.0;
 border-left:4px solid ${
 Number(porcentajeDesembolso)>=100
 ? "#28a745"
@@ -377,35 +377,14 @@ Number(porcentajeDesembolso)>=100
 };
 ">
 
-<b style="font-size:13px;">
+<b style="font-size:11px;">
 👤 ${asesor}
 </b>
 
-<br>
-
 ${colorEstado}
-${porcentajeDesembolso >= 100
-? "META"
-: porcentajeDesembolso >= 80
-? "RUTA"
-: "BAJO"}
-
-<br>
-
-🎯 S/${(metaDesembolso/1000).toFixed(0)}K
-|
-💰 S/${(colocacion/1000).toFixed(0)}K
-
-<br>
-
-📊 ${porcentajeDesembolso}%
-|
-📋 ${oper}/${metaOperaciones}
-
-<br>
-
-📈 TEM ${tem}
-|
+${porcentajeDesembolso}% |
+💰 ${(colocacion/1000).toFixed(0)}K |
+📋 ${oper} |
 👥 ${cli}
 
 </div>

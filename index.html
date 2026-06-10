@@ -754,8 +754,16 @@ window.onload = function(){
     }
 
   actualizarResumen();
+let rankingGuardado =
+localStorage.getItem("rankingKPIHTML");
 
-// 🔥 SINCRONIZAR DESDE FIREBASE
+if(
+rankingGuardado &&
+document.getElementById("rankingKPI")
+){
+document.getElementById("rankingKPI").innerHTML =
+rankingGuardado;
+}// 🔥 SINCRONIZAR DESDE FIREBASE
 db.ref("cartera").on("value", (snapshot)=>{
 
     let dataFirebase = snapshot.val();

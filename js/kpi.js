@@ -360,39 +360,56 @@ else if(Number(porcentajeDesembolso) >= 80){
 }
 
 resumen += `
-        <hr>
 
-        <b>👤 ${asesor}</b><br>
+<div style="
+background:#f8f9fa;
+padding:6px;
+margin:4px 0;
+border-radius:8px;
+font-size:12px;
+line-height:1.2;
+border-left:4px solid ${
+Number(porcentajeDesembolso)>=100
+? "#28a745"
+: Number(porcentajeDesembolso)>=80
+? "#ffc107"
+: "#dc3545"
+};
+">
+
+<b style="font-size:13px;">
+👤 ${asesor}
+</b>
+
+<br>
 
 ${colorEstado}
-${porcentajeDesembolso >= 100 ? "META CUMPLIDA" :
-porcentajeDesembolso >= 80 ? "EN RUTA" :
-"BAJO META"}<br>
+${porcentajeDesembolso >= 100
+? "META"
+: porcentajeDesembolso >= 80
+? "RUTA"
+: "BAJO"}
 
-🎯 Meta Desembolsos:
-S/ ${metaDesembolso.toLocaleString()}<br>
+<br>
 
-💰 Desembolsos:
-S/ ${colocacion.toFixed(2)}<br>
+🎯 S/${(metaDesembolso/1000).toFixed(0)}K
+|
+💰 S/${(colocacion/1000).toFixed(0)}K
 
-📊 Cumplimiento Desembolso:
-${porcentajeDesembolso}%<br>
+<br>
 
-🎯 Meta Operaciones:
-${metaOperaciones}<br>
+📊 ${porcentajeDesembolso}%
+|
+📋 ${oper}/${metaOperaciones}
 
-📋 Operaciones:
-${oper}<br>
+<br>
 
-📈 Cumplimiento Operaciones:
-${porcentajeOperaciones}%<br>
+📈 TEM ${tem}
+|
+👥 ${cli}
 
-📈 TEM Promedio:
-${tem}<br>
-
-👥 Clientes:
-${cli}<br>
-        `;
+</div>
+`;
 
     });
 

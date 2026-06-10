@@ -467,14 +467,36 @@ top.forEach(r => {
 
     resumen += `</div>`;
 
-    document.getElementById(
-        "kpiResumen"
-    ).innerHTML = resumen;
+document.getElementById(
+    "kpiResumen"
+).innerHTML = resumen;
 
-    localStorage.setItem(
-        "resumenKPI",
-        resumen
-    );
+localStorage.setItem(
+    "resumenKPI",
+    resumen
+);
+
+// 🔥 FIREBASE KPI
+db.ref("kpiGerencial").set({
+
+    resumen: resumen,
+
+    nombreMeta:
+    localStorage.getItem("nombreMetaKPI") || "",
+
+    fechaMeta:
+    localStorage.getItem("fechaMetaKPI") || "",
+
+    nombreProduccion:
+    localStorage.getItem("nombreProduccionKPI") || "",
+
+    fechaProduccion:
+    localStorage.getItem("fechaProduccionKPI") || "",
+
+    fechaActualizacion:
+    new Date().toLocaleString()
+
+});
 
 }
 

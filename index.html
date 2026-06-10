@@ -148,8 +148,18 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
   align-items:flex-start;
   gap:8px;
   margin:10px 15px;
+  flex-wrap:wrap;
 }
+@media (max-width:768px){
 
+  #rankingBox,
+  #rankingKPIBox{
+      width:100%;
+      max-width:100%;
+      flex:none;
+  }
+
+}
 #rankingBox,
 #rankingKPIBox{
   flex:1;

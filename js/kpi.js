@@ -407,8 +407,37 @@ ${colorEstado} ${asesor}
     let top =
     Object.entries(ranking)
     .sort((a,b)=>b[1]-a[1]);
+let rankingKPIHTML = "";
 
-    resumen += `
+top.slice(0,5).forEach((r,index)=>{
+
+let medalla="🥉";
+
+if(index===0) medalla="🥇";
+if(index===1) medalla="🥈";
+
+rankingKPIHTML += `
+<div style="
+font-size:12px;
+margin-top:4px;
+">
+${medalla}
+${r[0]}
+→ S/${r[1].toLocaleString()}
+</div>
+`;
+
+});
+
+localStorage.setItem(
+"rankingKPIHTML",
+rankingKPIHTML
+);
+
+if(document.getElementById("rankingKPI")){
+document.getElementById("rankingKPI").innerHTML =
+rankingKPIHTML;
+}    resumen += `
     <div class="card">
 
      <h3 style="

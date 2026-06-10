@@ -751,7 +751,23 @@ db.ref("cartera").on("value", (snapshot)=>{
     }
 
 });
+db.ref("kpiGerencial").on("value",(snapshot)=>{
 
+    let data = snapshot.val();
+
+    if(!data) return;
+
+    let div =
+    document.getElementById("kpiResumen");
+
+    if(div && data.resumen){
+
+        div.innerHTML =
+        data.resumen;
+
+    }
+
+});
 };
 // LOGIN
 function login(){

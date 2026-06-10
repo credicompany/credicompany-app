@@ -263,7 +263,12 @@ ${temGeneral}%
 
     resumen += `
     <div class="card">
-    <h3>🎯 KPI POR ASESOR</h3>
+  <h4 style="
+margin:5px 0;
+font-size:14px;
+">
+🎯 KPI POR ASESOR
+</h4>
     `;
 
     Object.keys(ranking).forEach(asesor=>{
@@ -360,14 +365,8 @@ else if(Number(porcentajeDesembolso) >= 80){
 }
 
 resumen += `
-
-<div style="
-background:#f8f9fa;
-padding:3px;
-margin:2px 0;
-border-radius:8px;
-font-size:10px;
-line-height:1.0;
+<div class="item"
+style="
 border-left:4px solid ${
 Number(porcentajeDesembolso)>=100
 ? "#28a745"
@@ -377,19 +376,16 @@ Number(porcentajeDesembolso)>=100
 };
 ">
 
-<b style="font-size:11px;">
-👤 ${asesor}
-</b>
+<b>${colorEstado} ${asesor}</b><br>
 
-${colorEstado}
-${porcentajeDesembolso}% |
-💰 ${(colocacion/1000).toFixed(0)}K |
+🎯 ${porcentajeDesembolso}% |
+💰 S/${(colocacion/1000).toFixed(0)}K |
 📋 ${oper} |
-👥 ${cli}
+👥 ${cli} |
+📈 ${tem}
 
 </div>
 `;
-
     });
 
     resumen += `</div>`;

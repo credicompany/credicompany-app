@@ -518,7 +518,7 @@ localStorage.setItem(
 db.ref("kpiGerencial").set({
 
     resumen: resumen,
-
+    rankingKPIHTML: rankingKPIHTML,
     nombreMeta:
     localStorage.getItem("nombreMetaKPI") || "",
 

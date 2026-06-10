@@ -764,6 +764,31 @@ window.onload = function(){
     }
 
   actualizarResumen();
+  // 🔥 SINCRONIZAR KPI FIREBASE
+db.ref("kpiGerencial").on("value",(snapshot)=>{
+
+    let data = snapshot.val();
+
+    if(!data) return;
+
+    // KPI completo
+    localStorage.setItem(
+        "resumenKPI",
+        data.resumen || ""
+    );
+
+    if(document.getElementById("kpiResumen")){
+        document.getElementById("kpiResumen").innerHTML =
+        data.resumen || "";
+    }
+
+    // Ranking colocación
+    if(document.getElementById("rankingKPI")){
+        document.getElementById("rankingKPI").innerHTML =
+        data.rankingKPIHTML || "";
+    }
+
+});
 let rankingGuardado =
 localStorage.getItem("rankingKPIHTML");
 

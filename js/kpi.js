@@ -418,12 +418,18 @@ if(index===1) medalla="🥈";
 
 rankingKPIHTML += `
 <div style="
-font-size:12px;
-margin-top:4px;
+font-size:11px;
+line-height:1.2;
+margin:2px 0;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
 ">
+
 ${medalla}
-${r[0]}
-→ S/${r[1].toLocaleString()}
+${r[0].substring(0,8)}
+→ S/${Math.round(r[1]/1000)}K
+
 </div>
 `;
 

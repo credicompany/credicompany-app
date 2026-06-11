@@ -161,14 +161,18 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 
 @media(max-width:768px){
 
-    #rankingContainer{
-        display:flex;
-        flex-direction:row;
-        justify-content:center;
-        align-items:flex-start;
-        gap:8px;
-    }
-
+   #rankingContainer{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:8px;
+}
+#btnVolverTop{
+    flex-basis:100%;
+    display:block;
+    width:100%;
+    margin-top:8px;
+}
     #rankingBox,
     #rankingKPIBox{
         width:45%;
@@ -189,9 +193,11 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
         line-height:1.2;
     }
 
-    #btnVolverTop{
-        display:none;
-    }
+   #btnVolverTop{
+    display:block;
+    width:100%;
+    margin-top:8px;
+}
 
 }
 

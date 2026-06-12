@@ -125,7 +125,27 @@ function generarKPI(json){
     });
 
     let totalOperaciones = json.length;
+let metaEmpresa = 0;
 
+metas.forEach(m=>{
+
+   metaEmpresa +=
+   parseFloat(
+      String(
+         m["COLOCACION"] ||
+         m["COLOC."] ||
+         0
+      ).replace(/,/g,"")
+   ) || 0;
+
+});
+let avanceEmpresa =
+metaEmpresa > 0
+?
+((montoOtorgadoTotal / metaEmpresa) * 100)
+.toFixed(1)
+:
+0;
 let temGeneral =
 0;
 
@@ -217,7 +237,25 @@ min-height:55px;
 ${temGeneral}%
 </div>
 </div>
-
+<div style="
+background:#dc2626;
+color:white;
+padding:6px;
+border-radius:8px;
+text-align:center;
+min-height:55px;
+">
+<div style="font-size:16px;">🎯</div>
+<div style="font-size:11px;">
+Meta Empresa
+</div>
+<div style="
+font-size:15px;
+font-weight:bold;
+">
+${avanceEmpresa}%
+</div>
+</div>
 </div>
 `;
 

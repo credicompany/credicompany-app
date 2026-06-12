@@ -389,6 +389,24 @@ ${colorEstado} ${asesor}
 <br>
 
 📊 Cumpl.: ${porcentajeDesembolso}%
+<div style="
+background:#e5e7eb;
+height:6px;
+border-radius:10px;
+overflow:hidden;
+margin-top:3px;
+margin-bottom:3px;
+">
+<div style="
+width:${Math.min(porcentajeDesembolso,100)}%;
+height:100%;
+background:
+${porcentajeDesembolso>=100 ? '#22c55e' :
+porcentajeDesembolso>=80 ? '#facc15' :
+'#ef4444'};
+">
+</div>
+</div>
 &nbsp;&nbsp;
 📋 ${oper}/${metaOperaciones}
 

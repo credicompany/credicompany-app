@@ -480,6 +480,15 @@ ${colorEstado} ${asesor}
 <br>
 
 📊 Cumpl.: ${porcentajeDesembolso}%
+&nbsp;&nbsp; 📋 ${oper}/${metaOperaciones}
+
+<br>
+
+👥 ${cli}
+
+&nbsp;&nbsp; 📈 ${tem}
+
+📈 TEM ${tem}
 <div style="
 background:#e5e7eb;
 height:6px;

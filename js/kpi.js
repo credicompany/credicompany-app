@@ -298,7 +298,60 @@ ${avanceEmpresa}%
         }
 
     });
+top =
+Object.entries(ranking)
+.sort((a,b)=>b[1]-a[1]);
 
+let mejorAsesor =
+top.length > 0
+?
+top[0]
+:
+null;
+
+if(mejorAsesor){
+
+resumen += `
+
+<div style="
+background:linear-gradient(
+135deg,
+#f59e0b,
+#fbbf24
+);
+color:white;
+padding:12px;
+border-radius:12px;
+margin-bottom:12px;
+box-shadow:0 4px 10px rgba(0,0,0,.15);
+">
+
+<div style="
+font-size:18px;
+font-weight:bold;
+">
+⭐ MEJOR ASESOR
+</div>
+
+<div style="
+font-size:22px;
+font-weight:bold;
+margin-top:5px;
+">
+${mejorAsesor[0]}
+</div>
+
+<div style="
+font-size:18px;
+margin-top:4px;
+">
+💰 S/${mejorAsesor[1].toLocaleString()}
+</div>
+
+</div>
+`;
+
+}
     resumen += `
     <div class="card">
   <h4 style="
@@ -432,6 +485,28 @@ background:#e5e7eb;
 height:6px;
 border-radius:10px;
 overflow:hidden;
+margin-top:2px;
+margin-bottom:4px;
+">
+
+<div style="
+width:${Math.min(porcentajeDesembolso,100)}%;
+height:100%;
+background:
+${Number(porcentajeDesembolso)>=100
+? '#22c55e'
+: Number(porcentajeDesembolso)>=80
+? '#facc15'
+: '#ef4444'};
+">
+</div>
+
+</div>
+<div style="
+background:#e5e7eb;
+height:6px;
+border-radius:10px;
+overflow:hidden;
 margin-top:3px;
 margin-bottom:3px;
 ">
@@ -463,6 +538,12 @@ porcentajeDesembolso>=80 ? '#facc15' :
     let top =
     Object.entries(ranking)
     .sort((a,b)=>b[1]-a[1]);
+    let mejorAsesor =
+top.length > 0
+?
+top[0]
+:
+null;
 let rankingKPIHTML = "";
 
 top.slice(0,5).forEach((r,index)=>{

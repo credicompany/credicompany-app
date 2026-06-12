@@ -298,7 +298,7 @@ ${avanceEmpresa}%
         }
 
     });
-top =
+let top =
 Object.entries(ranking)
 .sort((a,b)=>b[1]-a[1]);
 
@@ -488,20 +488,6 @@ overflow:hidden;
 margin-top:2px;
 margin-bottom:4px;
 ">
-
-<div style="
-width:${Math.min(porcentajeDesembolso,100)}%;
-height:100%;
-background:
-${Number(porcentajeDesembolso)>=100
-? '#22c55e'
-: Number(porcentajeDesembolso)>=80
-? '#facc15'
-: '#ef4444'};
-">
-</div>
-
-</div>
 <div style="
 background:#e5e7eb;
 height:6px;
@@ -534,16 +520,6 @@ porcentajeDesembolso>=80 ? '#facc15' :
     });
 
     resumen += `</div>`;
-
-    let top =
-    Object.entries(ranking)
-    .sort((a,b)=>b[1]-a[1]);
-    let mejorAsesor =
-top.length > 0
-?
-top[0]
-:
-null;
 let rankingKPIHTML = "";
 
 top.slice(0,5).forEach((r,index)=>{

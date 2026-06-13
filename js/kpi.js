@@ -458,7 +458,12 @@ else if(Number(porcentajeDesembolso) >= 80){
 resumen += `
 <div class="item"
 style="
-padding-left:8px;
+background:white;
+padding:8px;
+margin:6px 0;
+border-radius:10px;
+box-shadow:0 1px 4px rgba(0,0,0,.08);
+font-size:12px;
 ">
 
 <b style="font-size:13px;">

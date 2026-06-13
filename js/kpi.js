@@ -458,13 +458,7 @@ else if(Number(porcentajeDesembolso) >= 80){
 resumen += `
 <div class="item"
 style="
-border-left:4px solid ${
-Number(porcentajeDesembolso)>=100
-? "#28a745"
-: Number(porcentajeDesembolso)>=80
-? "#ffc107"
-: "#dc3545"
-};
+padding-left:8px;
 ">
 
 <b style="font-size:13px;">
@@ -483,12 +477,6 @@ ${colorEstado} ${asesor}
 &nbsp;&nbsp; 📋 ${oper}/${metaOperaciones}
 
 <br>
-
-👥 ${cli}
-
-&nbsp;&nbsp; 📈 ${tem}
-
-📈 TEM ${tem}
 <div style="
 background:#e5e7eb;
 height:6px;

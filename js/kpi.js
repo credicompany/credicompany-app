@@ -469,7 +469,13 @@ font-size:12px;
 <b style="font-size:13px;">
 ${colorEstado} ${asesor}
 </b>
+<br>
 
+💰 S/${Math.round(colocacion/1000)}K
+
+&nbsp;&nbsp;
+
+📊 ${porcentajeDesembolso}%
 <br>
 
 🎯 Meta: S/${(metaDesembolso/1000).toFixed(0)}K
@@ -516,7 +522,48 @@ porcentajeDesembolso>=80 ? '#facc15' :
 👥 ${cli}
 &nbsp;&nbsp;
 📈 TEM ${tem}
+<div
+id="detalle_${asesor}"
+style="
+display:none;
+margin-top:8px;
+font-size:12px;
+">
 
+🎯 Meta Desembolso:
+S/${metaDesembolso.toLocaleString()}
+
+<br>
+
+💰 Real:
+S/${colocacion.toLocaleString()}
+
+<br>
+
+📊 Cumplimiento:
+${porcentajeDesembolso}%
+
+<br>
+
+🎯 Meta Operaciones:
+${metaOperaciones}
+
+<br>
+
+📋 Operaciones:
+${oper}
+
+<br>
+
+📈 TEM:
+${tem}%
+
+<br>
+
+👥 Clientes:
+${cli}
+
+</div>
 </div>
 `;
     });

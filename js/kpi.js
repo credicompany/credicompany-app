@@ -468,16 +468,40 @@ font-size:12px;
 cursor:pointer;
 ">
 
-<b style="font-size:13px;">
+<div style="
+background:
+${Number(porcentajeDesembolso)>=100
+? '#22c55e'
+: Number(porcentajeDesembolso)>=80
+? '#facc15'
+: '#ef4444'};
+color:white;
+padding:6px 10px;
+margin:-8px -8px 8px -8px;
+border-radius:10px 10px 0 0;
+font-weight:bold;
+font-size:14px;
+">
 ${colorEstado} ${asesor}
-</b>
+</div>
 <br>
 
+<div style="
+display:flex;
+justify-content:space-between;
+font-size:14px;
+font-weight:bold;
+">
+
+<span>
 💰 S/${Math.round(colocacion/1000)}K
+</span>
 
-&nbsp;&nbsp;
-
+<span>
 📊 ${porcentajeDesembolso}%
+</span>
+
+</div>
 
 <br>
 

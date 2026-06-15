@@ -457,6 +457,7 @@ else if(Number(porcentajeDesembolso) >= 80){
 
 resumen += `
 <div class="item"
+onclick="toggleKPI('${asesor}')"
 style="
 background:white;
 padding:8px;
@@ -464,6 +465,7 @@ margin:6px 0;
 border-radius:10px;
 box-shadow:0 1px 4px rgba(0,0,0,.08);
 font-size:12px;
+cursor:pointer;
 ">
 
 <b style="font-size:13px;">
@@ -476,52 +478,18 @@ ${colorEstado} ${asesor}
 &nbsp;&nbsp;
 
 📊 ${porcentajeDesembolso}%
-<br>
-
-🎯 Meta: S/${(metaDesembolso/1000).toFixed(0)}K
-&nbsp;&nbsp;
-💰 Real: S/${(colocacion/1000).toFixed(0)}K
 
 <br>
 
-📊 Cumpl.: ${porcentajeDesembolso}%
-&nbsp;&nbsp; 📋 ${oper}/${metaOperaciones}
-
-<br>
-<div style="
-background:#e5e7eb;
-height:6px;
-border-radius:10px;
-overflow:hidden;
-margin-top:2px;
-margin-bottom:4px;
+<span style="
+color:#0d6efd;
+font-size:11px;
+font-weight:bold;
 ">
-<div style="
-background:#e5e7eb;
-height:6px;
-border-radius:10px;
-overflow:hidden;
-margin-top:3px;
-margin-bottom:3px;
-">
-<div style="
-width:${Math.min(porcentajeDesembolso,100)}%;
-height:100%;
-background:
-${porcentajeDesembolso>=100 ? '#22c55e' :
-porcentajeDesembolso>=80 ? '#facc15' :
-'#ef4444'};
-">
-</div>
-</div>
-&nbsp;&nbsp;
-📋 ${oper}/${metaOperaciones}
+▼ Ver detalle
+</span>
 
 <br>
-
-👥 ${cli}
-&nbsp;&nbsp;
-📈 TEM ${tem}
 <div
 id="detalle_${asesor}"
 style="
@@ -640,7 +608,26 @@ db.ref("kpiGerencial").set({
 
 }
 
+function toggleKPI(asesor){
 
+    let detalle =
+    document.getElementById(
+        "detalle_" + asesor
+    );
+
+    if(!detalle) return;
+
+    if(detalle.style.display==="none"){
+
+        detalle.style.display="block";
+
+    }else{
+
+        detalle.style.display="none";
+
+    }
+
+}
 window.addEventListener("load",()=>{
 
     let div =

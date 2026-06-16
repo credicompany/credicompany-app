@@ -700,6 +700,7 @@ window.addEventListener("load",()=>{
         resumenGuardado;
 
     }
+    });
 function cargarExcelFinanciero(){
 
 let archivo =

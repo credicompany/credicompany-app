@@ -775,19 +775,54 @@ localStorage.getItem(
 )
 ) || [];
 
+let carteraTotal = 0;
+
+data.forEach(c=>{
+
+carteraTotal +=
+parseFloat(c["Saldo Capital"]) || 0;
+
+});
+
 document.getElementById(
 "resumenFinanciero"
 ).innerHTML =
 
 `
-<div class="item">
+<div style="
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+">
 
-✅ Registros cargados:
+<div style="
+background:#198754;
+color:white;
+padding:15px;
+border-radius:12px;
+text-align:center;
+">
 
-<b>${data.length}</b>
+<div style="font-size:28px;">
+💰
+</div>
+
+<div>
+Cartera Total
+</div>
+
+<div style="
+font-size:22px;
+font-weight:bold;
+">
+
+S/${carteraTotal.toLocaleString()}
+
+</div>
+
+</div>
 
 </div>
 `;
 
 }
-

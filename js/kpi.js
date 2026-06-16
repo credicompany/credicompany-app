@@ -742,7 +742,11 @@ wb.SheetNames[0]
 let json =
 XLSX.utils
 .sheet_to_json(hoja);
+console.log(json[0]);
 
+alert(
+Object.keys(json[0]).join("\n")
+);
 localStorage.setItem(
 "financiero",
 JSON.stringify(json)

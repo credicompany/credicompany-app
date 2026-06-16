@@ -344,6 +344,17 @@ onclick="mostrar('admin')">
     <div style="font-size:28px;">📊</div>
     <div>KPI Gerencial</div>
 </div>
+<div
+id="boxKpiFinanciero"
+class="box"
+style="display:none"
+onclick="mostrar('kpiFinanciero')">
+
+<div style="font-size:28px;">🏦</div>
+
+<div>KPI Financiero</div>
+
+</div>
 </div>
 </div>
 
@@ -730,6 +741,25 @@ onclick="cargarExcelKPI()">
 <div id="kpiResumen"></div>
 
 </div>
+<div
+id="kpiFinanciero"
+class="card"
+style="display:none">
+
+<div class="volver"
+onclick="volver()">
+← Volver
+</div>
+
+<h3>🏦 KPI FINANCIERO</h3>
+
+<div id="kpiFinancieroResumen">
+
+Próximamente...
+
+</div>
+
+</div>
 <div id="historialClienteDiv" class="card" style="display:none;">
     <div class="volver" onclick="volverHistorialCliente()">← Volver</div>
     <h3>📋 Historial del Cliente</h3>
@@ -912,7 +942,19 @@ let encontrado = usuarios.find(
 if(encontrado){
 
     asesor = user.toLowerCase().trim();
+if(asesor==="ebenites"){
 
+document.getElementById(
+"boxKpiFinanciero"
+).style.display="flex";
+
+}else{
+
+document.getElementById(
+"boxKpiFinanciero"
+).style.display="none";
+
+}
     nombreAsesor.innerText = asesor;
 
     cargarPerfilAsesor(asesor);
@@ -2086,6 +2128,7 @@ app.style.display="block";
 "pagos",
 "admin",
 "kpi",
+"kpiFinanciero",
 "historialDiv",
 "historialGestionesDiv",
 "historialClienteDiv"
@@ -2133,6 +2176,7 @@ app.style.display="none";
 "pagos",
 "admin",
 "kpi",
+"kpiFinanciero",
 "historialDiv",
 "historialGestionesDiv",
 "historialClienteDiv"

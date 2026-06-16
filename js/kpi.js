@@ -776,11 +776,23 @@ localStorage.getItem(
 ) || [];
 
 let carteraTotal = 0;
+let capitalVencido = 0;
 
 data.forEach(c=>{
 
-carteraTotal +=
+let saldo =
 parseFloat(c["Saldo Capital"]) || 0;
+
+let atraso =
+parseFloat(c["Dias de retraso"]) || 0;
+
+carteraTotal += saldo;
+
+if(atraso > 0){
+
+capitalVencido += saldo;
+
+}
 
 });
 
@@ -809,6 +821,32 @@ text-align:center;
 
 <div>
 Cartera Total
+<div style="
+background:#dc3545;
+color:white;
+padding:15px;
+border-radius:12px;
+text-align:center;
+">
+
+<div style="font-size:28px;">
+💵
+</div>
+
+<div>
+Capital Vencido
+</div>
+
+<div style="
+font-size:22px;
+font-weight:bold;
+">
+
+S/${capitalVencido.toLocaleString()}
+
+</div>
+
+</div>
 </div>
 
 <div style="

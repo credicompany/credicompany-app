@@ -700,5 +700,89 @@ window.addEventListener("load",()=>{
         resumenGuardado;
 
     }
+function cargarExcelFinanciero(){
 
+let archivo =
+document.getElementById(
+"excelFinanciero"
+).files[0];
+
+if(!archivo){
+
+alert(
+"Seleccione archivo financiero"
+);
+
+return;
+
+}
+
+let lector =
+new FileReader();
+
+lector.onload = function(e){
+
+let data =
+new Uint8Array(
+e.target.result
+);
+
+let wb =
+XLSX.read(
+data,
+{type:"array"}
+);
+
+let hoja =
+wb.Sheets[
+wb.SheetNames[0]
+];
+
+let json =
+XLSX.utils
+.sheet_to_json(hoja);
+
+localStorage.setItem(
+"financiero",
+JSON.stringify(json)
+);
+
+alert(
+"✅ Excel financiero cargado"
+);
+
+mostrarResumenFinanciero();
+
+};
+
+lector.readAsArrayBuffer(
+archivo
+);
+
+}
+
+function mostrarResumenFinanciero(){
+
+let data =
+JSON.parse(
+localStorage.getItem(
+"financiero"
+)
+) || [];
+
+document.getElementById(
+"resumenFinanciero"
+).innerHTML =
+
+`
+<div class="item">
+
+✅ Registros cargados:
+
+<b>${data.length}</b>
+
+</div>
+`;
+
+}
 });

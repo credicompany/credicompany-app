@@ -852,6 +852,7 @@ let clientesCriticos = 0;
 let rentabilidad = 0;
 let rankingCartera = {};
 let carteraProducto = {};
+let vencidoProducto = {};
 let clientesProducto = {};
 let costoDesembolsoTotal = 0;
 let rankingAsesores = {};
@@ -891,6 +892,13 @@ rankingCartera[asesor] = 0;
 }
 
 rankingCartera[asesor] += saldo;
+if(!vencidoProducto[producto]){
+vencidoProducto[producto] = 0;
+}
+
+if(atraso > 0){
+vencidoProducto[producto] += saldo;
+}
 let interes =
 parseFloat(c["Interes Devengado"]) || 0;
 
@@ -993,6 +1001,7 @@ let topCartera =
 Object.entries(rankingCartera)
 .sort((a,b)=>b[1]-a[1])
 .slice(0,5);
+let moraProductoHTML = "";
 let rankingProductoHTML = "";
 Object.entries(carteraProducto)
 .sort((a,b)=>b[1]-a[1])
@@ -1025,6 +1034,54 @@ border-radius:8px;
 💵 S/${r[1].toLocaleString()}<br>
 
 📈 ${participacion}%
+
+</div>
+`;
+
+});
+Object.entries(carteraProducto)
+.sort((a,b)=>b[1]-a[1])
+.forEach(r=>{
+
+let cartera =
+r[1];
+
+let vencido =
+vencidoProducto[r[0]] || 0;
+
+let mora =
+cartera > 0
+?
+((vencido / cartera) * 100).toFixed(1)
+:
+0;
+
+let color =
+mora <= 5
+? "#198754"
+: mora <= 10
+? "#ffc107"
+: "#dc3545";
+
+moraProductoHTML += `
+<div style="
+background:${color};
+color:white;
+padding:8px;
+margin:5px 0;
+border-radius:8px;
+">
+
+<b>${r[0]}</b><br>
+
+📊 Cartera:
+S/${cartera.toLocaleString()}<br>
+
+🚨 Vencido:
+S/${vencido.toLocaleString()}<br>
+
+📉 Mora:
+${mora}%
 
 </div>
 `;

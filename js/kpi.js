@@ -833,12 +833,33 @@ let carteraTotal = 0;
 let capitalVencido = 0;
 let moraPorcentaje = 0;
 let clientesCriticos = 0;
+let costoDesembolsoTotal = 0;
 let rankingAsesores = {};
 data.forEach(c=>{
 
 let saldo =
 parseFloat(c["Saldo Capital"]) || 0;
+let costo =
+parseFloat(c["Costo por Desembolso"]) || 0;
 
+let fechaDesembolso =
+c["Fecha Desembolso"];
+
+let fecha =
+new Date(fechaDesembolso);
+
+let hoy =
+new Date();
+
+if(
+fecha.getMonth() === hoy.getMonth()
+&&
+fecha.getFullYear() === hoy.getFullYear()
+){
+
+    costoDesembolsoTotal += costo;
+
+}
 let atraso =
 parseFloat(c["Dias de retraso"]) || 0;
 let asesor =

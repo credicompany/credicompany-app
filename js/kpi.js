@@ -709,6 +709,25 @@ if(financieroGuardado){
 mostrarResumenFinanciero();
 
 }
+    let nombreFinanciero =
+localStorage.getItem(
+"nombreFinanciero"
+);
+
+if(
+document.getElementById(
+"archivoFinancieroActivo"
+)
+){
+
+document.getElementById(
+"archivoFinancieroActivo"
+).innerHTML =
+
+"📂 Archivo vigente: " +
+(nombreFinanciero || "Sin archivo");
+
+}
     });
 function cargarExcelFinanciero(){
 
@@ -763,6 +782,10 @@ JSON.stringify(json)
 localStorage.setItem(
 "nombreFinanciero",
 archivo.name
+);
+    localStorage.setItem(
+"fechaFinanciero",
+new Date().toLocaleString()
 );
 alert(
 "✅ Excel financiero cargado"

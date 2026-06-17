@@ -804,13 +804,6 @@ let json =
 XLSX.utils
 .sheet_to_json(hoja);
 console.log(json[0]);
-alert(
-json.slice(0,20)
-.map(x=>x["Producto"])
-.join("\n")
-);alert(
-Object.keys(json[0]).join("\n")
-);
 localStorage.setItem(
 "financiero",
 JSON.stringify(json)
@@ -861,6 +854,9 @@ data.forEach(c=>{
 
 let saldo =
 parseFloat(c["Saldo Capital"]) || 0;
+
+let atraso =
+parseFloat(c["Dias de retraso"]) || 0;
 let asesor =
 (c["Asesor(a)"] || "SIN ASESOR")
 .toString()
@@ -915,6 +911,8 @@ c["Fecha Desembolso"] || ""
 let partes =
 fechaDesembolso.split("/");
 
+if(partes.length === 3){
+
 let fecha =
 new Date(
 parseInt(partes[2]),
@@ -924,18 +922,16 @@ parseInt(partes[0])
 
 let hoy =
 new Date();
-console.log(
-"FECHA:",
-fechaDesembolso,
-" COSTO:",
-costo
-);if(
+
+if(
 fecha.getMonth() === hoy.getMonth()
 &&
 fecha.getFullYear() === hoy.getFullYear()
 ){
 
-    costoDesembolsoTotal += costo;
+costoDesembolsoTotal += costo;
+
+}
 
 }
 carteraTotal += saldo;
@@ -1227,7 +1223,16 @@ color:black;
 </h3>
 ${rankingCarteraHTML}
 <hr style="margin:10px 0;">
+<h3 style="
+text-align:center;
+color:black;
+">
+👨‍💼 Ranking Asesores
+</h3>
 
+${rankingHTML}
+
+<hr style="margin:15px 0;">
 <h3 style="
 text-align:center;
 color:black;

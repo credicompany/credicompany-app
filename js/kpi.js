@@ -118,7 +118,8 @@ json.forEach(c=>{
 
     montoOtorgadoTotal +=
     parseFloat(c["Monto Otorgado"]) || 0;
-
+let atraso =
+parseFloat(c["Dias de retraso"]) || 0;
     let costo =
     parseFloat(c["Costo por Desembolso"]) || 0;
 
@@ -937,8 +938,6 @@ fecha.getFullYear() === hoy.getFullYear()
     costoDesembolsoTotal += costo;
 
 }
-let atraso =
-parseFloat(c["Dias de retraso"]) || 0;
 carteraTotal += saldo;
 if(!rankingAsesores[asesor]){
 
@@ -1237,6 +1236,16 @@ color:black;
 </h3>
 
 ${rankingProductoHTML}
+<hr style="margin:15px 0;">
+
+<h3 style="
+text-align:center;
+color:black;
+">
+📉 Mora por Producto
+</h3>
+
+${moraProductoHTML}
 </div>
 `;
 

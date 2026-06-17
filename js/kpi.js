@@ -846,6 +846,39 @@ clientesCriticos++;
 
 }
 });
+let rankingHTML = "";
+
+Object.entries(rankingAsesores)
+
+.sort((a,b)=>b[1]-a[1])
+
+.slice(0,5)
+
+.forEach((r,index)=>{
+
+let medalla = "🥉";
+
+if(index===0) medalla="🥇";
+if(index===1) medalla="🥈";
+
+rankingHTML += `
+
+<div style="
+padding:5px;
+font-size:14px;
+font-weight:bold;
+">
+
+${medalla}
+${r[0]}
+→
+S/${r[1].toLocaleString()}
+
+</div>
+
+`;
+
+});
 moraPorcentaje =
 carteraTotal > 0
 ?
@@ -929,6 +962,24 @@ text-align:center;
 ${clientesCriticos}
 </div>
 </div>
+</div>
+<div style="
+background:white;
+padding:15px;
+border-radius:12px;
+margin-top:15px;
+">
+
+<h3 style="
+text-align:center;
+margin-bottom:10px;
+color:black;
+">
+🏆 Ranking Cartera
+</h3>
+
+${rankingHTML}
+
 </div>
 `;
 

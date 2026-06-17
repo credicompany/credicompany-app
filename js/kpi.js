@@ -174,7 +174,7 @@ margin-bottom:15px;
 
 <div style="
 display:grid;
-grid-template-columns:repeat(2,1fr);
+grid-template-columns:repeat(3,1fr);
 gap:5px;
 margin-bottom:10px;
 ">
@@ -840,7 +840,25 @@ text-align:center;
 S/${capitalVencido.toLocaleString()}
 </div>
 </div>
-
+<div style="
+background:${
+moraPorcentaje <= 5
+? '#198754'
+: moraPorcentaje <= 10
+? '#ffc107'
+: '#dc3545'
+};
+color:white;
+padding:15px;
+border-radius:12px;
+text-align:center;
+">
+<div style="font-size:28px;">📉</div>
+<div>% Mora</div>
+<div style="font-size:22px;font-weight:bold;">
+${moraPorcentaje}%
+</div>
+</div>
 </div>
 `;
 

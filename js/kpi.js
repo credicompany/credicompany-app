@@ -814,6 +814,7 @@ let carteraTotal = 0;
 let capitalVencido = 0;
 let moraPorcentaje = 0;
 let clientesCriticos = 0;
+let rankingAsesores = {};
 data.forEach(c=>{
 
 let saldo =
@@ -821,9 +822,19 @@ parseFloat(c["Saldo Capital"]) || 0;
 
 let atraso =
 parseFloat(c["Dias de retraso"]) || 0;
-
+let asesor =
+(c["Asesor(a)"] || "SIN ASESOR")
+.toString()
+.trim()
+.toUpperCase();
 carteraTotal += saldo;
+if(!rankingAsesores[asesor]){
 
+rankingAsesores[asesor] = 0;
+
+}
+
+rankingAsesores[asesor] += saldo;
 if(atraso > 0){
 
 capitalVencido += saldo;

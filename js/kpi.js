@@ -111,19 +111,37 @@ function generarKPI(json){
 
     let totalClientes = json.length;
 
-    let montoOtorgadoTotal = 0;
-    let costoDesembolsoTotal = 0;
+  let montoOtorgadoTotal = 0;
+let costoDesembolsoTotal = 0;
 
-    json.forEach(c => {
+json.forEach(c=>{
 
-        montoOtorgadoTotal +=
-        parseFloat(c["Monto Otorgado"]) || 0;
+    montoOtorgadoTotal +=
+    parseFloat(c["Monto Otorgado"]) || 0;
 
-        costoDesembolsoTotal +=
-        parseFloat(c["Costo por Desembolso"]) || 0;
-let fechaDesembolso =
-c["Fecha Desembolso"];   
-    });
+    let costo =
+    parseFloat(c["Costo por Desembolso"]) || 0;
+
+    let fechaDesembolso =
+    c["Fecha Desembolso"];
+
+    let fecha =
+    new Date(fechaDesembolso);
+
+    let hoy =
+    new Date();
+
+    if(
+        fecha.getMonth() === hoy.getMonth()
+        &&
+        fecha.getFullYear() === hoy.getFullYear()
+    ){
+
+        costoDesembolsoTotal += costo;
+
+    }
+
+});
 
     let totalOperaciones = json.length;
 let metaEmpresa = 0;

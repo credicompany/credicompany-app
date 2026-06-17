@@ -1004,7 +1004,12 @@ clientesProducto[r[0]]
 clientesProducto[r[0]].size
 :
 0;
-
+let participacion =
+carteraTotal > 0
+?
+((r[1] / carteraTotal) * 100).toFixed(1)
+:
+0;
 rankingProductoHTML += `
 <div style="
 background:#f8f9fa;
@@ -1017,7 +1022,9 @@ border-radius:8px;
 
 👥 ${cantidadClientes} clientes<br>
 
-💵 S/${r[1].toLocaleString()}
+💵 S/${r[1].toLocaleString()}<br>
+
+📈 ${participacion}%
 
 </div>
 `;

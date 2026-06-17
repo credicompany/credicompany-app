@@ -123,14 +123,22 @@ json.forEach(c=>{
     parseFloat(c["Costo por Desembolso"]) || 0;
 
     let fechaDesembolso =
-    c["Fecha Desembolso"];
-console.log(
-"Fecha:",
-c["Fecha Desembolso"]
-);
-    let fecha =
-    new Date(fechaDesembolso);
+String(c["Fecha Desembolso"] || "");
 
+let partes =
+fechaDesembolso.split("/");
+
+let fecha =
+new Date(
+partes[2],
+partes[1]-1,
+partes[0]
+);
+console.log(
+fechaDesembolso,
+fecha,
+c["Costo por Desembolso"]
+);
     let hoy =
     new Date();
 

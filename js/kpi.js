@@ -1216,15 +1216,6 @@ margin-top:15px;
 
 <h3 style="
 text-align:center;
-margin-bottom:10px;
-color:black;
-">
-🏆 Ranking Cartera
-</h3>
-${rankingCarteraHTML}
-<hr style="margin:10px 0;">
-<h3 style="
-text-align:center;
 color:black;
 ">
 👨‍💼 Ranking Asesores

@@ -777,12 +777,30 @@ localStorage.getItem(
 
 let carteraTotal = 0;
 let capitalVencido = 0;
-
+let moraPorcentaje = 0;
 data.forEach(c=>{
 
 let saldo =
 parseFloat(c["Saldo Capital"]) || 0;
 
+let atraso =
+parseFloat(c["Dias de retraso"]) || 0;
+
+carteraTotal += saldo;
+
+if(atraso > 0){
+
+capitalVencido += saldo;
+
+}
+
+});
+moraPorcentaje =
+carteraTotal > 0
+?
+((capitalVencido / carteraTotal) * 100).toFixed(2)
+:
+0;
 let atraso =
 parseFloat(c["Dias de retraso"]) || 0;
 
@@ -814,13 +832,13 @@ padding:15px;
 border-radius:12px;
 text-align:center;
 ">
-
-<div style="font-size:28px;">
-💰
+<div style="font-size:28px;">💰</div>
+<div>Cartera Total</div>
+<div style="font-size:22px;font-weight:bold;">
+S/${carteraTotal.toLocaleString()}
+</div>
 </div>
 
-<div>
-Cartera Total
 <div style="
 background:#dc3545;
 color:white;
@@ -828,36 +846,11 @@ padding:15px;
 border-radius:12px;
 text-align:center;
 ">
-
-<div style="font-size:28px;">
-💵
-</div>
-
-<div>
-Capital Vencido
-</div>
-
-<div style="
-font-size:22px;
-font-weight:bold;
-">
-
+<div style="font-size:28px;">💵</div>
+<div>Capital Vencido</div>
+<div style="font-size:22px;font-weight:bold;">
 S/${capitalVencido.toLocaleString()}
-
 </div>
-
-</div>
-</div>
-
-<div style="
-font-size:22px;
-font-weight:bold;
-">
-
-S/${carteraTotal.toLocaleString()}
-
-</div>
-
 </div>
 
 </div>

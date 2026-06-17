@@ -801,18 +801,6 @@ carteraTotal > 0
 ((capitalVencido / carteraTotal) * 100).toFixed(2)
 :
 0;
-let atraso =
-parseFloat(c["Dias de retraso"]) || 0;
-
-carteraTotal += saldo;
-
-if(atraso > 0){
-
-capitalVencido += saldo;
-
-}
-
-});
 
 document.getElementById(
 "resumenFinanciero"

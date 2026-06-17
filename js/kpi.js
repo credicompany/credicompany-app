@@ -204,8 +204,24 @@ margin-bottom:15px;
 ">
 📊 KPI GERENCIAL
 </h3>
-
 <div style="
+background:#f8f9fa;
+padding:10px;
+border-radius:10px;
+margin-bottom:10px;
+text-align:center;
+font-size:14px;
+font-weight:bold;
+">
+
+📊 KPI FINANCIERO
+
+<br>
+
+🕒 Actualizado:
+${new Date().toLocaleString()}
+
+</div><div style="
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:5px;
@@ -367,7 +383,7 @@ font-weight:bold;
 </div>
 
 <div style="
-font-size:22px;
+font-size:18px;
 font-weight:bold;
 margin-top:5px;
 ">
@@ -1093,7 +1109,7 @@ if(index===1) medalla="🥈";
 
 rankingCarteraHTML += `
 <div style="
-font-size:15px;
+font-size:13px;
 margin:5px 0;
 ">
 ${medalla}
@@ -1117,11 +1133,12 @@ gap:10px;
 <div style="
 background:#198754;
 color:white;
-padding:15px;
-border-radius:12px;
+padding:10px;
+border-radius:10px;
 text-align:center;
+min-height:80px;
 ">
-<div style="font-size:28px;">💰</div>
+<div style="font-size:22px;">💰</div>
 <div>Cartera Total</div>
 <div style="font-size:22px;font-weight:bold;">
 S/${carteraTotal.toLocaleString()}
@@ -1129,26 +1146,28 @@ S/${carteraTotal.toLocaleString()}
 </div>
 
 <div style="
-background:#dc3545;
+background:#fd7e14;
 color:white;
-padding:15px;
-border-radius:12px;
+padding:10px;
+border-radius:10px;
 text-align:center;
+min-height:80px;
 ">
-<div style="font-size:28px;">💵</div>
+<div style="font-size:22px;">💵</div>
 <div>Capital Vencido</div>
 <div style="font-size:22px;font-weight:bold;">
 S/${capitalVencido.toLocaleString()}
 </div>
 </div>
 <div style="
-background:#0d6efd;
+background:#20c997;
 color:white;
-padding:15px;
-border-radius:12px;
+padding:10px;
+border-radius:10px;
 text-align:center;
+min-height:80px;
 ">
-<div style="font-size:28px;">💸</div>
+<div style="font-size:22px;">💸</div>
 <div>Costo Desembolso</div>
 <div style="font-size:22px;font-weight:bold;">
 S/${costoDesembolsoTotal.toLocaleString()}
@@ -1163,11 +1182,12 @@ moraPorcentaje <= 5
 : '#dc3545'
 };
 color:white;
-padding:15px;
-border-radius:12px;
+padding:10px;
+border-radius:10px;
 text-align:center;
+min-height:80px;
 ">
-<div style="font-size:28px;">📉</div>
+<div style="font-size:22px;">📉</div>
 <div>% Mora</div>
 <div style="font-size:22px;font-weight:bold;">
 ${moraPorcentaje}%
@@ -1182,26 +1202,28 @@ clientesCriticos <= 20
 : '#dc3545'
 };
 color:white;
-padding:15px;
-border-radius:12px;
+padding:10px;
+border-radius:10px;
 text-align:center;
+min-height:80px;
 ">
-<div style="font-size:28px;">🚨</div>
+<div style="font-size:22px;">🚨</div>
 <div>Clientes +30</div>
 <div style="font-size:22px;font-weight:bold;">
 ${clientesCriticos}
 </div>
 </div>
 <div style="
-background:#0d6efd;
+background:#6f42c1;
 color:white;
-padding:15px;
-border-radius:12px;
+padding:10px;
+border-radius:10px;
 text-align:center;
+min-height:80px;
 ">
-<div style="font-size:28px;">📈</div>
+<div style="font-size:22px;">📈</div>
 <div>Rentabilidad</div>
-<div style="font-size:22px;font-weight:bold;">
+<div style="font-size:18px;font-weight:bold;">
 S/${rentabilidad.toLocaleString()}
 </div>
 </div>

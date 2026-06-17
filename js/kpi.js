@@ -851,6 +851,7 @@ let moraPorcentaje = 0;
 let clientesCriticos = 0;
 let rentabilidad = 0;
 let rankingCartera = {};
+let carteraProducto = {};
 let costoDesembolsoTotal = 0;
 let rankingAsesores = {};
 data.forEach(c=>{
@@ -862,6 +863,17 @@ let asesor =
 .toString()
 .trim()
 .toUpperCase();
+let producto =
+(c["Producto"] || "SIN PRODUCTO")
+.toString()
+.trim()
+.toUpperCase();
+
+if(!carteraProducto[producto]){
+carteraProducto[producto] = 0;
+}
+
+carteraProducto[producto] += saldo;
 if(!rankingCartera[asesor]){
 rankingCartera[asesor] = 0;
 }
@@ -969,7 +981,23 @@ let topCartera =
 Object.entries(rankingCartera)
 .sort((a,b)=>b[1]-a[1])
 .slice(0,5);
+let rankingProductoHTML = "";
 
+Object.entries(carteraProducto)
+.sort((a,b)=>b[1]-a[1])
+.forEach(r=>{
+
+rankingProductoHTML += `
+<div style="
+font-size:14px;
+margin:4px 0;
+">
+💰 ${r[0]}
+→ S/${r[1].toLocaleString()}
+</div>
+`;
+
+});
 let rankingCarteraHTML = "";
 
 topCartera.forEach((r,index)=>{
@@ -1110,7 +1138,16 @@ color:black;
 🏆 Ranking Cartera
 </h3>
 ${rankingCarteraHTML}
+<hr style="margin:10px 0;">
 
+<h3 style="
+text-align:center;
+color:black;
+">
+📊 Cartera por Producto
+</h3>
+
+${rankingProductoHTML}
 </div>
 `;
 

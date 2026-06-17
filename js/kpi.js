@@ -847,12 +847,19 @@ let capitalVencido = 0;
 let moraPorcentaje = 0;
 let clientesCriticos = 0;
 let rentabilidad = 0;
+let rankingCartera = {};
 let costoDesembolsoTotal = 0;
 let rankingAsesores = {};
 data.forEach(c=>{
 
 let saldo =
 parseFloat(c["Saldo Capital"]) || 0;
+
+if(!rankingCartera[asesor]){
+rankingCartera[asesor] = 0;
+}
+
+rankingCartera[asesor] += saldo;
 let interes =
 parseFloat(c["Interes Devengado"]) || 0;
 
@@ -956,7 +963,32 @@ carteraTotal > 0
 ((capitalVencido / carteraTotal) * 100).toFixed(2)
 :
 0;
+let topCartera =
+Object.entries(rankingCartera)
+.sort((a,b)=>b[1]-a[1])
+.slice(0,5);
 
+let rankingCarteraHTML = "";
+
+topCartera.forEach((r,index)=>{
+
+let medalla = "🥉";
+
+if(index===0) medalla="🥇";
+if(index===1) medalla="🥈";
+
+rankingCarteraHTML += `
+<div style="
+font-size:15px;
+margin:5px 0;
+">
+${medalla}
+${r[0]}
+→ S/${r[1].toLocaleString()}
+</div>
+`;
+
+});
 document.getElementById(
 "resumenFinanciero"
 ).innerHTML =
@@ -1075,8 +1107,7 @@ color:black;
 ">
 🏆 Ranking Cartera
 </h3>
-
-${rankingHTML}
+${rankingCarteraHTML}
 
 </div>
 `;

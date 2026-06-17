@@ -778,6 +778,7 @@ localStorage.getItem(
 let carteraTotal = 0;
 let capitalVencido = 0;
 let moraPorcentaje = 0;
+let clientesCriticos = 0;
 data.forEach(c=>{
 
 let saldo =
@@ -793,7 +794,11 @@ if(atraso > 0){
 capitalVencido += saldo;
 
 }
+if(atraso > 30){
 
+clientesCriticos++;
+
+}
 });
 moraPorcentaje =
 carteraTotal > 0
@@ -857,6 +862,25 @@ text-align:center;
 <div>% Mora</div>
 <div style="font-size:22px;font-weight:bold;">
 ${moraPorcentaje}%
+</div>
+</div>
+<div style="
+background:${
+clientesCriticos <= 20
+? '#198754'
+: clientesCriticos <= 50
+? '#ffc107'
+: '#dc3545'
+};
+color:white;
+padding:15px;
+border-radius:12px;
+text-align:center;
+">
+<div style="font-size:28px;">🚨</div>
+<div>Clientes +30</div>
+<div style="font-size:22px;font-weight:bold;">
+${clientesCriticos}
 </div>
 </div>
 </div>

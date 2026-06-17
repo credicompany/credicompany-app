@@ -124,7 +124,10 @@ json.forEach(c=>{
 
     let fechaDesembolso =
     c["Fecha Desembolso"];
-
+console.log(
+"Fecha:",
+c["Fecha Desembolso"]
+);
     let fecha =
     new Date(fechaDesembolso);
 

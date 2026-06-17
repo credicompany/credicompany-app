@@ -856,15 +856,28 @@ let costo =
 parseFloat(c["Costo por Desembolso"]) || 0;
 
 let fechaDesembolso =
-c["Fecha Desembolso"];
+String(
+c["Fecha Desembolso"] || ""
+);
+
+let partes =
+fechaDesembolso.split("/");
 
 let fecha =
-new Date(fechaDesembolso);
+new Date(
+parseInt(partes[2]),
+parseInt(partes[1]) - 1,
+parseInt(partes[0])
+);
 
 let hoy =
 new Date();
-
-if(
+console.log(
+"FECHA:",
+fechaDesembolso,
+" COSTO:",
+costo
+);if(
 fecha.getMonth() === hoy.getMonth()
 &&
 fecha.getFullYear() === hoy.getFullYear()

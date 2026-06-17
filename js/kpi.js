@@ -852,6 +852,7 @@ let clientesCriticos = 0;
 let rentabilidad = 0;
 let rankingCartera = {};
 let carteraProducto = {};
+let clientesProducto = {};
 let costoDesembolsoTotal = 0;
 let rankingAsesores = {};
 data.forEach(c=>{
@@ -868,7 +869,18 @@ let producto =
 .toString()
 .trim()
 .toUpperCase();
+let dni =
+(c["DNI"] || "")
+.toString()
+.trim();
 
+if(!clientesProducto[producto]){
+clientesProducto[producto] = new Set();
+}
+
+if(dni){
+clientesProducto[producto].add(dni);
+}
 if(!carteraProducto[producto]){
 carteraProducto[producto] = 0;
 }
@@ -982,18 +994,31 @@ Object.entries(rankingCartera)
 .sort((a,b)=>b[1]-a[1])
 .slice(0,5);
 let rankingProductoHTML = "";
-
 Object.entries(carteraProducto)
 .sort((a,b)=>b[1]-a[1])
 .forEach(r=>{
 
+let cantidadClientes =
+clientesProducto[r[0]]
+?
+clientesProducto[r[0]].size
+:
+0;
+
 rankingProductoHTML += `
 <div style="
-font-size:14px;
-margin:4px 0;
+background:#f8f9fa;
+padding:8px;
+margin:5px 0;
+border-radius:8px;
 ">
-💰 ${r[0]}
-→ S/${r[1].toLocaleString()}
+
+<b>💰 ${r[0]}</b><br>
+
+👥 ${cantidadClientes} clientes<br>
+
+💵 S/${r[1].toLocaleString()}
+
 </div>
 `;
 

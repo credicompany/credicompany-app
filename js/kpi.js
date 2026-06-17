@@ -854,7 +854,11 @@ data.forEach(c=>{
 
 let saldo =
 parseFloat(c["Saldo Capital"]) || 0;
-
+let asesor =
+(c["Asesor(a)"] || "SIN ASESOR")
+.toString()
+.trim()
+.toUpperCase();
 if(!rankingCartera[asesor]){
 rankingCartera[asesor] = 0;
 }
@@ -900,11 +904,6 @@ fecha.getFullYear() === hoy.getFullYear()
 }
 let atraso =
 parseFloat(c["Dias de retraso"]) || 0;
-let asesor =
-(c["Asesor(a)"] || "SIN ASESOR")
-.toString()
-.trim()
-.toUpperCase();
 carteraTotal += saldo;
 if(!rankingAsesores[asesor]){
 

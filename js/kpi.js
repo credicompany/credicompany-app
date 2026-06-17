@@ -803,8 +803,11 @@ let json =
 XLSX.utils
 .sheet_to_json(hoja);
 console.log(json[0]);
-
 alert(
+json.slice(0,20)
+.map(x=>x["Producto"])
+.join("\n")
+);alert(
 Object.keys(json[0]).join("\n")
 );
 localStorage.setItem(

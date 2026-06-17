@@ -944,6 +944,19 @@ S/${capitalVencido.toLocaleString()}
 </div>
 </div>
 <div style="
+background:#0d6efd;
+color:white;
+padding:15px;
+border-radius:12px;
+text-align:center;
+">
+<div style="font-size:28px;">💸</div>
+<div>Costo Desembolso</div>
+<div style="font-size:22px;font-weight:bold;">
+S/${costoDesembolsoTotal.toLocaleString()}
+</div>
+</div>
+<div style="
 background:${
 moraPorcentaje <= 5
 ? '#198754'

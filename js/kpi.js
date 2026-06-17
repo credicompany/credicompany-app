@@ -122,26 +122,28 @@ json.forEach(c=>{
     let costo =
     parseFloat(c["Costo por Desembolso"]) || 0;
 
-    let fechaDesembolso =
-String(c["Fecha Desembolso"] || "");
+   let fechaDesembolso =
+String(
+c["Fecha Desembolso"] || ""
+);
 
 let partes =
 fechaDesembolso.split("/");
 
 let fecha =
 new Date(
-partes[2],
-partes[1]-1,
-partes[0]
+parseInt(partes[2]),
+parseInt(partes[1]) - 1,
+parseInt(partes[0])
 );
 console.log(
 fechaDesembolso,
 fecha,
-c["Costo por Desembolso"]
+costo
 );
-    let hoy =
-    new Date();
 
+let hoy =
+new Date();
     if(
         fecha.getMonth() === hoy.getMonth()
         &&

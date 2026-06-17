@@ -846,12 +846,17 @@ let carteraTotal = 0;
 let capitalVencido = 0;
 let moraPorcentaje = 0;
 let clientesCriticos = 0;
+let rentabilidad = 0;
 let costoDesembolsoTotal = 0;
 let rankingAsesores = {};
 data.forEach(c=>{
 
 let saldo =
 parseFloat(c["Saldo Capital"]) || 0;
+let interes =
+parseFloat(c["Interes Devengado"]) || 0;
+
+rentabilidad += interes;
 let costo =
 parseFloat(c["Costo por Desembolso"]) || 0;
 
@@ -1041,7 +1046,21 @@ text-align:center;
 ${clientesCriticos}
 </div>
 </div>
+<div style="
+background:#0d6efd;
+color:white;
+padding:15px;
+border-radius:12px;
+text-align:center;
+">
+<div style="font-size:28px;">📈</div>
+<div>Rentabilidad</div>
+<div style="font-size:22px;font-weight:bold;">
+S/${rentabilidad.toLocaleString()}
 </div>
+</div>
+</div>
+
 <div style="
 background:white;
 padding:15px;

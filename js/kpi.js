@@ -121,7 +121,8 @@ function generarKPI(json){
 
         costoDesembolsoTotal +=
         parseFloat(c["Costo por Desembolso"]) || 0;
-
+let fechaDesembolso =
+c["Fecha Desembolso"];   
     });
 
     let totalOperaciones = json.length;

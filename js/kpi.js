@@ -700,6 +700,15 @@ window.addEventListener("load",()=>{
         resumenGuardado;
 
     }
+// KPI FINANCIERO
+let financieroGuardado =
+localStorage.getItem("financiero");
+
+if(financieroGuardado){
+
+mostrarResumenFinanciero();
+
+}
     });
 function cargarExcelFinanciero(){
 
@@ -751,7 +760,10 @@ localStorage.setItem(
 "financiero",
 JSON.stringify(json)
 );
-
+localStorage.setItem(
+"nombreFinanciero",
+archivo.name
+);
 alert(
 "✅ Excel financiero cargado"
 );

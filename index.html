@@ -1649,7 +1649,8 @@ if(key.includes("telefono") || key.includes("celular")) obj.celular=val;
 if(key.includes("producto")) obj.producto=val;
 // DIRECCION TITULAR
 if(
-   key === "direccion"
+   key.includes("direccion") &&
+   !key.includes("aval")
 ){
    obj.direccion = val;
 }
@@ -1680,21 +1681,18 @@ if(key.includes("direccionaval"))
 obj.direccionAval = val;
 
 if(
-   key.includes("aval") &&
-   key.includes("telefono")
+    key.includes("aval") &&
+    (
+      key.includes("telefono") ||
+      key.includes("celular")
+    )
 ){
-   obj.telefonoAval = val;
+    obj.telefonoAval = val;
 }
 
-if(
-   key.includes("aval") &&
-   key.includes("telelfono")
-){
-   obj.telefonoAval = val;
-}
+}); // cierre de headers.forEach
 
 return obj;
-});
 
 // 🔥 GUARDADO REAL
 db.ref("cartera").set(json);

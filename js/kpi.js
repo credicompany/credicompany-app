@@ -319,7 +319,7 @@ ${avanceEmpresa}%
         (c["Asesor(a)"] || "SIN ASESOR")
         .trim()
         .toUpperCase();
-
+console.log("ASESOR KPI:", asesor);
         let monto =
         parseFloat(c["Monto Otorgado"]) || 0;
 

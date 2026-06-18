@@ -612,7 +612,7 @@ ${cli}
     resumen += `</div>`;
 let rankingKPIHTML = "";
 
-top.slice(0,5).forEach((r,index)=>{
+top.slice(0,10).forEach((r,index)=>{
 
 let medalla="🥉";
 

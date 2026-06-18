@@ -2695,7 +2695,8 @@ celular: celular,
 tipo: "GESTIÓN",
 comentario: comentario,
 asesor: asesor,
-fecha: new Date().toLocaleString()
+fecha: new Date().toLocaleString(),
+timestamp: Date.now()
 };
 
 db.ref("gestiones").push(gestion);
@@ -2735,8 +2736,34 @@ db.ref("gestiones").once("value", snap => {
 
 let historial = [];
 
+let ahora = Date.now();
+let sieteDias = 7 * 24 * 60 * 60 * 1000;
+
 snap.forEach(item=>{
-historial.push(item.val());
+
+let g = item.val();
+
+if(!g.timestamp){
+    historial.push(g);
+    return;
+}
+
+if((ahora - g.timestamp) <= sieteDias){
+    historial.push(g);
+}
+
+});
+snap.forEach(item=>{
+
+let g = item.val();
+
+if(
+    g.timestamp &&
+    (ahora - g.timestamp) > sieteDias
+){
+    item.ref.remove();
+}
+
 });
 
 lista.innerHTML = "";

@@ -2737,7 +2737,7 @@ db.ref("gestiones").once("value", snap => {
 let historial = [];
 
 let ahora = Date.now();
-let sieteDias = 7 * 24 * 60 * 60 * 1000;
+let quinceDias = 15 * 24 * 60 * 60 * 1000;
 
 snap.forEach(item=>{
 
@@ -2748,7 +2748,7 @@ if(!g.timestamp){
     return;
 }
 
-if((ahora - g.timestamp) <= sieteDias){
+if((ahora - g.timestamp) <= quinceDias){
     historial.push(g);
 }
 
@@ -2756,10 +2756,16 @@ if((ahora - g.timestamp) <= sieteDias){
 snap.forEach(item=>{
 
 let g = item.val();
+if(!g.timestamp){
 
+    item.ref.remove();
+
+    return;
+
+}
 if(
     g.timestamp &&
-    (ahora - g.timestamp) > sieteDias
+    (ahora - g.timestamp) > quinceDias
 ){
     item.ref.remove();
 }

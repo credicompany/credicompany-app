@@ -1604,7 +1604,19 @@ if(!h)return;
 let key=h.toString().toLowerCase().replace(/\s+/g,"");
  let val = r[i] || "";
 
-if(key.includes("nombre")) obj.nombre=val;
+// NOMBRE TITULAR
+if(
+   key.includes("nombreyapellido")
+){
+   obj.nombre = val;
+}
+
+// NOMBRE AVAL
+if(
+   key.includes("nombreaval")
+){
+   obj.nombreAval = val;
+}
 if(key.includes("asesor")){
     let nombre = (val || "").toLowerCase().trim();
 
@@ -1635,7 +1647,19 @@ if(key === "cuotasporpagar" ||
 }
 if(key.includes("telefono") || key.includes("celular")) obj.celular=val;
 if(key.includes("producto")) obj.producto=val;
-if(key.includes("direccion")) obj.direccion=val;
+// DIRECCION TITULAR
+if(
+   key === "direccion"
+){
+   obj.direccion = val;
+}
+
+// DIRECCION AVAL
+if(
+   key.includes("direccionaval")
+){
+   obj.direccionAval = val;
+}
 if(key.includes("distrito")) obj.distrito=val;
 if(key.includes("nombreaval"))
 obj.nombreAval = val;

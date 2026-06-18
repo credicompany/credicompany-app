@@ -100,46 +100,7 @@ function cargarExcelKPI(){
     lector.readAsArrayBuffer(archivo);
 
 }
-
-let hoy = new Date();
-
-json = json.filter(c=>{
-
-let fechaTexto =
-String(c["Fecha Desembolso"] || "").trim();
-
-let fecha;
-
-if(fechaTexto.includes("/")){
-
-    let partes =
-    fechaTexto.split("/");
-
-    fecha =
-    new Date(
-        parseInt(partes[2]),
-        parseInt(partes[1]) - 1,
-        parseInt(partes[0])
-    );
-
-}else{
-
-    fecha =
-    new Date(fechaTexto);
-
-}
-
-if(isNaN(fecha.getTime())){
-    return false;
-}
-
-return (
-    fecha.getMonth() === hoy.getMonth()
-    &&
-    fecha.getFullYear() === hoy.getFullYear()
-);
-
-});
+function generarKPI(json){
     let metas =
     JSON.parse(
         localStorage.getItem("metasKPI")

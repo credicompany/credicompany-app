@@ -368,27 +368,24 @@ if(mejorAsesor){
 resumen += `
 
 <div style="
-background:linear-gradient(
-135deg,
-#f59e0b,
-#fbbf24
-);
-color:white;
+background:#FFFFFF;
+border-left:5px solid #0A3A63;
+color:#1F2937;
 padding:12px;
 border-radius:12px;
 margin-bottom:12px;
-box-shadow:0 4px 10px rgba(0,0,0,.15);
 ">
 
 <div style="
-font-size:18px;
-font-weight:bold;
+font-size:14px;
+font-weight:600;
+color:#6B7280;
 ">
-⭐ MEJOR ASESOR
+🏆 Líder del Mes
 </div>
 
 <div style="
-font-size:18px;
+font-size:20px;
 font-weight:bold;
 margin-top:5px;
 ">

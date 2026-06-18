@@ -987,11 +987,14 @@ if(index===0) medalla="🥇";
 if(index===1) medalla="🥈";
 
 rankingHTML += `
-
 <div style="
-padding:5px;
+background:#F8FAFC;
+padding:10px;
+margin:8px 0;
+border-radius:10px;
+border-left:4px solid #0A3A63;
 font-size:14px;
-font-weight:bold;
+font-weight:600;
 ">
 
 ${medalla}
@@ -1034,10 +1037,10 @@ carteraTotal > 0
 0;
 rankingProductoHTML += `
 <div style="
-background:#f8f9fa;
-padding:8px;
+background:#FFFFFF;
+border:1px solid #E5E7EB;
+box-shadow:0 1px 6px rgba(0,0,0,.04);
 margin:5px 0;
-border-radius:8px;
 ">
 
 <b>💰 ${r[0]}</b><br>
@@ -1076,25 +1079,45 @@ mora <= 5
 ? "#ffc107"
 : "#dc3545";
 
+let fondo =
+mora <= 5
+? "#F0FDF4"
+: mora <= 10
+? "#FFFBEB"
+: "#FEF2F2";
+
+let borde =
+mora <= 5
+? "#22C55E"
+: mora <= 10
+? "#F59E0B"
+: "#EF4444";
+
 moraProductoHTML += `
 <div style="
-background:${color};
-color:white;
-padding:8px;
-margin:5px 0;
-border-radius:8px;
+background:${fondo};
+color:#1F2937;
+border-left:5px solid ${borde};
+padding:14px;
+margin:10px 0;
+border-radius:12px;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
 ">
+`;
 
-<b>${r[0]}</b><br>
+<div style="
+font-size:18px;
+font-weight:700;
+margin-bottom:8px;
+">
+${r[0]}
+</div>
 
-📊 Cartera:
-S/${cartera.toLocaleString()}<br>
+💰 Cartera: S/${cartera.toLocaleString()}<br>
 
-🚨 Vencido:
-S/${vencido.toLocaleString()}<br>
+📍 Vencido: S/${vencido.toLocaleString()}<br>
 
-📉 Mora:
-${mora}%
+📉 Mora: ${mora}%
 
 </div>
 `;
@@ -1133,14 +1156,19 @@ gap:10px;
 ">
 
 <div style="
-background:#198754;
-color:white;
-padding:10px;
-border-radius:10px;
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
 text-align:center;
 min-height:80px;
 ">
-<div style="font-size:22px;">💰</div>
+<div style="
+font-size:28px;
+margin-bottom:5px;
+">
+💰
+</div>
 <div>Cartera Total</div>
 <div style="font-size:22px;font-weight:bold;">
 S/${carteraTotal.toLocaleString()}
@@ -1148,10 +1176,10 @@ S/${carteraTotal.toLocaleString()}
 </div>
 
 <div style="
-background:#fd7e14;
-color:white;
-padding:10px;
-border-radius:10px;
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
 text-align:center;
 min-height:80px;
 ">
@@ -1162,10 +1190,10 @@ S/${capitalVencido.toLocaleString()}
 </div>
 </div>
 <div style="
-background:#20c997;
-color:white;
-padding:10px;
-border-radius:10px;
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
 text-align:center;
 min-height:80px;
 ">
@@ -1216,10 +1244,10 @@ ${clientesCriticos}
 </div>
 </div>
 <div style="
-background:#6f42c1;
-color:white;
-padding:10px;
-border-radius:10px;
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
 text-align:center;
 min-height:80px;
 ">
@@ -1232,9 +1260,10 @@ S/${rentabilidad.toLocaleString()}
 </div>
 
 <div style="
-background:white;
-padding:15px;
-border-radius:12px;
+background:#FFFFFF;
+padding:20px;
+border-radius:16px;
+box-shadow:0 2px 10px rgba(0,0,0,.06);
 margin-top:15px;
 ">
 

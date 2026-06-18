@@ -228,8 +228,9 @@ gap:5px;
 margin-bottom:10px;
 ">
 <div style="
-background:#0d6efd;
-color:white;
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
 padding:6px;
 border-radius:8px;
 text-align:center;
@@ -243,8 +244,9 @@ ${totalClientes}
 </div>
 
 <div style="
-background:#198754;
-color:white;
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
 padding:6px;
 border-radius:8px;
 text-align:center;
@@ -258,8 +260,9 @@ S/ ${(montoOtorgadoTotal/1000).toFixed(0)}K
 </div>
 
 <div style="
-background:#fd7e14;
-color:white;
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
 padding:6px;
 border-radius:8px;
 text-align:center;
@@ -273,8 +276,9 @@ ${totalOperaciones}
 </div>
 
 <div style="
-background:#6f42c1;
-color:white;
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
 padding:6px;
 border-radius:8px;
 text-align:center;
@@ -287,8 +291,9 @@ ${temGeneral}%
 </div>
 </div>
 <div style="
-background:#dc2626;
-color:white;
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
 padding:6px;
 border-radius:8px;
 text-align:center;

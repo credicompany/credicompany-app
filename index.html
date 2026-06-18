@@ -1679,9 +1679,19 @@ obj.apellidoMAval = val;
 if(key.includes("direccionaval"))
 obj.direccionAval = val;
 
-if(key.includes("telefonoaval"))
-obj.telefonoAval = val;
-});
+if(
+   key.includes("aval") &&
+   key.includes("telefono")
+){
+   obj.telefonoAval = val;
+}
+
+if(
+   key.includes("aval") &&
+   key.includes("telelfono")
+){
+   obj.telefonoAval = val;
+}
 
 return obj;
 });

@@ -200,9 +200,12 @@ let resumen = `
 
 <h3 style="
 text-align:center;
-margin-bottom:15px;
+margin-bottom:20px;
+color:#0A3A63;
+font-size:24px;
+font-weight:700;
 ">
-📊 KPI GERENCIAL
+KPI GERENCIAL
 </h3>
 <div style="
 background:#f8f9fa;
@@ -988,14 +991,16 @@ if(index===1) medalla="🥈";
 
 rankingHTML += `
 <div style="
-background:#F8FAFC;
-padding:10px;
-margin:8px 0;
-border-radius:10px;
-border-left:4px solid #0A3A63;
+background:white;
+padding:12px;
+margin:6px 0;
+border-radius:12px;
+border:1px solid #E5E7EB;
 font-size:14px;
-font-weight:600;
+font-weight:500;
+box-shadow:0 1px 4px rgba(0,0,0,.04);
 ">
+
 
 ${medalla}
 ${r[0]}
@@ -1037,10 +1042,12 @@ carteraTotal > 0
 0;
 rankingProductoHTML += `
 <div style="
-background:#FFFFFF;
-border:1px solid #E5E7EB;
-box-shadow:0 1px 6px rgba(0,0,0,.04);
-margin:5px 0;
+background:white;
+padding:12px;
+border-radius:12px;
+border:1px solid #F1F5F9;
+box-shadow:none;
+margin:8px 0;
 ">
 
 <b>💰 ${r[0]}</b><br>

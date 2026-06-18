@@ -1092,7 +1092,6 @@ mora <= 5
 : mora <= 10
 ? "#F59E0B"
 : "#EF4444";
-
 moraProductoHTML += `
 <div style="
 background:${fondo};
@@ -1103,7 +1102,6 @@ margin:10px 0;
 border-radius:12px;
 box-shadow:0 2px 8px rgba(0,0,0,.05);
 ">
-`;
 
 <div style="
 font-size:18px;
@@ -1121,7 +1119,6 @@ ${r[0]}
 
 </div>
 `;
-
 });
 let rankingCarteraHTML = "";
 
@@ -1204,16 +1201,12 @@ S/${costoDesembolsoTotal.toLocaleString()}
 </div>
 </div>
 <div style="
-background:${
-moraPorcentaje <= 5
-? '#198754'
-: moraPorcentaje <= 10
-? '#ffc107'
-: '#dc3545'
-};
-color:white;
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
 padding:10px;
-border-radius:10px;
+border-radius:12px;
 text-align:center;
 min-height:80px;
 ">
@@ -1224,16 +1217,12 @@ ${moraPorcentaje}%
 </div>
 </div>
 <div style="
-background:${
-clientesCriticos <= 20
-? '#198754'
-: clientesCriticos <= 50
-? '#ffc107'
-: '#dc3545'
-};
-color:white;
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
 padding:10px;
-border-radius:10px;
+border-radius:12px;
 text-align:center;
 min-height:80px;
 ">

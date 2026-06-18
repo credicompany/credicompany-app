@@ -1589,7 +1589,13 @@ cuotasVencidas:0,
 celular:"",
 producto:"",
 direccion:"",
-distrito:""
+distrito:"",
+
+nombreAval:"",
+apellidoPAval:"",
+apellidoMAval:"",
+direccionAval:"",
+telefonoAval:""
 };
 
 headers.forEach((h,i)=>{
@@ -1631,7 +1637,26 @@ if(key.includes("telefono") || key.includes("celular")) obj.celular=val;
 if(key.includes("producto")) obj.producto=val;
 if(key.includes("direccion")) obj.direccion=val;
 if(key.includes("distrito")) obj.distrito=val;
+if(key.includes("nombreaval"))
+obj.nombreAval = val;
 
+if(
+key.includes("apellidop.") ||
+key.includes("apellidop")
+)
+obj.apellidoPAval = val;
+
+if(
+key.includes("apellidom.") ||
+key.includes("apellidom")
+)
+obj.apellidoMAval = val;
+
+if(key.includes("direccionaval"))
+obj.direccionAval = val;
+
+if(key.includes("telefonoaval"))
+obj.telefonoAval = val;
 });
 
 return obj;
@@ -2033,6 +2058,35 @@ ${c.celular}
 📦 ${c.producto}<br>
 📍 ${c.direccion}<br>
 🏙️ ${c.distrito}
+
+${c.nombreAval ? `
+
+<hr style="
+margin:8px 0;
+border:none;
+border-top:1px solid #ddd;
+">
+
+<div style="
+background:#F8FAFC;
+padding:8px;
+border-radius:8px;
+margin-top:8px;
+">
+
+<b>👥 AVAL</b><br>
+
+👤 ${c.nombreAval}
+${c.apellidoPAval}
+${c.apellidoMAval}<br>
+
+📞 ${c.telefonoAval}<br>
+
+📍 ${c.direccionAval}
+
+</div>
+
+` : ""}
 
 <div class="fila" style="margin-top:8px;">
 ${parseInt(c.retraso || 0) > 0 ? `

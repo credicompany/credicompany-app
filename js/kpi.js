@@ -782,6 +782,36 @@ document.getElementById(
 (nombreFinanciero || "Sin archivo");
 
 }
+// RECUPERAR KPI FINANCIERO DESDE FIREBASE
+
+db.ref("kpiFinanciero")
+.once("value")
+.then(snapshot=>{
+
+    let datos = snapshot.val();
+
+    if(!datos) return;
+
+    localStorage.setItem(
+        "financiero",
+        JSON.stringify(
+            datos.financiero
+        )
+    );
+
+    localStorage.setItem(
+        "nombreFinanciero",
+        datos.nombreFinanciero || ""
+    );
+
+    localStorage.setItem(
+        "fechaFinanciero",
+        datos.fechaFinanciero || ""
+    );
+
+    mostrarResumenFinanciero();
+
+});
     });
 function cargarExcelFinanciero(){
 
@@ -837,6 +867,19 @@ archivo.name
 "fechaFinanciero",
 new Date().toLocaleString()
 );
+    // FIREBASE KPI FINANCIERO
+
+db.ref("kpiFinanciero").set({
+
+    financiero: json,
+
+    nombreFinanciero:
+    archivo.name,
+
+    fechaFinanciero:
+    new Date().toLocaleString()
+
+});
 alert(
 "✅ Excel financiero cargado"
 );

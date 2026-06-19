@@ -1013,6 +1013,9 @@ clientesCriticos++;
 
 }
 });
+console.log(
+Object.keys(rankingAsesores)
+);
 let rankingHTML = "";
 
 Object.entries(rankingAsesores)

@@ -840,9 +840,35 @@ new Date().toLocaleString()
 alert(
 "✅ Excel financiero cargado"
 );
+function guardarFinancieroFirebase(){
 
+db.ref("kpiFinanciero").set({
+
+archivo:
+localStorage.getItem(
+"nombreFinanciero"
+) || "",
+
+fecha:
+localStorage.getItem(
+"fechaFinanciero"
+) || "",
+
+data:
+JSON.parse(
+localStorage.getItem(
+"financiero"
+)
+) || [],
+
+actualizacion:
+new Date().toLocaleString()
+
+});
+
+}
 mostrarResumenFinanciero();
-
+guardarFinancieroFirebase();
 };
 
 lector.readAsArrayBuffer(
@@ -852,7 +878,6 @@ archivo
 }
 
 function mostrarResumenFinanciero(){
-
 let data =
 JSON.parse(
 localStorage.getItem(

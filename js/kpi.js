@@ -894,6 +894,7 @@ localStorage.getItem(
 
 let carteraTotal = 0;
 let capitalVencido = 0;
+let carteraSana = 0;
 let moraPorcentaje = 0;
 let clientesCriticos = 0;
 let rentabilidad = 0;
@@ -1002,9 +1003,14 @@ rankingAsesores[asesor] = 0;
 }
 
 rankingAsesores[asesor] += saldo;
-if(atraso > 0){
+
+   if(atraso > 0){
 
 capitalVencido += saldo;
+
+}else{
+
+carteraSana += saldo;
 
 }
 if(atraso > 30){
@@ -1344,7 +1350,82 @@ S/${rentabilidad.toLocaleString()}
 </div>
 </div>
 </div>
+<div style="
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+margin-top:15px;
+">
 
+<div style="
+background:#198754;
+color:white;
+padding:15px;
+border-radius:12px;
+text-align:center;
+">
+
+<div style="font-size:24px;">
+🟢
+</div>
+
+<div>
+Cartera Sana
+</div>
+
+<div style="
+font-size:22px;
+font-weight:bold;
+">
+S/${carteraSana.toLocaleString()}
+</div>
+
+</div>
+
+<div style="
+background:#dc3545;
+color:white;
+padding:15px;
+border-radius:12px;
+text-align:center;
+">
+
+<div style="font-size:24px;">
+🔴
+</div>
+
+<div>
+Cartera Vencida
+</div>
+
+<div style="
+font-size:22px;
+font-weight:bold;
+">
+S/${capitalVencido.toLocaleString()}
+</div>
+
+</div>
+
+</div>
+
+<div style="
+background:#FFFFFF;
+border:1px solid #E5E7EB;
+padding:15px;
+border-radius:12px;
+margin-top:10px;
+text-align:center;
+font-weight:bold;
+">
+
+🟢 ${((carteraSana/carteraTotal)*100).toFixed(1)}%
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+🔴 ${((capitalVencido/carteraTotal)*100).toFixed(1)}%
+
+</div>
 <div style="
 background:#FFFFFF;
 padding:20px;

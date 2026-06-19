@@ -782,39 +782,6 @@ document.getElementById(
 (nombreFinanciero || "Sin archivo");
 
 }
-// RECUPERAR KPI FINANCIERO DESDE FIREBASE
-
-db.ref("kpiFinanciero")
-.once("value")
-.then(snapshot=>{
-
-    let datos = snapshot.val();
-
-if(!datos) return;
-
-document.getElementById(
-   "resumenFinanciero"
-).innerHTML =
-
-datos.resumenFinanciero || "";
-
-Debe quedar exactamente así:
-
-db.ref("kpiFinanciero")
-.once("value")
-.then(snapshot=>{
-
-   let datos = snapshot.val();
-
-   if(!datos) return;
-
-   document.getElementById(
-      "resumenFinanciero"
-   ).innerHTML =
-
-   datos.resumenFinanciero || "";
-
-});
     });
 function cargarExcelFinanciero(){
 
@@ -870,31 +837,6 @@ archivo.name
 "fechaFinanciero",
 new Date().toLocaleString()
 );
-    // FIREBASE KPI FINANCIERO
-
-db.ref("kpiFinanciero").set({
-
-    financiero: json,
-
-    nombreFinanciero: archivo.name,
-
-    fechaFinanciero: new Date().toLocaleString()
-
-})
-.then(()=>{
-
-   console.log("✅ KPI Financiero guardado");
-
-   alert("Firebase Financiero OK");
-
-})
-.catch(error=>{
-
-   console.error(error);
-
-   alert("ERROR FIREBASE: " + error.message);
-
-});
 alert(
 "✅ Excel financiero cargado"
 );
@@ -1351,36 +1293,5 @@ color:black;
 ${moraProductoHTML}
 </div>
 `;
-// GUARDAR HTML LOCAL
 
-localStorage.setItem(
-   "resumenFinancieroHTML",
-   document.getElementById(
-      "resumenFinanciero"
-   ).innerHTML
-);
-
-// 🔥 FIREBASE KPI FINANCIERO
-
-db.ref("kpiFinanciero").set({
-
-   resumenFinanciero:
-   document.getElementById(
-      "resumenFinanciero"
-   ).innerHTML,
-
-   nombreFinanciero:
-   localStorage.getItem(
-      "nombreFinanciero"
-   ) || "",
-
-   fechaFinanciero:
-   localStorage.getItem(
-      "fechaFinanciero"
-   ) || "",
-
-   fechaActualizacion:
-   new Date().toLocaleString()
-
-});
 }

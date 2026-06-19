@@ -790,26 +790,29 @@ db.ref("kpiFinanciero")
 
     let datos = snapshot.val();
 
-    if(!datos) return;
+if(!datos) return;
 
-    localStorage.setItem(
-        "financiero",
-        JSON.stringify(
-            datos.financiero
-        )
-    );
+document.getElementById(
+   "resumenFinanciero"
+).innerHTML =
 
-    localStorage.setItem(
-        "nombreFinanciero",
-        datos.nombreFinanciero || ""
-    );
+datos.resumenFinanciero || "";
 
-    localStorage.setItem(
-        "fechaFinanciero",
-        datos.fechaFinanciero || ""
-    );
+Debe quedar exactamente así:
 
-    mostrarResumenFinanciero();
+db.ref("kpiFinanciero")
+.once("value")
+.then(snapshot=>{
+
+   let datos = snapshot.val();
+
+   if(!datos) return;
+
+   document.getElementById(
+      "resumenFinanciero"
+   ).innerHTML =
+
+   datos.resumenFinanciero || "";
 
 });
     });
@@ -1348,5 +1351,36 @@ color:black;
 ${moraProductoHTML}
 </div>
 `;
+// GUARDAR HTML LOCAL
 
+localStorage.setItem(
+   "resumenFinancieroHTML",
+   document.getElementById(
+      "resumenFinanciero"
+   ).innerHTML
+);
+
+// 🔥 FIREBASE KPI FINANCIERO
+
+db.ref("kpiFinanciero").set({
+
+   resumenFinanciero:
+   document.getElementById(
+      "resumenFinanciero"
+   ).innerHTML,
+
+   nombreFinanciero:
+   localStorage.getItem(
+      "nombreFinanciero"
+   ) || "",
+
+   fechaFinanciero:
+   localStorage.getItem(
+      "fechaFinanciero"
+   ) || "",
+
+   fechaActualizacion:
+   new Date().toLocaleString()
+
+});
 }

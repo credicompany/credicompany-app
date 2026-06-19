@@ -903,6 +903,7 @@ let vencidoProducto = {};
 let clientesProducto = {};
 let costoDesembolsoTotal = 0;
 let rankingAsesores = {};
+let clientesAsesor = {};
 data.forEach(c=>{
 
 let saldo =
@@ -924,7 +925,13 @@ let dni =
 (c["DNI"] || "")
 .toString()
 .trim();
+if(!clientesAsesor[asesor]){
+clientesAsesor[asesor] = new Set();
+}
 
+if(dni){
+clientesAsesor[asesor].add(dni);
+}
 if(!clientesProducto[producto]){
 clientesProducto[producto] = new Set();
 }
@@ -1021,7 +1028,22 @@ let medalla = "🥉";
 if(index===0) medalla="🥇";
 if(index===1) medalla="🥈";
 
+let cantidadClientes =
+clientesAsesor[r[0]]
+?
+clientesAsesor[r[0]].size
+:
+0;
+
+let ticket =
+cantidadClientes > 0
+?
+(r[1] / cantidadClientes)
+:
+0;
+
 rankingHTML += `
+
 <div style="
 background:white;
 padding:12px;
@@ -1031,13 +1053,28 @@ border:1px solid #E5E7EB;
 font-size:14px;
 font-weight:500;
 box-shadow:0 1px 4px rgba(0,0,0,.04);
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
 ">
 
-
+<span>
 ${medalla}
-${r[0]}
-→
-S/${r[1].toLocaleString()}
+<b>${r[0]}</b>
+</span>
+
+<span>
+👥 ${cantidadClientes}
+</span>
+
+<span>
+💰 ${Math.round(r[1]/1000)}K
+</span>
+
+<span>
+🎯 ${Math.round(ticket)}
+</span>
 
 </div>
 

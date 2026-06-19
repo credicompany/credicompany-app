@@ -784,7 +784,6 @@ document.getElementById(
 }
     });
 function cargarExcelFinanciero(){
-
 let archivo =
 document.getElementById(
 "excelFinanciero"
@@ -844,7 +843,7 @@ alert(
 mostrarResumenFinanciero();
 
 guardarFinancieroFirebase();
-
+};
 lector.readAsArrayBuffer(
 archivo
 );

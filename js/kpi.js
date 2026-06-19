@@ -840,7 +840,10 @@ new Date().toLocaleString()
 alert(
 "✅ Excel financiero cargado"
 );
-function guardarFinancieroFirebase(){
+
+mostrarResumenFinanciero();
+
+guardarFinancieroFirebase();
 
 db.ref("kpiFinanciero").set({
 
@@ -876,7 +879,41 @@ archivo
 );
 
 }
+function guardarFinancieroFirebase(){
 
+db.ref("kpiFinanciero").set({
+
+archivo:
+localStorage.getItem(
+"nombreFinanciero"
+) || "",
+
+fecha:
+localStorage.getItem(
+"fechaFinanciero"
+) || "",
+
+actualizacion:
+new Date().toLocaleString()
+
+})
+.then(()=>{
+
+console.log(
+"✅ KPI FINANCIERO FIREBASE"
+);
+
+})
+.catch(error=>{
+
+console.error(
+"❌ FIREBASE ERROR",
+error
+);
+
+});
+
+}
 function mostrarResumenFinanciero(){
 let data =
 JSON.parse(

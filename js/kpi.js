@@ -755,6 +755,31 @@ window.addEventListener("load",()=>{
 
     }
 // KPI FINANCIERO
+db.ref("kpiFinanciero")
+.once("value")
+.then(snapshot=>{
+
+let datos = snapshot.val();
+
+if(
+datos &&
+datos.html &&
+document.getElementById(
+"resumenFinanciero"
+)
+){
+
+document.getElementById(
+"resumenFinanciero"
+).innerHTML =
+datos.html;
+
+console.log(
+"✅ KPI FINANCIERO DESDE FIREBASE"
+);
+
+}else{
+
 let financieroGuardado =
 localStorage.getItem("financiero");
 
@@ -763,6 +788,10 @@ if(financieroGuardado){
 mostrarResumenFinanciero();
 
 }
+
+}
+
+});
     let nombreFinanciero =
 localStorage.getItem(
 "nombreFinanciero"
@@ -782,7 +811,8 @@ document.getElementById(
 (nombreFinanciero || "Sin archivo");
 
 }
-    });
+    
+});
 function cargarExcelFinanciero(){
 let archivo =
 document.getElementById(
@@ -842,7 +872,9 @@ alert(
 
 mostrarResumenFinanciero();
 
-guardarFinancieroFirebase();
+setTimeout(()=>{
+    guardarFinancieroFirebase();
+},500);
 };
 lector.readAsArrayBuffer(
 archivo
@@ -854,17 +886,18 @@ function guardarFinancieroFirebase(){
 db.ref("kpiFinanciero").set({
 
 archivo:
-localStorage.getItem(
-"nombreFinanciero"
-) || "",
+localStorage.getItem("nombreFinanciero") || "",
 
 fecha:
-localStorage.getItem(
-"fechaFinanciero"
-) || "",
+localStorage.getItem("fechaFinanciero") || "",
 
 actualizacion:
-new Date().toLocaleString()
+new Date().toLocaleString(),
+
+html:
+document.getElementById(
+"resumenFinanciero"
+).innerHTML
 
 })
 .then(()=>{

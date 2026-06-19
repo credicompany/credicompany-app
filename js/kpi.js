@@ -1019,7 +1019,7 @@ Object.entries(rankingAsesores)
 
 .sort((a,b)=>b[1]-a[1])
 
-.slice(0,5)
+.slice(0,7)
 
 .forEach((r,index)=>{
 

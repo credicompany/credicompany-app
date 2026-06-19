@@ -873,11 +873,23 @@ db.ref("kpiFinanciero").set({
 
     financiero: json,
 
-    nombreFinanciero:
-    archivo.name,
+    nombreFinanciero: archivo.name,
 
-    fechaFinanciero:
-    new Date().toLocaleString()
+    fechaFinanciero: new Date().toLocaleString()
+
+})
+.then(()=>{
+
+   console.log("✅ KPI Financiero guardado");
+
+   alert("Firebase Financiero OK");
+
+})
+.catch(error=>{
+
+   console.error(error);
+
+   alert("ERROR FIREBASE: " + error.message);
 
 });
 alert(

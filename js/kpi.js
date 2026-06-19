@@ -1117,24 +1117,38 @@ carteraTotal > 0
 :
 0;
 rankingProductoHTML += `
+
 <div style="
 background:white;
 padding:12px;
 border-radius:12px;
 border:1px solid #F1F5F9;
-box-shadow:none;
-margin:8px 0;
+margin:6px 0;
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+font-size:14px;
 ">
 
-<b>💰 ${r[0]}</b><br>
+<span>
+💰 <b>${r[0]}</b>
+</span>
 
-👥 ${cantidadClientes} clientes<br>
+<span>
+👥 ${cantidadClientes}
+</span>
 
-💵 S/${r[1].toLocaleString()}<br>
+<span>
+💵 ${Math.round(r[1]/1000)}K
+</span>
 
+<span>
 📈 ${participacion}%
+</span>
 
 </div>
+
 `;
 
 });

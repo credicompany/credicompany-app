@@ -1019,11 +1019,7 @@ Object.keys(rankingAsesores)
 let rankingHTML = "";
 
 Object.entries(rankingAsesores)
-
-.sort((a,b)=>b[1]-a[1])
-
-.slice(0,7)
-
+.filter(([asesor]) => asesor !== "SLOPEZ").slice(0,7)
 .forEach((r,index)=>{
 
 let medalla = "🥉";

@@ -972,6 +972,42 @@ let moraAsesor = {};
 let vencidoAsesor = {};
 let mesConsulta = 5;
 let anioConsulta = 2026;
+    let ultimaFecha = null;
+
+data.forEach(c=>{
+
+let fechaTexto =
+String(c["Fecha Desembolso"] || "");
+
+let partes =
+fechaTexto.split("/");
+
+if(partes.length === 3){
+
+let fecha =
+new Date(
+parseInt(partes[2]),
+parseInt(partes[1]) - 1,
+parseInt(partes[0])
+);
+
+if(
+!ultimaFecha ||
+fecha > ultimaFecha
+){
+
+ultimaFecha = fecha;
+
+}
+
+}
+
+});
+    let mesConsulta =
+ultimaFecha.getMonth();
+
+let anioConsulta =
+ultimaFecha.getFullYear();
 data.forEach(c=>{
 
 let saldo =
@@ -1049,6 +1085,32 @@ rentabilidad += interes;
 rentabilidadAsesor[asesor] += interes;
 let costo =
 parseFloat(c["Costo por Desembolso"]) || 0;
+    let fechaTexto =
+String(c["Fecha Desembolso"] || "");
+
+let partes =
+fechaTexto.split("/");
+
+if(partes.length === 3){
+
+let fecha =
+new Date(
+parseInt(partes[2]),
+parseInt(partes[1]) - 1,
+parseInt(partes[0])
+);
+
+if(
+fecha.getMonth() === mesConsulta
+&&
+fecha.getFullYear() === anioConsulta
+){
+
+costoDesembolsoTotal += costo;
+
+}
+
+}
     costoDesembolsoTotal += costo;
     console.log(
 "FECHA:",

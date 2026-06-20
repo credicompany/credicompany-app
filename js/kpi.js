@@ -1255,6 +1255,51 @@ ${r[0]}
 </div>
 `;
 });
+
+let topClientesHTML = "";
+
+let topClientes = [...data]
+
+.sort((a,b)=>
+
+(parseFloat(b["Saldo Capital"]) || 0)
+
+-
+
+(parseFloat(a["Saldo Capital"]) || 0)
+
+)
+
+.slice(0,30);
+
+topClientes.forEach((c,index)=>{
+
+topClientesHTML += `
+
+<div style="
+background:white;
+padding:10px;
+margin:5px 0;
+border-radius:10px;
+border:1px solid #E5E7EB;
+display:flex;
+justify-content:space-between;
+font-size:13px;
+">
+
+<span>
+${index+1}. ${c["Cliente"] || "SIN NOMBRE"}
+</span>
+
+<span>
+S/${(parseFloat(c["Saldo Capital"]) || 0).toLocaleString()}
+</span>
+
+</div>
+
+`;
+
+});
 let rankingCarteraHTML = "";
 
 topCartera.forEach((r,index)=>{
@@ -1494,6 +1539,16 @@ color:black;
 </h3>
 
 ${moraProductoHTML}
+<hr style="margin:15px 0;">
+
+<h3 style="
+text-align:center;
+color:black;
+">
+🏆 TOP 30 CLIENTES
+</h3>
+
+${topClientesHTML}
 </div>
 `;
 

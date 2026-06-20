@@ -996,6 +996,12 @@ parseFloat(c["Interes Devengado"]) || 0;
 rentabilidad += interes;
 let costo =
 parseFloat(c["Costo por Desembolso"]) || 0;
+    console.log(
+"FECHA:",
+c["Fecha Desembolso"],
+"COSTO:",
+costo
+);
 
 let fechaDesembolso =
 String(
@@ -1127,6 +1133,10 @@ ${medalla}
 `;
 
 });
+ console.log(
+"TOTAL COSTO DESEMBOLSO:",
+costoDesembolsoTotal
+);   
 moraPorcentaje =
 carteraTotal > 0
 ?

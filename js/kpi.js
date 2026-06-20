@@ -971,8 +971,10 @@ let clientesAsesor = {};
 let moraAsesor = {};
 let vencidoAsesor = {};
     let ultimaFecha = null;
-
-data.forEach(c=>{
+console.log(
+"ULTIMA FECHA:",
+ultimaFecha
+);data.forEach(c=>{
 
 let fechaTexto =
 String(c["Fecha Desembolso"] || "");
@@ -993,9 +995,7 @@ if(
 !ultimaFecha ||
 fecha > ultimaFecha
 ){
-
 ultimaFecha = fecha;
-
 }
 
 }
@@ -1006,6 +1006,12 @@ ultimaFecha.getMonth();
 
 let anioConsulta =
 ultimaFecha.getFullYear();
+    console.log(
+"MES DETECTADO:",
+mesConsulta + 1,
+"AÑO:",
+anioConsulta
+);
 data.forEach(c=>{
 
 let saldo =
@@ -1083,20 +1089,10 @@ rentabilidad += interes;
 rentabilidadAsesor[asesor] += interes;
 let costo =
 parseFloat(c["Costo por Desembolso"]) || 0;
-    let fechaTexto =
-String(c["Fecha Desembolso"] || "");
+    let fecha =
+new Date(c["Fecha Desembolso"]);
 
-let partes =
-fechaTexto.split("/");
-
-if(partes.length === 3){
-
-let fecha =
-new Date(
-parseInt(partes[2]),
-parseInt(partes[1]) - 1,
-parseInt(partes[0])
-);
+if(!isNaN(fecha)){
 
 if(
 fecha.getMonth() === mesConsulta

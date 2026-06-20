@@ -1055,16 +1055,27 @@ c["Fecha Desembolso"],
 "COSTO:",
 costo
 );
+let fechaTexto =
+String(c["Fecha Desembolso"] || "");
 
-let fecha =
-new Date(c["Fecha Desembolso"]);
+let partes =
+fechaTexto.split("/");
 
-if(!isNaN(fecha)){
+if(partes.length === 3){
+
+let dia =
+parseInt(partes[0]);
+
+let mes =
+parseInt(partes[1]) - 1;
+
+let anio =
+parseInt(partes[2]);
 
 if(
-fecha.getMonth() === mesConsulta
+mes === mesConsulta
 &&
-fecha.getFullYear() === anioConsulta
+anio === anioConsulta
 ){
 
 costoDesembolsoTotal += costo;

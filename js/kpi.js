@@ -696,6 +696,9 @@ function toggleKPI(asesor){
  }
 function mostrarPanel(panel){
 
+let resumen =
+document.getElementById("panelResumen");
+
 let asesores =
 document.getElementById("panelAsesores");
 
@@ -705,6 +708,9 @@ document.getElementById("panelRentabilidad");
 let clientes =
 document.getElementById("panelClientes");
 
+if(resumen)
+resumen.style.display="none";
+
 if(asesores)
 asesores.style.display="none";
 
@@ -713,6 +719,9 @@ rentabilidad.style.display="none";
 
 if(clientes)
 clientes.style.display="none";
+
+if(panel==="resumen")
+resumen.style.display="block";
 
 if(panel==="asesores")
 asesores.style.display="block";
@@ -1458,12 +1467,12 @@ onclick="mostrarPanel('rentabilidad')">
 </div>
 
 <div class="card-resumen"
-onclick="mostrarPanel('productos')">
+onclick="mostrarPanel('resumen')"
 📦<br>Productos
 </div>
 
 <div class="card-resumen"
-onclick="mostrarPanel('mora')">
+onclick="mostrarPanel('resumen')"
 📉<br>Mora
 </div>
 
@@ -1473,6 +1482,9 @@ onclick="mostrarPanel('clientes')">
 </div>
 
 </div>
+
+<div id="panelResumen"
+style="display:block;">
 
 <div style="
 display:grid;
@@ -1658,6 +1670,9 @@ border-radius:16px;
 box-shadow:0 2px 10px rgba(0,0,0,.06);
 margin-top:15px;
 ">
+</div>
+
+</div>
 
 <div id="panelAsesores"
 style="display:none;">

@@ -970,8 +970,6 @@ let rentabilidadAsesor = {};
 let clientesAsesor = {};
 let moraAsesor = {};
 let vencidoAsesor = {};
-let mesConsulta = 5;
-let anioConsulta = 2026;
     let ultimaFecha = null;
 
 data.forEach(c=>{
@@ -1104,41 +1102,6 @@ if(
 fecha.getMonth() === mesConsulta
 &&
 fecha.getFullYear() === anioConsulta
-){
-
-costoDesembolsoTotal += costo;
-
-}
-
-}
-    costoDesembolsoTotal += costo;
-    console.log(
-"FECHA:",
-c["Fecha Desembolso"],
-"COSTO:",
-costo
-);
-let fechaTexto =
-String(c["Fecha Desembolso"] || "");
-
-let partes =
-fechaTexto.split("/");
-
-if(partes.length === 3){
-
-let dia =
-parseInt(partes[0]);
-
-let mes =
-parseInt(partes[1]) - 1;
-
-let anio =
-parseInt(partes[2]);
-
-if(
-mes === mesConsulta
-&&
-anio === anioConsulta
 ){
 
 costoDesembolsoTotal += costo;
@@ -1596,12 +1559,12 @@ onclick="mostrarPanel('rentabilidad')">
 </div>
 
 <div class="card-resumen"
-onclick="mostrarPanel('resumen')"
+onclick="mostrarPanel('resumen')">
 📦<br>Productos
 </div>
 
 <div class="card-resumen"
-onclick="mostrarPanel('resumen')"
+onclick="mostrarPanel('resumen')">
 📉<br>Mora
 </div>
 

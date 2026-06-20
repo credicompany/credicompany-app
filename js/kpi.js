@@ -966,6 +966,10 @@ let costoDesembolsoTotal = 0;
 let rankingAsesores = {};
 let rentabilidadAsesor = {};
 let clientesAsesor = {};
+let moraAsesor = {};
+let vencidoAsesor = {};
+let mesConsulta = 5;
+let anioConsulta = 2026;
 data.forEach(c=>{
 
 let saldo =
@@ -978,6 +982,15 @@ let asesor =
 .toString()
 .trim()
 .toUpperCase();
+if(!moraAsesor[asesor]){
+    moraAsesor[asesor] = 0;
+}
+
+if(!vencidoAsesor[asesor]){
+    vencidoAsesor[asesor] = 0;
+}
+
+moraAsesor[asesor] += saldo;
 let producto =
 (c["Producto"] || "SIN PRODUCTO")
 .toString()
@@ -1018,6 +1031,11 @@ vencidoProducto[producto] = 0;
 if(atraso > 0){
 vencidoProducto[producto] += saldo;
 }
+if(atraso > 30){
+
+vencidoAsesor[asesor] += saldo;
+
+}
 let interes =
 parseFloat(c["Interes Devengado"]) || 0;
 
@@ -1036,30 +1054,15 @@ c["Fecha Desembolso"],
 costo
 );
 
-let fechaDesembolso =
-String(
-c["Fecha Desembolso"] || ""
-);
-
-let partes =
-fechaDesembolso.split("/");
-
-if(partes.length === 3){
-
 let fecha =
-new Date(
-parseInt(partes[2]),
-parseInt(partes[1]) - 1,
-parseInt(partes[0])
-);
+new Date(c["Fecha Desembolso"]);
 
-let hoy =
-new Date();
+if(!isNaN(fecha)){
 
 if(
-fecha.getMonth() === hoy.getMonth()
+fecha.getMonth() === mesConsulta
 &&
-fecha.getFullYear() === hoy.getFullYear()
+fecha.getFullYear() === anioConsulta
 ){
 
 costoDesembolsoTotal += costo;
@@ -1371,6 +1374,52 @@ color:#198754;
 ">
 💰 S/${(parseFloat(c["Saldo Capital"]) || 0).toLocaleString()}
 </div>
+
+</div>
+
+`;
+
+});
+let moraAsesorHTML = "";
+
+Object.keys(moraAsesor)
+
+.forEach(asesor=>{
+
+let cartera =
+moraAsesor[asesor] || 0;
+
+let vencido =
+vencidoAsesor[asesor] || 0;
+
+let mora =
+cartera > 0
+?
+((vencido / cartera) * 100)
+.toFixed(1)
+:
+0;
+
+moraAsesorHTML += `
+
+<div style="
+background:white;
+padding:12px;
+margin:6px 0;
+border-radius:10px;
+border:1px solid #E5E7EB;
+display:flex;
+justify-content:space-between;
+font-size:14px;
+">
+
+<span>
+👨‍💼 ${asesor}
+</span>
+
+<span>
+📉 ${mora}%
+</span>
 
 </div>
 
@@ -1720,7 +1769,16 @@ color:black;
 </h3>
 
 ${rentabilidadHTML}
+<hr style="margin:15px 0;">
 
+<h3 style="
+text-align:center;
+color:black;
+">
+📉 MORA POR ASESOR
+</h3>
+
+${moraAsesorHTML}
 </div>
 <hr style="margin:15px 0;">
 

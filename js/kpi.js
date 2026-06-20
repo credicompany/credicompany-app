@@ -971,33 +971,42 @@ let clientesAsesor = {};
 let moraAsesor = {};
 let vencidoAsesor = {};
     let ultimaFecha = null;
-console.log(
-"ULTIMA FECHA:",
-ultimaFecha
-);data.forEach(c=>{
+
+data.forEach(c=>{
+
+let fechaTexto =
+String(c["Fecha Desembolso"] || "");
+
+let partes =
+fechaTexto.split("/");
+
+if(partes.length === 3){
 
 let fecha =
-new Date(c["Fecha Desembolso"]);
+new Date(
+parseInt(partes[2]),
+parseInt(partes[1]) - 1,
+parseInt(partes[0])
+);
 
 if(
-!isNaN(fecha)
-&&
-(
 !ultimaFecha ||
 fecha > ultimaFecha
-)
 ){
 
 ultimaFecha = fecha;
 
-}});
+}
+
+}
+
+});
     let mesConsulta =
 ultimaFecha.getMonth();
 
 let anioConsulta =
 ultimaFecha.getFullYear();
-    console.log(
-console.log(
+  console.log(
 "ULTIMA FECHA:",
 ultimaFecha
 );
@@ -1088,10 +1097,21 @@ rentabilidad += interes;
 rentabilidadAsesor[asesor] += interes;
 let costo =
 parseFloat(c["Costo por Desembolso"]) || 0;
-    let fecha =
-new Date(c["Fecha Desembolso"]);
 
-if(!isNaN(fecha)){
+ let fechaTexto =
+String(c["Fecha Desembolso"] || "");
+
+let partes =
+fechaTexto.split("/");
+
+if(partes.length === 3){
+
+let fecha =
+new Date(
+parseInt(partes[2]),
+parseInt(partes[1]) - 1,
+parseInt(partes[0])
+);
 
 if(
 fecha.getMonth() === mesConsulta
@@ -1103,6 +1123,7 @@ costoDesembolsoTotal += costo;
 
 }
 
+}   
 }
 carteraTotal += saldo;
 if(!rankingAsesores[asesor]){

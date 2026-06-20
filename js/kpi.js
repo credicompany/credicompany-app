@@ -696,7 +696,32 @@ function toggleKPI(asesor){
  }
 function mostrarPanel(panel){
 
-console.log("Panel:", panel);
+let asesores =
+document.getElementById("panelAsesores");
+
+let rentabilidad =
+document.getElementById("panelRentabilidad");
+
+let clientes =
+document.getElementById("panelClientes");
+
+if(asesores)
+asesores.style.display="none";
+
+if(rentabilidad)
+rentabilidad.style.display="none";
+
+if(clientes)
+clientes.style.display="none";
+
+if(panel==="asesores")
+asesores.style.display="block";
+
+if(panel==="rentabilidad")
+rentabilidad.style.display="block";
+
+if(panel==="clientes")
+clientes.style.display="block";
 
 }
 window.addEventListener("load",()=>{
@@ -1634,7 +1659,8 @@ box-shadow:0 2px 10px rgba(0,0,0,.06);
 margin-top:15px;
 ">
 
-<div id="panelAsesores">
+<div id="panelAsesores"
+style="display:none;">
 
 <h3 style="
 text-align:center;
@@ -1666,8 +1692,6 @@ color:black;
 </h3>
 
 ${moraProductoHTML}
-<hr style="margin:15px 0;">
-
 <hr style="margin:15px 0;">
 
 <h3 style="

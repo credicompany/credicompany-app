@@ -976,31 +976,21 @@ console.log(
 ultimaFecha
 );data.forEach(c=>{
 
-let fechaTexto =
-String(c["Fecha Desembolso"] || "");
-
-let partes =
-fechaTexto.split("/");
-
-if(partes.length === 3){
-
 let fecha =
-new Date(
-parseInt(partes[2]),
-parseInt(partes[1]) - 1,
-parseInt(partes[0])
-);
+new Date(c["Fecha Desembolso"]);
 
 if(
+!isNaN(fecha)
+&&
+(
 !ultimaFecha ||
 fecha > ultimaFecha
+)
 ){
+
 ultimaFecha = fecha;
-}
 
-}
-
-});
+}});
     let mesConsulta =
 ultimaFecha.getMonth();
 

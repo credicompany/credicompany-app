@@ -122,8 +122,10 @@ let atraso =
 parseFloat(c["Dias de retraso"]) || 0;
     let costo =
     parseFloat(c["Costo por Desembolso"]) || 0;
-
-   let fechaDesembolso =
+console.log(
+"COSTO:",
+c["Costo por Desembolso"]
+);   let fechaDesembolso =
 String(
 c["Fecha Desembolso"] || ""
 );

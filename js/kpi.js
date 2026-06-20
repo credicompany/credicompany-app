@@ -693,7 +693,9 @@ function toggleKPI(asesor){
         detalle.style.display="none";
 
     }
+function mostrarPanel(panel){
 
+    alert("Panel seleccionado: " + panel);
 }
 window.addEventListener("load",()=>{
 
@@ -1413,27 +1415,33 @@ gap:8px;
 margin-bottom:15px;
 ">
 
-<div class="card-resumen">
+<div class="card-resumen"
+onclick="mostrarPanel('resumen')">
 📊<br>Resumen
 </div>
 
-<div class="card-resumen">
+<div class="card-resumen"
+onclick="mostrarPanel('asesores')">
 👨‍💼<br>Asesores
 </div>
 
-<div class="card-resumen">
+<div class="card-resumen"
+onclick="mostrarPanel('rentabilidad')">
 💰<br>Rentabilidad
 </div>
 
-<div class="card-resumen">
+<div class="card-resumen"
+onclick="mostrarPanel('productos')">
 📦<br>Productos
 </div>
 
-<div class="card-resumen">
+<div class="card-resumen"
+onclick="mostrarPanel('mora')">
 📉<br>Mora
 </div>
 
-<div class="card-resumen">
+<div class="card-resumen"
+onclick="mostrarPanel('clientes')">
 🏆<br>Clientes
 </div>
 

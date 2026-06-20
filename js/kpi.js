@@ -1694,6 +1694,9 @@ color:black;
 ${moraProductoHTML}
 <hr style="margin:15px 0;">
 
+<div id="panelRentabilidad"
+style="display:none;">
+
 <h3 style="
 text-align:center;
 color:black;
@@ -1703,7 +1706,11 @@ color:black;
 
 ${rentabilidadHTML}
 
+</div>
 <hr style="margin:15px 0;">
+
+<div id="panelClientes"
+style="display:none;">
 
 <h3 style="
 text-align:center;
@@ -1713,6 +1720,7 @@ color:black;
 </h3>
 
 ${topClientesHTML}
+
 </div>
 `;
 

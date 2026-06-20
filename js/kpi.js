@@ -1287,13 +1287,46 @@ justify-content:space-between;
 font-size:13px;
 ">
 
-<span>
-${index+1}. ${c["Cliente"] || "SIN NOMBRE"}
+<div style="
+display:flex;
+flex-direction:column;
+">
+
+<span style="
+font-weight:bold;
+">
+${index+1}. ${
+(
+(c["Apellido Paterno"] || "") + " " +
+(c["Apellido Materno"] || "") + " " +
+(c["Nombre"] || "")
+).trim()
+}
 </span>
 
-<span>
-S/${(parseFloat(c["Saldo Capital"]) || 0).toLocaleString()}
+<span style="
+font-size:11px;
+color:#6B7280;
+">
+👤 ${c["Asesor(a)"] || "SIN ASESOR"}
 </span>
+
+<span style="
+font-size:11px;
+color:#6B7280;
+">
+📦 ${c["Producto"] || ""}
+</span>
+
+</div>
+
+<div style="
+text-align:right;
+font-weight:bold;
+color:#198754;
+">
+💰 S/${(parseFloat(c["Saldo Capital"]) || 0).toLocaleString()}
+</div>
 
 </div>
 

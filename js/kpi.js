@@ -696,7 +696,8 @@ function toggleKPI(asesor){
  }
 function mostrarPanel(panel){
 
-    alert("Panel seleccionado: " + panel);
+console.log("Panel:", panel);
+
 }
 window.addEventListener("load",()=>{
 

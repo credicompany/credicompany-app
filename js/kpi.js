@@ -143,18 +143,7 @@ fecha,
 costo
 );
 
-let hoy =
-new Date();
-    if(
-        fecha.getMonth() === hoy.getMonth()
-        &&
-        fecha.getFullYear() === hoy.getFullYear()
-    ){
-
-        costoDesembolsoTotal += costo;
-
-    }
-
+costoDesembolsoTotal += costo;
 });
 
     let totalOperaciones = json.length;

@@ -1124,7 +1124,7 @@ costoDesembolsoTotal += costo;
 }
 
 }   
-}
+
 carteraTotal += saldo;
 if(!rankingAsesores[asesor]){
 
@@ -1224,10 +1224,6 @@ ${medalla}
 `;
 
 });
- console.log(
-"TOTAL COSTO DESEMBOLSO:",
-costoDesembolsoTotal
-);   
     console.log(
 "TOTAL COSTO DESEMBOLSO:",
 costoDesembolsoTotal

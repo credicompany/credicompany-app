@@ -1634,6 +1634,8 @@ box-shadow:0 2px 10px rgba(0,0,0,.06);
 margin-top:15px;
 ">
 
+<div id="panelAsesores">
+
 <h3 style="
 text-align:center;
 color:black;
@@ -1642,6 +1644,8 @@ color:black;
 </h3>
 
 ${rankingHTML}
+
+</div>
 
 <hr style="margin:15px 0;">
 <h3 style="

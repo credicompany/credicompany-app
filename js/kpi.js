@@ -1405,6 +1405,40 @@ document.getElementById(
 ).innerHTML =
 
 `
+
+<div style="
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px;
+margin-bottom:15px;
+">
+
+<div class="card-resumen">
+📊<br>Resumen
+</div>
+
+<div class="card-resumen">
+👨‍💼<br>Asesores
+</div>
+
+<div class="card-resumen">
+💰<br>Rentabilidad
+</div>
+
+<div class="card-resumen">
+📦<br>Productos
+</div>
+
+<div class="card-resumen">
+📉<br>Mora
+</div>
+
+<div class="card-resumen">
+🏆<br>Clientes
+</div>
+
+</div>
+
 <div style="
 display:grid;
 grid-template-columns:repeat(2,1fr);
@@ -1620,10 +1654,6 @@ color:black;
 ${moraProductoHTML}
 <hr style="margin:15px 0;">
 
-<h3 style="
-text-align:center;
-color:black;
-">
 <hr style="margin:15px 0;">
 
 <h3 style="
@@ -1634,6 +1664,13 @@ color:black;
 </h3>
 
 ${rentabilidadHTML}
+
+<hr style="margin:15px 0;">
+
+<h3 style="
+text-align:center;
+color:black;
+">
 🏆 TOP 30 CLIENTES
 </h3>
 

@@ -691,8 +691,9 @@ function toggleKPI(asesor){
     }else{
 
         detalle.style.display="none";
+}
 
-    }
+ }
 function mostrarPanel(panel){
 
     alert("Panel seleccionado: " + panel);

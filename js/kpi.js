@@ -1032,7 +1032,7 @@ rankingAsesores[asesor] = 0;
 
 rankingAsesores[asesor] += saldo;
 
-   if(atraso > 0){
+   if(atraso > 30){
 
 capitalVencido += saldo;
 

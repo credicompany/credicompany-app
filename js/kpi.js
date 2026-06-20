@@ -926,6 +926,7 @@ let vencidoProducto = {};
 let clientesProducto = {};
 let costoDesembolsoTotal = 0;
 let rankingAsesores = {};
+let rentabilidadAsesor = {};
 let clientesAsesor = {};
 data.forEach(c=>{
 
@@ -983,6 +984,11 @@ let interes =
 parseFloat(c["Interes Devengado"]) || 0;
 
 rentabilidad += interes;
+    if(!rentabilidadAsesor[asesor]){
+    rentabilidadAsesor[asesor] = 0;
+}
+
+rentabilidadAsesor[asesor] += interes;
 let costo =
 parseFloat(c["Costo por Desembolso"]) || 0;
     console.log(
@@ -1333,6 +1339,46 @@ color:#198754;
 `;
 
 });
+    let rentabilidadHTML = "";
+
+Object.entries(rentabilidadAsesor)
+
+.sort((a,b)=>b[1]-a[1])
+
+.forEach((r,index)=>{
+
+let medalla = "🏅";
+
+if(index===0) medalla="🥇";
+if(index===1) medalla="🥈";
+if(index===2) medalla="🥉";
+
+rentabilidadHTML += `
+
+<div style="
+background:white;
+padding:12px;
+margin:6px 0;
+border-radius:10px;
+border:1px solid #E5E7EB;
+display:flex;
+justify-content:space-between;
+font-size:14px;
+">
+
+<span>
+${medalla} ${r[0]}
+</span>
+
+<span>
+💰 S/${Math.round(r[1]).toLocaleString()}
+</span>
+
+</div>
+
+`;
+
+});
 let rankingCarteraHTML = "";
 
 topCartera.forEach((r,index)=>{
@@ -1578,6 +1624,16 @@ ${moraProductoHTML}
 text-align:center;
 color:black;
 ">
+<hr style="margin:15px 0;">
+
+<h3 style="
+text-align:center;
+color:black;
+">
+💰 RENTABILIDAD POR ASESOR
+</h3>
+
+${rentabilidadHTML}
 🏆 TOP 30 CLIENTES
 </h3>
 

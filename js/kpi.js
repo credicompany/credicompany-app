@@ -997,9 +997,18 @@ ultimaFecha.getMonth();
 let anioConsulta =
 ultimaFecha.getFullYear();
     console.log(
+console.log(
+"ULTIMA FECHA:",
+ultimaFecha
+);
+
+console.log(
 "MES DETECTADO:",
-mesConsulta + 1,
-"AÑO:",
+mesConsulta + 1
+);
+
+console.log(
+"AÑO DETECTADO:",
 anioConsulta
 );
 data.forEach(c=>{
@@ -1201,6 +1210,10 @@ costoDesembolsoTotal
     console.log(
 "TOTAL COSTO DESEMBOLSO:",
 costoDesembolsoTotal
+);
+    console.log(
+"REGISTROS FINANCIEROS:",
+data.length
 );
 moraPorcentaje =
 carteraTotal > 0

@@ -1175,6 +1175,10 @@ ${medalla}
 "TOTAL COSTO DESEMBOLSO:",
 costoDesembolsoTotal
 );   
+    console.log(
+"TOTAL COSTO DESEMBOLSO:",
+costoDesembolsoTotal
+);
 moraPorcentaje =
 carteraTotal > 0
 ?

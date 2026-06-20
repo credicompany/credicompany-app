@@ -1049,6 +1049,7 @@ rentabilidad += interes;
 rentabilidadAsesor[asesor] += interes;
 let costo =
 parseFloat(c["Costo por Desembolso"]) || 0;
+    costoDesembolsoTotal += costo;
     console.log(
 "FECHA:",
 c["Fecha Desembolso"],

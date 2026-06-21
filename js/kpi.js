@@ -965,6 +965,7 @@ let carteraProducto = {};
 let vencidoProducto = {};
 let clientesProducto = {};
 let costoDesembolsoTotal = 0;
+let registrosMes = 0;
 let rankingAsesores = {};
 let rentabilidadAsesor = {};
 let clientesAsesor = {};
@@ -1119,11 +1120,15 @@ fecha.getFullYear() === anioConsulta
 ){
 
 costoDesembolsoTotal += costo;
+registrosMes++;
 
 console.log(
 "SUMANDO:",
 fecha,
-costo
+"COSTO:",
+costo,
+"ACUMULADO:",
+costoDesembolsoTotal
 );
 
 }
@@ -1236,6 +1241,10 @@ costoDesembolsoTotal
     console.log(
 "REGISTROS FINANCIEROS:",
 data.length
+);
+    console.log(
+"REGISTROS MES:",
+registrosMes
 );
 moraPorcentaje =
 carteraTotal > 0

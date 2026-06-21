@@ -974,22 +974,14 @@ let vencidoAsesor = {};
 
 data.forEach(c=>{
 
-let fechaTexto =
-String(c["Fecha Desembolso"] || "");
-console.log(
-"FECHA ORIGINAL:",
-c["Fecha Desembolso"]
-);
-let partes =
-fechaTexto.split("/");
+let fechaExcel =
+parseFloat(c["Fecha Desembolso"]);
 
-if(partes.length === 3){
+if(!isNaN(fechaExcel)){
 
 let fecha =
 new Date(
-parseInt(partes[2]),
-parseInt(partes[1]) - 1,
-parseInt(partes[0])
+(fechaExcel - 25569) * 86400 * 1000
 );
 
 if(
@@ -1004,6 +996,15 @@ ultimaFecha = fecha;
 }
 
 });
+if(!ultimaFecha){
+
+alert(
+"No se encontró ninguna fecha de desembolso válida"
+);
+
+return;
+
+}
     let mesConsulta =
 ultimaFecha.getMonth();
 
@@ -1101,19 +1102,14 @@ rentabilidadAsesor[asesor] += interes;
 let costo =
 parseFloat(c["Costo por Desembolso"]) || 0;
 
- let fechaTexto =
-String(c["Fecha Desembolso"] || "");
+let fechaExcel =
+parseFloat(c["Fecha Desembolso"]);
 
-let partes =
-fechaTexto.split("/");
-
-if(partes.length === 3){
+if(!isNaN(fechaExcel)){
 
 let fecha =
 new Date(
-parseInt(partes[2]),
-parseInt(partes[1]) - 1,
-parseInt(partes[0])
+(fechaExcel - 25569) * 86400 * 1000
 );
 
 if(
@@ -1123,14 +1119,16 @@ fecha.getFullYear() === anioConsulta
 ){
 
 costoDesembolsoTotal += costo;
+
 console.log(
 "SUMANDO:",
-fechaTexto,
+fecha,
 costo
 );
+
 }
 
-}   
+}
 
 carteraTotal += saldo;
 if(!rankingAsesores[asesor]){

@@ -982,7 +982,11 @@ if(!isNaN(fechaExcel)){
 
 let fecha =
 new Date(
-(fechaExcel - 25569) * 86400 * 1000
+Date.UTC(
+1899,
+11,
+30 + fechaExcel
+)
 );
 
 if(
@@ -1110,7 +1114,11 @@ if(!isNaN(fechaExcel)){
 
 let fecha =
 new Date(
-(fechaExcel - 25569) * 86400 * 1000
+Date.UTC(
+1899,
+11,
+30 + fechaExcel
+)
 );
 
 if(

@@ -989,8 +989,12 @@ Date.UTC(
 30 + fechaExcel
 )
 );
-
-if(
+console.log(
+"EXCEL:",
+fechaExcel,
+"FECHA:",
+fecha.toISOString()
+);if(
 !ultimaFecha ||
 fecha > ultimaFecha
 ){

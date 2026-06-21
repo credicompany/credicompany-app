@@ -32,6 +32,7 @@ function cargarMetasKPI() {
             "metasKPI",
             JSON.stringify(json)
         );
+    
 
         localStorage.setItem(
             "nombreMetaKPI",

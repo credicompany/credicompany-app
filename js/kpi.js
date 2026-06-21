@@ -976,7 +976,10 @@ data.forEach(c=>{
 
 let fechaTexto =
 String(c["Fecha Desembolso"] || "");
-
+console.log(
+"FECHA ORIGINAL:",
+c["Fecha Desembolso"]
+);
 let partes =
 fechaTexto.split("/");
 
@@ -1120,7 +1123,11 @@ fecha.getFullYear() === anioConsulta
 ){
 
 costoDesembolsoTotal += costo;
-
+console.log(
+"SUMANDO:",
+fechaTexto,
+costo
+);
 }
 
 }   

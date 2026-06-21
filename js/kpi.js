@@ -983,11 +983,7 @@ if(!isNaN(fechaExcel)){
 
 let fecha =
 new Date(
-Date.UTC(
-1899,
-11,
-30 + fechaExcel
-)
+(fechaExcel - 25569) * 86400 * 1000
 );
 console.log(
 "EXCEL:",
@@ -1016,14 +1012,15 @@ return;
 
 }
     let mesConsulta =
-ultimaFecha.getMonth();
+ultimaFecha.getUTCMonth();
 
 let anioConsulta =
-ultimaFecha.getFullYear();
+ultimaFecha.getUTCFullYear();
   console.log(
 "ULTIMA FECHA:",
 ultimaFecha
 );
+
 
 console.log(
 "MES DETECTADO:",
@@ -1127,9 +1124,9 @@ Date.UTC(
 );
 
 if(
-fecha.getMonth() === mesConsulta
+fecha.getUTCMonth() === mesConsulta
 &&
-fecha.getFullYear() === anioConsulta
+fecha.getUTCFullYear() === anioConsulta
 ){
 
 costoDesembolsoTotal += costo;

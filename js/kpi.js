@@ -529,113 +529,51 @@ else if(Number(porcentajeDesembolso) >= 80){
    colorEstado = "🟡";
 
 }
-
 resumen += `
-<div class="item"
-onclick="toggleKPI('${asesor}')"
-style="
-background:white;
-padding:8px;
-margin:6px 0;
-border-radius:10px;
-box-shadow:0 1px 4px rgba(0,0,0,.08);
-font-size:12px;
-cursor:pointer;
-">
-
-<div style="
-background:
-${Number(porcentajeDesembolso)>=100
-? '#22c55e'
-: Number(porcentajeDesembolso)>=80
-? '#facc15'
-: '#ef4444'};
-color:white;
-padding:6px 10px;
-margin:-8px -8px 8px -8px;
-border-radius:10px 10px 0 0;
-font-weight:bold;
-font-size:14px;
-">
-${colorEstado} ${asesor}
-</div>
-<br>
-
-<div style="
-display:flex;
-justify-content:space-between;
-font-size:14px;
-font-weight:bold;
-">
-
-<span>
-💰 S/${Math.round(colocacion/1000)}K
-</span>
-
-<span>
-📊 ${porcentajeDesembolso}%
-</span>
-
-</div>
-
-<br>
-
-<span style="
-color:#0d6efd;
-font-size:11px;
-font-weight:bold;
-">
-▼ Ver detalle
-</span>
-
-<br>
-<div
-id="detalle_${asesor}"
-style="
-display:none;
-margin-top:8px;
-font-size:12px;
-">
-
-<table style="
-width:100%;
-font-size:12px;
-border-collapse:collapse;
-margin-top:5px;
-">
 
 <tr>
-<td><b>Meta:</b></td>
-<td>S/${metaDesembolso.toLocaleString()}</td>
 
-<td><b>Real:</b></td>
-<td>S/${Math.round(colocacion).toLocaleString()}</td>
+<td>
+<b>${asesor}</b>
+</td>
+
+<td>
+S/${metaDesembolso.toLocaleString()}
+</td>
+
+<td>
+S/${Math.round(colocacion).toLocaleString()}
+</td>
+
+<td>
+${porcentajeDesembolso}%
+</td>
+
+<td>
+${oper}
+</td>
+
+<td>
+${tem}%
+</td>
+
+<td>
+${cli}
+</td>
+
+<td>
+${colorEstado}
+</td>
+
 </tr>
 
-<tr>
-<td><b>%:</b></td>
-<td>${porcentajeDesembolso}%</td>
-
-<td><b>Oper:</b></td>
-<td>${oper}</td>
-</tr>
-
-<tr>
-<td><b>TEM:</b></td>
-<td>${tem}%</td>
-
-<td><b>Clientes:</b></td>
-<td>${cli}</td>
-</tr>
-
-</table>
-
-</div>
-</div>
 `;
     });
 
-    resumen += `</div>`;
+    resumen += `
+</table>
+</div>
+`;
 let rankingKPIHTML = "";
 
 top.slice(0,10).forEach((r,index)=>{

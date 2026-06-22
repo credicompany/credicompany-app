@@ -429,6 +429,7 @@ color:white;
 <th>META</th>
 <th>REAL</th>
 <th>%</th>
+<th>META OPER</th>
 <th>OPER</th>
 <th>TEM</th>
 <th>CLIENTES</th>
@@ -547,6 +548,10 @@ S/${Math.round(colocacion).toLocaleString()}
 
 <td>
 ${porcentajeDesembolso}%
+</td>
+
+<td>
+${metaOperaciones}
 </td>
 
 <td>

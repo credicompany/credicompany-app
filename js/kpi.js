@@ -398,15 +398,44 @@ margin-top:4px;
 `;
 
 }
-    resumen += `
-    <div class="card">
-  <h4 style="
+   resumen += `
+
+<div class="card">
+
+<h4 style="
 margin:5px 0;
 font-size:14px;
 ">
 🎯 KPI POR ASESOR
 </h4>
-    `;
+
+<div style="
+overflow-x:auto;
+">
+
+<table style="
+width:100%;
+border-collapse:collapse;
+font-size:12px;
+text-align:center;
+">
+
+<tr style="
+background:#0A3A63;
+color:white;
+">
+
+<th>ASESOR</th>
+<th>META</th>
+<th>REAL</th>
+<th>%</th>
+<th>OPER</th>
+<th>TEM</th>
+<th>CLIENTES</th>
+<th>🚦</th>
+
+</tr>
+`;
 
     Object.keys(ranking).forEach(asesor=>{
 
@@ -568,38 +597,38 @@ margin-top:8px;
 font-size:12px;
 ">
 
-🎯 Meta Desembolso:
-S/${metaDesembolso.toLocaleString()}
+<table style="
+width:100%;
+font-size:12px;
+border-collapse:collapse;
+margin-top:5px;
+">
 
-<br>
+<tr>
+<td><b>Meta:</b></td>
+<td>S/${metaDesembolso.toLocaleString()}</td>
 
-💰 Real:
-S/${colocacion.toLocaleString()}
+<td><b>Real:</b></td>
+<td>S/${Math.round(colocacion).toLocaleString()}</td>
+</tr>
 
-<br>
+<tr>
+<td><b>%:</b></td>
+<td>${porcentajeDesembolso}%</td>
 
-📊 Cumplimiento:
-${porcentajeDesembolso}%
+<td><b>Oper:</b></td>
+<td>${oper}</td>
+</tr>
 
-<br>
+<tr>
+<td><b>TEM:</b></td>
+<td>${tem}%</td>
 
-🎯 Meta Operaciones:
-${metaOperaciones}
+<td><b>Clientes:</b></td>
+<td>${cli}</td>
+</tr>
 
-<br>
-
-📋 Operaciones:
-${oper}
-
-<br>
-
-📈 TEM:
-${tem}%
-
-<br>
-
-👥 Clientes:
-${cli}
+</table>
 
 </div>
 </div>

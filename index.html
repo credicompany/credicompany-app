@@ -524,17 +524,54 @@ onclick="cargarExcel()">
 </div>
 
 <div class="fila">
-<button id="btn0dias" style="background:#2ecc71;color:white" onclick="filtrarMora(0,0)">0 días</button>
 
-<button id="btn1a8dias" style="background:#27ae60;color:white" onclick="filtrarMora(1,8)">1-8 días</button>
+<button id="btn0dias"
+style="background:#2ecc71;color:white"
+onclick="filtrarMora(0,0)">
+0 días
+</button>
 
-<button style="background:#f1c40f;color:black" onclick="filtrarMora(9,30)">9-30 días</button>
+<button id="btn1a8dias"
+style="background:#27ae60;color:white"
+onclick="filtrarMora(1,8)">
+1-8 días
+</button>
 
-<button style="background:#e74c3c;color:white" onclick="filtrarMora(31,60)">31-60 días</button>
+<button
+style="background:#f1c40f;color:black"
+onclick="filtrarMora(9,30)">
+9-30 días
+</button>
 
-<button style="background:black;color:white" onclick="filtrarMora(61,1000)">61+ días</button>
+<button
+style="background:#e74c3c;color:white"
+onclick="filtrarMora(31,60)">
+31-60 días
+</button>
+
+<button
+style="background:black;color:white"
+onclick="filtrarMora(61,1000)">
+61+ días
+</button>
+
+<div id="kpiMoraTotal"
+style="
+background:#8B0000;
+color:white;
+font-weight:bold;
+padding:10px;
+border-radius:12px;
+text-align:center;
+min-width:220px;
+">
+💰 MORA TOTAL<br>
+<span id="moraTotalGeneral">
+S/0.00
+</span>
 </div>
 
+</div>
 <div id="panelAsesores"
 style="
 display:none;
@@ -1997,16 +2034,36 @@ return r>=filtroMin && r<=filtroMax && esMio;
 });
 
 let hoy=0, alDia=0, leve=0, medio=0, critico=0;
+let moraTotal = 0;
 filtrados.forEach(c=>{
     let r=parseFloat(c.retraso)||0;
+let capitalVencido =
+parseFloat(
+c.capitalVencido ||
+c["Capital Vencido"] ||
+c.saldoCapitalVencido ||
+0
+);
 
+if(r >= 1){
+   moraTotal += capitalVencido;
+}
     if(r === 0) hoy++;
     else if(r <= 8) alDia++;
     else if(r <= 30) leve++;
     else if(r <= 60) medio++;
     else critico++;
 });
-
+document.getElementById(
+"moraTotalGeneral"
+).innerHTML =
+"S/" +
+moraTotal.toLocaleString(
+"es-PE",
+{
+minimumFractionDigits:2
+}
+);
 lista.innerHTML+=`
 <div class="item" style="background:#123B63;color:white">
 <b>📊 Resumen</b><br>

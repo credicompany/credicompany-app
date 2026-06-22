@@ -2113,7 +2113,17 @@ margin-top:8px;
 ${c.apellidoPAval}
 ${c.apellidoMAval}<br>
 
-📞 ${c.telefonoAval}<br>
+📞 <a href="#"
+onclick='enviarCobranzaAval(
+"${encodeURIComponent(c.nombreAval)}",
+"${c.telefonoAval}",
+"${encodeURIComponent(c.nombre)}",
+"${c.retraso}",
+"${c.monto}"
+); return false;'
+style="color:#25D366;font-weight:bold;text-decoration:none;">
+${c.telefonoAval}
+</a><br>
 
 📍 ${c.direccionAval}
 
@@ -2622,7 +2632,50 @@ window.open(
 );
 
 }
+function enviarCobranzaAval(
+nombreAval,
+telefonoAval,
+cliente,
+dias,
+monto
+){
 
+nombreAval =
+decodeURIComponent(nombreAval);
+
+cliente =
+decodeURIComponent(cliente);
+
+telefonoAval =
+(telefonoAval || "")
+.replace(/\D/g,"");
+
+let mensaje =
+`👥 *COMUNICADO AL AVAL*
+
+Estimado(a):
+*${nombreAval}*
+
+Usted figura como aval del cliente:
+
+👤 *${cliente}*
+
+⏰ Días de atraso: ${dias}
+
+💰 Deuda pendiente:
+S/ ${monto}
+
+Solicitamos su apoyo para comunicarse con el titular y regularizar la obligación pendiente.
+
+🏦 *CREDICOMPANY*
+*Área de Cobranzas*
+_Crecemos Juntos_`;
+
+window.open(
+`https://wa.me/51${telefonoAval}?text=${encodeURIComponent(mensaje)}`
+);
+
+}
 // ✅ CANCELADO (ELIMINAR)
 function registrarPago(id){
 

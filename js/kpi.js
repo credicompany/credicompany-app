@@ -446,13 +446,6 @@ color:white;
 
         let oper =
         operaciones[asesor];
-let porcentajeOper =
-metaOperaciones > 0
-?
-((oper / metaOperaciones) * 100)
-.toFixed(1)
-:
-0;
         let tem =
         temPromedio[asesor].length
         ?
@@ -571,15 +564,15 @@ ${oper}
 
 <td style="
 background:
-${Number(porcentajeOper) >= 100
+${Number(porcentajeOperaciones) >= 100
 ? '#22c55e'
-: Number(porcentajeOper) >= 80
+: Number(porcentajeOperaciones) >= 80
 ? '#facc15'
 : '#ef4444'};
 color:white;
 font-weight:bold;
 ">
-${porcentajeOper}%
+${porcentajeOperaciones}%
 </td>
 
 <td>

@@ -426,11 +426,11 @@ color:white;
 ">
 
 <th>ASESOR</th>
-<th>META</th>
-<th>REAL</th>
-<th>%</th>
-<th>META OPER</th>
-<th>OPER</th>
+<th>META COLOCACIÓN</th>
+<th>AVANCE</th>
+<th>% AVANCE</th>
+<th>META OPERACIONES</th>
+<th>AVANCE</th>
 <th>TEM</th>
 <th>CLIENTES</th>
 <th>🚦</th>

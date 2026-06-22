@@ -2038,12 +2038,7 @@ let moraTotal = 0;
 filtrados.forEach(c=>{
     let r=parseFloat(c.retraso)||0;
 let capitalVencido =
-parseFloat(
-c["Saldo capital vencido"] ||
-c.saldoCapitalVencido ||
-c.capitalVencido ||
-0
-);
+parseFloat(c.saldoCapital || 0);
 
 if(r >= 1){
    moraTotal += capitalVencido;

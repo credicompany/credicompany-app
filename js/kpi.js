@@ -607,6 +607,154 @@ ${cli}
     });
 
     resumen += `</div>`;
+    resumen += `
+
+<div style="
+overflow-x:auto;
+margin-top:20px;
+">
+
+<table style="
+width:100%;
+border-collapse:collapse;
+font-size:12px;
+text-align:center;
+">
+
+<tr style="
+background:#0A3A63;
+color:white;
+font-weight:bold;
+">
+
+<th>ASESOR</th>
+<th>META</th>
+<th>REAL</th>
+<th>%</th>
+<th>OPER</th>
+<th>TEM</th>
+<th>CLIENTES</th>
+<th>SEMÁFORO</th>
+
+</tr>
+`;
+    Object.keys(ranking).forEach(asesor=>{
+
+let colocacion =
+ranking[asesor];
+
+let oper =
+operaciones[asesor];
+
+let tem =
+temPromedio[asesor].length
+?
+(
+temPromedio[asesor]
+.reduce((a,b)=>a+b,0)
+/
+temPromedio[asesor].length
+).toFixed(2)
+:
+0;
+
+let cli =
+clientes[asesor].size;
+
+let meta =
+metas.find(m =>
+
+String(
+m["Asesor (A)"] ||
+m["ASESOR"] ||
+""
+)
+.trim()
+.toUpperCase()
+.replace(/\s+/g,"")
+
+===
+
+asesor
+.trim()
+.toUpperCase()
+.replace(/\s+/g,"")
+
+);
+
+let metaDesembolso =
+meta
+?
+parseFloat(
+String(
+meta["COLOCACION"] ||
+meta["COLOC."] ||
+0
+).replace(/,/g,"")
+)
+:
+0;
+
+let porcentaje =
+metaDesembolso > 0
+?
+((colocacion/metaDesembolso)*100)
+.toFixed(1)
+:
+0;
+
+let color = "#dc3545";
+let texto = "🔴";
+
+if(porcentaje >= 100){
+color="#198754";
+texto="🟢";
+}
+else if(porcentaje >=80){
+color="#ffc107";
+texto="🟡";
+}
+
+resumen += `
+
+<tr style="
+border-bottom:1px solid #ddd;
+">
+
+<td><b>${asesor}</b></td>
+
+<td>
+S/${metaDesembolso.toLocaleString()}
+</td>
+
+<td>
+S/${Math.round(colocacion).toLocaleString()}
+</td>
+
+<td style="
+font-weight:bold;
+color:${color};
+">
+${porcentaje}%
+</td>
+
+<td>${oper}</td>
+
+<td>${tem}%</td>
+
+<td>${cli}</td>
+
+<td>${texto}</td>
+
+</tr>
+
+`;
+
+});
+    resumen += `
+</table>
+</div>
+`;
 let rankingKPIHTML = "";
 
 top.slice(0,10).forEach((r,index)=>{

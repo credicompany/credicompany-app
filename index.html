@@ -2039,9 +2039,9 @@ filtrados.forEach(c=>{
     let r=parseFloat(c.retraso)||0;
 let capitalVencido =
 parseFloat(
-c.capitalVencido ||
-c["Capital Vencido"] ||
+c["Saldo capital vencido"] ||
 c.saldoCapitalVencido ||
+c.capitalVencido ||
 0
 );
 

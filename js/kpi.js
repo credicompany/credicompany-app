@@ -431,6 +431,7 @@ color:white;
 <th>% AVANCE</th>
 <th>META OPERACIONES</th>
 <th>AVANCE</th>
+<th>% AVANCE OPER</th>
 <th>TEM</th>
 <th>CLIENTES</th>
 <th>🚦</th>
@@ -445,7 +446,13 @@ color:white;
 
         let oper =
         operaciones[asesor];
-
+let porcentajeOper =
+metaOperaciones > 0
+?
+((oper / metaOperaciones) * 100)
+.toFixed(1)
+:
+0;
         let tem =
         temPromedio[asesor].length
         ?
@@ -560,6 +567,19 @@ ${metaOperaciones}
 
 <td>
 ${oper}
+</td>
+
+<td style="
+background:
+${Number(porcentajeOper) >= 100
+? '#22c55e'
+: Number(porcentajeOper) >= 80
+? '#facc15'
+: '#ef4444'};
+color:white;
+font-weight:bold;
+">
+${porcentajeOper}%
 </td>
 
 <td>

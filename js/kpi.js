@@ -546,10 +546,14 @@ S/${metaDesembolso.toLocaleString()}
 S/${Math.round(colocacion).toLocaleString()}
 </td>
 
-<td>
+<td style="
+background:${Number(porcentajeDesembolso) >= 100 ? '#22c55e' : '#ffffff'};
+color:${Number(porcentajeDesembolso) >= 100 ? 'white' : '#000'};
+font-weight:bold;
+border-radius:4px;
+">
 ${porcentajeDesembolso}%
 </td>
-
 <td>
 ${metaOperaciones}
 </td>

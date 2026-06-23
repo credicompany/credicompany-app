@@ -35,14 +35,18 @@ align-items:center;
 margin-top:10px;
 }
 .fotoAsesor{
-width:180px;
-height:180px;
+width:120px;
+height:120px;
+min-width:120px;
+min-height:120px;
+max-width:120px;
+max-height:120px;
 border-radius:50%;
 object-fit:cover;
-border:4px solid white;
-box-shadow:0 8px 25px rgba(0,0,0,.25);
-display:block;
+border:5px solid white;
+box-shadow:0 6px 20px rgba(0,0,0,.20);
 background:white;
+display:block;
 }
 
 .nombreCompleto{
@@ -295,10 +299,12 @@ class="fotoAsesor">
 
 <div id="nombreCompletoAsesor"
 class="nombreCompleto">
+Asesor
 </div>
 
-<div id="cargoAsesor"
-class="asesorTexto">
+<div class="asesorTexto">
+Asesor:
+<span id="nombreAsesor">-</span>
 </div>
 
 </div>
@@ -518,54 +524,17 @@ onclick="cargarExcel()">
 </div>
 
 <div class="fila">
+<button id="btn0dias" style="background:#2ecc71;color:white" onclick="filtrarMora(0,0)">0 días</button>
 
-<button id="btn0dias"
-style="background:#2ecc71;color:white"
-onclick="filtrarMora(0,0)">
-0 días
-</button>
+<button id="btn1a8dias" style="background:#27ae60;color:white" onclick="filtrarMora(1,8)">1-8 días</button>
 
-<button id="btn1a8dias"
-style="background:#27ae60;color:white"
-onclick="filtrarMora(1,8)">
-1-8 días
-</button>
+<button style="background:#f1c40f;color:black" onclick="filtrarMora(9,30)">9-30 días</button>
 
-<button
-style="background:#f1c40f;color:black"
-onclick="filtrarMora(9,30)">
-9-30 días
-</button>
+<button style="background:#e74c3c;color:white" onclick="filtrarMora(31,60)">31-60 días</button>
 
-<button
-style="background:#e74c3c;color:white"
-onclick="filtrarMora(31,60)">
-31-60 días
-</button>
-
-<button
-style="background:black;color:white"
-onclick="filtrarMora(61,1000)">
-61+ días
-</button>
-
-<div id="kpiMoraTotal"
-style="
-background:#8B0000;
-color:white;
-font-weight:bold;
-padding:10px;
-border-radius:12px;
-text-align:center;
-min-width:220px;
-">
-💰 MORA TOTAL<br>
-<span id="moraTotalGeneral">
-S/0.00
-</span>
+<button style="background:black;color:white" onclick="filtrarMora(61,1000)">61+ días</button>
 </div>
 
-</div>
 <div id="panelAsesores"
 style="
 display:none;
@@ -887,12 +856,6 @@ let filtroMin = 0;
 let filtroMax = 1000;
 window.onload = function(){
 
-document.querySelector(".resumen").style.display = "none";
-dashboard.style.display = "none";
-app.style.display = "none";
-document.getElementById("rankingContainer").style.display = "none";
-
-    let hoy = new Date().toLocaleDateString('en-CA');
     let hoy = new Date().toLocaleDateString('en-CA');
     let ultimo = localStorage.getItem("fechaSistema");
 
@@ -1008,9 +971,7 @@ cargarPerfilAsesor(asesor);
 
 loginDiv.style.display="none";
 dashboard.style.display="block";
-document.getElementById("rankingContainer").style.display="flex";
-document.querySelector(".resumen").style.display="grid";
-app.style.display="none";
+
 document.getElementById("boxAdmin").style.display="flex";
 document.getElementById("panelExcel").style.display="block";
 document.getElementById("panelAsesores").style.display="grid";
@@ -1046,19 +1007,13 @@ document.getElementById(
 ).style.display="none";
 
 }
-    if(document.getElementById("nombreAsesor")){
-    document.getElementById("nombreAsesor").innerText = asesor;
-}
+    nombreAsesor.innerText = asesor;
 
     cargarPerfilAsesor(asesor);
 
     loginDiv.style.display="none";
     dashboard.style.display="block";
-document.getElementById("rankingContainer").style.display="flex";
 
-document.querySelector(".resumen").style.display="grid";
-
-app.style.display="none";
     document.getElementById("boxAdmin").style.display="none";
 
     if(asesor === "slopez"){
@@ -2042,31 +1997,16 @@ return r>=filtroMin && r<=filtroMax && esMio;
 });
 
 let hoy=0, alDia=0, leve=0, medio=0, critico=0;
-let moraTotal = 0;
 filtrados.forEach(c=>{
     let r=parseFloat(c.retraso)||0;
-let capitalVencido =
-parseFloat(c.saldoCapital || 0);
 
-if(r >= 1){
-   moraTotal += capitalVencido;
-}
     if(r === 0) hoy++;
     else if(r <= 8) alDia++;
     else if(r <= 30) leve++;
     else if(r <= 60) medio++;
     else critico++;
 });
-document.getElementById(
-"moraTotalGeneral"
-).innerHTML =
-"S/" +
-moraTotal.toLocaleString(
-"es-PE",
-{
-minimumFractionDigits:2
-}
-);
+
 lista.innerHTML+=`
 <div class="item" style="background:#123B63;color:white">
 <b>📊 Resumen</b><br>
@@ -2325,7 +2265,7 @@ alert("Acceso restringido");
 return;
 }
 dashboard.style.display="none";
-document.getElementById("rankingContainer").style.display = "none";
+
 document.querySelector(".resumen").style.display = "none";
 
 app.style.display="block";
@@ -2396,7 +2336,7 @@ if(el) el.style.display="none";
 document.querySelector(".resumen").style.display = "grid";
 
 document.getElementById("historialDiv").style.display="none";
-document.getElementById("rankingContainer").style.display="flex";
+
 dashboard.style.display="block";
   if(asesor === "slopez"){
     document.getElementById("panelAsesores").style.display="grid";
@@ -3133,41 +3073,19 @@ foto.style.display = "block";
 return;
 
 }
+// ADMIN
 if(usuario === "admin"){
 
-foto.src = "ebenites.jpeg";
-
-nombreCompleto.innerHTML = `
-<div style="
-font-size:26px;
-font-weight:700;
-color:white;
-margin-top:12px;
-">
-Edgar Benites
-</div>
-`;
-
-document.getElementById("cargoAsesor").innerHTML = `
-<div style="
-font-size:15px;
-font-weight:600;
-color:#00ff66;
-">
-Gerencia General
-</div>
-`;
+foto.src = "admin.png";
+nombreCompleto.innerText = "Área de Cobranzas";
+nombreAsesor.innerText = "admin";
 
 }
+
 // EDGAR
 else if(usuario === "ebenites"){
 
-foto.src = "ebenites.jpeg";
-
-foto.onerror = function(){
-    this.src = "logo.png";
-};
-
+foto.src = "ebenites.png";
 nombreCompleto.innerText = "Edgar Benites";
 nombreAsesor.innerText = "ebenites";
 
@@ -3182,30 +3100,12 @@ nombreAsesor.innerText = "emedina";
 
 }
 
+// ALESSANDRA
 else if(usuario === "tleon"){
 
 foto.src = "tleon.png";
-
-nombreCompleto.innerHTML = `
-<div style="
-font-size:26px;
-font-weight:700;
-color:white;
-margin-top:12px;
-">
-Alessandra Leon
-</div>
-`;
-
-document.getElementById("cargoAsesor").innerHTML = `
-<div style="
-font-size:15px;
-font-weight:600;
-color:#00ff66;
-">
-Asesora Intermedia
-</div>
-`;
+nombreCompleto.innerText = "Alessandra Leon";
+nombreAsesor.innerText = "tleon";
 
 }
 // DIEGO

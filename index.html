@@ -35,18 +35,14 @@ align-items:center;
 margin-top:10px;
 }
 .fotoAsesor{
-width:120px;
-height:120px;
-min-width:120px;
-min-height:120px;
-max-width:120px;
-max-height:120px;
+width:180px;
+height:180px;
 border-radius:50%;
 object-fit:cover;
-border:5px solid white;
-box-shadow:0 6px 20px rgba(0,0,0,.20);
-background:white;
+border:4px solid white;
+box-shadow:0 8px 25px rgba(0,0,0,.25);
 display:block;
+background:white;
 }
 
 .nombreCompleto{
@@ -298,12 +294,11 @@ src=""
 class="fotoAsesor">
 
 <div id="nombreCompletoAsesor"
-class="nombreCompleto"
-style="display:none;">
+class="nombreCompleto">
 </div>
 
-<div class="asesorTexto">
-<span id="nombreAsesor">Gerencia</span>
+<div id="cargoAsesor"
+class="asesorTexto">
 </div>
 
 </div>
@@ -3124,14 +3119,30 @@ foto.style.display = "block";
 return;
 
 }
-// ADMIN
 if(usuario === "admin"){
+
 foto.src = "ebenites.jpeg";
-foto.onerror = function(){
-   this.src = "logo.png";
-};
-nombreCompleto.innerText = "";
-nombreAsesor.innerText = "Gerencia";
+
+nombreCompleto.innerHTML = `
+<div style="
+font-size:26px;
+font-weight:700;
+color:white;
+margin-top:12px;
+">
+Edgar Benites
+</div>
+`;
+
+document.getElementById("cargoAsesor").innerHTML = `
+<div style="
+font-size:15px;
+font-weight:600;
+color:#00ff66;
+">
+Gerencia General
+</div>
+`;
 
 }
 // EDGAR
@@ -3157,20 +3168,27 @@ nombreAsesor.innerText = "emedina";
 
 }
 
-// ALESSANDRA
 else if(usuario === "tleon"){
 
 foto.src = "tleon.png";
 
-// Oculta el nombre grande inferior
-nombreCompleto.innerText = "";
-
-// Muestra nombre y cargo debajo de la foto
-nombreAsesor.innerHTML = `
-<div style="font-size:22px;font-weight:bold;color:white;">
+nombreCompleto.innerHTML = `
+<div style="
+font-size:26px;
+font-weight:700;
+color:white;
+margin-top:12px;
+">
 Alessandra Leon
 </div>
-<div style="font-size:14px;color:#00ff66;">
+`;
+
+document.getElementById("cargoAsesor").innerHTML = `
+<div style="
+font-size:15px;
+font-weight:600;
+color:#00ff66;
+">
 Asesora Intermedia
 </div>
 `;

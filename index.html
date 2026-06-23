@@ -299,12 +299,10 @@ class="fotoAsesor">
 
 <div id="nombreCompletoAsesor"
 class="nombreCompleto">
-Asesor
 </div>
 
 <div class="asesorTexto">
-Asesor:
-<span id="nombreAsesor">-</span>
+<span id="nombreAsesor">Gerencia</span>
 </div>
 
 </div>
@@ -3127,15 +3125,12 @@ return;
 }
 // ADMIN
 if(usuario === "admin"){
-
 foto.src = "ebenites.jpeg";
-
 foto.onerror = function(){
    this.src = "logo.png";
 };
-
-nombreCompleto.innerText = "Área de Cobranzas";
-nombreAsesor.innerText = "admin";
+nombreCompleto.innerText = "";
+nombreAsesor.innerText = "Gerencia";
 
 }
 // EDGAR

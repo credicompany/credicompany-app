@@ -1171,7 +1171,9 @@ let rankingHTML = "";
 Object.entries(rankingAsesores)
 
 .filter(([asesor]) =>
-asesor !== "SLOPEZ"
+!["slopez","admin"].includes(
+asesor.toLowerCase()
+)
 )
 
 .sort((a,b)=>b[1]-a[1])

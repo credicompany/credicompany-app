@@ -411,18 +411,17 @@ font-size:14px;
 
 <div style="
 overflow-x:auto;
-">
-<div style="
-overflow-x:auto;
+overflow-y:hidden;
 width:100%;
 -webkit-overflow-scrolling:touch;
+padding-bottom:8px;
 ">
 
 <table style="
 width:100%;
-min-width:750px;
+min-width:1100px;
 border-collapse:collapse;
-font-size:12px;
+font-size:14px;
 text-align:center;
 ">
 

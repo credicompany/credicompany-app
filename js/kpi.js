@@ -1171,6 +1171,10 @@ let rankingHTML = "";
 Object.entries(rankingAsesores)
 
 .filter(([asesor]) =>
+!asesor.toLowerCase().includes("slopez")
+)
+
+.filter(([asesor]) =>
 !["slopez","admin"].includes(
 asesor.toLowerCase()
 )

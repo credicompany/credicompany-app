@@ -298,7 +298,8 @@ src=""
 class="fotoAsesor">
 
 <div id="nombreCompletoAsesor"
-class="nombreCompleto">
+class="nombreCompleto"
+style="display:none;">
 </div>
 
 <div class="asesorTexto">
@@ -3160,8 +3161,19 @@ nombreAsesor.innerText = "emedina";
 else if(usuario === "tleon"){
 
 foto.src = "tleon.png";
-nombreCompleto.innerText = "Alessandra Leon";
-nombreAsesor.innerText = "tleon";
+
+// Oculta el nombre grande inferior
+nombreCompleto.innerText = "";
+
+// Muestra nombre y cargo debajo de la foto
+nombreAsesor.innerHTML = `
+<div style="font-size:22px;font-weight:bold;color:white;">
+Alessandra Leon
+</div>
+<div style="font-size:14px;color:#00ff66;">
+Asesora Intermedia
+</div>
+`;
 
 }
 // DIEGO

@@ -3138,6 +3138,11 @@ nombreAsesor.innerText = "admin";
 else if(usuario === "ebenites"){
 
 foto.src = "ebenites.jpeg";
+
+foto.onerror = function(){
+    this.src = "logo.png";
+};
+
 nombreCompleto.innerText = "Edgar Benites";
 nombreAsesor.innerText = "ebenites";
 

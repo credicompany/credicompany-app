@@ -349,8 +349,14 @@ console.log("ASESOR KPI:", asesor);
     });
 let top =
 Object.entries(ranking)
-.sort((a,b)=>b[1]-a[1]);
 
+.filter(([asesor]) =>
+!["SLOPEZ","ADMIN"].includes(
+asesor.toUpperCase()
+)
+)
+
+.sort((a,b)=>b[1]-a[1]);
 let mejorAsesor =
 top.length > 0
 ?
@@ -603,7 +609,17 @@ ${colorEstado}
 `;
 let rankingKPIHTML = "";
 
-top.slice(0,10).forEach((r,index)=>{
+top
+
+.filter(([asesor]) =>
+!["SLOPEZ","ADMIN"].includes(
+asesor.toUpperCase()
+)
+)
+
+.slice(0,10)
+
+.forEach((r,index)=>{
 
 let medalla="🥉";
 

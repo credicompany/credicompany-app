@@ -35,27 +35,28 @@ align-items:center;
 margin-top:10px;
 }
 .fotoAsesor{
-width:220px;
-height:220px;
+width:260px;
+height:260px;
 border-radius:50%;
 object-fit:cover;
-border:4px solid white;
+object-position:center;
+border:5px solid white;
 box-shadow:0 8px 25px rgba(0,0,0,.25);
-display:block;
 background:white;
+display:block;
 }
 .nombreCompleto{
-margin-top:15px;
-font-size:32px;
+margin-top:20px;
+font-size:42px;
 font-weight:700;
 color:white;
 text-align:center;
-text-shadow:none;
+line-height:1.1;
 }
 
 .asesorTexto{
-margin-top:5px;
-font-size:18px;
+margin-top:8px;
+font-size:22px;
 font-weight:600;
 color:#00ff66;
 text-align:center;
@@ -3097,31 +3098,13 @@ nombreAsesor.innerText = "emedina";
 // ALESSANDRA
 else if(usuario === "tleon"){
 
-foto.src = "tleon.png";
+foto.src = "tleon_foto.png";
 
-nombreCompleto.innerHTML = `
-<div style="
-font-size:32px;
-font-weight:700;
-color:white;
-text-align:center;
-margin-top:15px;
-">
-Alessandra Leon
-</div>
-`;
+nombreCompleto.innerText =
+"Alessandra Leon";
 
-nombreAsesor.innerHTML = `
-<div style="
-font-size:18px;
-font-weight:600;
-color:#00ff66;
-text-align:center;
-margin-top:5px;
-">
-ASESORA INTERMEDIA
-</div>
-`;
+nombreAsesor.innerText =
+"ASESORA INTERMEDIO";
 
 }
 // DIEGO

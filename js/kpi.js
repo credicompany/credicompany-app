@@ -412,9 +412,15 @@ font-size:14px;
 <div style="
 overflow-x:auto;
 ">
+<div style="
+overflow-x:auto;
+width:100%;
+-webkit-overflow-scrolling:touch;
+">
 
 <table style="
 width:100%;
+min-width:750px;
 border-collapse:collapse;
 font-size:12px;
 text-align:center;

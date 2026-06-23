@@ -3128,12 +3128,16 @@ return;
 // ADMIN
 if(usuario === "admin"){
 
-foto.src = "admin.png";
+foto.src = "ebenites.jpeg";
+
+foto.onerror = function(){
+   this.src = "logo.png";
+};
+
 nombreCompleto.innerText = "Área de Cobranzas";
 nombreAsesor.innerText = "admin";
 
 }
-
 // EDGAR
 else if(usuario === "ebenites"){
 

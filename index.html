@@ -55,11 +55,13 @@ line-height:1.1;
 }
 
 .asesorTexto{
-margin-top:8px;
-font-size:22px;
-font-weight:600;
+margin-top:10px;
+font-size:20px;
+font-weight:700;
 color:#00ff66;
 text-align:center;
+letter-spacing:1px;
+text-transform:uppercase;
 }
 .card{background:#FFFFFF;color:#1F2937;margin:15px;padding:20px;border-radius:18px;box-shadow:0 4px 12px rgba(0,0,0,.08);
 border:none;}
@@ -3073,7 +3075,7 @@ if(usuario === "admin"){
 
 foto.src = "admin.png";
 nombreCompleto.innerText = "Área de Cobranzas";
-nombreAsesor.innerText = "admin";
+nombreAsesor.innerText = "GERENCIA";
 
 }
 
@@ -3090,8 +3092,9 @@ nombreAsesor.innerText = "ebenites";
 else if(usuario === "emedina"){
 
 foto.src = "emedina.png";
+
 nombreCompleto.innerText = "Erick Medina";
-nombreAsesor.innerText = "emedina";
+nombreAsesor.innerText = "ASESOR INTERMEDIO";
 
 }
 
@@ -3112,7 +3115,7 @@ else if(usuario === "daraindia"){
 
 foto.src = "daraindia.png";
 nombreCompleto.innerText = "Diego Araindia";
-nombreAsesor.innerText = "daraindia";
+nombreAsesor.innerText = "ASESOR CREDITOS";
 
 }
 
@@ -3121,7 +3124,7 @@ else if(usuario === "slopez"){
 
 foto.src = "slopez.png";
 nombreCompleto.innerText = "Segundo Lopez";
-nombreAsesor.innerText = "slopez";
+nombreAsesor.innerText = "GESTOR DE COBRANZAS";
 
 }
 // OTROS
@@ -3129,7 +3132,7 @@ else{
 
 foto.src = "logo.png";
 nombreCompleto.innerText = usuario;
-nombreAsesor.innerText = usuario;
+nombreAsesor.innerText = "ASESOR CREDITOS";
 
 }
 

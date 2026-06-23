@@ -887,6 +887,12 @@ let filtroMin = 0;
 let filtroMax = 1000;
 window.onload = function(){
 
+document.querySelector(".resumen").style.display = "none";
+dashboard.style.display = "none";
+app.style.display = "none";
+document.getElementById("rankingContainer").style.display = "none";
+
+    let hoy = new Date().toLocaleDateString('en-CA');
     let hoy = new Date().toLocaleDateString('en-CA');
     let ultimo = localStorage.getItem("fechaSistema");
 
@@ -1002,7 +1008,9 @@ cargarPerfilAsesor(asesor);
 
 loginDiv.style.display="none";
 dashboard.style.display="block";
-
+document.getElementById("rankingContainer").style.display="flex";
+document.querySelector(".resumen").style.display="grid";
+app.style.display="none";
 document.getElementById("boxAdmin").style.display="flex";
 document.getElementById("panelExcel").style.display="block";
 document.getElementById("panelAsesores").style.display="grid";
@@ -1046,7 +1054,11 @@ document.getElementById(
 
     loginDiv.style.display="none";
     dashboard.style.display="block";
+document.getElementById("rankingContainer").style.display="flex";
 
+document.querySelector(".resumen").style.display="grid";
+
+app.style.display="none";
     document.getElementById("boxAdmin").style.display="none";
 
     if(asesor === "slopez"){
@@ -2313,7 +2325,7 @@ alert("Acceso restringido");
 return;
 }
 dashboard.style.display="none";
-
+document.getElementById("rankingContainer").style.display = "none";
 document.querySelector(".resumen").style.display = "none";
 
 app.style.display="block";
@@ -2384,7 +2396,7 @@ if(el) el.style.display="none";
 document.querySelector(".resumen").style.display = "grid";
 
 document.getElementById("historialDiv").style.display="none";
-
+document.getElementById("rankingContainer").style.display="flex";
 dashboard.style.display="block";
   if(asesor === "slopez"){
     document.getElementById("panelAsesores").style.display="grid";

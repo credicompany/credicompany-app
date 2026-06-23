@@ -1038,7 +1038,9 @@ document.getElementById(
 ).style.display="none";
 
 }
-    nombreAsesor.innerText = asesor;
+    if(document.getElementById("nombreAsesor")){
+    document.getElementById("nombreAsesor").innerText = asesor;
+}
 
     cargarPerfilAsesor(asesor);
 

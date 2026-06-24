@@ -1077,13 +1077,30 @@ if(!confirm("¿Eliminar usuario?")) return;
 
 usuarios.splice(index,1);
 
-localStorage.setItem("usuarios", JSON.stringify(usuarios));
+localStorage.setItem(
+    "usuarios",
+    JSON.stringify(usuarios)
+);
+
+db.ref("usuarios")
+.set(usuarios)
+.then(()=>{
+
+    console.log(
+    "✅ Usuario eliminado Firebase"
+    );
+
+})
+.catch(err=>{
+
+    console.error(err);
+
+});
 
 renderUsuarios();
 
 alert("✅ Usuario eliminado");
-
-}
+  }
 function obtenerTarifario(producto,monto,tipo){
 
 let config = null;

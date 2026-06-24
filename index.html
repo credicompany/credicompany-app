@@ -529,7 +529,22 @@ onclick="cargarExcel()">
 
 <button style="background:#e74c3c;color:white" onclick="filtrarMora(31,60)">31-60 días</button>
 
-<button style="background:black;color:white" onclick="filtrarMora(61,1000)">61+ días</button>
+<button style="background:black;color:white" onclick="filtrarMora(61,2000)">61+ días</button>
+<div id="moraVencidaBox"
+style="
+background:#8B0000;
+color:white;
+padding:10px;
+border-radius:12px;
+font-weight:bold;
+text-align:center;
+min-width:180px;
+">
+💰 Mora +30 días<br>
+<span id="moraVencidaTotal">
+S/0
+</span>
+</div>
 </div>
 
 <div id="panelAsesores"
@@ -1723,6 +1738,7 @@ function actualizarResumen(){
   let hoy = 0;
   let vencenHoy = 0;
   let criticos = 0;
+  let moraVencida30 = 0;
   let moraRecuperada = 0;
   let miMora = 0;
   let misMorosos = 0;
@@ -1815,7 +1831,14 @@ if(retraso >= 1){
     }
 
 }
-    if(retraso > 30) criticos++;
+if(retraso > 30){
+
+    criticos++;
+
+    moraVencida30 +=
+    parseFloat(c.saldoCapital) || 0;
+
+}
     let saldo = parseFloat(c.saldo || c.monto) || 0;
      
     // 🔥 CLIENTES AL DÍA
@@ -1847,6 +1870,16 @@ document.getElementById("miMora").innerText =
 
 document.getElementById("misMorosos").innerText =
 misMorosos;
+let divMora =
+document.getElementById("moraVencidaTotal");
+
+if(divMora){
+
+    divMora.innerText =
+    "S/ " +
+    moraVencida30.toLocaleString();
+
+}
   Object.keys(control).forEach(a=>{
 
 let t = control[a].total;

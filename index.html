@@ -576,8 +576,8 @@ onclick="filtrarPorAsesor('bhuerta')">
 <button
 class="btn-verde"
 style="width:100%;"
-onclick="filtrarPorAsesor('daraindia')">
-👤 Daraindia
+onclick="filtrarPorAsesor('dgarcia')">
+👤 Dgarcia
 </button>
 
 <button
@@ -1622,7 +1622,7 @@ if(key.includes("asesor")){
     if(nombre.includes("medina")) nombre = "emedina";
     if(nombre.includes("leon")) nombre = "tleon";
     if(nombre.includes("huerta")) nombre = "bhuerta";
-    if(nombre.includes("araindia")) nombre = "daraindia";
+    if(nombre.includes("garcia")) nombre = "dgarcia";
     if(nombre.includes("lopez")) nombre = "slopez";
     obj.asesor = nombre;
 }
@@ -2492,7 +2492,7 @@ _Crecemos juntos_
 
 }
 // DIEGO
-else if(asesor === "daraindia"){
+else if(asesor === "dgarcia"){
 
 firma = `
 *Atte.*
@@ -3111,11 +3111,13 @@ nombreAsesor.innerText =
 
 }
 // DIEGO
-else if(usuario === "daraindia"){
+else if(usuario === "dgarcia"){
 nombreCompleto.style.display = "block";
 foto.src = "daraindia.png";
-nombreCompleto.innerText = "Diego Araindia";
-nombreAsesor.innerText = "ASESOR CREDITOS";
+nombreCompleto.innerText =
+"Diego Garcia";
+nombreAsesor.innerText =
+"ASESOR CREDITOS";
 
 }
 

@@ -443,8 +443,9 @@ color:white;
 <th>META OPERACIONES</th>
 <th>AVANCE</th>
 <th>% AVANCE OPER</th>
+<th>TEM MAYO</th>
 <th>TEM</th>
-<th>CLIENTES</th>
+<th>MORA MAYO</th>
 <th>🚦</th>
 
 </tr>
@@ -471,7 +472,27 @@ color:white;
 
         let cli =
         clientes[asesor].size;
+let temMayo =
+meta
+?
+parseFloat(
+String(
+meta["TEM MAYO"] || 0
+).replace(/,/g,"")
+)
+:
+0;
 
+let moraMayo =
+meta
+?
+parseFloat(
+String(
+meta["MORA MAYO"] || 0
+).replace(/,/g,"")
+)
+:
+0;
         let meta =
         metas.find(m =>
 
@@ -587,11 +608,15 @@ ${porcentajeOperaciones}%
 </td>
 
 <td>
+${Number(temMayo).toFixed(1)}%
+</td>
+
+<td>
 ${tem}%
 </td>
 
 <td>
-${cli}
+S/${Number(moraMayo).toLocaleString()}
 </td>
 
 <td>

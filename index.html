@@ -1708,7 +1708,28 @@ if(
 
 return obj;
 }); // 🔥 GUARDADO REAL
-db.ref("cartera").set(json);
+db.ref("cartera")
+.set(json)
+.then(()=>{
+
+    console.log("✅ Cartera enviada a Firebase");
+
+    alert("✅ Cartera enviada a Firebase");
+
+})
+.catch(err=>{
+
+    console.error(
+        "❌ Error Firebase:",
+        err
+    );
+
+    alert(
+        "❌ Error Firebase: " +
+        err.message
+    );
+
+});
 localStorage.setItem("cartera", JSON.stringify(json));
 localStorage.setItem("cartera_backup", JSON.stringify(json));
 // 🔥 RESET DIARIO (LÍNEA 357)

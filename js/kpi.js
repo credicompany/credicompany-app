@@ -445,6 +445,7 @@ color:white;
 <th>% AVANCE OPER</th>
 <th>TEM MAYO</th>
 <th>TEM</th>
+<th>MORA ACTUAL</th>
 <th>MORA MAYO</th>
 <th>🚦</th>
 
@@ -514,6 +515,37 @@ meta["MORA MAYO"] || 0
 )
 :
 0;
+
+        // MORA ACTUAL DESDE COBRANZAS
+let cartera = JSON.parse(localStorage.getItem("cartera")) || [];
+
+let moraActual = 0;
+
+cartera.forEach(c=>{
+
+    let asesorCartera =
+    (c.asesor || "")
+    .trim()
+    .toUpperCase();
+
+    // convertir nombres iguales al KPI
+    if(asesorCartera==="EBENITES") asesorCartera="EBENITES";
+    if(asesorCartera==="EMEDINA") asesorCartera="EMEDINA";
+    if(asesorCartera==="TLEON") asesorCartera="TLEON";
+    if(asesorCartera==="BHUERTA") asesorCartera="BHUERTA";
+    if(asesorCartera==="DGARCIA") asesorCartera="DGARCIA";
+
+    if(
+        asesorCartera===asesor &&
+        (parseFloat(c.retraso)||0)>0
+    ){
+
+        moraActual +=
+        parseFloat(c.saldoCapital)||0;
+
+    }
+
+});
         let metaDesembolso =
         meta
         ?
@@ -613,6 +645,13 @@ ${Number(temMayo).toFixed(1)}%
 
 <td>
 ${tem}%
+</td>
+
+<td style="
+font-weight:bold;
+color:#c62828;
+">
+S/${Math.round(moraActual).toLocaleString()}
 </td>
 
 <td>

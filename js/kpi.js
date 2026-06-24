@@ -472,6 +472,27 @@ color:white;
 
         let cli =
         clientes[asesor].size;
+
+        let meta =
+        metas.find(m =>
+
+            String(
+                m["Asesor (A)"] ||
+                m["ASESOR"] ||
+                ""
+            )
+            .trim()
+            .toUpperCase()
+            .replace(/\s+/g,"")
+
+            ===
+
+            asesor
+            .trim()
+            .toUpperCase()
+            .replace(/\s+/g,"")
+
+        );
 let temMayo =
 meta
 ?
@@ -493,27 +514,6 @@ meta["MORA MAYO"] || 0
 )
 :
 0;
-        let meta =
-        metas.find(m =>
-
-            String(
-                m["Asesor (A)"] ||
-                m["ASESOR"] ||
-                ""
-            )
-            .trim()
-            .toUpperCase()
-            .replace(/\s+/g,"")
-
-            ===
-
-            asesor
-            .trim()
-            .toUpperCase()
-            .replace(/\s+/g,"")
-
-        );
-
         let metaDesembolso =
         meta
         ?

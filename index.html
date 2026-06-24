@@ -354,11 +354,6 @@ onclick="mostrar('admin')">
     <div style="font-size:28px;">📝</div>
     <div>Gestiones</div>
 </div>
-
-<div class="box" onclick="verHistorialPagos()">
-    <div style="font-size:28px;">📋</div>
-    <div>Bono diario</div>
-</div>
   <div class="box" onclick="mostrar('kpi')">
     <div style="font-size:28px;">📊</div>
     <div>KPI Gerencial</div>
@@ -891,6 +886,22 @@ window.onload = function(){
     }
 
   actualizarResumen();
+  db.ref("usuarios").on("value",(snapshot)=>{
+
+    let usuariosFirebase = snapshot.val();
+
+    if(!usuariosFirebase) return;
+
+    localStorage.setItem(
+        "usuarios",
+        JSON.stringify(usuariosFirebase)
+    );
+
+    console.log(
+        "✅ Usuarios sincronizados desde Firebase"
+    );
+
+});
   // 🔥 SINCRONIZAR KPI FIREBASE
 db.ref("kpiGerencial").on("value",(snapshot)=>{
 
@@ -2279,7 +2290,23 @@ nombre:nuevoNombre.value.trim(),
 foto:nuevoFoto.value.trim()
 });
 localStorage.setItem("usuarios",JSON.stringify(usuarios));
+db.ref("usuarios")
+.set(usuarios)
+.then(()=>{
 
+   console.log(
+   "✅ Usuarios sincronizados"
+   );
+
+})
+.catch(err=>{
+
+   console.error(
+   "❌ Error usuarios:",
+   err
+   );
+
+});
 nuevoUser.value="";
 nuevoPass.value="";
 nuevoNombre.value="";

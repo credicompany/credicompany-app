@@ -2386,9 +2386,11 @@ app.style.display="block";
 "admin",
 "kpi",
 "kpiFinanciero",
+"resultadoMensual",
 "historialDiv",
 "historialGestionesDiv",
 "historialClienteDiv"
+]
 ].forEach(id=>{
 let el = document.getElementById(id);
 if(el) el.style.display="none";
@@ -2423,8 +2425,13 @@ if(p==="clientes"){
 }
 if(p==="admin") renderUsuarios();
 }
+if(p==="resultadoMensual"){
 
-function volver(){
+    cargarResultadoMensual();
+
+    actualizarResultadoMensual();
+
+}function volver(){
 
 app.style.display="none";
 [
@@ -2434,9 +2441,11 @@ app.style.display="none";
 "admin",
 "kpi",
 "kpiFinanciero",
+"resultadoMensual",
 "historialDiv",
 "historialGestionesDiv",
 "historialClienteDiv"
+]
 ].forEach(id=>{
 let el=document.getElementById(id);
 if(el) el.style.display="none";

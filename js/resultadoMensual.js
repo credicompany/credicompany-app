@@ -88,8 +88,33 @@ box-shadow:0 2px 8px rgba(0,0,0,.08);
 ">
 
 <h3>Detalle de Ingresos</h3>
+<input
+type="file"
+id="excelGastos"
+accept=".xlsx,.xls">
 
-<table style="width:100%;">
+<button
+class="btn-verde"
+onclick="cargarExcelGastos()">
+
+📂 Cargar Gastos
+
+</button>
+
+<br><br>
+
+<div id="archivoGastosActivo"
+style="
+background:#e8f5e9;
+padding:10px;
+border-radius:10px;
+font-weight:bold;
+margin-bottom:15px;
+">
+
+Sin archivos cargados
+
+</div><table style="width:100%;">
 
 <tr>
 
@@ -132,4 +157,163 @@ S/0
 </div>
 
 `;
+}
+// ===============================
+// CARGAR EXCEL DE GASTOS
+// ===============================
+// ===============================
+// CARGAR EXCEL DE GASTOS
+// ===============================
+
+function cargarExcelGastos(){
+
+let archivo =
+document.getElementById("excelGastos").files[0];
+
+if(!archivo){
+
+alert("Seleccione el Excel de gastos");
+
+return;
+
+}
+
+let lector = new FileReader();
+
+lector.onload = function(e){
+
+let data =
+new Uint8Array(e.target.result);
+
+let wb =
+XLSX.read(data,{type:"array"});
+
+let hoja =
+wb.Sheets[wb.SheetNames[0]];
+
+let json =
+XLSX.utils.sheet_to_json(hoja);
+
+localStorage.setItem(
+"gastosMensuales",
+JSON.stringify(json)
+);
+
+localStorage.setItem(
+"nombreGastosMensuales",
+archivo.name
+);
+
+localStorage.setItem(
+"fechaGastosMensuales",
+new Date().toLocaleString()
+);
+
+document.getElementById(
+"archivoGastosActivo"
+).innerHTML =
+"📂 " + archivo.name;
+
+alert("✅ Gastos cargados correctamente");
+
+actualizarResultadoMensual();
+
+};
+
+lector.readAsArrayBuffer(archivo);
+
+}
+
+
+// ===============================
+// ACTUALIZAR RESULTADO MENSUAL
+// ===============================
+
+function actualizarResultadoMensual(){
+
+let ingresos = 0;
+let egresos = 0;
+
+let interesDevengado = 0;
+let moraReal = 0;
+let costoDesembolso = 0;
+
+// ===== INGRESOS DESDE KPI FINANCIERO =====
+
+let financiero =
+JSON.parse(localStorage.getItem("financiero")) || [];
+
+financiero.forEach(f=>{
+
+interesDevengado +=
+parseFloat(f["Interes Devengado"]) || 0;
+
+costoDesembolso +=
+parseFloat(f["Costo por Desembolso"]) || 0;
+
+});
+
+// ===== MORA REAL =====
+// En el siguiente paso la leeremos automáticamente.
+
+moraReal = 0;
+
+
+// ===== EGRESOS =====
+
+let gastos =
+JSON.parse(localStorage.getItem("gastosMensuales")) || [];
+
+gastos.forEach(g=>{
+
+Object.keys(g).forEach(col=>{
+
+let valor =
+parseFloat(g[col]);
+
+if(!isNaN(valor)){
+
+egresos += valor;
+
+}
+
+});
+
+});
+
+
+// ===== TOTALES =====
+
+ingresos =
+interesDevengado +
+moraReal +
+costoDesembolso;
+
+let utilidad =
+ingresos - egresos;
+
+
+// ===== MOSTRAR =====
+
+document.getElementById("rmInteres").innerHTML =
+"S/ " + interesDevengado.toLocaleString();
+
+document.getElementById("rmMora").innerHTML =
+"S/ " + moraReal.toLocaleString();
+
+document.getElementById("rmCosto").innerHTML =
+"S/ " + costoDesembolso.toLocaleString();
+
+document.getElementById("rmIngresos").innerHTML =
+"S/ " + ingresos.toLocaleString();
+
+document.getElementById("rmEgresos").innerHTML =
+"S/ " + egresos.toLocaleString();
+
+document.getElementById("rmOperativa").innerHTML =
+"S/ " + utilidad.toLocaleString();
+
+document.getElementById("rmNeta").innerHTML =
+"S/ " + utilidad.toLocaleString();
+
 }

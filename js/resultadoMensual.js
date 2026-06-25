@@ -173,7 +173,6 @@ document.getElementById("excelGastos").files[0];
 if(!archivo){
 
 alert("Seleccione el Excel de gastos");
-
 return;
 
 }
@@ -214,9 +213,9 @@ document.getElementById(
 ).innerHTML =
 "📂 " + archivo.name;
 
-alert("✅ Gastos cargados correctamente");
-
 actualizarResultadoMensual();
+
+alert("✅ Gastos cargados correctamente");
 
 };
 

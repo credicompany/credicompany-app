@@ -236,28 +236,27 @@ let egresos = 0;
 let interesDevengado = 0;
 let moraReal = 0;
 let costoDesembolso = 0;
-
-// ===== INGRESOS DESDE KPI FINANCIERO =====
+// ===============================
+// LEER KPI FINANCIERO
+// ===============================
 
 let financiero =
-JSON.parse(localStorage.getItem("financiero")) || [];
+JSON.parse(
+localStorage.getItem("financiero")
+) || [];
 
 financiero.forEach(f=>{
 
 interesDevengado +=
 parseFloat(f["Interes Devengado"]) || 0;
 
+moraReal +=
+parseFloat(f["Mora Real"]) || 0;
+
 costoDesembolso +=
 parseFloat(f["Costo por Desembolso"]) || 0;
 
 });
-
-// ===== MORA REAL =====
-// En el siguiente paso la leeremos automáticamente.
-
-moraReal = 0;
-
-
 // ===== EGRESOS =====
 
 let gastos =

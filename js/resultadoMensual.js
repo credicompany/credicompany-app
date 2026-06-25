@@ -559,3 +559,592 @@ otrosIngresos;
 return totalIngresos;
 
 }
+// =====================================================
+// PARTE 3/6
+// CARGA DE GASTOS
+// =====================================================
+
+
+// ======================================
+// CARGAR EXCEL DE GASTOS
+// ======================================
+
+function cargarExcelGastos(){
+
+let archivo =
+document.getElementById("excelGastos").files[0];
+
+if(!archivo){
+
+alert("Seleccione el archivo de gastos");
+
+return;
+
+}
+
+let lector =
+new FileReader();
+
+lector.onload = function(e){
+
+let data =
+new Uint8Array(e.target.result);
+
+let wb =
+XLSX.read(data,{type:"array"});
+
+let hoja =
+wb.Sheets[
+wb.SheetNames[0]
+];
+
+let json =
+XLSX.utils.sheet_to_json(hoja);
+
+gastosMensuales = json;
+
+localStorage.setItem(
+"gastosMensuales",
+JSON.stringify(json)
+);
+
+localStorage.setItem(
+"nombreGastos",
+archivo.name
+);
+
+localStorage.setItem(
+"fechaGastos",
+new Date().toLocaleString()
+);
+
+document.getElementById(
+"archivoGastosActivo"
+).innerHTML =
+
+"📂 " + archivo.name;
+
+
+// =============================
+// CALCULAR GASTOS
+// =============================
+
+calcularGastos();
+
+actualizarResultadoMensual();
+
+guardarResultadoMensualFirebase();
+
+alert(
+"✅ Archivo de gastos cargado correctamente."
+);
+
+};
+
+lector.readAsArrayBuffer(
+archivo);
+
+}
+
+
+
+// ======================================
+// RECUPERAR GASTOS
+// ======================================
+
+function recuperarGastos(){
+
+let data =
+JSON.parse(
+localStorage.getItem(
+"gastosMensuales"
+)
+) || [];
+
+if(data.length==0) return;
+
+gastosMensuales = data;
+
+let nombre =
+localStorage.getItem(
+"nombreGastos"
+);
+
+if(
+document.getElementById(
+"archivoGastosActivo"
+)
+){
+
+document.getElementById(
+"archivoGastosActivo"
+).innerHTML =
+
+"📂 " +
+(nombre || "Sin archivo");
+
+}
+
+calcularGastos();
+
+}
+
+
+
+// ======================================
+// CALCULAR TOTAL DE EGRESOS
+// ======================================
+
+function calcularGastos(){
+
+totalEgresos = 0;
+
+gastosMensuales.forEach(f=>{
+
+Object.keys(f).forEach(col=>{
+
+let valor =
+parseFloat(f[col]);
+
+if(!isNaN(valor)){
+
+totalEgresos += valor;
+
+}
+
+});
+
+});
+
+return totalEgresos;
+
+}
+
+
+
+// ======================================
+// DETALLE DE EGRESOS
+// ======================================
+
+function obtenerDetalleGastos(){
+
+let detalle = [];
+
+gastosMensuales.forEach(f=>{
+
+Object.keys(f).forEach(col=>{
+
+let valor =
+parseFloat(f[col]);
+
+if(!isNaN(valor) && valor>0){
+
+detalle.push({
+
+concepto:col,
+
+monto:valor
+
+});
+
+}
+
+});
+
+});
+
+return detalle;
+
+}
+
+
+
+// ======================================
+// TOTAL GENERAL
+// ======================================
+
+function calcularResultado(){
+
+calcularIngresos();
+
+calcularGastos();
+
+utilidadOperativa =
+
+totalIngresos -
+
+totalEgresos;
+
+utilidadNeta =
+utilidadOperativa;
+
+if(totalIngresos>0){
+
+margenOperativo =
+
+(
+(utilidadOperativa /
+totalIngresos)
+*100
+).toFixed(2);
+
+margenNeto =
+
+(
+(utilidadNeta /
+totalIngresos)
+*100
+).toFixed(2);
+
+}else{
+
+margenOperativo = 0;
+
+margenNeto = 0;
+
+}
+
+}
+
+
+
+// ======================================
+// RECUPERAR TODO
+// ======================================
+
+function recuperarResultadoMensual(){
+
+recuperarIngresos();
+
+recuperarGastos();
+
+actualizarResultadoMensual();
+
+}
+// =====================================================
+// PARTE 5/6
+// FIREBASE RESULTADO MENSUAL
+// =====================================================
+
+
+// ======================================
+// GUARDAR EN FIREBASE
+// ======================================
+
+function guardarResultadoMensualFirebase(){
+
+if(typeof db==="undefined") return;
+
+let datos={
+
+ingresos:totalIngresos,
+
+egresos:totalEgresos,
+
+utilidadOperativa:utilidadOperativa,
+
+utilidadNeta:utilidadNeta,
+
+interesDevengado:interesDevengado,
+
+moraReal:moraReal,
+
+costoDesembolso:costoDesembolso,
+
+otrosIngresos:otrosIngresos,
+
+margenOperativo:margenOperativo,
+
+margenNeto:margenNeto,
+
+nombreIngresos:
+localStorage.getItem("nombreIngresos")||"",
+
+nombreGastos:
+localStorage.getItem("nombreGastos")||"",
+
+fechaIngresos:
+localStorage.getItem("fechaIngresos")||"",
+
+fechaGastos:
+localStorage.getItem("fechaGastos")||"",
+
+fechaActualizacion:
+new Date().toLocaleString()
+
+};
+
+db.ref("resultadoMensual")
+.set(datos)
+
+.then(()=>{
+
+console.log(
+"✅ Resultado Mensual sincronizado"
+);
+
+})
+
+.catch(error=>{
+
+console.error(
+"Firebase:",
+error
+);
+
+});
+
+}
+
+
+
+// ======================================
+// CARGAR DESDE FIREBASE
+// ======================================
+
+function cargarResultadoMensualFirebase(){
+
+if(typeof db==="undefined") return;
+
+db.ref("resultadoMensual")
+
+.once("value")
+
+.then(snapshot=>{
+
+let datos=snapshot.val();
+
+if(!datos) return;
+
+
+// ==============================
+// RESTAURAR VARIABLES
+// ==============================
+
+totalIngresos=
+Number(datos.ingresos)||0;
+
+totalEgresos=
+Number(datos.egresos)||0;
+
+utilidadOperativa=
+Number(datos.utilidadOperativa)||0;
+
+utilidadNeta=
+Number(datos.utilidadNeta)||0;
+
+interesDevengado=
+Number(datos.interesDevengado)||0;
+
+moraReal=
+Number(datos.moraReal)||0;
+
+costoDesembolso=
+Number(datos.costoDesembolso)||0;
+
+otrosIngresos=
+Number(datos.otrosIngresos)||0;
+
+margenOperativo=
+Number(datos.margenOperativo)||0;
+
+margenNeto=
+Number(datos.margenNeto)||0;
+
+
+// ==============================
+// ARCHIVOS
+// ==============================
+
+if(document.getElementById(
+"archivoIngresosActivo"
+)){
+
+document.getElementById(
+"archivoIngresosActivo"
+).innerHTML=
+
+"📂 "+(
+datos.nombreIngresos||
+
+"Sin archivo"
+
+);
+
+}
+
+
+if(document.getElementById(
+"archivoGastosActivo"
+)){
+
+document.getElementById(
+"archivoGastosActivo"
+).innerHTML=
+
+"📂 "+(
+datos.nombreGastos||
+
+"Sin archivo"
+
+);
+
+}
+
+
+// ==============================
+// ACTUALIZAR PANTALLA
+// ==============================
+
+if(document.getElementById("rmIngresos")){
+
+document.getElementById(
+"rmIngresos"
+).innerHTML=
+
+"S/ "+
+
+totalIngresos.toLocaleString();
+
+}
+
+
+if(document.getElementById("rmEgresos")){
+
+document.getElementById(
+"rmEgresos"
+).innerHTML=
+
+"S/ "+
+
+totalEgresos.toLocaleString();
+
+}
+
+
+if(document.getElementById("rmOperativa")){
+
+document.getElementById(
+"rmOperativa"
+).innerHTML=
+
+"S/ "+
+
+utilidadOperativa.toLocaleString();
+
+}
+
+
+if(document.getElementById("rmNeta")){
+
+document.getElementById(
+"rmNeta"
+).innerHTML=
+
+"S/ "+
+
+utilidadNeta.toLocaleString();
+
+}
+
+
+if(document.getElementById("rmInteres")){
+
+document.getElementById(
+"rmInteres"
+).innerHTML=
+
+"S/ "+
+
+interesDevengado.toLocaleString();
+
+}
+
+
+if(document.getElementById("rmMora")){
+
+document.getElementById(
+"rmMora"
+).innerHTML=
+
+"S/ "+
+
+moraReal.toLocaleString();
+
+}
+
+
+if(document.getElementById("rmCosto")){
+
+document.getElementById(
+"rmCosto"
+).innerHTML=
+
+"S/ "+
+
+costoDesembolso.toLocaleString();
+
+}
+
+
+if(document.getElementById("rmOtros")){
+
+document.getElementById(
+"rmOtros"
+).innerHTML=
+
+"S/ "+
+
+otrosIngresos.toLocaleString();
+
+}
+
+
+if(document.getElementById(
+"rmMargenOperativo"
+)){
+
+document.getElementById(
+"rmMargenOperativo"
+).innerHTML=
+
+margenOperativo+" %";
+
+}
+
+
+if(document.getElementById(
+"rmMargenNeto"
+)){
+
+document.getElementById(
+"rmMargenNeto"
+).innerHTML=
+
+margenNeto+" %";
+
+}
+
+console.log(
+"✅ Resultado Mensual cargado desde Firebase"
+);
+
+});
+
+}
+
+
+
+// ======================================
+// SINCRONIZAR AL INICIAR
+// ======================================
+
+window.addEventListener("load",()=>{
+
+setTimeout(()=>{
+
+cargarResultadoMensualFirebase();
+
+},1000);
+
+});

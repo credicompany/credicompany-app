@@ -1,10 +1,68 @@
-// ====================================
+// =====================================================
 // RESULTADO MENSUAL CREDICOMPANY
-// ====================================
+// Versión 2.0
+// =====================================================
+
+// ======================================
+// VARIABLES GLOBALES
+// ======================================
+
+let ingresosMensuales = [];
+let gastosMensuales = [];
+
+let totalIngresos = 0;
+let totalEgresos = 0;
+
+let interesDevengado = 0;
+let moraReal = 0;
+let costoDesembolso = 0;
+let otrosIngresos = 0;
+
+let utilidadOperativa = 0;
+let utilidadNeta = 0;
+
+let margenOperativo = 0;
+let margenNeto = 0;
+
+
+// ======================================
+// PANEL PRINCIPAL
+// ======================================
 
 function cargarResultadoMensual(){
 
-document.getElementById("resumenResultadoMensual").innerHTML = `
+let html = `
+
+<div style="
+background:white;
+padding:18px;
+border-radius:18px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+">
+
+<h2 style="
+margin:0;
+color:#123B63;
+text-align:center;
+">
+💼 RESULTADO MENSUAL
+</h2>
+
+<div style="
+text-align:center;
+color:#666;
+font-size:13px;
+margin-top:5px;
+">
+
+Estado de Resultados del Mes
+
+</div>
+
+</div>
+
+<br>
+
 
 <div style="
 display:grid;
@@ -20,13 +78,20 @@ border-radius:15px;
 text-align:center;
 ">
 
-<h3>💰 Ingresos</h3>
+<div style="font-size:30px;">
+💰
+</div>
+
+<div>
+Ingresos
+</div>
 
 <h2 id="rmIngresos">
 S/ 0
 </h2>
 
 </div>
+
 
 <div style="
 background:#dc2626;
@@ -36,13 +101,20 @@ border-radius:15px;
 text-align:center;
 ">
 
-<h3>💸 Egresos</h3>
+<div style="font-size:30px;">
+💸
+</div>
+
+<div>
+Egresos
+</div>
 
 <h2 id="rmEgresos">
 S/ 0
 </h2>
 
 </div>
+
 
 <div style="
 background:#2563eb;
@@ -52,13 +124,20 @@ border-radius:15px;
 text-align:center;
 ">
 
-<h3>📈 Utilidad Operativa</h3>
+<div style="font-size:30px;">
+📈
+</div>
+
+<div>
+Utilidad Operativa
+</div>
 
 <h2 id="rmOperativa">
 S/ 0
 </h2>
 
 </div>
+
 
 <div style="
 background:#7c3aed;
@@ -68,7 +147,13 @@ border-radius:15px;
 text-align:center;
 ">
 
-<h3>🏆 Utilidad Neta</h3>
+<div style="font-size:30px;">
+🏆
+</div>
+
+<div>
+Utilidad Neta
+</div>
 
 <h2 id="rmNeta">
 S/ 0
@@ -82,12 +167,68 @@ S/ 0
 
 <div style="
 background:white;
-padding:20px;
-border-radius:15px;
+padding:18px;
+border-radius:18px;
 box-shadow:0 2px 8px rgba(0,0,0,.08);
 ">
 
-<h3>Detalle de Ingresos</h3>
+<h3 style="
+margin-top:0;
+color:#123B63;
+">
+
+📂 Archivo de Ingresos
+
+</h3>
+
+<input
+type="file"
+id="excelIngresos"
+accept=".xlsx,.xls">
+
+<button
+class="btn-verde"
+onclick="cargarExcelIngresos()">
+
+💰 Cargar Archivo Ingresos
+
+</button>
+
+<br><br>
+
+<div
+id="archivoIngresosActivo"
+style="
+background:#E8F5E9;
+padding:10px;
+border-radius:10px;
+font-weight:bold;
+">
+
+Sin archivo cargado
+
+</div>
+
+</div>
+
+<br>
+
+<div style="
+background:white;
+padding:18px;
+border-radius:18px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+">
+
+<h3 style="
+margin-top:0;
+color:#123B63;
+">
+
+📂 Archivo de Gastos
+
+</h3>
+
 <input
 type="file"
 id="excelGastos"
@@ -97,24 +238,45 @@ accept=".xlsx,.xls">
 class="btn-verde"
 onclick="cargarExcelGastos()">
 
-📂 Cargar Gastos
+💸 Cargar Archivo Gastos
 
 </button>
 
 <br><br>
 
-<div id="archivoGastosActivo"
+<div
+id="archivoGastosActivo"
 style="
-background:#e8f5e9;
+background:#E8F5E9;
 padding:10px;
 border-radius:10px;
 font-weight:bold;
-margin-bottom:15px;
 ">
 
-Sin archivos cargados
+Sin archivo cargado
 
-</div><table style="width:100%;">
+</div>
+
+</div>
+
+<br>
+
+<div style="
+background:white;
+padding:18px;
+border-radius:18px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+">
+
+<h3 style="margin-top:0;">
+📊 Detalle de Ingresos
+</h3>
+
+<table
+style="
+width:100%;
+border-collapse:collapse;
+">
 
 <tr>
 
@@ -122,7 +284,7 @@ Sin archivos cargados
 
 <td align="right">
 <b id="rmInteres">
-S/0
+S/ 0
 </b>
 </td>
 
@@ -134,7 +296,7 @@ S/0
 
 <td align="right">
 <b id="rmMora">
-S/0
+S/ 0
 </b>
 </td>
 
@@ -146,7 +308,19 @@ S/0
 
 <td align="right">
 <b id="rmCosto">
-S/0
+S/ 0
+</b>
+</td>
+
+</tr>
+
+<tr>
+
+<td>Otros Ingresos</td>
+
+<td align="right">
+<b id="rmOtros">
+S/ 0
 </b>
 </td>
 
@@ -157,27 +331,39 @@ S/0
 </div>
 
 `;
-}
-// ===============================
-// CARGAR EXCEL DE GASTOS
-// ===============================
-// ===============================
-// CARGAR EXCEL DE GASTOS
-// ===============================
 
-function cargarExcelGastos(){
+document.getElementById(
+"resumenResultadoMensual"
+).innerHTML = html;
+
+actualizarResultadoMensual();
+
+}
+// =====================================================
+// PARTE 2/6
+// CARGA DE INGRESOS
+// =====================================================
+
+
+// ======================================
+// CARGAR EXCEL DE INGRESOS
+// ======================================
+
+function cargarExcelIngresos(){
 
 let archivo =
-document.getElementById("excelGastos").files[0];
+document.getElementById("excelIngresos").files[0];
 
 if(!archivo){
 
-alert("Seleccione el Excel de gastos");
+alert("Seleccione el archivo de ingresos");
+
 return;
 
 }
 
-let lector = new FileReader();
+let lector =
+new FileReader();
 
 lector.onload = function(e){
 
@@ -188,130 +374,188 @@ let wb =
 XLSX.read(data,{type:"array"});
 
 let hoja =
-wb.Sheets[wb.SheetNames[0]];
+wb.Sheets[
+wb.SheetNames[0]
+];
 
 let json =
 XLSX.utils.sheet_to_json(hoja);
 
+ingresosMensuales = json;
+
 localStorage.setItem(
-"gastosMensuales",
+"ingresosMensuales",
 JSON.stringify(json)
 );
 
 localStorage.setItem(
-"nombreGastosMensuales",
+"nombreIngresos",
 archivo.name
 );
 
 localStorage.setItem(
-"fechaGastosMensuales",
+"fechaIngresos",
 new Date().toLocaleString()
 );
 
 document.getElementById(
-"archivoGastosActivo"
+"archivoIngresosActivo"
 ).innerHTML =
+
 "📂 " + archivo.name;
+
+
+// =============================
+// CALCULAR INGRESOS
+// =============================
+
+interesDevengado = 0;
+moraReal = 0;
+costoDesembolso = 0;
+otrosIngresos = 0;
+
+json.forEach(f=>{
+
+interesDevengado +=
+parseFloat(
+f["Interes Devengado"] ||
+f["INTERES DEVENGADO"] ||
+0
+);
+
+moraReal +=
+parseFloat(
+f["Mora Real"] ||
+f["MORA REAL"] ||
+0
+);
+
+costoDesembolso +=
+parseFloat(
+f["Costo por Desembolso"] ||
+f["COSTO POR DESEMBOLSO"] ||
+0
+);
+
+otrosIngresos +=
+parseFloat(
+f["Otros Ingresos"] ||
+f["OTROS INGRESOS"] ||
+0
+);
+
+});
 
 actualizarResultadoMensual();
 
-alert("✅ Gastos cargados correctamente");
+guardarResultadoMensualFirebase();
+
+alert(
+"✅ Archivo de ingresos cargado correctamente."
+);
 
 };
 
-lector.readAsArrayBuffer(archivo);
+lector.readAsArrayBuffer(
+archivo
+);
 
 }
 
 
-// ===============================
-// ACTUALIZAR RESULTADO MENSUAL
-// ===============================
+// ======================================
+// RECUPERAR INGRESOS
+// ======================================
 
-function actualizarResultadoMensual(){
+function recuperarIngresos(){
 
-let ingresos = 0;
-let egresos = 0;
-
-let interesDevengado = 0;
-let moraReal = 0;
-let costoDesembolso = 0;
-// ===============================
-// LEER KPI FINANCIERO
-// ===============================
-
-let financiero =
+let data =
 JSON.parse(
-localStorage.getItem("financiero")
+localStorage.getItem(
+"ingresosMensuales"
+)
 ) || [];
 
-financiero.forEach(f=>{
+if(data.length==0) return;
+
+ingresosMensuales = data;
+
+interesDevengado = 0;
+moraReal = 0;
+costoDesembolso = 0;
+otrosIngresos = 0;
+
+data.forEach(f=>{
 
 interesDevengado +=
-parseFloat(f["Interes Devengado"]) || 0;
+parseFloat(
+f["Interes Devengado"] ||
+f["INTERES DEVENGADO"] ||
+0
+);
 
 moraReal +=
-parseFloat(f["Mora Real"]) || 0;
+parseFloat(
+f["Mora Real"] ||
+f["MORA REAL"] ||
+0
+);
 
 costoDesembolso +=
-parseFloat(f["Costo por Desembolso"]) || 0;
+parseFloat(
+f["Costo por Desembolso"] ||
+f["COSTO POR DESEMBOLSO"] ||
+0
+);
+
+otrosIngresos +=
+parseFloat(
+f["Otros Ingresos"] ||
+f["OTROS INGRESOS"] ||
+0
+);
 
 });
-// ===== EGRESOS =====
 
-let gastos =
-JSON.parse(localStorage.getItem("gastosMensuales")) || [];
+let nombre =
+localStorage.getItem(
+"nombreIngresos"
+);
 
-gastos.forEach(g=>{
+if(
+document.getElementById(
+"archivoIngresosActivo"
+)
+){
 
-Object.keys(g).forEach(col=>{
+document.getElementById(
+"archivoIngresosActivo"
+).innerHTML =
 
-let valor =
-parseFloat(g[col]);
-
-if(!isNaN(valor)){
-
-egresos += valor;
+"📂 " +
+(nombre || "Sin archivo");
 
 }
 
-});
-
-});
+}
 
 
-// ===== TOTALES =====
+// ======================================
+// TOTAL INGRESOS
+// ======================================
 
-ingresos =
+function calcularIngresos(){
+
+totalIngresos =
+
 interesDevengado +
+
 moraReal +
-costoDesembolso;
 
-let utilidad =
-ingresos - egresos;
+costoDesembolso +
 
+otrosIngresos;
 
-// ===== MOSTRAR =====
-
-document.getElementById("rmInteres").innerHTML =
-"S/ " + interesDevengado.toLocaleString();
-
-document.getElementById("rmMora").innerHTML =
-"S/ " + moraReal.toLocaleString();
-
-document.getElementById("rmCosto").innerHTML =
-"S/ " + costoDesembolso.toLocaleString();
-
-document.getElementById("rmIngresos").innerHTML =
-"S/ " + ingresos.toLocaleString();
-
-document.getElementById("rmEgresos").innerHTML =
-"S/ " + egresos.toLocaleString();
-
-document.getElementById("rmOperativa").innerHTML =
-"S/ " + utilidad.toLocaleString();
-
-document.getElementById("rmNeta").innerHTML =
-"S/ " + utilidad.toLocaleString();
+return totalIngresos;
 
 }

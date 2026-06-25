@@ -821,6 +821,266 @@ recuperarGastos();
 actualizarResultadoMensual();
 
 }
+
+// =====================================================
+// PARTE 4/6
+// ACTUALIZAR RESULTADO MENSUAL
+// =====================================================
+
+
+// ======================================
+// ACTUALIZAR DASHBOARD
+// ======================================
+
+function actualizarResultadoMensual(){
+
+// Recalcular resultados
+
+calcularResultado();
+
+
+// ===============================
+// TARJETAS PRINCIPALES
+// ===============================
+
+if(document.getElementById("rmIngresos")){
+
+document.getElementById("rmIngresos").innerHTML=
+
+"S/ "+totalIngresos.toLocaleString();
+
+}
+
+if(document.getElementById("rmEgresos")){
+
+document.getElementById("rmEgresos").innerHTML=
+
+"S/ "+totalEgresos.toLocaleString();
+
+}
+
+if(document.getElementById("rmOperativa")){
+
+document.getElementById("rmOperativa").innerHTML=
+
+"S/ "+utilidadOperativa.toLocaleString();
+
+}
+
+if(document.getElementById("rmNeta")){
+
+document.getElementById("rmNeta").innerHTML=
+
+"S/ "+utilidadNeta.toLocaleString();
+
+}
+
+
+// ===============================
+// DETALLE INGRESOS
+// ===============================
+
+if(document.getElementById("rmInteres")){
+
+document.getElementById("rmInteres").innerHTML=
+
+"S/ "+interesDevengado.toLocaleString();
+
+}
+
+if(document.getElementById("rmMora")){
+
+document.getElementById("rmMora").innerHTML=
+
+"S/ "+moraReal.toLocaleString();
+
+}
+
+if(document.getElementById("rmCosto")){
+
+document.getElementById("rmCosto").innerHTML=
+
+"S/ "+costoDesembolso.toLocaleString();
+
+}
+
+if(document.getElementById("rmOtros")){
+
+document.getElementById("rmOtros").innerHTML=
+
+"S/ "+otrosIngresos.toLocaleString();
+
+}
+
+
+// ===============================
+// COLORES SEGÚN UTILIDAD
+// ===============================
+
+if(document.getElementById("rmOperativa")){
+
+if(utilidadOperativa>=0){
+
+document.getElementById("rmOperativa").style.color="#16a34a";
+
+}else{
+
+document.getElementById("rmOperativa").style.color="#dc2626";
+
+}
+
+}
+
+if(document.getElementById("rmNeta")){
+
+if(utilidadNeta>=0){
+
+document.getElementById("rmNeta").style.color="#16a34a";
+
+}else{
+
+document.getElementById("rmNeta").style.color="#dc2626";
+
+}
+
+}
+
+
+// ===============================
+// MÁRGENES
+// ===============================
+
+if(totalIngresos>0){
+
+margenOperativo=
+
+((utilidadOperativa/
+
+totalIngresos)*100)
+
+.toFixed(2);
+
+margenNeto=
+
+((utilidadNeta/
+
+totalIngresos)*100)
+
+.toFixed(2);
+
+}else{
+
+margenOperativo=0;
+
+margenNeto=0;
+
+}
+
+
+// ===============================
+// FECHA ACTUALIZACIÓN
+// ===============================
+
+localStorage.setItem(
+
+"fechaResultadoMensual",
+
+new Date().toLocaleString()
+
+);
+
+
+// ===============================
+// SINCRONIZAR FIREBASE
+// ===============================
+
+if(typeof guardarResultadoMensualFirebase==="function"){
+
+guardarResultadoMensualFirebase();
+
+}
+
+}
+
+
+
+// ======================================
+// REFRESCAR
+// ======================================
+
+function refrescarResultadoMensual(){
+
+recuperarIngresos();
+
+recuperarGastos();
+
+actualizarResultadoMensual();
+
+}
+
+
+
+// ======================================
+// LIMPIAR DATOS
+// ======================================
+
+function limpiarResultadoMensual(){
+
+localStorage.removeItem("ingresosMensuales");
+
+localStorage.removeItem("gastosMensuales");
+
+localStorage.removeItem("nombreIngresos");
+
+localStorage.removeItem("nombreGastos");
+
+localStorage.removeItem("fechaIngresos");
+
+localStorage.removeItem("fechaGastos");
+
+ingresosMensuales=[];
+
+gastosMensuales=[];
+
+interesDevengado=0;
+
+moraReal=0;
+
+costoDesembolso=0;
+
+otrosIngresos=0;
+
+totalIngresos=0;
+
+totalEgresos=0;
+
+utilidadOperativa=0;
+
+utilidadNeta=0;
+
+margenOperativo=0;
+
+margenNeto=0;
+
+actualizarResultadoMensual();
+
+}
+
+
+
+// ======================================
+// CARGA AUTOMÁTICA
+// ======================================
+
+window.addEventListener("load",()=>{
+
+if(document.getElementById("resumenResultadoMensual")){
+
+recuperarResultadoMensual();
+
+}
+
+});
 // =====================================================
 // PARTE 5/6
 // FIREBASE RESULTADO MENSUAL

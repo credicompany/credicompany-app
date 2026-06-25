@@ -367,6 +367,16 @@ onclick="mostrar('kpiFinanciero')">
 <div style="font-size:28px;">🏦</div>
 
 <div>KPI Financiero</div>
+</div>
+  <div
+id="boxResultadoMensual"
+class="box"
+style="display:none"
+onclick="mostrar('resultadoMensual')">
+
+<div style="font-size:28px;">💼</div>
+
+<div>Resultado Mensual</div>
 
 </div>
 </div>
@@ -1087,9 +1097,8 @@ dashboard.style.display="block";
 document.getElementById("boxAdmin").style.display="flex";
 document.getElementById("panelExcel").style.display="block";
 document.getElementById("panelAsesores").style.display="grid";
-  document.getElementById(
-"boxKpiFinanciero"
-).style.display="flex";
+document.getElementById("boxKpiFinanciero").style.display="flex";
+document.getElementById("boxResultadoMensual").style.display="flex";
 actualizarResumen();
 
 return;
@@ -1108,15 +1117,15 @@ if(encontrado){
     asesor = user.toLowerCase().trim();
 if(asesor==="ebenites"){
 
-document.getElementById(
-"boxKpiFinanciero"
-).style.display="flex";
+document.getElementById("boxKpiFinanciero").style.display="flex";
+
+document.getElementById("boxResultadoMensual").style.display="flex";
 
 }else{
 
-document.getElementById(
-"boxKpiFinanciero"
-).style.display="none";
+document.getElementById("boxKpiFinanciero").style.display="none";
+
+document.getElementById("boxResultadoMensual").style.display="none";
 
 }
     nombreAsesor.innerText = asesor;
@@ -2423,6 +2432,7 @@ app.style.display="block";
 "admin",
 "kpi",
 "kpiFinanciero",
+"resultadoMensual",
 "historialDiv",
 "historialGestionesDiv",
 "historialClienteDiv"
@@ -2471,6 +2481,7 @@ app.style.display="none";
 "admin",
 "kpi",
 "kpiFinanciero",
+"resultadoMensual",
 "historialDiv",
 "historialGestionesDiv",
 "historialClienteDiv"

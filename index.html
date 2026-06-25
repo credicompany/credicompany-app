@@ -820,6 +820,108 @@ color:black;
 </div>
 
 </div>
+<!-- ====================================================== -->
+<!-- RESULTADO MENSUAL -->
+<!-- ====================================================== -->
+
+<div
+id="resultadoMensual"
+class="card"
+style="display:none;">
+
+<div
+class="volver"
+onclick="volver()">
+
+← Volver
+
+</div>
+
+<h3>
+
+💼 RESULTADO MENSUAL
+
+</h3>
+
+<div
+style="
+margin-top:20px;
+margin-bottom:20px;
+">
+
+<input
+type="file"
+id="excelIngresos"
+accept=".xlsx,.xls">
+
+<button
+class="btn-verde"
+onclick="cargarExcelIngresos()">
+
+💰 Cargar Ingresos
+
+</button>
+
+<br><br>
+
+<div
+id="archivoIngresosActivo"
+style="
+padding:12px;
+background:#eef8ee;
+border-radius:10px;
+font-weight:bold;
+color:#222;
+">
+
+Sin archivo cargado
+
+</div>
+
+</div>
+
+<div
+style="
+margin-top:20px;
+margin-bottom:20px;
+">
+
+<input
+type="file"
+id="excelGastos"
+accept=".xlsx,.xls">
+
+<button
+class="btn-verde"
+onclick="cargarExcelGastos()">
+
+💸 Cargar Gastos
+
+</button>
+
+<br><br>
+
+<div
+id="archivoGastosActivo"
+style="
+padding:12px;
+background:#eef8ee;
+border-radius:10px;
+font-weight:bold;
+color:#222;
+">
+
+Sin archivo cargado
+
+</div>
+
+</div>
+
+<div id="resumenResultadoMensual">
+
+</div>
+
+</div>
 <div id="historialClienteDiv" class="card" style="display:none;">
     <div class="volver" onclick="volverHistorialCliente()">← Volver</div>
     <h3>📋 Historial del Cliente</h3>

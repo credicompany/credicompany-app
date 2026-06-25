@@ -363,25 +363,13 @@ id="boxKpiFinanciero"
 class="box"
 style="display:none"
 onclick="mostrar('kpiFinanciero')">
+
 <div style="font-size:28px;">🏦</div>
+
 <div>KPI Financiero</div>
-</div>
-<div
-id="boxResultadoMensual"
-class="box"
-style="display:none"
-onclick="mostrar('resultadoMensual')">
-
-<div style="font-size:28px;">💼</div>
-
-<div>Resultado Mensual</div>
 
 </div>
-<div
-<div style="font-size:28px;">💼</div>
-
-<div>Resultado Mensual</div>
-
+</div>
 </div>
 
 <div class="resumen" style="display:none;">
@@ -548,7 +536,7 @@ padding:12px;
 border-radius:12px;
 font-weight:bold;
 text-align:center;
-width:95%;
+width:100%;
 margin-top:10px;
 ">
 
@@ -832,55 +820,6 @@ color:black;
 </div>
 
 </div>
-  <div
-id="resultadoMensual"
-class="card"
-style="display:none">
-
-<div class="volver"
-onclick="volver()">
-← Volver
-</div>
-
-<h3>💼 RESULTADO MENSUAL</h3>
-
-<div id="resumenResultadoMensual">
-
-<div style="
-background:white;
-padding:25px;
-border-radius:15px;
-text-align:center;
-box-shadow:0 2px 10px rgba(0,0,0,.08);
-">
-
-<h2>💼 Resultado Mensual</h2>
-
-<p>
-Aquí se visualizarán:
-
-<br><br>
-
-💰 Ingresos
-
-<br>
-
-💸 Gastos
-
-<br>
-
-📈 Utilidad
-
-<br>
-
-📊 Rentabilidad
-</p>
-
-</div>
-
-</div>
-
-</div>
 <div id="historialClienteDiv" class="card" style="display:none;">
     <div class="volver" onclick="volverHistorialCliente()">← Volver</div>
     <h3>📋 Historial del Cliente</h3>
@@ -1046,8 +985,9 @@ dashboard.style.display="block";
 document.getElementById("boxAdmin").style.display="flex";
 document.getElementById("panelExcel").style.display="block";
 document.getElementById("panelAsesores").style.display="grid";
-document.getElementById("boxKpiFinanciero").style.display="flex";
-document.getElementById("boxResultadoMensual").style.display="flex";
+  document.getElementById(
+"boxKpiFinanciero"
+).style.display="flex";
 actualizarResumen();
 
 return;
@@ -1066,13 +1006,15 @@ if(encontrado){
     asesor = user.toLowerCase().trim();
 if(asesor==="ebenites"){
 
-document.getElementById("boxKpiFinanciero").style.display="flex";
-document.getElementById("boxResultadoMensual").style.display="none";
+document.getElementById(
+"boxKpiFinanciero"
+).style.display="flex";
 
 }else{
 
-document.getElementById("boxKpiFinanciero").style.display="none";
-document.getElementById("boxResultadoMensual").style.display="none";
+document.getElementById(
+"boxKpiFinanciero"
+).style.display="none";
 
 }
     nombreAsesor.innerText = asesor;
@@ -2379,7 +2321,6 @@ app.style.display="block";
 "admin",
 "kpi",
 "kpiFinanciero",
-"resultadoMensual",
 "historialDiv",
 "historialGestionesDiv",
 "historialClienteDiv"
@@ -2409,32 +2350,16 @@ document.getElementById(p).style.display="block";
     }
 
 }
-if(p=="clientes"){
+if(p==="clientes"){
 
     filtrarMora(0,1000);
 
     actualizarResumen();
-
+}
+if(p==="admin") renderUsuarios();
 }
 
-if(p=="admin"){
-
-    renderUsuarios();
-
-}
-
-if(p=="resultadoMensual"){
-
-    cargarResultadoMensual();
-
-    if(typeof recuperarResultadoMensual==="function"){
-        recuperarResultadoMensual();
-    }
-
-}
-
-}
-  function volver(){
+function volver(){
 
 app.style.display="none";
 [
@@ -2444,7 +2369,6 @@ app.style.display="none";
 "admin",
 "kpi",
 "kpiFinanciero",
-"resultadoMensual",
 "historialDiv",
 "historialGestionesDiv",
 "historialClienteDiv"
@@ -3151,6 +3075,6 @@ if ("serviceWorker" in navigator) {
 </script>
 <script src="js/gestiones.js?v=20260624"></script>
 <script src="js/kpi.js?v=20260624"></script>
-<script src="js/resultadoMensual.js?v=20260626"></script>
 </body>
   </html>
+  

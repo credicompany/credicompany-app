@@ -141,7 +141,9 @@ let json =
 XLSX.utils.sheet_to_json(hoja,{
     range:3
 });
-    console.log(Object.keys(json[0]));
+  console.log("Cantidad:", json.length);
+console.log("Primer registro:", json[0]);
+console.table(json.slice(0,5));
 localStorage.setItem(
 "resultadoIngresos",
 JSON.stringify(json)

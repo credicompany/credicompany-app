@@ -152,6 +152,8 @@ document.getElementById(
 
 actualizarResultadoMensual();
 
+guardarResultadoMensualFirebase();
+
 alert("✅ Archivo de ingresos cargado");
 
 };
@@ -227,6 +229,8 @@ document.getElementById(
 
 actualizarResultadoMensual();
 
+guardarResultadoMensualFirebase();
+
 alert("✅ Archivo de gastos cargado");
 
 };
@@ -253,5 +257,44 @@ document.getElementById(
 "📂 " + nombre;
 
 }
+
+}
+// =====================================
+// GUARDAR RESULTADO MENSUAL FIREBASE
+// =====================================
+
+function guardarResultadoMensualFirebase(){
+
+firebase.database().ref("resultadoMensual").set({
+
+    ingresos:
+    Number(localStorage.getItem("rmInteres") || 0) +
+    Number(localStorage.getItem("rmMoraReal") || 0),
+
+    interes:
+    Number(localStorage.getItem("rmInteres") || 0),
+
+    moraReal:
+    Number(localStorage.getItem("rmMoraReal") || 0),
+
+    gastos:
+    Number(localStorage.getItem("rmGastos") || 0),
+
+    utilidadOperativa:
+    (Number(localStorage.getItem("rmInteres") || 0) +
+     Number(localStorage.getItem("rmMoraReal") || 0))
+     -
+     Number(localStorage.getItem("rmGastos") || 0),
+
+    utilidadNeta:
+    (Number(localStorage.getItem("rmInteres") || 0) +
+     Number(localStorage.getItem("rmMoraReal") || 0))
+     -
+     Number(localStorage.getItem("rmGastos") || 0),
+
+    fecha:
+    new Date().toLocaleString("es-PE")
+
+});
 
 }

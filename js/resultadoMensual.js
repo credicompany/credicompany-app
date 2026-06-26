@@ -115,6 +115,8 @@ let json =
 XLSX.utils.sheet_to_json(hoja,{
     range:3
 });
+console.log("Primera fila gastos:", json[0]);
+console.log("Columnas:", Object.keys(json[0]));
     // =====================================
 // OBTENER FILA TOTAL
 // =====================================

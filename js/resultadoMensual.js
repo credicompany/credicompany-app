@@ -289,13 +289,50 @@ firebase.database().ref("resultadoMensual").set({
    ).toFixed(2)),
 
     utilidadNeta:
-    (Number(localStorage.getItem("rmInteres") || 0) +
-     Number(localStorage.getItem("rmMoraReal") || 0))
-     -
-     Number(localStorage.getItem("rmGastos") || 0),
+Number((
+(Number(localStorage.getItem("rmInteres") || 0) +
+ Number(localStorage.getItem("rmMoraReal") || 0))
+-
+Number(localStorage.getItem("rmGastos") || 0)
+).toFixed(2)),
 
     fecha:
     new Date().toLocaleString("es-PE")
+
+});
+
+}
+// =====================================
+// RECUPERAR RESULTADO MENSUAL FIREBASE
+// =====================================
+
+function recuperarResultadoMensualFirebase(){
+
+firebase.database()
+.ref("resultadoMensual")
+.once("value")
+.then((snapshot)=>{
+
+if(!snapshot.exists()) return;
+
+let datos = snapshot.val();
+
+localStorage.setItem(
+"rmInteres",
+datos.interes || 0
+);
+
+localStorage.setItem(
+"rmMoraReal",
+datos.moraReal || 0
+);
+
+localStorage.setItem(
+"rmGastos",
+datos.gastos || 0
+);
+
+actualizarResultadoMensual();
 
 });
 

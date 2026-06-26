@@ -16,7 +16,7 @@ actualizarResultadoMensual();
 // =====================================
 
 function actualizarResultadoMensual(){
-
+console.count("actualizarResultadoMensual");
     let ingresos = 0;
     let gastos = 0;
 

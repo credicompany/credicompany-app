@@ -42,23 +42,15 @@ datosIngresos.forEach(f=>{
     ingresos += interes + moraReal;
 
 });
+    // =====================================
+// SUMAR SOLO LA COLUMNA MONTO
+// =====================================
 
-    // Sumar gastos
-    datosGastos.forEach(f=>{
+datosGastos.forEach(f=>{
 
-        Object.values(f).forEach(valor=>{
+    gastos += parseFloat(f["Monto"]) || 0;
 
-            let numero = parseFloat(valor);
-
-            if(!isNaN(numero)){
-
-                gastos += numero;
-
-            }
-
-        });
-
-    });
+});
 
     let utilidadOperativa = ingresos - gastos;
 
@@ -99,6 +91,20 @@ minimumFractionDigits:2
     "S/ " + utilidadNeta.toLocaleString("es-PE", {
         minimumFractionDigits:2
     });
+document.getElementById("rmInteres").innerHTML =
+"S/ " + totalInteres.toLocaleString("es-PE", {
+minimumFractionDigits:2
+});
+
+document.getElementById("rmMoraReal").innerHTML =
+"S/ " + totalMoraReal.toLocaleString("es-PE", {
+minimumFractionDigits:2
+});
+
+document.getElementById("rmTotalIngresos").innerHTML =
+"S/ " + ingresos.toLocaleString("es-PE", {
+minimumFractionDigits:2
+});
 
 }
 // =====================================

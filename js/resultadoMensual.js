@@ -119,7 +119,7 @@ XLSX.utils.sheet_to_json(hoja,{
 // =====================================
 
 let ultimaFila =
-json[json.length - 1];
+json.find(f => String(f["CUOTA"]).trim() === "TOTAL");
 let totalInteres =
 parseFloat(ultimaFila["INTERES"]) || 0;
 

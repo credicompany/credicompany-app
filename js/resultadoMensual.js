@@ -139,7 +139,7 @@ wb.Sheets[wb.SheetNames[0]];
 
 let json =
 XLSX.utils.sheet_to_json(hoja,{
-    range:2
+    range:3
 });
     console.log(Object.keys(json[0]));
 localStorage.setItem(

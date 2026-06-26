@@ -139,7 +139,7 @@ wb.Sheets[wb.SheetNames[0]];
 
 let json =
 XLSX.utils.sheet_to_json(hoja);
-
+console.log(json);
 localStorage.setItem(
 "resultadoIngresos",
 JSON.stringify(json)
@@ -198,7 +198,7 @@ wb.Sheets[wb.SheetNames[0]];
 
 let json =
 XLSX.utils.sheet_to_json(hoja);
-
+console.log(json);
 localStorage.setItem(
 "resultadoGastos",
 JSON.stringify(json)

@@ -7,3 +7,135 @@ function cargarResultadoMensual(){
     actualizarResultadoMensual();
 
 }
+// =====================================
+// ACTUALIZAR RESULTADO MENSUAL
+// =====================================
+
+function actualizarResultadoMensual(){
+
+    let ingresos = 0;
+    let gastos = 0;
+
+    // Leer datos guardados
+    let datosIngresos =
+    JSON.parse(localStorage.getItem("resultadoIngresos")) || [];
+
+    let datosGastos =
+    JSON.parse(localStorage.getItem("resultadoGastos")) || [];
+
+    // Sumar ingresos
+    datosIngresos.forEach(f=>{
+
+        Object.values(f).forEach(valor=>{
+
+            let numero = parseFloat(valor);
+
+            if(!isNaN(numero)){
+
+                ingresos += numero;
+
+            }
+
+        });
+
+    });
+
+    // Sumar gastos
+    datosGastos.forEach(f=>{
+
+        Object.values(f).forEach(valor=>{
+
+            let numero = parseFloat(valor);
+
+            if(!isNaN(numero)){
+
+                gastos += numero;
+
+            }
+
+        });
+
+    });
+
+    let utilidadOperativa = ingresos - gastos;
+
+    let utilidadNeta = utilidadOperativa;
+
+    document.getElementById("rmIngresos").innerHTML =
+    "S/ " + ingresos.toLocaleString("es-PE", {
+        minimumFractionDigits:2
+    });
+
+    document.getElementById("rmGastos").innerHTML =
+    "S/ " + gastos.toLocaleString("es-PE", {
+        minimumFractionDigits:2
+    });
+
+    document.getElementById("rmOperativa").innerHTML =
+    "S/ " + utilidadOperativa.toLocaleString("es-PE", {
+        minimumFractionDigits:2
+    });
+
+    document.getElementById("rmNeta").innerHTML =
+    "S/ " + utilidadNeta.toLocaleString("es-PE", {
+        minimumFractionDigits:2
+    });
+
+}
+// =====================================
+// CARGAR EXCEL INGRESOS
+// =====================================
+
+function cargarExcelIngresos(){
+
+let archivo =
+document.getElementById("excelIngresos").files[0];
+
+if(!archivo){
+
+alert("Seleccione el archivo de ingresos");
+
+return;
+
+}
+
+let lector = new FileReader();
+
+lector.onload = function(e){
+
+let data =
+new Uint8Array(e.target.result);
+
+let wb =
+XLSX.read(data,{type:"array"});
+
+let hoja =
+wb.Sheets[wb.SheetNames[0]];
+
+let json =
+XLSX.utils.sheet_to_json(hoja);
+
+localStorage.setItem(
+"resultadoIngresos",
+JSON.stringify(json)
+);
+
+localStorage.setItem(
+"nombreResultadoIngresos",
+archivo.name
+);
+
+document.getElementById(
+"archivoIngresosActivo"
+).innerHTML =
+"📂 " + archivo.name;
+
+actualizarResultadoMensual();
+
+alert("✅ Archivo de ingresos cargado");
+
+};
+
+lector.readAsArrayBuffer(archivo);
+
+}

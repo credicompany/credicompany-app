@@ -149,6 +149,28 @@ let json =
 XLSX.utils.sheet_to_json(hoja,{
     range:3
 });
+    // =====================================
+// OBTENER FILA TOTAL
+// =====================================
+
+let ultimaFila =
+json[json.length - 1];
+
+let totalInteres =
+parseFloat(ultimaFila["INTERES"]) || 0;
+
+let totalMoraReal =
+parseFloat(ultimaFila["MORA REAL"]) || 0;
+
+localStorage.setItem(
+"rmInteres",
+totalInteres
+);
+
+localStorage.setItem(
+"rmMoraReal",
+totalMoraReal
+);
   console.log("Cantidad:", json.length);
 console.log("Primer registro:", json[0]);
 console.table(json.slice(0,5));

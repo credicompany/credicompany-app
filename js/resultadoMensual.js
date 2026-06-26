@@ -27,22 +27,21 @@ function actualizarResultadoMensual(){
     let datosGastos =
     JSON.parse(localStorage.getItem("resultadoGastos")) || [];
 
-    // Sumar ingresos
-    datosIngresos.forEach(f=>{
+   // =====================================
+// SUMAR INTERES + MORA REAL
+// =====================================
 
-        Object.values(f).forEach(valor=>{
+datosIngresos.forEach(f=>{
 
-            let numero = parseFloat(valor);
+    let interes =
+    parseFloat(f["INTERES"]) || 0;
 
-            if(!isNaN(numero)){
+    let moraReal =
+    parseFloat(f["MORA REAL"]) || 0;
 
-                ingresos += numero;
+    ingresos += interes + moraReal;
 
-            }
-
-        });
-
-    });
+});
 
     // Sumar gastos
     datosGastos.forEach(f=>{
@@ -65,10 +64,26 @@ function actualizarResultadoMensual(){
 
     let utilidadNeta = utilidadOperativa;
 
-    document.getElementById("rmIngresos").innerHTML =
-    "S/ " + ingresos.toLocaleString("es-PE", {
-        minimumFractionDigits:2
-    });
+    let totalInteres = 0;
+let totalMoraReal = 0;
+
+datosIngresos.forEach(f=>{
+
+    totalInteres +=
+    parseFloat(f["INTERES"]) || 0;
+
+    totalMoraReal +=
+    parseFloat(f["MORA REAL"]) || 0;
+
+});
+
+ingresos =
+totalInteres + totalMoraReal;
+
+document.getElementById("rmIngresos").innerHTML =
+"S/ " + ingresos.toLocaleString("es-PE",{
+minimumFractionDigits:2
+});
 
     document.getElementById("rmGastos").innerHTML =
     "S/ " + gastos.toLocaleString("es-PE", {

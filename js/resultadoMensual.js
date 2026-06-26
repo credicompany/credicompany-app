@@ -31,13 +31,21 @@ console.count("actualizarResultadoMensual");
 // SUMAR INTERES + MORA REAL
 // =====================================
 
-datosIngresos.forEach(f=>{
+datosIngresos.forEach((f,i)=>{
 
     let interes =
     parseFloat(f["INTERES"]) || 0;
 
     let moraReal =
     parseFloat(f["MORA REAL"]) || 0;
+
+    if(i < 5){
+        console.log("Fila", i, {
+            interes,
+            moraReal,
+            fila: f
+        });
+    }
 
     ingresos += interes + moraReal;
 

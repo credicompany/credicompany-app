@@ -138,8 +138,9 @@ let hoja =
 wb.Sheets[wb.SheetNames[0]];
 
 let json =
-XLSX.utils.sheet_to_json(hoja);
-console.log(json);
+XLSX.utils.sheet_to_json(hoja,{
+    range:2
+});
 localStorage.setItem(
 "resultadoIngresos",
 JSON.stringify(json)

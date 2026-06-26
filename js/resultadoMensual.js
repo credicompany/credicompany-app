@@ -26,28 +26,18 @@ console.count("actualizarResultadoMensual");
 
     let datosGastos =
     JSON.parse(localStorage.getItem("resultadoGastos")) || [];
-
-   // =====================================
-// SUMAR INTERES + MORA REAL
+// =====================================
+// LEER TOTALES GUARDADOS
 // =====================================
 
-datosIngresos.forEach((f,i)=>{
+let totalInteres =
+parseFloat(localStorage.getItem("rmInteres")) || 0;
 
-    let interes =
-    parseFloat(f["INTERES"]) || 0;
+let totalMoraReal =
+parseFloat(localStorage.getItem("rmMoraReal")) || 0;
 
-    let moraReal =
-    parseFloat(f["MORA REAL"]) || 0;
-
-    if(i < 5){
-        console.log("Fila", i, {
-            interes,
-            moraReal,
-            fila: f
-        });
-    }
-
-    ingresos += interes + moraReal;
+ingresos =
+totalInteres + totalMoraReal; 
 
 });
     // =====================================

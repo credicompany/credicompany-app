@@ -16,7 +16,6 @@ actualizarResultadoMensual();
 // =====================================
 
 function actualizarResultadoMensual(){
-console.count("actualizarResultadoMensual");
     let ingresos = 0;
     let gastos = 0;
 
@@ -115,15 +114,12 @@ let json =
 XLSX.utils.sheet_to_json(hoja,{
     range:3
 });
-console.log("Primera fila gastos:", json[0]);
-console.log("Columnas:", Object.keys(json[0]));
     // =====================================
 // OBTENER FILA TOTAL
 // =====================================
 
 let ultimaFila =
 json[json.length - 1];
-console.log("Última fila", ultimaFila);
 let totalInteres =
 parseFloat(ultimaFila["INTERES"]) || 0;
 
@@ -139,9 +135,6 @@ localStorage.setItem(
 "rmMoraReal",
 totalMoraReal
 );
-  console.log("Cantidad:", json.length);
-console.log("Primer registro:", json[0]);
-console.table(json.slice(0,5));
 localStorage.setItem(
 "resultadoIngresos",
 JSON.stringify(json)
@@ -171,8 +164,6 @@ lector.readAsArrayBuffer(archivo);
 // =====================================
 
 function cargarExcelGastos(){
-
-alert("Entró a Gastos");
 
 let archivo =
 document.getElementById("excelGastos").files[0];
@@ -214,8 +205,6 @@ json.forEach(f=>{
     Number(f["Monto"]) || 0;
 
 });
-
-console.log("Total Gastos:", totalGastos);
 
 localStorage.setItem(
 "rmGastos",

@@ -4,7 +4,11 @@
 
 function cargarResultadoMensual(){
 
-    actualizarResultadoMensual();
+recuperarIngresos();
+
+recuperarGastos();
+
+actualizarResultadoMensual();
 
 }
 // =====================================
@@ -137,5 +141,85 @@ alert("✅ Archivo de ingresos cargado");
 };
 
 lector.readAsArrayBuffer(archivo);
+
+}
+// =====================================
+// CARGAR EXCEL GASTOS
+// =====================================
+
+function cargarExcelGastos(){
+
+alert("Entró a Gastos");
+
+let archivo =
+document.getElementById("excelGastos").files[0];
+
+if(!archivo){
+
+alert("Seleccione el archivo de gastos");
+
+return;
+
+}
+
+let lector = new FileReader();
+
+lector.onload = function(e){
+
+let data =
+new Uint8Array(e.target.result);
+
+let wb =
+XLSX.read(data,{type:"array"});
+
+let hoja =
+wb.Sheets[wb.SheetNames[0]];
+
+let json =
+XLSX.utils.sheet_to_json(hoja);
+
+localStorage.setItem(
+"resultadoGastos",
+JSON.stringify(json)
+);
+
+localStorage.setItem(
+"nombreResultadoGastos",
+archivo.name
+);
+
+document.getElementById(
+"archivoGastosActivo"
+).innerHTML =
+"📂 " + archivo.name;
+
+actualizarResultadoMensual();
+
+alert("✅ Archivo de gastos cargado");
+
+};
+
+lector.readAsArrayBuffer(archivo);
+
+}
+// =====================================
+// RECUPERAR INGRESOS
+// =====================================
+
+function recuperarIngresos(){
+
+let nombre =
+localStorage.getItem(
+"nombreResultadoIngresos"
+);
+
+if(nombre){
+
+document.getElementById(
+"archivoIngresosActivo"
+).innerHTML =
+"📂 " + nombre;
+
+}
 
 }

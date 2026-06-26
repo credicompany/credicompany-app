@@ -39,11 +39,8 @@ totalInteres + totalMoraReal;
 // SUMAR SOLO LA COLUMNA MONTO
 // =====================================
 
-datosGastos.forEach(f=>{
-
-    gastos += parseFloat(f["Monto"]) || 0;
-
-});
+gastos =
+Number(localStorage.getItem("rmGastos")) || 0;
 
     let utilidadOperativa = ingresos - gastos;
 
@@ -200,7 +197,28 @@ let hoja =
 wb.Sheets[wb.SheetNames[0]];
 
 let json =
-XLSX.utils.sheet_to_json(hoja);
+XLSX.utils.sheet_to_json(hoja,{
+    range:3
+});
+// =====================================
+// SUMAR COLUMNA MONTO
+// =====================================
+
+let totalGastos = 0;
+
+json.forEach(f=>{
+
+    totalGastos +=
+    Number(f["Monto"]) || 0;
+
+});
+
+console.log("Total Gastos:", totalGastos);
+
+localStorage.setItem(
+"rmGastos",
+totalGastos
+);
 localStorage.setItem(
 "resultadoGastos",
 JSON.stringify(json)

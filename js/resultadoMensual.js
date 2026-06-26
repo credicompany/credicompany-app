@@ -278,13 +278,15 @@ firebase.database().ref("resultadoMensual").set({
     Number(localStorage.getItem("rmMoraReal") || 0),
 
     gastos:
-    Number(localStorage.getItem("rmGastos") || 0),
+    Number((Number(localStorage.getItem("rmGastos") || 0)).toFixed(2)),
 
     utilidadOperativa:
+    Number((
     (Number(localStorage.getItem("rmInteres") || 0) +
-     Number(localStorage.getItem("rmMoraReal") || 0))
-     -
-     Number(localStorage.getItem("rmGastos") || 0),
+    Number(localStorage.getItem("rmMoraReal") || 0))
+   -
+   Number(localStorage.getItem("rmGastos") || 0)
+   ).toFixed(2)),
 
     utilidadNeta:
     (Number(localStorage.getItem("rmInteres") || 0) +

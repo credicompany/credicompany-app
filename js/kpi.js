@@ -122,7 +122,6 @@ jsonGeneral.forEach(c => {
     }
 
 });
-
 if (ultimaFecha) {
 
     let mesConsulta = ultimaFecha.getUTCMonth();

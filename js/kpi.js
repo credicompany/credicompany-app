@@ -76,110 +76,6 @@ function cargarExcelKPI(){
 
         let json =
         XLSX.utils.sheet_to_json(hoja);
-// ======================================
-// FILTRAR SOLO EL ÚLTIMO MES DEL ARCHIVO
-// ======================================
-
-let ultimaFecha = null;
-
-// Detectar la última fecha de desembolso
-json.forEach(fila => {
-
-    let valor = fila["Fecha Desembolso"];
-
-    let fecha = null;
-
-    if (typeof valor === "number") {
-
-        fecha = new Date(Date.UTC(1899, 11, 30 + valor));
-
-    } else {
-
-        fecha = new Date(valor);
-
-        if (isNaN(fecha)) {
-
-            let partes = String(valor).split("/");
-
-            if (partes.length === 3) {
-
-                fecha = new Date(
-                    Number(partes[2]),
-                    Number(partes[1]) - 1,
-                    Number(partes[0])
-                );
-
-            }
-
-        }
-
-    }
-
-    if (fecha && !isNaN(fecha)) {
-
-        if (!ultimaFecha || fecha > ultimaFecha) {
-
-            ultimaFecha = fecha;
-
-        }
-
-    }
-
-});
-
-if (ultimaFecha) {
-
-    let mes = ultimaFecha.getMonth();
-    let anio = ultimaFecha.getFullYear();
-
-    json = json.filter(fila => {
-
-        let valor = fila["Fecha Desembolso"];
-
-        let fecha = null;
-
-        if (typeof valor === "number") {
-
-            fecha = new Date(Date.UTC(1899, 11, 30 + valor));
-
-        } else {
-
-            fecha = new Date(valor);
-
-            if (isNaN(fecha)) {
-
-                let partes = String(valor).split("/");
-
-                if (partes.length === 3) {
-
-                    fecha = new Date(
-                        Number(partes[2]),
-                        Number(partes[1]) - 1,
-                        Number(partes[0])
-                    );
-
-                }
-
-            }
-
-        }
-
-        return (
-            fecha &&
-            !isNaN(fecha) &&
-            fecha.getMonth() === mes &&
-            fecha.getFullYear() === anio
-        );
-
-    });
-
-}
-
-console.log("REGISTROS MES:", json.length);
-        localStorage.setItem(
-            "produccionKPI",
-            JSON.stringify(json)
-        );
 
         localStorage.setItem(
             "nombreProduccionKPI",
@@ -199,6 +95,64 @@ console.log("REGISTROS MES:", json.length);
 
 }
 function generarKPI(json){
+    // ======================================
+// SOLO KPI GERENCIAL -> ÚLTIMO MES
+// ======================================
+
+let jsonGeneral = [...json];
+
+let ultimaFecha = null;
+
+jsonGeneral.forEach(c => {
+
+    let fechaExcel = parseFloat(c["Fecha Desembolso"]);
+
+    if (!isNaN(fechaExcel)) {
+
+        let fecha = new Date(
+            (fechaExcel - 25569) * 86400 * 1000
+        );
+
+        if (!ultimaFecha || fecha > ultimaFecha) {
+
+            ultimaFecha = fecha;
+
+        }
+
+    }
+
+});
+
+if (ultimaFecha) {
+
+    let mesConsulta = ultimaFecha.getUTCMonth();
+    let anioConsulta = ultimaFecha.getUTCFullYear();
+
+    json = jsonGeneral.filter(c => {
+
+        let fechaExcel = parseFloat(c["Fecha Desembolso"]);
+
+        if (isNaN(fechaExcel)) return false;
+
+        let fecha = new Date(
+            (fechaExcel - 25569) * 86400 * 1000
+        );
+
+        return (
+            fecha.getUTCMonth() === mesConsulta &&
+            fecha.getUTCFullYear() === anioConsulta
+        );
+
+    });
+
+}
+
+console.log("KPI GERENCIAL:", json.length);
+
+let metas =
+JSON.parse(
+    localStorage.getItem("metasKPI")
+) || [];
     let metas =
     JSON.parse(
         localStorage.getItem("metasKPI")
@@ -416,7 +370,14 @@ ${avanceEmpresa}%
         (c["Asesor(a)"] || "SIN ASESOR")
         .trim()
         .toUpperCase();
-console.log("ASESOR KPI:", asesor);
+console.log(
+    "ASESOR:",
+    JSON.stringify(c["Asesor(a)"]),
+    "| PRESTAMO:",
+    c["Prestamo"],
+    "| FECHA:",
+    c["Fecha Desembolso"]
+);
         let monto =
         parseFloat(c["Monto Otorgado"]) || 0;
 

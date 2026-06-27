@@ -153,10 +153,7 @@ let metas =
 JSON.parse(
     localStorage.getItem("metasKPI")
 ) || [];
-    let metas =
-    JSON.parse(
-        localStorage.getItem("metasKPI")
-    ) || [];
+
 console.log(
 "REGISTROS MES ACTUAL:",
 json.length

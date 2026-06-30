@@ -496,6 +496,12 @@ Object.keys(datos)
 let r = datos[periodo];
 
 tabla.innerHTML += `
+<tr style="height:38px;">
+<td style="padding:6px 10px;vertical-align:middle;">${periodo}</td>
+<td style="padding:6px 10px;text-align:right;vertical-align:middle;">S/ ${(r.ingresos || 0).toLocaleString("es-PE",{minimumFractionDigits:2})}</td>
+<td style="padding:6px 10px;text-align:right;vertical-align:middle;">S/ ${(r.gastos || 0).toLocaleString("es-PE",{minimumFractionDigits:2})}</td>
+<td style="padding:6px 10px;text-align:right;vertical-align:middle;font-weight:bold;color:${(r.utilidad||0)>=0?"#16a34a":"#dc2626"};">S/ ${(r.utilidad || 0).toLocaleString("es-PE",{minimumFractionDigits:2})}</td>
+</tr>`;
 
 <tr>
 

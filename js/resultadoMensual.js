@@ -1,4 +1,4 @@
-// =====================================
+firebase.database().ref("resultadoMensual").set({// =====================================
 // CARGAR RESULTADO MENSUAL
 // =====================================
 
@@ -319,7 +319,7 @@ document.getElementById(
 
 function guardarResultadoMensualFirebase(){
 
-firebase.database().ref("resultadoMensual").set({
+firebase.database().ref("resultadoMensual/actual").set({
 
     ingresos:
     Number(localStorage.getItem("rmInteres") || 0) +
@@ -373,7 +373,7 @@ console.log("Ingresos:", Number(localStorage.getItem("rmInteres") || 0) +
 Number(localStorage.getItem("rmMoraReal") || 0));
 console.log("Gastos:", Number(localStorage.getItem("rmGastos") || 0));
 firebase.database()
-.ref("resultadoMensualHistorico/" + periodo)
+.ref("resultadoMensual/historico/" + periodo)
 .set({
 
     periodo: periodo,
@@ -411,7 +411,7 @@ firebase.database()
 function recuperarResultadoMensualFirebase(){
 
 firebase.database()
-.ref("resultadoMensual")
+.ref("resultadoMensual/actual")
 .once("value")
 .then((snapshot)=>{
 
@@ -446,7 +446,7 @@ cargarHistoricoResultado();
 function cargarHistoricoResultado(){
 
 firebase.database()
-.ref("resultadoMensualHistorico")
+.ref("resultadoMensual/historico")
 .once("value")
 .then((snapshot)=>{
 

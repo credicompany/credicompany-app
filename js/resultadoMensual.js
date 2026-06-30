@@ -503,13 +503,13 @@ tabla.innerHTML += `
 ${periodo}
 </td>
 
-<td style="padding:4px 10px;text-align:right;"
+<td style="padding:4px 10px;text-align:right;">
 S/ ${(r.ingresos || 0).toLocaleString("es-PE",{
 minimumFractionDigits:2
 })}
 </td>
 
-<td style="padding:4px 10px;text-align:right;"
+<td style="padding:4px 10px;text-align:right;">
 S/ ${(r.gastos || 0).toLocaleString("es-PE",{
 minimumFractionDigits:2
 })}
@@ -519,13 +519,11 @@ minimumFractionDigits:2
 padding:4px 10px;
 text-align:right;
 font-weight:bold;
-color:${(r.utilidad||0)>=0 ? "#16a34a" : "#dc2626"};
+color:${(r.utilidad || 0) >= 0 ? "#16a34a" : "#dc2626"};
 ">
-
 S/ ${(r.utilidad || 0).toLocaleString("es-PE",{
 minimumFractionDigits:2
 })}
-
 </td>
 
 </tr>

@@ -121,26 +121,24 @@ XLSX.utils.sheet_to_json(hoja,{
 
 let primeraFila = json[0];
 
-console.log(primeraFila);
-
 let nombreFecha =
 Object.keys(primeraFila).find(c =>
 c.toUpperCase().includes("FECHA")
 );
 
-let fechaExcel =
-String(primeraFila[nombreFecha]);
-
-let partes =
-fechaExcel.split("/");
-
 let periodo =
-partes[2] + "-" + partes[1];
-
-localStorage.setItem(
-"rmPeriodo",
-periodo
+obtenerPeriodoExcel(
+primeraFila[nombreFecha]
 );
+
+if(!periodo){
+
+    alert("No se pudo obtener el período del archivo de ingresos.");
+
+    return;
+
+}
+
 localStorage.setItem(
 "rmPeriodo",
 periodo
@@ -236,22 +234,23 @@ XLSX.utils.sheet_to_json(hoja,{
 
 let primeraFila = json[0];
 
-console.log(primeraFila);
-
 let nombreFecha =
 Object.keys(primeraFila).find(c =>
 c.toUpperCase().includes("FECHA")
 );
 
-let fechaExcel =
-String(primeraFila[nombreFecha]);
-
-let partes =
-fechaExcel.split("/");
-
 let periodo =
-partes[2] + "-" + partes[1];
+obtenerPeriodoExcel(
+primeraFila[nombreFecha]
+);
 
+if(!periodo){
+
+    alert("No se pudo obtener el período del archivo de gastos.");
+
+    return;
+
+}
 let periodoIngresos =
 localStorage.getItem("rmPeriodo");
 
@@ -536,5 +535,54 @@ minimumFractionDigits:2
 });
 
 });
+
+}
+
+// =====================================
+// OBTENER PERÍODO DEL EXCEL
+// =====================================
+
+function obtenerPeriodoExcel(valorFecha){
+
+    if(valorFecha === undefined || valorFecha === null){
+        return null;
+    }
+
+    if(typeof valorFecha === "number"){
+
+        let fecha = XLSX.SSF.parse_date_code(valorFecha);
+
+        let mes = String(fecha.m).padStart(2,"0");
+
+        return fecha.y + "-" + mes;
+
+    }
+
+    let texto = String(valorFecha).trim();
+
+    if(texto.includes("/")){
+
+        let p = texto.split("/");
+
+        if(p.length >= 3){
+
+            return p[2] + "-" + p[1];
+
+        }
+
+    }
+
+    let fecha = new Date(texto);
+
+    if(!isNaN(fecha)){
+
+        let mes =
+        String(fecha.getMonth()+1).padStart(2,"0");
+
+        return fecha.getFullYear()+"-"+mes;
+
+    }
+
+    return null;
 
 }

@@ -300,7 +300,52 @@ Number(localStorage.getItem("rmGastos") || 0)
     new Date().toLocaleString("es-PE")
 
 });
+// =====================================
+// GUARDAR HISTÓRICO DEL MES
+// =====================================
 
+let hoy = new Date();
+
+let mes =
+String(hoy.getMonth() + 1).padStart(2, "0");
+
+let anio =
+hoy.getFullYear();
+
+let periodo =
+anio + "-" + mes;
+
+firebase.database()
+.ref("resultadoMensualHistorico/" + periodo)
+.set({
+
+    periodo: periodo,
+
+    ingresos:
+    Number(localStorage.getItem("rmInteres") || 0) +
+    Number(localStorage.getItem("rmMoraReal") || 0),
+
+    interes:
+    Number(localStorage.getItem("rmInteres") || 0),
+
+    moraReal:
+    Number(localStorage.getItem("rmMoraReal") || 0),
+
+    gastos:
+    Number(localStorage.getItem("rmGastos") || 0),
+
+    utilidad:
+    Number((
+        (Number(localStorage.getItem("rmInteres") || 0) +
+        Number(localStorage.getItem("rmMoraReal") || 0))
+        -
+        Number(localStorage.getItem("rmGastos") || 0)
+    ).toFixed(2)),
+
+    fecha:
+    new Date().toLocaleString("es-PE")
+
+});
 }
 // =====================================
 // RECUPERAR RESULTADO MENSUAL FIREBASE

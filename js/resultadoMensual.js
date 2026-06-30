@@ -499,25 +499,23 @@ tabla.innerHTML += `
 
 <tr>
 
-<td style="padding:10px;">
+<td style="padding:4px 10px;"
 ${periodo}
 </td>
 
-<td style="padding:10px;text-align:right;">
+<td style="padding:4px 10px;text-align:right;"
 S/ ${(r.ingresos || 0).toLocaleString("es-PE",{
 minimumFractionDigits:2
 })}
 </td>
 
-<td style="padding:10px;text-align:right;">
+<td style="padding:4px 10px;text-align:right;"
 S/ ${(r.gastos || 0).toLocaleString("es-PE",{
 minimumFractionDigits:2
 })}
 </td>
 
-<td style="
-padding:10px;
-text-align:right;
+<td style="padding:4px 10px;text-align:right;"
 font-weight:bold;
 color:${(r.utilidad||0)>=0 ? "#16a34a" : "#dc2626"};
 ">

@@ -314,7 +314,11 @@ hoy.getFullYear();
 
 let periodo =
 anio + "-" + mes;
-
+console.log("=== HISTORICO ===");
+console.log("Periodo:", periodo);
+console.log("Ingresos:", Number(localStorage.getItem("rmInteres") || 0) +
+Number(localStorage.getItem("rmMoraReal") || 0));
+console.log("Gastos:", Number(localStorage.getItem("rmGastos") || 0));
 firebase.database()
 .ref("resultadoMensualHistorico/" + periodo)
 .set({

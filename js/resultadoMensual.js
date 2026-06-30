@@ -499,7 +499,7 @@ tabla.innerHTML += `
 
 <tr>
 
-<td style="padding:4px 10px;"
+<td style="padding:4px 10px;">
 ${periodo}
 </td>
 
@@ -515,7 +515,9 @@ minimumFractionDigits:2
 })}
 </td>
 
-<td style="padding:4px 10px;text-align:right;"
+<td style="
+padding:4px 10px;
+text-align:right;
 font-weight:bold;
 color:${(r.utilidad||0)>=0 ? "#16a34a" : "#dc2626"};
 ">

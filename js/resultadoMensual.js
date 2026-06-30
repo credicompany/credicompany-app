@@ -114,6 +114,28 @@ let json =
 XLSX.utils.sheet_to_json(hoja,{
     range:3
 });
+
+ // =====================================
+// OBTENER PERÍODO DEL EXCEL
+// =====================================
+
+let primeraFila =
+json.find(f => f["FECHA DE PAGO"]);
+
+let fechaExcel =
+String(primeraFila["FECHA DE PAGO"]);
+
+let partes =
+fechaExcel.split("/");
+
+let periodo =
+partes[2] + "-" + partes[1];
+
+localStorage.setItem(
+"rmPeriodo",
+periodo
+);
+    
     // =====================================
 // OBTENER FILA TOTAL
 // =====================================
@@ -197,6 +219,35 @@ let json =
 XLSX.utils.sheet_to_json(hoja,{
     range:3
 });
+
+// =====================================
+// PERÍODO DEL EXCEL GASTOS
+// =====================================
+
+let primeraFila =
+json.find(f => f["Fecha de Registro"]);
+
+let fechaExcel =
+String(primeraFila["Fecha de Registro"]);
+
+let partes =
+fechaExcel.split("/");
+
+let periodo =
+partes[2] + "-" + partes[1];
+
+let periodoIngresos =
+localStorage.getItem("rmPeriodo");
+
+if(periodoIngresos && periodoIngresos !== periodo){
+
+    alert(
+    "Los archivos de ingresos y gastos pertenecen a meses diferentes."
+    );
+
+    return;
+
+}
 // =====================================
 // SUMAR COLUMNA MONTO
 // =====================================
@@ -304,19 +355,18 @@ Number(localStorage.getItem("rmGastos") || 0)
 
 });
 // =====================================
-// GUARDAR HISTÓRICO DEL MES
+// OBTENER PERÍODO DEL MES CARGADO
 // =====================================
 
-let hoy = new Date();
-
-let mes =
-String(hoy.getMonth() + 1).padStart(2, "0");
-
-let anio =
-hoy.getFullYear();
-
 let periodo =
-anio + "-" + mes;
+localStorage.getItem("rmPeriodo");
+    if(!periodo){
+
+    alert("No se pudo determinar el período del archivo.");
+
+    return;
+
+}
 console.log("=== HISTORICO ===");
 console.log("Periodo:", periodo);
 console.log("Ingresos:", Number(localStorage.getItem("rmInteres") || 0) +

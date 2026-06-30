@@ -119,11 +119,17 @@ XLSX.utils.sheet_to_json(hoja,{
 // OBTENER PERÍODO DEL EXCEL
 // =====================================
 
-let primeraFila =
-json.find(f => f["FECHA DE PAGO"]);
+let primeraFila = json[0];
+
+console.log(primeraFila);
+
+let nombreFecha =
+Object.keys(primeraFila).find(c =>
+c.toUpperCase().includes("FECHA")
+);
 
 let fechaExcel =
-String(primeraFila["FECHA DE PAGO"]);
+String(primeraFila[nombreFecha]);
 
 let partes =
 fechaExcel.split("/");
@@ -131,6 +137,10 @@ fechaExcel.split("/");
 let periodo =
 partes[2] + "-" + partes[1];
 
+localStorage.setItem(
+"rmPeriodo",
+periodo
+);
 localStorage.setItem(
 "rmPeriodo",
 periodo
@@ -224,11 +234,17 @@ XLSX.utils.sheet_to_json(hoja,{
 // PERÍODO DEL EXCEL GASTOS
 // =====================================
 
-let primeraFila =
-json.find(f => f["Fecha de Registro"]);
+let primeraFila = json[0];
+
+console.log(primeraFila);
+
+let nombreFecha =
+Object.keys(primeraFila).find(c =>
+c.toUpperCase().includes("FECHA")
+);
 
 let fechaExcel =
-String(primeraFila["Fecha de Registro"]);
+String(primeraFila[nombreFecha]);
 
 let partes =
 fechaExcel.split("/");

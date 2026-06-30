@@ -154,6 +154,8 @@ actualizarResultadoMensual();
 
 guardarResultadoMensualFirebase();
 
+cargarHistoricoResultado();
+
 alert("✅ Archivo de ingresos cargado");
 
 };
@@ -231,8 +233,9 @@ actualizarResultadoMensual();
 
 guardarResultadoMensualFirebase();
 
-alert("✅ Archivo de gastos cargado");
+cargarHistoricoResultado();
 
+alert("✅ Archivo de gastos cargado");
 };
 
 lector.readAsArrayBuffer(archivo);
@@ -382,7 +385,7 @@ datos.gastos || 0
 );
 
 actualizarResultadoMensual();
-
+cargarHistoricoResultado();
 });
 
 }

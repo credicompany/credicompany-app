@@ -539,11 +539,18 @@ let registroAsesor = json.find(c =>
     .replace(/\s+/g,"")
 
 );
-
-let tem = registroAsesor
-? parseFloat(registroAsesor["TEM"] || 0).toFixed(2)
-: 0;
-
+let tem =
+temPromedio[asesor].length
+?
+(
+    temPromedio[asesor]
+    .reduce((a,b)=>a+b,0)
+    /
+    temPromedio[asesor].length
+).toFixed(2)
+:
+0;
+        
         let cli =
         clientes[asesor].size;
 
@@ -567,28 +574,62 @@ let tem = registroAsesor
             .replace(/\s+/g,"")
 
         );
-let temMayo =
-meta
+// ===============================
+// BUSCAR COLUMNAS HISTÓRICAS
+// ===============================
+
+let columnaTemAnterior = "";
+let columnaMoraAnterior = "";
+
+if(meta){
+
+    Object.keys(meta).forEach(col =>{
+
+        let nombre =
+        col
+        .toUpperCase()
+        .trim()
+        .replace(/\s+/g," ");
+
+        if(
+            nombre ===
+            ("TEM " + mesAnterior.toUpperCase())
+        ){
+            columnaTemAnterior = col;
+        }
+
+        if(
+            nombre ===
+            ("MORA " + mesAnterior.toUpperCase())
+        ){
+            columnaMoraAnterior = col;
+        }
+
+    });
+
+}
+
+let temAnterior =
+meta && columnaTemAnterior
 ?
 parseFloat(
 String(
-meta["TEM MAYO"] || 0
+meta[columnaTemAnterior] || 0
 ).replace(/,/g,"")
 )
 :
 0;
 
-let moraMayo =
-meta
+let moraAnterior =
+meta && columnaMoraAnterior
 ?
 parseFloat(
 String(
-meta["MORA MAYO"] || 0
+meta[columnaMoraAnterior] || 0
 ).replace(/,/g,"")
 )
 :
 0;
-
        // MORA MES ACTUAL (Excel General)
 let moraActual = 0;
 
@@ -711,7 +752,7 @@ ${porcentajeOperaciones}%
 </td>
 
 <td>
-${Number(temMayo).toFixed(1)}%
+${Number(temAnterior).toFixed(1)}%
 </td>
 
 <td>
@@ -726,7 +767,7 @@ S/${Math.round(moraActual).toLocaleString()}
 </td>
 
 <td>
-S/${Number(moraMayo).toLocaleString()}
+S/${Number(moraAnterior).toLocaleString()}
 </td>
 
 <td>

@@ -580,7 +580,11 @@ if(meta){
 }       
        let moraActual =
 moraAsesor[asesor] || 0; 
-
+console.log(
+    "ASESOR:", asesor,
+    "MORA ACUMULADA:", moraAsesor[asesor],
+    "MORA ACTUAL:", moraActual
+);
         let metaDesembolso =
         meta
         ?

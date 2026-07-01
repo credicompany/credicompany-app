@@ -324,10 +324,27 @@ parseFloat(
         let dni =
         (c["DNI"] || "").toString();
 let atraso =
-parseFloat(c["Dias de retraso"]) || 0;
+parseFloat(
+    c["Dias de retraso"] ??
+    c["Días de retraso"] ??
+    c["DIAS DE RETRASO"] ??
+    0
+) || 0;
 
 let saldoCapital =
-parseFloat(c["Saldo Capital"]) || 0;
+parseFloat(
+    c["Saldo Capital"] ??
+    c["SALDO CAPITAL"] ??
+    c["Saldo Capital "] ??
+    c["Saldo"] ??
+    0
+) || 0;
+
+console.log(
+    asesor,
+    "Atraso:", atraso,
+    "Saldo:", saldoCapital
+);
         
        if(!ranking[asesor]){
 

@@ -2,162 +2,106 @@
 // KPI CREDICOMPANY
 // =====================
 
-function cargarMetasKPI() {
-
-    let archivo =
-    document.getElementById("excelMetas").files[0];
-
-    if (!archivo) {
-        alert("Seleccione archivo de metas");
-        return;
-    }
-
-    let lector = new FileReader();
-
-    lector.onload = function(e){
-
-        let data =
-        new Uint8Array(e.target.result);
-
-        let wb =
-        XLSX.read(data,{type:"array"});
-
-        let hoja =
-        wb.Sheets[wb.SheetNames[0]];
-
-        let json =
-        XLSX.utils.sheet_to_json(hoja);
-
-        localStorage.setItem(
-            "metasKPI",
-            JSON.stringify(json)
-        );
-    
-
-        localStorage.setItem(
-            "nombreMetaKPI",
-            archivo.name
-        );
-
-        localStorage.setItem(
-            "fechaMetaKPI",
-            new Date().toLocaleString()
-        );
-
-        alert("✅ Metas cargadas correctamente");
-
-    };
-
-    lector.readAsArrayBuffer(archivo);
-
-}
-function cargarExcelKPI(){
-
-    let archivo =
-    document.getElementById("excelKPI").files[0];
-
-    if(!archivo){
-        alert("Seleccione un Excel");
-        return;
-    }
-
-    let lector = new FileReader();
-
-    lector.onload = function(e){
-
-        let data =
-        new Uint8Array(e.target.result);
-
-        let wb =
-        XLSX.read(data,{type:"array"});
-
-        let hoja =
-        wb.Sheets[wb.SheetNames[0]];
-
-        let json =
-        XLSX.utils.sheet_to_json(hoja);
-
-        localStorage.setItem(
-            "nombreProduccionKPI",
-            archivo.name
-        );
-
-        localStorage.setItem(
-            "fechaProduccionKPI",
-            new Date().toLocaleString()
-        );
-
-        generarKPI(json);
-
-    };
-
-    lector.readAsArrayBuffer(archivo);
-
-}
 function generarKPI(json){
-    // ======================================
-// SOLO KPI GERENCIAL -> ÚLTIMO MES
+
+// ======================================
+// KPI GERENCIAL
+// DETECCIÓN AUTOMÁTICA DEL MES
 // ======================================
 
-let jsonGeneral = [...json];
+const jsonGeneral = [...json];
 
 let ultimaFecha = null;
 
-jsonGeneral.forEach(c => {
+jsonGeneral.forEach(c=>{
 
-    let fechaExcel = parseFloat(c["Fecha Desembolso"]);
+    let fechaExcel =
+    Number(c["Fecha Desembolso"]);
 
-    if (!isNaN(fechaExcel)) {
+    if(!isNaN(fechaExcel)){
 
-        let fecha = new Date(
-            (fechaExcel - 25569) * 86400 * 1000
+        let fecha =
+        new Date(
+            (fechaExcel-25569)*
+            86400*1000
         );
 
-        if (!ultimaFecha || fecha > ultimaFecha) {
-
-            ultimaFecha = fecha;
-
+        if(
+            !ultimaFecha ||
+            fecha>ultimaFecha
+        ){
+            ultimaFecha=fecha;
         }
 
     }
 
 });
-if (ultimaFecha) {
 
-    let mesConsulta = ultimaFecha.getUTCMonth();
-    let anioConsulta = ultimaFecha.getUTCFullYear();
-const meses = [
-"Enero","Febrero","Marzo","Abril",
-"Mayo","Junio","Julio","Agosto",
-"Septiembre","Octubre","Noviembre","Diciembre"
-];
+if(!ultimaFecha){
 
-const mesActual = meses[mesConsulta];
+    alert(
+    "No existe ninguna fecha válida."
+    );
 
-const mesAnterior =
-meses[(mesConsulta + 11) % 12];
-    json = jsonGeneral.filter(c => {
-
-        let fechaExcel = parseFloat(c["Fecha Desembolso"]);
-
-        if (isNaN(fechaExcel)) return false;
-
-        let fecha = new Date(
-            (fechaExcel - 25569) * 86400 * 1000
-        );
-
-        return (
-            fecha.getUTCMonth() === mesConsulta &&
-            fecha.getUTCFullYear() === anioConsulta
-        );
-
-    });
+    return;
 
 }
 
-console.log("KPI GERENCIAL:", json.length);
+const meses=[
+"Enero","Febrero","Marzo","Abril",
+"Mayo","Junio","Julio","Agosto",
+"Septiembre","Octubre",
+"Noviembre","Diciembre"
+];
 
-let metas =
+const indiceMes =
+ultimaFecha.getUTCMonth();
+
+const anioActual =
+ultimaFecha.getUTCFullYear();
+
+const mesActual =
+meses[indiceMes];
+
+const mesAnterior =
+meses[(indiceMes+11)%12];
+
+json=jsonGeneral.filter(c=>{
+
+    let fechaExcel=
+    Number(c["Fecha Desembolso"]);
+
+    if(isNaN(fechaExcel))
+    return false;
+
+    let fecha=
+    new Date(
+        (fechaExcel-25569)*
+        86400*1000
+    );
+
+    return(
+
+        fecha.getUTCMonth()
+        ===
+        indiceMes
+
+        &&
+
+        fecha.getUTCFullYear()
+        ===
+        anioActual
+
+    );
+
+});
+
+console.log(
+"KPI:",
+mesActual,
+json.length,
+"REGISTROS"
+);let metas =
 JSON.parse(
     localStorage.getItem("metasKPI")
 ) || [];
@@ -182,20 +126,8 @@ parseFloat(c["Dias de retraso"]) || 0;
 console.log(
 "COSTO:",
 c["Costo por Desembolso"]
-);   let fechaDesembolso =
-String(
-c["Fecha Desembolso"] || ""
-);
-
-let partes =
-fechaDesembolso.split("/");
-
-let fecha =
-new Date(
-parseInt(partes[2]),
-parseInt(partes[1]) - 1,
-parseInt(partes[0])
-);
+);  
+   
 console.log(
 fechaDesembolso,
 fecha,
@@ -365,9 +297,10 @@ ${avanceEmpresa}%
 `;
 
     let ranking = {};
-    let operaciones = {};
-    let temPromedio = {};
-    let clientes = {};
+let operaciones = {};
+let temPromedio = {};
+let clientes = {};
+let moraAsesor = {};
 
     json.forEach(c => {
 
@@ -391,21 +324,30 @@ console.log(
 
         let dni =
         (c["DNI"] || "").toString();
+let atraso =
+parseFloat(c["Dias de retraso"]) || 0;
 
-        if(!ranking[asesor]){
+let saldoCapital =
+parseFloat(c["Saldo Capital"]) || 0;
+        
+       if(!ranking[asesor]){
 
-            ranking[asesor] = 0;
-            operaciones[asesor] = 0;
-            temPromedio[asesor] = [];
-            clientes[asesor] = new Set();
+    ranking[asesor] = 0;
+    operaciones[asesor] = 0;
+    temPromedio[asesor] = [];
+    clientes[asesor] = new Set();
+    moraAsesor[asesor] = 0;
 
-        }
+}
 
         ranking[asesor] += monto;
         operaciones[asesor]++;
         temPromedio[asesor].push(tem);
+if(atraso >= 1){
 
-        if(dni){
+    moraAsesor[asesor] += saldoCapital;
+
+}        if(dni){
             clientes[asesor].add(dni);
         }
 
@@ -523,22 +465,7 @@ color:white;
         let oper =
         operaciones[asesor];
        // TEM DEL MES ACTUAL (Excel General)
-let registroAsesor = json.find(c =>
 
-    (c["Asesor(a)"] || "")
-    .toString()
-    .trim()
-    .toUpperCase()
-    .replace(/\s+/g,"")
-
-    ===
-
-    asesor
-    .trim()
-    .toUpperCase()
-    .replace(/\s+/g,"")
-
-);
 let tem =
 temPromedio[asesor].length
 ?
@@ -574,90 +501,85 @@ temPromedio[asesor].length
             .replace(/\s+/g,"")
 
         );
-// ===============================
-// BUSCAR COLUMNAS HISTÓRICAS
-// ===============================
+//==================================
+// HISTÓRICO AUTOMÁTICO
+//==================================
 
-let columnaTemAnterior = "";
-let columnaMoraAnterior = "";
+let temAnterior = 0;
+let moraAnterior = 0;
 
 if(meta){
 
-    Object.keys(meta).forEach(col =>{
+    const columnas =
+    Object.keys(meta);
 
-        let nombre =
-        col
-        .toUpperCase()
-        .trim()
-        .replace(/\s+/g," ");
+    const buscarColumna = (tipo,mes)=>{
 
-        if(
-            nombre ===
-            ("TEM " + mesAnterior.toUpperCase())
-        ){
-            columnaTemAnterior = col;
-        }
+        const buscado =
+        (tipo+" "+mes)
+        .toUpperCase();
 
-        if(
-            nombre ===
-            ("MORA " + mesAnterior.toUpperCase())
-        ){
-            columnaMoraAnterior = col;
-        }
+        let encontrada =
+        columnas.find(col=>{
 
-    });
+            let nombre =
+            col
+            .toUpperCase()
+            .trim()
+            .replace(/\s+/g," ");
 
-}
+            return(
+                nombre.includes(tipo)
+                &&
+                nombre.includes(
+                    mes.toUpperCase()
+                )
+            );
 
-let temAnterior =
-meta && columnaTemAnterior
-?
-parseFloat(
-String(
-meta[columnaTemAnterior] || 0
-).replace(/,/g,"")
-)
-:
-0;
+        });
 
-let moraAnterior =
-meta && columnaMoraAnterior
-?
-parseFloat(
-String(
-meta[columnaMoraAnterior] || 0
-).replace(/,/g,"")
-)
-:
-0;
-       // MORA MES ACTUAL (Excel General)
-let moraActual = 0;
+        return encontrada;
 
-json.forEach(c=>{
+    };
 
-    let asesorExcel =
-    (c["Asesor(a)"] || "")
-    .toString()
-    .trim()
-    .toUpperCase()
-    .replace(/\s+/g,"");
+    let colTEM =
+    buscarColumna(
+        "TEM",
+        mesAnterior
+    );
 
-    let atraso =
-    parseFloat(c["Dias de retraso"]) || 0;
+    let colMORA =
+    buscarColumna(
+        "MORA",
+        mesAnterior
+    );
 
-    let saldo =
-    parseFloat(c["Saldo Capital"]) || 0;
+    if(colTEM){
 
-    if(
-        asesorExcel ===
-        asesor.trim().toUpperCase().replace(/\s+/g,"")
-        &&
-        atraso >= 1
-    ){
-        moraActual += saldo;
+        temAnterior =
+        parseFloat(
+            String(
+                meta[colTEM]
+            ).replace(/,/g,"")
+        ) || 0;
+
     }
 
-});
+    if(colMORA){
+
+        moraAnterior =
+        parseFloat(
+            String(
+                meta[colMORA]
+            ).replace(/,/g,"")
+        ) || 0;
+
+    }
+
+}       
+       let moraActual =
+moraAsesor[asesor] || 0; 
+
         let metaDesembolso =
         meta
         ?

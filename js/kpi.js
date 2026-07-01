@@ -331,12 +331,7 @@ parseFloat(
     0
 ) || 0;
 
-console.log(
-    asesor,
-    "Atraso:", atraso,
-    "Saldo:", saldoCapital
-);
-        
+
        if(!ranking[asesor]){
 
     ranking[asesor] = 0;

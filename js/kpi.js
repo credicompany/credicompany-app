@@ -323,20 +323,11 @@ parseFloat(
 
         let dni =
         (c["DNI"] || "").toString();
-let atraso =
+let saldoCapitalVencido =
 parseFloat(
-    c["Dias de retraso"] ??
-    c["Días de retraso"] ??
-    c["DIAS DE RETRASO"] ??
-    0
-) || 0;
-
-let saldoCapital =
-parseFloat(
-    c["Saldo Capital"] ??
-    c["SALDO CAPITAL"] ??
-    c["Saldo Capital "] ??
-    c["Saldo"] ??
+    c["Saldo capital vencido"] ??
+    c["Saldo Capital Vencido"] ??
+    c["SALDO CAPITAL VENCIDO"] ??
     0
 ) || 0;
 
@@ -359,11 +350,10 @@ console.log(
         ranking[asesor] += monto;
         operaciones[asesor]++;
         temPromedio[asesor].push(tem);
-if(atraso >= 1){
-
-    moraAsesor[asesor] += saldoCapital;
-
-}        if(dni){
+        
+moraAsesor[asesor] += saldoCapitalVencido;
+       
+        if(dni){
             clientes[asesor].add(dni);
         }
 

@@ -299,7 +299,7 @@ let clientes = {};
 let moraAsesor = {};
 
     json.forEach(c => {
-
+console.log(Object.keys(c));
         let asesor =
         (c["Asesor(a)"] || "SIN ASESOR")
         .trim()

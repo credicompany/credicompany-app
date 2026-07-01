@@ -126,7 +126,16 @@ if (ultimaFecha) {
 
     let mesConsulta = ultimaFecha.getUTCMonth();
     let anioConsulta = ultimaFecha.getUTCFullYear();
+const meses = [
+"Enero","Febrero","Marzo","Abril",
+"Mayo","Junio","Julio","Agosto",
+"Septiembre","Octubre","Noviembre","Diciembre"
+];
 
+const mesActual = meses[mesConsulta];
+
+const mesAnterior =
+meses[(mesConsulta + 11) % 12];
     json = jsonGeneral.filter(c => {
 
         let fechaExcel = parseFloat(c["Fecha Desembolso"]);
@@ -497,10 +506,10 @@ color:white;
 <th>META OPERACIONES</th>
 <th>AVANCE</th>
 <th>% AVANCE OPER</th>
-<th>TEM MAYO</th>
-<th>TEM</th>
-<th>MORA ACTUAL</th>
-<th>MORA MAYO</th>
+<th>TEM ${mesAnterior.toUpperCase()}</th>
+<th>TEM ${mesActual.toUpperCase()}</th>
+<th>MORA ${mesActual.toUpperCase()}</th>
+<th>MORA ${mesAnterior.toUpperCase()}</th>
 <th>🚦</th>
 
 </tr>
@@ -513,17 +522,27 @@ color:white;
 
         let oper =
         operaciones[asesor];
-        let tem =
-        temPromedio[asesor].length
-        ?
-        (
-            temPromedio[asesor]
-            .reduce((a,b)=>a+b,0)
-            /
-            temPromedio[asesor].length
-        ).toFixed(2)
-        :
-        0;
+       // TEM DEL MES ACTUAL (Excel General)
+let registroAsesor = json.find(c =>
+
+    (c["Asesor(a)"] || "")
+    .toString()
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g,"")
+
+    ===
+
+    asesor
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g,"")
+
+);
+
+let tem = registroAsesor
+? parseFloat(registroAsesor["TEM"] || 0).toFixed(2)
+: 0;
 
         let cli =
         clientes[asesor].size;
@@ -570,33 +589,31 @@ meta["MORA MAYO"] || 0
 :
 0;
 
-        // MORA ACTUAL DESDE COBRANZAS
-let cartera = JSON.parse(localStorage.getItem("cartera")) || [];
-
+       // MORA MES ACTUAL (Excel General)
 let moraActual = 0;
 
-cartera.forEach(c=>{
+json.forEach(c=>{
 
-    let asesorCartera =
-    (c.asesor || "")
+    let asesorExcel =
+    (c["Asesor(a)"] || "")
+    .toString()
     .trim()
-    .toUpperCase();
+    .toUpperCase()
+    .replace(/\s+/g,"");
 
-    // convertir nombres iguales al KPI
-    if(asesorCartera==="EBENITES") asesorCartera="EBENITES";
-    if(asesorCartera==="EMEDINA") asesorCartera="EMEDINA";
-    if(asesorCartera==="TLEON") asesorCartera="TLEON";
-    if(asesorCartera==="BHUERTA") asesorCartera="BHUERTA";
-    if(asesorCartera==="DGARCIA") asesorCartera="DGARCIA";
+    let atraso =
+    parseFloat(c["Dias de retraso"]) || 0;
+
+    let saldo =
+    parseFloat(c["Saldo Capital"]) || 0;
 
     if(
-        asesorCartera===asesor &&
-        (parseFloat(c.retraso)||0)>0
+        asesorExcel ===
+        asesor.trim().toUpperCase().replace(/\s+/g,"")
+        &&
+        atraso >= 1
     ){
-
-        moraActual +=
-        parseFloat(c.saldoCapital)||0;
-
+        moraActual += saldo;
     }
 
 });
@@ -772,7 +789,6 @@ if(document.getElementById("rankingKPI")){
 document.getElementById("rankingKPI").innerHTML =
 rankingKPIHTML;
 }    
-
 document.getElementById(
     "kpiResumen"
 ).innerHTML = resumen;

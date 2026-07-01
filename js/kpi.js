@@ -127,12 +127,6 @@ console.log(
 "COSTO:",
 c["Costo por Desembolso"]
 );  
-   
-console.log(
-fechaDesembolso,
-fecha,
-costo
-);
 
 costoDesembolsoTotal += costo;
 });
@@ -159,13 +153,15 @@ metaEmpresa > 0
 .toFixed(1)
 :
 0;
-let temGeneral =
-0;
+let temGeneral = 0;
 
 json.forEach(c=>{
 
-   temGeneral +=
-   parseFloat(c["TEM"]) || 0;
+    temGeneral +=
+    parseFloat(
+        String(c["TEM"] || 0)
+        .replace(",",".")
+    ) || 0;
 
 });
 
@@ -320,7 +316,10 @@ console.log(
         parseFloat(c["Monto Otorgado"]) || 0;
 
         let tem =
-        parseFloat(c["TEM"]) || 0;
+parseFloat(
+    String(c["TEM"])
+    .replace(",",".")
+) || 0;
 
         let dni =
         (c["DNI"] || "").toString();
@@ -450,8 +449,8 @@ color:white;
 <th>% AVANCE OPER</th>
 <th>TEM ${mesAnterior.toUpperCase()}</th>
 <th>TEM ${mesActual.toUpperCase()}</th>
-<th>MORA ${mesActual.toUpperCase()}</th>
 <th>MORA ${mesAnterior.toUpperCase()}</th>
+<th>MORA ${mesActual.toUpperCase()}</th>
 <th>🚦</th>
 
 </tr>
@@ -681,18 +680,16 @@ ${Number(temAnterior).toFixed(1)}%
 ${tem}%
 </td>
 
+<td>
+S/${Number(moraAnterior).toLocaleString()}
+</td>
+
 <td style="
 font-weight:bold;
 color:#c62828;
 ">
 S/${Math.round(moraActual).toLocaleString()}
 </td>
-
-<td>
-S/${Number(moraAnterior).toLocaleString()}
-</td>
-
-<td>
 ${colorEstado}
 </td>
 
@@ -1158,7 +1155,11 @@ if(!vencidoAsesor[asesor]){
     vencidoAsesor[asesor] = 0;
 }
 
-moraAsesor[asesor] += saldo;
+if(atraso > 30){
+
+    moraAsesor[asesor] += saldo;
+
+}
 let producto =
 (c["Producto"] || "SIN PRODUCTO")
 .toString()

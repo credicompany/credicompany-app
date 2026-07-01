@@ -1995,3 +1995,107 @@ ${topClientesHTML}
 `;
 
 }
+// ==========================================
+// CARGAR METAS KPI
+// ==========================================
+function cargarMetasKPI(){
+
+    const archivo =
+    document.getElementById("excelMetas").files[0];
+
+    if(!archivo){
+        alert("Seleccione el archivo de metas.");
+        return;
+    }
+
+    const lector = new FileReader();
+
+    lector.onload = function(e){
+
+        const data =
+        new Uint8Array(e.target.result);
+
+        const wb =
+        XLSX.read(data,{type:"array"});
+
+        const hoja =
+        wb.Sheets[wb.SheetNames[0]];
+
+        const json =
+        XLSX.utils.sheet_to_json(hoja);
+
+        localStorage.setItem(
+            "metasKPI",
+            JSON.stringify(json)
+        );
+
+        localStorage.setItem(
+            "nombreMetaKPI",
+            archivo.name
+        );
+
+        localStorage.setItem(
+            "fechaMetaKPI",
+            new Date().toLocaleString()
+        );
+
+        alert("✅ Metas cargadas correctamente.");
+
+    };
+
+    lector.readAsArrayBuffer(archivo);
+
+}
+// ==========================================
+// CARGAR PRODUCCIÓN KPI
+// ==========================================
+function cargarExcelKPI(){
+
+    const archivo =
+    document.getElementById("excelKPI").files[0];
+
+    if(!archivo){
+        alert("Seleccione el archivo de producción.");
+        return;
+    }
+
+    const lector = new FileReader();
+
+    lector.onload = function(e){
+
+        const data =
+        new Uint8Array(e.target.result);
+
+        const wb =
+        XLSX.read(data,{type:"array"});
+
+        const hoja =
+        wb.Sheets[wb.SheetNames[0]];
+
+        const json =
+        XLSX.utils.sheet_to_json(hoja);
+
+        localStorage.setItem(
+            "produccionKPI",
+            JSON.stringify(json)
+        );
+
+        localStorage.setItem(
+            "nombreProduccionKPI",
+            archivo.name
+        );
+
+        localStorage.setItem(
+            "fechaProduccionKPI",
+            new Date().toLocaleString()
+        );
+
+        generarKPI(json);
+
+        alert("✅ Producción cargada correctamente.");
+
+    };
+
+    lector.readAsArrayBuffer(archivo);
+
+}

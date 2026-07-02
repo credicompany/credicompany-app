@@ -331,8 +331,9 @@ document.getElementById(
 "📂 " + archivo.name;
 
 actualizarResultadoMensual();
-
-guardarResultadoMensualFirebase();
+console.log("TOTAL GASTOS:", totalGastos);
+console.log("ARCHIVO:", archivo.name);
+console.log("PERIODO:", periodo);guardarResultadoMensualFirebase();
 
 cargarHistoricoResultado();
 

@@ -169,8 +169,43 @@ localStorage.setItem(
 "resultadoIngresos",
 JSON.stringify(json)
 );
+// =====================================
+// RENTABILIDAD POR ASESOR
+// =====================================
+
+let rankingAsesor = {};
+
+json.forEach(f=>{
+
+    // Ignorar fila TOTAL
+    if(String(f["CUOTA"]).trim().toUpperCase()=="TOTAL") return;
+
+    let asesor = (f["ASESOR"] || "SIN ASESOR").toString().trim();
+
+    let interes = Number(f["INTERES"]) || 0;
+
+    let moraReal = Number(f["MORA REAL"]) || 0;
+
+    if(!rankingAsesor[asesor]){
+
+        rankingAsesor[asesor]={
+            interes:0,
+            moraReal:0
+        };
+
+    }
+
+    rankingAsesor[asesor].interes += interes;
+
+    rankingAsesor[asesor].moraReal += moraReal;
+
+});
 
 localStorage.setItem(
+"rankingRentabilidadAsesor",
+JSON.stringify(rankingAsesor)
+);
+    localStorage.setItem(
 "nombreResultadoIngresos",
 archivo.name
 );
@@ -181,7 +216,7 @@ document.getElementById(
 "📂 " + archivo.name;
 
 actualizarResultadoMensual();
-
+mostrarRentabilidadAsesor();
 guardarResultadoMensualFirebase();
 
 cargarHistoricoResultado();
@@ -534,6 +569,85 @@ minimumFractionDigits:2
 });
 
 });
+
+}
+function mostrarRentabilidadAsesor(){
+
+let datos =
+JSON.parse(
+localStorage.getItem("rankingRentabilidadAsesor")
+)||{};
+
+let div =
+document.getElementById("rankingRentabilidadAsesor");
+
+if(!div) return;
+
+let html="";
+
+Object.entries(datos)
+
+.sort((a,b)=>
+
+(b[1].interes+b[1].moraReal)-
+
+(a[1].interes+a[1].moraReal)
+
+)
+
+.forEach((item,index)=>{
+
+let medalla="🥉";
+
+if(index==0) medalla="🥇";
+
+if(index==1) medalla="🥈";
+
+let ingreso=
+item[1].interes+
+item[1].moraReal;
+
+html+=`
+
+<div style="
+padding:12px;
+margin-bottom:10px;
+background:#f8fafc;
+border-radius:12px;
+">
+
+<b style="font-size:16px;">
+${medalla} ${item[0]}
+</b>
+
+<br>
+
+💰 Interés:
+<b>
+S/ ${item[1].interes.toLocaleString("es-PE",{minimumFractionDigits:2})}
+</b>
+
+<br>
+
+🚨 Mora Real:
+<b>
+S/ ${item[1].moraReal.toLocaleString("es-PE",{minimumFractionDigits:2})}
+</b>
+
+<br>
+
+🏦 Ingreso:
+<b style="color:#16a34a;">
+S/ ${ingreso.toLocaleString("es-PE",{minimumFractionDigits:2})}
+</b>
+
+</div>
+
+`;
+
+});
+
+div.innerHTML=html;
 
 }
 

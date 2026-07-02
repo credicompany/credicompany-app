@@ -333,18 +333,103 @@ padding:12px;
 }
 
 .resultado-card{
-    border-radius:16px;
-    padding:12px;
-    color:#fff;
-    text-align:center;
-    min-height:100px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    box-shadow:0 4px 10px rgba(0,0,0,.10);
+
+background:#fff;
+
+border-radius:22px;
+
+padding:20px;
+
+color:#123B63;
+
+text-align:left;
+
+min-height:145px;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+box-shadow:0 10px 30px rgba(0,0,0,.10);
+
+border:1px solid #E8EEF7;
+
+transition:.30s;
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+.resultado-card:hover{
+
+transform:translateY(-4px);
+
+box-shadow:0 18px 40px rgba(0,0,0,.18);
+
 }
 
 .resultado-card h3{
+
+font-size:15px;
+
+margin:0;
+
+font-weight:700;
+
+color:#6B7280;
+
+}
+
+.resultado-card h2{
+
+font-size:30px;
+
+margin-top:14px;
+
+font-weight:800;
+
+color:#123B63;
+
+line-height:1;
+
+}
+
+.resultado-card::before{
+
+content:"";
+
+position:absolute;
+
+left:0;
+
+top:0;
+
+width:8px;
+
+height:100%;
+
+background:#123B63;
+
+}
+.ingresos-card::before{
+    background:#16a34a;
+}
+
+.gastos-card::before{
+    background:#dc2626;
+}
+
+.operativa-card::before{
+    background:#2563eb;
+}
+
+.neta-card::before{
+    background:#7c3aed;
+}.resultado-card h3{
     margin:0;
     font-size:15px;
     font-weight:700;
@@ -1054,7 +1139,7 @@ Sin archivo cargado
 
 <div class="resultado-grid">
 
-<div class="resultado-card" style="background:#16a34a;">
+<div class="resultado-card ingresos-card">
 
 <h3>💰 Ingresos</h3>
 
@@ -1066,7 +1151,7 @@ S/ 0.00
 
 </div>
 
-<div class="resultado-card" style="background:#dc2626;">
+<div class="resultado-card gastos-card">
 
 <h3>💸 Gastos</h3>
 
@@ -1078,7 +1163,7 @@ S/ 0.00
 
 </div>
 
-<div class="resultado-card" style="background:#2563eb;">
+<div class="resultado-card operativa-card">
 
 <h3>📈 Utilidad Operativa</h3>
 
@@ -1090,7 +1175,7 @@ S/ 0.00
 
 </div>
 
-<div class="resultado-card" style="background:#7c3aed;">
+<div class="resultado-card neta-card">
 
 <h3>🏆 Utilidad Neta</h3>
 

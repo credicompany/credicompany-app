@@ -457,8 +457,35 @@ color:white;
 
 </tr>
 `;
+// ==========================
+// MORA ACTUAL (TODA LA CARTERA)
+// ==========================
 
-    Object.keys(ranking).forEach(asesor=>{
+let moraActualAsesor = {};
+
+jsonGeneral.forEach(c=>{
+
+    let asesor =
+    (c["Asesor(a)"] || "")
+    .toString()
+    .trim()
+    .toUpperCase();
+
+    let atraso =
+    parseFloat(c["Dias de retraso"] || 0) || 0;
+
+    let saldo =
+    parseFloat(c["Saldo Capital"] || 0) || 0;
+
+    if(!moraActualAsesor[asesor]){
+        moraActualAsesor[asesor] = 0;
+    }
+
+    if(atraso >= 1){
+        moraActualAsesor[asesor] += saldo;
+    }
+
+});    Object.keys(ranking).forEach(asesor=>{
 
         let colocacion =
         ranking[asesor];
@@ -579,12 +606,8 @@ if(meta){
 
 }       
        let moraActual =
-moraAsesor[asesor] || 0; 
-console.log(
-    "ASESOR:", asesor,
-    "MORA ACUMULADA:", moraAsesor[asesor],
-    "MORA ACTUAL:", moraActual
-);
+moraActualAsesor[asesor] || 0;
+    
         let metaDesembolso =
         meta
         ?

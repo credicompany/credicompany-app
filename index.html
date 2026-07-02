@@ -507,6 +507,78 @@ margin-top:8px;
 }
 
 } 
+
+  /* ===================================== */
+/* INTELIGENCIA GERENCIAL */
+/* ===================================== */
+
+#dashboardGerencial{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+gap:15px;
+
+margin-top:20px;
+
+}
+
+.intel-card{
+
+background:white;
+
+border-radius:18px;
+
+padding:20px;
+
+text-align:center;
+
+box-shadow:0 6px 18px rgba(0,0,0,.08);
+
+font-size:18px;
+
+font-weight:600;
+
+transition:.25s;
+
+}
+
+.intel-card b{
+
+display:block;
+
+margin-top:12px;
+
+font-size:24px;
+
+color:#123B63;
+
+}
+
+@media(max-width:768px){
+
+#dashboardGerencial{
+
+grid-template-columns:1fr;
+
+}
+
+.intel-card{
+
+padding:18px;
+
+font-size:16px;
+
+}
+
+.intel-card b{
+
+font-size:20px;
+
+}
+
+}
 </style>
  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -611,6 +683,17 @@ onclick="mostrar('resultadoMensual')">
 <div style="font-size:28px;">💼</div>
 
 <div>Resultado Mensual</div>
+
+</div>
+  <div
+id="boxInteligencia"
+class="box"
+style="display:none"
+onclick="mostrar('inteligencia')">
+
+<div style="font-size:28px;">🧠</div>
+
+<div>Inteligencia Gerencial</div>
 
 </div>
 </div>
@@ -1362,6 +1445,89 @@ No existen datos
 </div>
 </div>
 </div>
+  <!-- ===================================== -->
+<!-- INTELIGENCIA GERENCIAL -->
+<!-- ===================================== -->
+
+<div
+id="inteligencia"
+class="card"
+style="display:none;">
+
+<div class="volver"
+onclick="volver()">
+
+← Volver
+
+</div>
+
+<h2 style="text-align:center;">
+
+🧠 Inteligencia Gerencial
+
+</h2>
+
+<div id="dashboardGerencial">
+
+<div class="intel-card">
+
+💰 Ingreso del Mes
+
+<br><br>
+
+<b id="intelIngreso">
+
+S/ 0.00
+
+</b>
+
+</div>
+
+<div class="intel-card">
+
+🏆 Mejor Asesor
+
+<br><br>
+
+<b id="intelAsesor">
+
+Sin datos
+
+</b>
+
+</div>
+
+<div class="intel-card">
+
+👑 Mejor Cliente
+
+<br><br>
+
+<b id="intelCliente">
+
+Sin datos
+
+</b>
+
+</div>
+
+<div class="intel-card">
+
+📦 Producto Más Rentable
+
+<br><br>
+
+<b id="intelProducto">
+
+Sin datos
+
+</b>
+
+</div>
+
+</div>
+
+</div>
 <div id="historialClienteDiv" class="card" style="display:none;">
     <div class="volver" onclick="volverHistorialCliente()">← Volver</div>
     <h3>📋 Historial del Cliente</h3>
@@ -1532,6 +1698,7 @@ document.getElementById("panelExcel").style.display="block";
 document.getElementById("panelAsesores").style.display="grid";
 document.getElementById("boxKpiFinanciero").style.display="flex";
 document.getElementById("boxResultadoMensual").style.display="flex";
+document.getElementById("boxInteligencia").style.display="flex";
 actualizarResumen();
 
 return;
@@ -1553,6 +1720,8 @@ if(asesor==="ebenites"){
 document.getElementById("boxKpiFinanciero").style.display="flex";
 
 document.getElementById("boxResultadoMensual").style.display="flex";
+
+document.getElementById("boxInteligencia").style.display="flex";
 
 }else{
 

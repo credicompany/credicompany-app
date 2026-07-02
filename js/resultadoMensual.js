@@ -363,6 +363,29 @@ document.getElementById(
 }
 
 }
+
+// =====================================
+// RECUPERAR GASTOS
+// =====================================
+
+function recuperarGastos(){
+
+let nombre =
+localStorage.getItem(
+"nombreResultadoGastos"
+);
+
+if(nombre){
+
+document.getElementById(
+"archivoGastosActivo"
+).innerHTML =
+"📂 " + nombre;
+
+}
+
+}
+
 // =====================================
 // GUARDAR RESULTADO MENSUAL FIREBASE
 // =====================================
@@ -399,7 +422,20 @@ Number((
 -
 Number(localStorage.getItem("rmGastos") || 0)
 ).toFixed(2)),
+resultadoIngresos:
+JSON.parse(localStorage.getItem("resultadoIngresos")) || [],
 
+resultadoGastos:
+JSON.parse(localStorage.getItem("resultadoGastos")) || [],
+
+rankingRentabilidadAsesor:
+JSON.parse(localStorage.getItem("rankingRentabilidadAsesor")) || {},
+
+nombreResultadoIngresos:
+localStorage.getItem("nombreResultadoIngresos") || "",
+
+nombreResultadoGastos:
+localStorage.getItem("nombreResultadoGastos") || "",
     fecha:
     new Date().toLocaleString("es-PE")
 
@@ -483,8 +519,38 @@ localStorage.setItem(
 "rmGastos",
 datos.gastos || 0
 );
+localStorage.setItem(
+"resultadoIngresos",
+JSON.stringify(datos.resultadoIngresos || [])
+);
+
+localStorage.setItem(
+"resultadoGastos",
+JSON.stringify(datos.resultadoGastos || [])
+);
+
+localStorage.setItem(
+"rankingRentabilidadAsesor",
+JSON.stringify(datos.rankingRentabilidadAsesor || {})
+);
+
+localStorage.setItem(
+"nombreResultadoIngresos",
+datos.nombreResultadoIngresos || ""
+);
+
+localStorage.setItem(
+"nombreResultadoGastos",
+datos.nombreResultadoGastos || ""
+);
+recuperarIngresos();
+
+recuperarGastos();
+
+mostrarRentabilidadAsesor();
 
 actualizarResultadoMensual();
+
 cargarHistoricoResultado();
 });
 

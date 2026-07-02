@@ -323,6 +323,60 @@ padding:12px;
 }
 
 }
+/* ===== RESULTADO MENSUAL ===== */
+
+.resultado-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px;
+    margin-top:20px;
+}
+
+.resultado-card{
+    border-radius:20px;
+    padding:22px 15px;
+    color:#fff;
+    text-align:center;
+    min-height:170px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
+}
+
+.resultado-card h3{
+    margin:0;
+    font-size:21px;
+    font-weight:700;
+}
+
+.resultado-card h2{
+    margin-top:18px;
+    font-size:42px;
+    font-weight:800;
+    line-height:1.15;
+}
+
+@media(max-width:768px){
+
+.resultado-grid{
+    gap:12px;
+}
+
+.resultado-card{
+    min-height:155px;
+    padding:18px 10px;
+}
+
+.resultado-card h3{
+    font-size:18px;
+}
+
+.resultado-card h2{
+    font-size:34px;
+}
+
+}
 </style>
  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -965,20 +1019,9 @@ Sin archivo cargado
 
 <div id="resumenResultadoMensual">
 
-<div style="
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:15px;
-margin-top:20px;
-">
+<div class="resultado-grid">
 
-<div style="
-background:#16a34a;
-color:white;
-padding:18px;
-border-radius:15px;
-text-align:center;
-">
+<div class="resultado-card" style="background:#16a34a;">
 
 <h3>💰 Ingresos</h3>
 
@@ -990,13 +1033,7 @@ S/ 0.00
 
 </div>
 
-<div style="
-background:#dc2626;
-color:white;
-padding:18px;
-border-radius:15px;
-text-align:center;
-">
+<div class="resultado-card" style="background:#dc2626;">
 
 <h3>💸 Gastos</h3>
 
@@ -1008,13 +1045,7 @@ S/ 0.00
 
 </div>
 
-<div style="
-background:#2563eb;
-color:white;
-padding:18px;
-border-radius:15px;
-text-align:center;
-">
+<div class="resultado-card" style="background:#2563eb;">
 
 <h3>📈 Utilidad Operativa</h3>
 
@@ -1026,13 +1057,7 @@ S/ 0.00
 
 </div>
 
-<div style="
-background:#7c3aed;
-color:white;
-padding:18px;
-border-radius:15px;
-text-align:center;
-">
+<div class="resultado-card" style="background:#7c3aed;">
 
 <h3>🏆 Utilidad Neta</h3>
 

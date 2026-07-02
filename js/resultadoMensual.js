@@ -319,11 +319,12 @@ localStorage.setItem(
 "resultadoGastos",
 JSON.stringify(json)
 );
-
 localStorage.setItem(
 "nombreResultadoGastos",
 archivo.name
 );
+
+alert("LLEGUÉ AQUÍ");
 
 document.getElementById(
 "archivoGastosActivo"

@@ -430,9 +430,12 @@ localStorage.getItem("nombreResultadoIngresos") || "",
 
 nombreResultadoGastos:
 localStorage.getItem("nombreResultadoGastos") || "",
-    fecha:
-    new Date().toLocaleString("es-PE")
 
+rankingRentabilidadAsesor:
+JSON.parse(localStorage.getItem("rankingRentabilidadAsesor")) || {},
+
+fecha:
+new Date().toLocaleString("es-PE")
 });
 // =====================================
 // OBTENER PERÍODO DEL MES CARGADO
@@ -522,6 +525,10 @@ datos.nombreResultadoIngresos || ""
 localStorage.setItem(
 "nombreResultadoGastos",
 datos.nombreResultadoGastos || ""
+);
+    localStorage.setItem(
+"rankingRentabilidadAsesor",
+JSON.stringify(datos.rankingRentabilidadAsesor || {})
 );
 recuperarIngresos();
 

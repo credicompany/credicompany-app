@@ -8,8 +8,6 @@ function iniciarSistema(){
 
     iniciarResetDiario();
 
-    iniciarFirebase();
-
     actualizarResumen();
 
 }

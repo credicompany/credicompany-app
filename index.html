@@ -870,6 +870,88 @@ font-weight:500;
 font-size:13px;
 
 }
+
+  /*=========================
+ BUSCADOR PREMIUM
+==========================*/
+
+.search-toolbar{
+
+display:flex;
+
+gap:18px;
+
+align-items:center;
+
+margin:20px 0;
+
+}
+
+.search-box{
+
+flex:1;
+
+background:#FFFFFF;
+
+border:1px solid #E5E7EB;
+
+border-radius:16px;
+
+padding:14px 18px;
+
+display:flex;
+
+align-items:center;
+
+gap:12px;
+
+box-shadow:0 4px 16px rgba(0,0,0,.05);
+
+}
+
+.search-box input{
+
+border:none;
+
+outline:none;
+
+width:100%;
+
+font-size:15px;
+
+background:transparent;
+
+color:#123B63;
+
+}
+
+.search-box input::placeholder{
+
+color:#94A3B8;
+
+}
+
+.orden-select{
+
+width:220px;
+
+background:#FFFFFF;
+
+border:1px solid #E5E7EB;
+
+border-radius:14px;
+
+padding:14px;
+
+font-size:14px;
+
+color:#123B63;
+
+box-shadow:0 4px 16px rgba(0,0,0,.05);
+
+cursor:pointer;
+
+}
 </style>
 </head>
 
@@ -1315,18 +1397,30 @@ font-size:12px;
 
 </div>
 </div>
-<input
-id="buscarCliente"
-placeholder="🔍 Buscar cliente, celular o DNI"
-style="
-width:100%;
-padding:12px;
-border-radius:10px;
-border:none;
-margin-top:10px;
-margin-bottom:10px;
-"
-onkeyup="filtrarMora(filtroMin,filtroMax)">
+<div class="search-toolbar">
+
+    <div class="search-box">
+
+        🔍
+
+        <input
+            type="text"
+            id="buscarCliente"
+            placeholder="Buscar cliente, celular o DNI..."
+            onkeyup="filtrarMora(filtroMin,filtroMax)">
+
+    </div>
+
+    <select class="orden-select">
+
+        <option>Ordenar por</option>
+        <option>Días de atraso</option>
+        <option>Capital vencido</option>
+        <option>Nombre</option>
+
+    </select>
+
+</div>
 <div id="listaClientes"></div>
 
 </div>

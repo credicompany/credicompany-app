@@ -806,6 +806,70 @@ border-left:6px solid #DC2626;
 border-left:6px solid #111827;
 
 }
+
+  /*==========================
+  TARJETAS ASESORES
+===========================*/
+
+.asesores-grid{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+gap:15px;
+
+margin-top:20px;
+
+}
+
+.asesores-grid button{
+
+background:#FFFFFF !important;
+
+border:1px solid #E7ECF3 !important;
+
+color:#123B63 !important;
+
+border-radius:18px;
+
+padding:18px !important;
+
+min-height:90px;
+
+box-shadow:0 4px 16px rgba(0,0,0,.05);
+
+font-size:15px !important;
+
+font-weight:700;
+
+transition:.25s;
+
+}
+
+.asesores-grid button:hover{
+
+transform:translateY(-4px);
+
+border-color:#123B63 !important;
+
+box-shadow:0 10px 24px rgba(18,59,99,.10);
+
+}
+
+.asesores-grid button small{
+
+display:block;
+
+margin-top:6px;
+
+color:#64748B;
+
+font-weight:500;
+
+font-size:13px;
+
+}
 </style>
 </head>
 
@@ -1130,58 +1194,59 @@ Mensual
 
 </div>
   
-<div id="moraVencidaBox"
-style="
-background:#8B0000;
-color:white;
-padding:12px;
-border-radius:12px;
-font-weight:bold;
-text-align:center;
-width:100%;
-margin-top:10px;
-">
+<div id="moraVencidaBox" class="mora-card">
 
-💰 Mora +30 días<br>
+<div class="mora-icono">
+    🚨
+</div>
 
-<span id="moraVencidaTotal">
-S/0
-</span>
+<div class="mora-info">
+
+    <div class="mora-titulo">
+        Mora Crítica (+30 días)
+    </div>
+
+    <div class="mora-monto" id="moraVencidaTotal">
+        S/0
+    </div>
+
+    <div class="mora-subtitulo">
+        Capital vencido
+    </div>
 
 </div>
 
-<div id="panelAsesores"
-style="
-display:none;
-grid-template-columns:repeat(4,1fr);
-gap:4px;
-margin-top:10px;
-">
+</div>
+
+<div id="panelAsesores" class="asesores-grid">
 <button class="btn-azul"
 style="padding:8px;font-size:12px;border-radius:12px;"
 onclick="resetFiltros()">
 🏆 Team Credicompany
 </button>
 
-<button class="btn-verde"
-class="btn-verde"
-style="width:100%;"
-onclick="filtrarPorAsesor('ebenites')">
+<button onclick="filtrarPorAsesor('ebenites')">
+
 👤 Ebenites
+
+<small>Cartera General</small>
+
 </button>
 
-<button
-class="btn-verde"
-style="width:100%;"
-onclick="filtrarPorAsesor('tleon')">
+<button onclick="filtrarPorAsesor('tleon')">
+
 👤 Tleon
+
+<small>Cartera General</small>
+
 </button>
 
-<button
-class="btn-verde"
-style="width:100%;"
-onclick="filtrarPorAsesor('bhuerta')">
+<button onclick="filtrarPorAsesor('bhuerta')">
+
 👤 Bhuerta
+
+<small>Cartera General</small>
+
 </button>
   
 <button

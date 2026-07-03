@@ -150,6 +150,15 @@ periodo
 
 let ultimaFila =
 json.find(f => String(f["CUOTA"]).trim() === "TOTAL");
+
+if(!ultimaFila){
+
+    alert("No se encontró la fila TOTAL.");
+
+    return;
+
+}
+
 let totalInteres =
 parseFloat(ultimaFila["INTERES"]) || 0;
 
@@ -306,6 +315,8 @@ let totalGastos = 0;
 
 json.forEach(f=>{
 
+    console.log("FILA GASTOS:", f);
+
     totalGastos +=
     Number(f["Monto"]) || 0;
 
@@ -334,7 +345,10 @@ document.getElementById(
 actualizarResultadoMensual();
 console.log("TOTAL GASTOS:", totalGastos);
 console.log("ARCHIVO:", archivo.name);
-console.log("PERIODO:", periodo);guardarResultadoMensualFirebase();
+console.log("PERIODO:", periodo);
+    
+    
+guardarResultadoMensualFirebase();
 
 cargarHistoricoResultado();
 
@@ -393,8 +407,7 @@ document.getElementById(
 // =====================================
 
 function guardarResultadoMensualFirebase(){
-
-firebase.database().ref("resultadoMensual/actual").set({
+const datosGuardar = {
 
     ingresos:
     Number(localStorage.getItem("rmInteres") || 0) +
@@ -411,32 +424,60 @@ firebase.database().ref("resultadoMensual/actual").set({
 
     utilidadOperativa:
     Number((
-    (Number(localStorage.getItem("rmInteres") || 0) +
-    Number(localStorage.getItem("rmMoraReal") || 0))
-   -
-   Number(localStorage.getItem("rmGastos") || 0)
-   ).toFixed(2)),
+        (Number(localStorage.getItem("rmInteres") || 0) +
+        Number(localStorage.getItem("rmMoraReal") || 0))
+        -
+        Number(localStorage.getItem("rmGastos") || 0)
+    ).toFixed(2)),
 
     utilidadNeta:
-Number((
-(Number(localStorage.getItem("rmInteres") || 0) +
- Number(localStorage.getItem("rmMoraReal") || 0))
--
-Number(localStorage.getItem("rmGastos") || 0)
-).toFixed(2)),
+    Number((
+        (Number(localStorage.getItem("rmInteres") || 0) +
+        Number(localStorage.getItem("rmMoraReal") || 0))
+        -
+        Number(localStorage.getItem("rmGastos") || 0)
+    ).toFixed(2)),
 
-nombreResultadoIngresos:
-localStorage.getItem("nombreResultadoIngresos") || "",
+    nombreResultadoIngresos:
+    localStorage.getItem("nombreResultadoIngresos") || "",
 
-nombreResultadoGastos:
-localStorage.getItem("nombreResultadoGastos") || "",
+    nombreResultadoGastos:
+    localStorage.getItem("nombreResultadoGastos") || "",
 
-rankingRentabilidadAsesor:
-JSON.parse(localStorage.getItem("rankingRentabilidadAsesor")) || {},
+    rankingRentabilidadAsesor:
+    JSON.parse(localStorage.getItem("rankingRentabilidadAsesor")) || {},
 
-fecha:
-new Date().toLocaleString("es-PE")
+    fecha:
+    new Date().toLocaleString("es-PE")
+
+};
+
+console.log("===== RESULTADO MENSUAL =====");
+console.log(datosGuardar);
+
+    Object.entries(datosGuardar).forEach(([k,v])=>{
+
+    if(v===undefined){
+
+        console.error("❌ UNDEFINED:",k);
+
+    }
+
 });
+firebase.database()
+.ref("resultadoMensual/actual")
+.set(datosGuardar)
+.then(()=>{
+
+    console.log("✅ Resultado mensual guardado");
+
+})
+.catch(err=>{
+
+    console.error("❌ Error:", err);
+
+});
+    
 // =====================================
 // OBTENER PERÍODO DEL MES CARGADO
 // =====================================

@@ -75,6 +75,7 @@ if(asesor === "admin" || asesor === "operaciones"){
 
     document.getElementById("panelExcel").style.display="block";
 
+
 }else{
 
     document.getElementById("panelExcel").style.display="none";

@@ -70,8 +70,16 @@ document.getElementById("boxInteligencia").style.display="none";
     }else{
         document.getElementById("panelAsesores").style.display="none";
     }
+// Solo Administrador y Operaciones pueden ver Cargar Excel
+if(asesor === "admin" || asesor === "operaciones"){
+
+    document.getElementById("panelExcel").style.display="block";
+
+}else{
 
     document.getElementById("panelExcel").style.display="none";
+
+}
 
     actualizarResumen();
 

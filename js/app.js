@@ -84,3 +84,32 @@ if(p==="clientes"){
 }
 if(p==="admin") renderUsuarios();
 }
+function volver(){
+
+app.style.display="none";
+[
+"simulador",
+"clientes",
+"pagos",
+"admin",
+"kpi",
+"kpiFinanciero",
+"resultadoMensual",
+  "inteligencia",
+"historialDiv",
+"historialGestionesDiv",
+"historialClienteDiv"
+].forEach(id=>{
+let el=document.getElementById(id);
+if(el) el.style.display="none";
+});
+
+document.querySelector(".resumen").style.display = "grid";
+
+document.getElementById("historialDiv").style.display="none";
+
+dashboard.style.display="block";
+  if(asesor === "slopez"){
+    document.getElementById("panelAsesores").style.display="grid";
+}
+}

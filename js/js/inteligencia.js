@@ -9,7 +9,6 @@ function cargarCentroInteligencia(){
     cargarIngresoMes();
 
 }
-
 // ====================================
 // INGRESO DEL MES
 // ====================================

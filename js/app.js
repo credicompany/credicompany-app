@@ -12,6 +12,21 @@ function iniciarSistema(){
 
         sincronizarCartera();
 
+        console.log(
+            "Existe recuperarResultadoMensualFirebase:",
+            typeof recuperarResultadoMensualFirebase
+        );
+
+        if(typeof recuperarResultadoMensualFirebase === "function"){
+
+            recuperarResultadoMensualFirebase();
+
+        }else{
+
+            console.error("❌ No existe recuperarResultadoMensualFirebase");
+
+        }
+
     },300);
 
 }

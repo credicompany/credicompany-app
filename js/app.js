@@ -113,3 +113,12 @@ dashboard.style.display="block";
     document.getElementById("panelAsesores").style.display="grid";
 }
 }
+// =====================================
+// INICIALIZACIÓN DEL SISTEMA
+// =====================================
+
+function iniciarSistema(){
+
+    console.log("🚀 Iniciando CREDICOMPANY...");
+
+}

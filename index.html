@@ -963,11 +963,33 @@ cursor:pointer;
 
 .cobranza-header{
 
-flex-direction:column;
+display:grid;
 
-align-items:flex-start;
+grid-template-columns:1fr;
 
 gap:15px;
+
+padding:10px;
+
+}
+
+.cobranza-header h2{
+
+font-size:28px;
+
+line-height:32px;
+
+margin:0;
+
+}
+
+.cobranza-header p{
+
+font-size:14px;
+
+margin-top:4px;
+
+color:#64748B;
 
 }
 
@@ -975,35 +997,68 @@ gap:15px;
 
 width:100%;
 
+height:56px;
+
+border-radius:16px;
+
+font-size:18px;
+
+font-weight:700;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
 }
 
 /* KPIs */
 
-.kpi-grid{
+kpi-grid{
+
+display:grid;
 
 grid-template-columns:repeat(2,1fr);
 
-gap:10px;
+gap:14px;
+
+margin-top:10px;
 
 }
-
 .kpi-card{
 
-padding:14px;
+aspect-ratio:1;
 
-border-radius:14px;
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+padding:18px;
+
+border-radius:18px;
 
 }
 
 .kpi-card h2{
 
-font-size:26px;
+font-size:42px;
+
+margin-top:10px;
+
+font-weight:700;
 
 }
 
 .kpi-card span{
 
-font-size:13px;
+font-size:15px;
+
+font-weight:600;
+
+color:#64748B;
 
 }
 

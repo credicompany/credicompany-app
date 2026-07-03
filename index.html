@@ -1372,12 +1372,12 @@ Mensual
             <p>Gestión Inteligente de Cartera</p>
         </div>
 
-        <button class="btn-cargar"
-          onclick="document.getElementById('excelFile').click()">
-            📂 Cargar Excel
-        </button>
+        <div id="panelExcel">
 
-    </div>
+    <button class="btn-cargar"
+    onclick="document.getElementById('excelFile').click()">
+        📂 Cargar Excel
+    </button>
 
     <input
     type="file"
@@ -1385,8 +1385,8 @@ Mensual
     accept=".csv,.xlsx"
     style="display:none"
     onchange="cargarExcel()">
-    >
 
+</div>
     <div class="kpi-grid">
 
         <div class="kpi-card">

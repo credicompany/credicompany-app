@@ -46,11 +46,19 @@ function sincronizarCartera(){
             JSON.stringify(cartera)
         );
 
-        console.log("✅ Cartera sincronizada Firebase");
+       console.log("✅ Cartera sincronizada Firebase");
 
-        if(typeof actualizarResumen==="function"){
-            actualizarResumen();
-        }
+setTimeout(()=>{
+
+    if(typeof actualizarResumen==="function"){
+        actualizarResumen();
+    }
+
+    if(typeof filtrarMora==="function"){
+        filtrarMora(0,1000);
+    }
+
+},500);
 
     });
 

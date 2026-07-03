@@ -154,3 +154,8 @@ function iniciarResetDiario(){
     }
 
 }
+// =====================================
+// INICIO DEL SISTEMA
+// =====================================
+
+window.onload = iniciarSistema;

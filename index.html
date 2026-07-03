@@ -1582,47 +1582,9 @@ window.onload = function(){
     }
 
   actualizarResumen();
-  db.ref("usuarios").on("value",(snapshot)=>{
-
-    let usuariosFirebase = snapshot.val();
-
-    if(!usuariosFirebase) return;
-
-    localStorage.setItem(
-        "usuarios",
-        JSON.stringify(usuariosFirebase)
-    );
-
-    console.log(
-        "✅ Usuarios sincronizados desde Firebase"
-    );
-
-});
+  sincronizarUsuarios();
   // 🔥 SINCRONIZAR KPI FIREBASE
-db.ref("kpiGerencial").on("value",(snapshot)=>{
-
-    let data = snapshot.val();
-
-    if(!data) return;
-
-    // KPI completo
-    localStorage.setItem(
-        "resumenKPI",
-        data.resumen || ""
-    );
-
-    if(document.getElementById("kpiResumen")){
-        document.getElementById("kpiResumen").innerHTML =
-        data.resumen || "";
-    }
-
-    // Ranking colocación
-    if(document.getElementById("rankingKPI")){
-        document.getElementById("rankingKPI").innerHTML =
-        data.rankingKPIHTML || "";
-    }
-
-});
+sincronizarKPI();
 let rankingGuardado =
 localStorage.getItem("rankingKPIHTML");
 

@@ -8,6 +8,8 @@ function iniciarSistema(){
 
     iniciarResetDiario();
 
+    sincronizarCartera();
+
     actualizarResumen();
 
 }

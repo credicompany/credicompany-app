@@ -16,3 +16,71 @@ function cerrarTarifario(){
 document.getElementById("modalTarifario").style.display = "none";
 
 }
+// UI
+function mostrar(p){
+if(
+p === "admin" &&
+asesor !== "admin" &&
+asesor !== "operaciones"
+){
+alert("Acceso restringido");
+return;
+}
+dashboard.style.display="none";
+
+document.querySelector(".resumen").style.display = "none";
+
+app.style.display="block";
+
+[
+"simulador",
+"clientes",
+"pagos",
+"admin",
+"kpi",
+"kpiFinanciero",
+"resultadoMensual",
+  "inteligencia",
+"historialDiv",
+"historialGestionesDiv",
+"historialClienteDiv"
+].forEach(id=>{
+let el = document.getElementById(id);
+if(el) el.style.display="none";
+});
+
+document.getElementById(p).style.display="block";
+
+  if(p==="inteligencia"){
+
+    cargarCentroInteligencia();
+
+}
+  if(p==="kpi"){
+
+    if(
+        asesor !== "admin" &&
+        asesor !== "operaciones"
+    ){
+
+        document.getElementById(
+            "panelCargaKPI"
+        ).style.display="none";
+
+    }else{
+
+        document.getElementById(
+            "panelCargaKPI"
+        ).style.display="block";
+
+    }
+
+}
+if(p==="clientes"){
+
+    filtrarMora(0,1000);
+
+    actualizarResumen();
+}
+if(p==="admin") renderUsuarios();
+}

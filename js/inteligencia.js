@@ -4,11 +4,7 @@
 
 function cargarCentroInteligencia(){
 
-    alert("✅ Inteligencia.js conectado correctamente");
+    document.getElementById("intelIngreso").innerHTML =
+    document.getElementById("rmTotalIngresos").innerHTML;
 
 }
-document.addEventListener("DOMContentLoaded",()=>{
-
-    cargarCentroInteligencia();
-
-});

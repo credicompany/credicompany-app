@@ -1817,7 +1817,7 @@ let hoyCount = 0;
 let moraCount = 0;
 let criticoCount = 0;
   data.forEach(c=>{
-
+total += parseFloat(c.saldoCapital || 0);
 let retraso = parseFloat(c.retraso) || 0;
 let monto = parseFloat(c.monto) || 0;
 

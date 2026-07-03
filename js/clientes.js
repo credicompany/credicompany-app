@@ -147,7 +147,12 @@ if(
 }); // cierre de headers.forEach
 
 return obj;
-}); // 🔥 GUARDADO REAL
+}); 
+ S
+ console.log("========== JSON A FIREBASE ==========");
+console.log(json);
+console.log(JSON.stringify(json, null, 2));
+ // 🔥 GUARDADO REAL
 db.ref("cartera")
 .set(json)
 .then(()=>{

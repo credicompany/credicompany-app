@@ -1,4 +1,18 @@
-console.log("✅ app.js cargado correctamente");
+// =====================================
+// INICIALIZACIÓN DEL SISTEMA
+// =====================================
+
+function iniciarSistema(){
+
+    console.log("🚀 Iniciando CREDICOMPANY...");
+
+    iniciarResetDiario();
+
+    iniciarFirebase();
+
+    actualizarResumen();
+
+}
 // QR
 function abrirQR(el){
 imgQR.src=el.querySelector("img").src;
@@ -112,15 +126,6 @@ dashboard.style.display="block";
   if(asesor === "slopez"){
     document.getElementById("panelAsesores").style.display="grid";
 }
-}
-// =====================================
-// INICIALIZACIÓN DEL SISTEMA
-// =====================================
-
-function iniciarSistema(){
-
-    console.log("🚀 Iniciando CREDICOMPANY...");
-
 }
 // =====================================
 // RESET DIARIO

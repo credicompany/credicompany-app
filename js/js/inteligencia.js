@@ -1,31 +1,25 @@
-// =====================================================
-// CENTRO DE INTELIGENCIA CREDICOMPANY
-// =====================================================
+// =========================================
+// CENTRO DE INTELIGENCIA
+// =========================================
 
 function cargarCentroInteligencia(){
 
-    console.log("🧠 Centro de Inteligencia iniciado");
+    firebase.database()
+    .ref("resultadoMensual/actual")
+    .once("value")
+    .then((snapshot)=>{
 
-    cargarIngresoMes();
+        if(!snapshot.exists()) return;
 
-}
-// ====================================
-// INGRESO DEL MES
-// ====================================
+        let datos = snapshot.val();
 
-function cargarIngresoMes(){
+        document.getElementById("intelIngreso").innerHTML =
+        "S/ " +
+        Number(datos.ingresos || 0)
+        .toLocaleString("es-PE",{
+            minimumFractionDigits:2
+        });
 
-    let origen =
-    document.getElementById("rmTotalIngresos");
-
-    let destino =
-    document.getElementById("intelIngreso");
-
-    if(origen && destino){
-
-        destino.innerHTML =
-        origen.innerHTML;
-
-    }
+    });
 
 }

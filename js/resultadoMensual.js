@@ -539,9 +539,18 @@ firebase.database()
 .once("value")
 .then((snapshot)=>{
 
-if(!snapshot.exists()) return;
+    console.log("===== SNAPSHOT RESULTADO =====");
+    console.log(snapshot.exists());
 
-let datos = snapshot.val();
+    if(!snapshot.exists()){
+        console.log("❌ No existe resultadoMensual/actual");
+        return;
+    }
+
+    let datos = snapshot.val();
+
+    console.log("===== DATOS FIREBASE =====");
+    console.log(datos);
 
 localStorage.setItem(
 "rmInteres",

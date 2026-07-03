@@ -27,9 +27,31 @@ function pushFirebase(ruta, datos){
     return db.ref(ruta).push(datos);
 
 }
+// =====================================
+// SINCRONIZAR CARTERA
+// =====================================
 
-guardarFirebase()
+function sincronizarCartera(){
 
-leerFirebase()
+    db.ref("cartera").on("value",(snapshot)=>{
 
-pushFirebase()
+        let datos = snapshot.val();
+
+        if(!datos) return;
+
+        let cartera = Object.values(datos);
+
+        localStorage.setItem(
+            "cartera",
+            JSON.stringify(cartera)
+        );
+
+        console.log("✅ Cartera sincronizada Firebase");
+
+        if(typeof actualizarResumen==="function"){
+            actualizarResumen();
+        }
+
+    });
+
+}

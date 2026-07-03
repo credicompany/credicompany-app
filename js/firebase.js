@@ -27,20 +27,9 @@ function pushFirebase(ruta, datos){
     return db.ref(ruta).push(datos);
 
 }
-// =====================================
-// INICIAR FIREBASE
-// =====================================
 
-function iniciarFirebase(){
+guardarFirebase()
 
-    console.log("🔥 Inicializando Firebase...");
+leerFirebase()
 
-    sincronizarUsuarios();
-
-    sincronizarKPI();
-
-    sincronizarCartera();
-
-    recuperarResultadoMensualFirebase();
-
-}
+pushFirebase()

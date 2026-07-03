@@ -724,17 +724,35 @@ margin-bottom:20px;
 
 .estado-card{
 
-padding:22px;
+background:#FFFFFF;
+
+border:1px solid #E7ECF3;
 
 border-radius:18px;
 
+padding:22px;
+
 cursor:pointer;
 
-transition:.30s;
+transition:.25s;
 
-color:white;
+color:#111827;
 
-box-shadow:0 10px 25px rgba(0,0,0,.10);
+box-shadow:0 4px 16px rgba(0,0,0,.05);
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+.estado-card:hover{
+
+transform:translateY(-4px);
+
+box-shadow:0 10px 24px rgba(18,59,99,.10);
+
+border-color:#123B63;
 
 }
 
@@ -750,47 +768,42 @@ font-size:15px;
 
 font-weight:600;
 
+color:#64748B;
+
+margin-bottom:12px;
+
 }
 
 .estado-card .valor{
 
-font-size:34px;
-
-margin-top:12px;
+font-size:46px;
 
 font-weight:800;
+
+color:#123B63;
+
+line-height:1;
 
 }
 
 .verde{
-
-background:#16a34a;
-
+border-left:6px solid #16A34A;
 }
 
 .verde2{
-
-background:#22c55e;
-
+border-left:6px solid #22C55E;
 }
 
 .amarillo{
-
-background:#f59e0b;
-
-color:black;
-
+border-left:6px solid #F59E0B;
 }
 
 .rojo{
-
-background:#dc2626;
-
+border-left:6px solid #DC2626;
 }
 
 .negro{
-
-background:#111827;
+border-left:6px solid #111827;
 
 }
 </style>

@@ -53,6 +53,8 @@ document.getElementById("boxKpiFinanciero").style.display="none";
 
 document.getElementById("boxResultadoMensual").style.display="none";
 
+document.getElementById("boxInteligencia").style.display="none";
+
 }
     nombreAsesor.innerText = asesor;
 

@@ -8,9 +8,11 @@ function iniciarSistema(){
 
     iniciarResetDiario();
 
-    sincronizarCartera();
+    setTimeout(()=>{
 
-    actualizarResumen();
+        sincronizarCartera();
+
+    },300);
 
 }
 // QR

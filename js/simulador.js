@@ -4,4 +4,3 @@
 
 console.log("✅ simulador.js cargado");
 
-Guarda.

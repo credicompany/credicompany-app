@@ -133,17 +133,23 @@ font-weight:700;
 color:#0D2D6C;
 margin-top:6px;
 }
- #rankingBox,
+  #rankingBox{
+  background:white;
+  margin:10px 15px;
+  padding:10px;
+  border-radius:18px;
+  text-align:center;
+  min-height:55px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.08);
+}
 #rankingKPIBox{
-
-    background:white;
-    margin:10px 15px;
-    padding:10px;
-    border-radius:18px;
-    text-align:center;
-    min-height:55px;
-    box-shadow:0 2px 6px rgba(0,0,0,.08);
-
+  background:white;
+  margin:10px 15px;
+  padding:10px;
+  border-radius:18px;
+  text-align:center;
+  min-height:55px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.08);
 }
 
 #rankingKPIBox h3{
@@ -327,103 +333,18 @@ padding:12px;
 }
 
 .resultado-card{
-
-background:#fff;
-
-border-radius:22px;
-
-padding:20px;
-
-color:#123B63;
-
-text-align:left;
-
-min-height:145px;
-
-display:flex;
-
-flex-direction:column;
-
-justify-content:center;
-
-box-shadow:0 10px 30px rgba(0,0,0,.10);
-
-border:1px solid #E8EEF7;
-
-transition:.30s;
-
-position:relative;
-
-overflow:hidden;
-cursor:default;
-}
-
-.resultado-card:hover{
-
-transform:translateY(-4px);
-
-box-shadow:0 18px 40px rgba(0,0,0,.18);
-
+    border-radius:16px;
+    padding:12px;
+    color:#fff;
+    text-align:center;
+    min-height:100px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    box-shadow:0 4px 10px rgba(0,0,0,.10);
 }
 
 .resultado-card h3{
-
-font-size:15px;
-
-margin:0;
-
-font-weight:700;
-
-color:#6B7280;
-
-}
-
-.resultado-card h2{
-
-font-size:30px;
-
-margin-top:14px;
-
-font-weight:800;
-
-color:#123B63;
-
-line-height:1;
-
-}
-
-.resultado-card::before{
-
-content:"";
-
-position:absolute;
-
-left:0;
-
-top:0;
-
-width:8px;
-
-height:100%;
-
-background:#123B63;
-
-}
-.ingresos-card::before{
-    background:#16a34a;
-}
-
-.gastos-card::before{
-    background:#dc2626;
-}
-
-.operativa-card::before{
-    background:#2563eb;
-}
-
-.neta-card::before{
-    background:#7c3aed;
-}.resultado-card h3{
     margin:0;
     font-size:15px;
     font-weight:700;
@@ -431,19 +352,10 @@ background:#123B63;
 }
 
 .resultado-card h2{
-
-margin-top:10px;
-
-font-size:32px;
-
-font-weight:800;
-
-line-height:1;
-
-color:#123B63;
-
-letter-spacing:-1px;
-
+    margin-top:8px;
+    font-size:20px;
+    font-weight:800;
+    line-height:1.1;
 }
 
 @media(max-width:768px){
@@ -463,11 +375,8 @@ letter-spacing:-1px;
 }
 
 .resultado-card h2{
-
-font-size:24px;
-
-margin-top:8px;
-
+    font-size:18px;
+    margin-top:6px;
 }
 
 }
@@ -501,616 +410,16 @@ margin-top:8px;
 }
 
 } 
-
-  /* ===================================== */
-/* INTELIGENCIA GERENCIAL */
-/* ===================================== */
-
-#dashboardGerencial{
-
-display:grid;
-
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-
-gap:15px;
-
-margin-top:20px;
-
-}
-
-.intel-card{
-
-background:white;
-
-border-radius:18px;
-
-padding:20px;
-
-text-align:center;
-
-box-shadow:0 6px 18px rgba(0,0,0,.08);
-
-font-size:18px;
-
-font-weight:600;
-
-transition:.25s;
-
-}
-
-.intel-card b{
-
-display:block;
-
-margin-top:12px;
-
-font-size:24px;
-
-color:#123B63;
-
-}
-
-@media(max-width:768px){
-
-#dashboardGerencial{
-
-grid-template-columns:1fr;
-
-}
-
-.intel-card{
-
-padding:18px;
-
-font-size:16px;
-
-}
-
-.intel-card b{
-
-font-size:20px;
-
-}
-
-}
-
-  /*=========================
- COBRANZAS 3.0
-==========================*/
-
-.cobranza-dashboard{
-background:#f4f7fb;
-padding:15px;
-border-radius:20px;
-margin:8px;
-}
-.cobranza-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:12px;
-margin-bottom:15px;
-flex-wrap:wrap;
-}
-.cobranza-header h2{
-margin:0;
-color:#123B63;
-font-size:22px;
-font-weight:800;
-line-height:1.2;
-}
-.cobranza-header p{
-margin-top:3px;
-font-size:14px;
-color:#6B7280;
-}
-
-.btn-cargar{
-
-background:#16a34a;
-
-color:white;
-
-border:none;
-
-padding:14px 24px;
-
-border-radius:12px;
-
-font-size:15px;
-
-cursor:pointer;
-
-transition:.3s;
-
-}
-
-.btn-cargar:hover{
-
-transform:translateY(-2px);
-
-box-shadow:0 8px 20px rgba(0,0,0,.15);
-
-}
-
-.kpi-grid{
-
-display:grid;
-
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-
-gap:18px;
-
-margin-bottom:25px;
-
-}
-
-.kpi-card{
-
-background:white;
-
-padding:24px;
-
-border-radius:20px;
-
-box-shadow:0 8px 25px rgba(0,0,0,.08);
-
-transition:.3s;
-
-}
-
-.kpi-card:hover{
-
-transform:translateY(-5px);
-
-}
-
-.kpi-card span{
-
-display:block;
-
-font-size:14px;
-
-color:#64748B;
-
-margin-bottom:10px;
-
-}
-
-.kpi-card h2{
-
-margin:0;
-
-font-size:32px;
-
-color:#123B63;
-
-font-weight:700;
-
-}
-
-/*=============================
- TARJETAS DE ESTADO
-==============================*/
-
-.estado-grid{
-
-display:grid;
-
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-
-gap:15px;
-
-margin-top:25px;
-
-margin-bottom:20px;
-
-}
-
-.estado-card{
-
-background:#FFFFFF;
-
-border:1px solid #E7ECF3;
-
-border-radius:18px;
-
-padding:22px;
-
-cursor:pointer;
-
-transition:.25s;
-
-color:#111827;
-
-box-shadow:0 4px 16px rgba(0,0,0,.05);
-
-position:relative;
-
-overflow:hidden;
-
-}
-
-.estado-card:hover{
-
-transform:translateY(-4px);
-
-box-shadow:0 10px 24px rgba(18,59,99,.10);
-
-border-color:#123B63;
-
-}
-
-.estado-card:hover{
-
-transform:translateY(-5px);
-
-}
-
-.estado-card .titulo{
-
-font-size:15px;
-
-font-weight:600;
-
-color:#64748B;
-
-margin-bottom:12px;
-
-}
-
-.estado-card .valor{
-
-font-size:46px;
-
-font-weight:800;
-
-color:#123B63;
-
-line-height:1;
-
-}
-
-.verde{
-border-left:6px solid #16A34A;
-}
-
-.verde2{
-border-left:6px solid #22C55E;
-}
-
-.amarillo{
-border-left:6px solid #F59E0B;
-}
-
-.rojo{
-border-left:6px solid #DC2626;
-}
-
-.negro{
-border-left:6px solid #111827;
-
-}
-
-  /*==========================
-  TARJETAS ASESORES
-===========================*/
-
-.asesores-grid{
-
-display:grid;
-
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-
-gap:15px;
-
-margin-top:20px;
-
-}
-
-.asesores-grid button{
-
-background:#FFFFFF !important;
-
-border:1px solid #E7ECF3 !important;
-
-color:#123B63 !important;
-
-border-radius:18px;
-
-padding:18px !important;
-
-min-height:90px;
-
-box-shadow:0 4px 16px rgba(0,0,0,.05);
-
-font-size:15px !important;
-
-font-weight:700;
-
-transition:.25s;
-
-}
-
-.asesores-grid button:hover{
-
-transform:translateY(-4px);
-
-border-color:#123B63 !important;
-
-box-shadow:0 10px 24px rgba(18,59,99,.10);
-
-}
-
-.asesores-grid button small{
-
-display:block;
-
-margin-top:6px;
-
-color:#64748B;
-
-font-weight:500;
-
-font-size:13px;
-
-}
-
-  /*=========================
- BUSCADOR PREMIUM
-==========================*/
-
-.search-toolbar{
-
-display:flex;
-
-gap:18px;
-
-align-items:center;
-
-margin:20px 0;
-
-}
-
-.search-box{
-
-flex:1;
-
-background:#FFFFFF;
-
-border:1px solid #E5E7EB;
-
-border-radius:16px;
-
-padding:14px 18px;
-
-display:flex;
-
-align-items:center;
-
-gap:12px;
-
-box-shadow:0 4px 16px rgba(0,0,0,.05);
-
-}
-
-.search-box input{
-
-border:none;
-
-outline:none;
-
-width:100%;
-
-font-size:15px;
-
-background:transparent;
-
-color:#123B63;
-
-}
-
-.search-box input::placeholder{
-
-color:#94A3B8;
-
-}
-
-.orden-select{
-
-width:220px;
-
-background:#FFFFFF;
-
-border:1px solid #E5E7EB;
-
-border-radius:14px;
-
-padding:14px;
-
-font-size:14px;
-
-color:#123B63;
-
-box-shadow:0 4px 16px rgba(0,0,0,.05);
-
-cursor:pointer;
-
-}
-
-  /*====================================
- RESPONSIVE CELULAR
-====================================*/
-
-@media (max-width:768px){
-
-/* Encabezado */
-
-.cobranza-header{
-
-display:grid;
-
-grid-template-columns:1fr;
-
-gap:15px;
-
-padding:10px;
-
-}
-
-.cobranza-header h2{
-
-font-size:28px;
-
-line-height:32px;
-
-margin:0;
-
-}
-
-.cobranza-header p{
-
-font-size:14px;
-
-margin-top:4px;
-
-color:#64748B;
-
-}
-
-.btn-cargar{
-
-width:100%;
-
-height:56px;
-
-border-radius:16px;
-
-font-size:18px;
-
-font-weight:700;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-}
-
-/* KPIs */
-
-/*=================================
- OCULTAR KPIs EN CELULAR
-=================================*/
-
-.kpi-grid{
-
-    display:none;
-
-}
-.kpi-card{
-
-aspect-ratio:1;
-
-display:flex;
-
-flex-direction:column;
-
-justify-content:center;
-
-padding:18px;
-
-border-radius:18px;
-
-}
-
-.kpi-card h2{
-
-font-size:42px;
-
-margin-top:10px;
-
-font-weight:700;
-
-}
-
-.kpi-card span{
-
-font-size:15px;
-
-font-weight:600;
-
-color:#64748B;
-
-}
-
-/* Estados */
-
-.estado-grid{
-
-grid-template-columns:repeat(2,1fr);
-
-gap:10px;
-
-}
-
-.estado-card{
-
-padding:14px;
-
-border-radius:14px;
-
-}
-
-.estado-card .valor{
-
-font-size:34px;
-
-}
-
-/* Asesores */
-
-.asesores-grid{
-
-grid-template-columns:repeat(2,1fr);
-
-gap:10px;
-
-}
-
-.asesores-grid button{
-
-min-height:75px;
-
-padding:10px;
-
-font-size:13px;
-
-}
-
-/* Buscador */
-
-.search-toolbar{
-
-flex-direction:column;
-
-}
-
-.search-box{
-
-width:100%;
-
-}
-
-.orden-select{
-
-width:100%;
-
-}
-
-}
 </style>
+ <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+getFirestore,
+doc,
+setDoc,
+getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+</script>
 </head>
 
 <body>
@@ -1154,6 +463,7 @@ Asesor
 <input id="clave" type="password" placeholder="Clave">
 <button class="btn-verde" onclick="login()">Ingresar</button>
 </div>
+
 <div id="dashboard" style="display:none">
 <div class="grid">
 <div class="box" onclick="mostrar('simulador')">
@@ -1204,17 +514,6 @@ onclick="mostrar('resultadoMensual')">
 <div style="font-size:28px;">💼</div>
 
 <div>Resultado Mensual</div>
-
-</div>
-  <div
-id="boxInteligencia"
-class="box"
-style="display:none"
-onclick="mostrar('inteligencia')">
-
-<div style="font-size:28px;">🧠</div>
-
-<div>Inteligencia Gerencial</div>
 
 </div>
 </div>
@@ -1286,7 +585,6 @@ Tipo Cliente
 Nuevo
 </option>
 
-
 <option value="recurrente">
 Recurrente
 </option>
@@ -1341,147 +639,94 @@ Mensual
 <button class="btn-azul" onclick="abrirTarifario()">
 📋 Tarifario
 </button>
+
 <button class="btn-verde" onclick="enviarFiltro()">🔎 Filtro</button>
 </div>
 
 <button class="btn-azul" onclick="limpiar()">🧹 Limpiar</button>
 </div>
 
-<div id="clientes" class="card cobranza-dashboard" style="display:none">
+<div id="clientes" class="card" style="display:none">
 
-    <div class="cobranza-header">
+<div id="panelExcel">
 
-        <div>
-          <h2>🏦 Cobranza Inteligente</h2>
-          <p>Gestión inteligente de cartera y recuperación</p>
-        </div>
+<input type="file"
+id="excelFile"
+accept=".csv,.xlsx"
+style="margin-top:15px;">
 
-        <div id="panelExcel">
-
-    <button class="btn-cargar"
-    onclick="document.getElementById('excelFile').click()">
-        📂 Cargar Excel
-    </button>
-
-    <input
-    type="file"
-    id="excelFile"
-    accept=".csv,.xlsx"
-    style="display:none"
-    onchange="cargarExcel()">
+<button class="btn-azul"
+onclick="cargarExcel()">
+📂 Cargar Excel
+</button>
 
 </div>
-    <div class="kpi-grid">
 
-        <div class="kpi-card">
-            <span>💼 Cartera</span>
-            <h2 id="totalCartera">S/0</h2>
-        </div>
+<div class="fila">
+<button id="btn0dias" style="background:#2ecc71;color:white" onclick="filtrarMora(0,0)">0 días</button>
 
-        <div class="kpi-card">
-            <span>🚨 Mora</span>
-            <h2 id="porcentajeMora">S/0</h2>
-        </div>
+<button id="btn1a8dias" style="background:#27ae60;color:white" onclick="filtrarMora(1,8)">1-8 días</button>
 
-        <div class="kpi-card">
-            <span>💰 Cobrado Hoy</span>
-            <h2 id="cobradoHoy">S/0</h2>
-        </div>
+<button style="background:#f1c40f;color:black" onclick="filtrarMora(9,30)">9-30 días</button>
 
-        <div class="kpi-card">
-            <span>👥 Clientes</span>
-            <h2 id="totalClientes">0</h2>
-        </div>
+<button style="background:#e74c3c;color:white" onclick="filtrarMora(31,60)">31-60 días</button>
 
-    </div>
-
-<div class="estado-grid">
-
-    <div class="estado-card verde"
-         onclick="filtrarMora(0,0)">
-        <div class="titulo">🟢 Al Día</div>
-        <div class="valor" id="contador0">0</div>
-    </div>
-
-    <div class="estado-card verde2"
-         onclick="filtrarMora(1,8)">
-        <div class="titulo">🟢 1 - 8 días</div>
-        <div class="valor" id="contador8">0</div>
-    </div>
-
-    <div class="estado-card amarillo"
-         onclick="filtrarMora(9,30)">
-        <div class="titulo">🟡 9 - 30 días</div>
-        <div class="valor" id="contador30">0</div>
-    </div>
-
-    <div class="estado-card rojo"
-         onclick="filtrarMora(31,60)">
-        <div class="titulo">🔴 31 - 60 días</div>
-        <div class="valor" id="contador60">0</div>
-    </div>
-
-    <div class="estado-card negro"
-         onclick="filtrarMora(61,2000)">
-        <div class="titulo">⚫ 61+ días</div>
-        <div class="valor" id="contador61">0</div>
-    </div>
+<button style="background:black;color:white" onclick="filtrarMora(61,2000)">61+ días</button>
 
 </div>
   
-<div id="moraVencidaBox" class="mora-card">
+<div id="moraVencidaBox"
+style="
+background:#8B0000;
+color:white;
+padding:12px;
+border-radius:12px;
+font-weight:bold;
+text-align:center;
+width:100%;
+margin-top:10px;
+">
 
-<div class="mora-icono">
-    🚨
-</div>
+💰 Mora +30 días<br>
 
-<div class="mora-info">
-
-    <div class="mora-titulo">
-        Mora Crítica (+30 días)
-    </div>
-
-    <div class="mora-monto" id="moraVencidaTotal">
-        S/0
-    </div>
-
-    <div class="mora-subtitulo">
-        Capital vencido
-    </div>
+<span id="moraVencidaTotal">
+S/0
+</span>
 
 </div>
 
-</div>
-
-<div id="panelAsesores" class="asesores-grid">
+<div id="panelAsesores"
+style="
+display:none;
+grid-template-columns:repeat(4,1fr);
+gap:4px;
+margin-top:10px;
+">
 <button class="btn-azul"
 style="padding:8px;font-size:12px;border-radius:12px;"
 onclick="resetFiltros()">
 🏆 Team Credicompany
 </button>
 
-<button onclick="filtrarPorAsesor('ebenites')">
-
+<button class="btn-verde"
+class="btn-verde"
+style="width:100%;"
+onclick="filtrarPorAsesor('ebenites')">
 👤 Ebenites
-
-<small>Cartera General</small>
-
 </button>
 
-<button onclick="filtrarPorAsesor('tleon')">
-
+<button
+class="btn-verde"
+style="width:100%;"
+onclick="filtrarPorAsesor('tleon')">
 👤 Tleon
-
-<small>Cartera General</small>
-
 </button>
 
-<button onclick="filtrarPorAsesor('bhuerta')">
-
+<button
+class="btn-verde"
+style="width:100%;"
+onclick="filtrarPorAsesor('bhuerta')">
 👤 Bhuerta
-
-<small>Cartera General</small>
-
 </button>
   
 <button
@@ -1550,30 +795,18 @@ font-size:12px;
 
 </div>
 </div>
-<div class="search-toolbar">
-
-    <div class="search-box">
-
-        🔍
-
-        <input
-            type="text"
-            id="buscarCliente"
-            placeholder="Buscar cliente, celular o DNI..."
-            onkeyup="filtrarMora(filtroMin,filtroMax)">
-
-    </div>
-
-    <select class="orden-select">
-
-        <option>Ordenar por</option>
-        <option>Días de atraso</option>
-        <option>Capital vencido</option>
-        <option>Nombre</option>
-
-    </select>
-
-</div>
+<input
+id="buscarCliente"
+placeholder="🔍 Buscar cliente, celular o DNI"
+style="
+width:100%;
+padding:12px;
+border-radius:10px;
+border:none;
+margin-top:10px;
+margin-bottom:10px;
+"
+onkeyup="filtrarMora(filtroMin,filtroMax)">
 <div id="listaClientes"></div>
 
 </div>
@@ -1672,8 +905,7 @@ onclick="cargarExcelKPI()">
 
 </div>
 
-<div id="kpiResumen" style="border:3px solid red;min-height:200px;">
-</div>
+<div id="kpiResumen"></div>
 
 </div>
 <div
@@ -1714,8 +946,8 @@ color:black;
 ">
 </div>
 
-<div id="resumenFinanciero" style="border:3px solid blue;min-height:200px;">
-</div>
+<div id="resumenFinanciero"></div>
+
 </div>
 
 </div>
@@ -1822,7 +1054,7 @@ Sin archivo cargado
 
 <div class="resultado-grid">
 
-<div class="resultado-card ingresos-card">
+<div class="resultado-card" style="background:#16a34a;">
 
 <h3>💰 Ingresos</h3>
 
@@ -1834,7 +1066,7 @@ S/ 0.00
 
 </div>
 
-<div class="resultado-card gastos-card">
+<div class="resultado-card" style="background:#dc2626;">
 
 <h3>💸 Gastos</h3>
 
@@ -1846,7 +1078,7 @@ S/ 0.00
 
 </div>
 
-<div class="resultado-card operativa-card">
+<div class="resultado-card" style="background:#2563eb;">
 
 <h3>📈 Utilidad Operativa</h3>
 
@@ -1858,7 +1090,7 @@ S/ 0.00
 
 </div>
 
-<div class="resultado-card neta-card">
+<div class="resultado-card" style="background:#7c3aed;">
 
 <h3>🏆 Utilidad Neta</h3>
 
@@ -2033,90 +1265,6 @@ No existen datos
 </div>
 </div>
 </div>
-  <!-- ===================================== -->
-<!-- INTELIGENCIA GERENCIAL -->
-<!-- ===================================== -->
-
-<div
-id="inteligencia"
-class="card"
-style="display:none;">
-
-<div class="volver"
-onclick="volver()">
-
-← Volver
-
-</div>
-
-<h2 style="text-align:center;">
-
-🧠 Inteligencia Gerencial
-
-</h2>
-
-<div id="dashboardGerencial">
-
-<div class="intel-card">
-
-<div style="font-size:34px;">💰</div>
-
-
-<h4>Ingreso del Mes</h4>
-
-<h2 id="intelIngreso">
-
-S/ 0.00
-
-</h2>
-
-</div>
-
-<div class="intel-card">
-
-<div style="font-size:34px;">🏆</div>
-
-<h4>Mejor Asesor</h4>
-
-<h2 id="intelAsesor">
-
-Sin datos
-
-</h2>
-
-</div>
-
-<div class="intel-card">
-
-👑 Mejor Cliente
-
-<br><br>
-
-<b id="intelCliente">
-
-Sin datos
-
-</b>
-
-</div>
-
-<div class="intel-card">
-
-📦 Producto Más Rentable
-
-<br><br>
-
-<b id="intelProducto">
-
-Sin datos
-
-</b>
-
-</div>
-
-</div>
-
-</div>
 <div id="historialClienteDiv" class="card" style="display:none;">
     <div class="volver" onclick="volverHistorialCliente()">← Volver</div>
     <h3>📋 Historial del Cliente</h3>
@@ -2136,6 +1284,8 @@ Sin datos
     </div>
 
 </div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
 <script>
 const firebaseConfig = {
@@ -2160,7 +1310,185 @@ let asesor="";
 let filtroAsesor = "";
 let filtroMin = 0;
 let filtroMax = 1000;
+window.onload = function(){
 
+    let hoy = new Date().toLocaleDateString('en-CA');
+    let ultimo = localStorage.getItem("fechaSistema");
+
+    // 🔥 SI ES UN NUEVO DÍA → RESET
+    if(ultimo !== hoy){
+
+        let data = JSON.parse(localStorage.getItem("cartera")) || [];
+
+        data.forEach(c=>{
+            c.pagado_hoy = false;
+            c.pagado_monto = 0;
+        });
+
+        localStorage.setItem("cartera", JSON.stringify(data));
+
+        // 🔥 limpiar bonos diarios
+        localStorage.setItem("bonosHoy", JSON.stringify({}));
+
+        // guardar fecha actual
+        localStorage.setItem("fechaSistema", hoy);
+    }
+
+  actualizarResumen();
+  db.ref("usuarios").on("value",(snapshot)=>{
+
+    let usuariosFirebase = snapshot.val();
+
+    if(!usuariosFirebase) return;
+
+    localStorage.setItem(
+        "usuarios",
+        JSON.stringify(usuariosFirebase)
+    );
+
+    console.log(
+        "✅ Usuarios sincronizados desde Firebase"
+    );
+
+});
+  // 🔥 SINCRONIZAR KPI FIREBASE
+db.ref("kpiGerencial").on("value",(snapshot)=>{
+
+    let data = snapshot.val();
+
+    if(!data) return;
+
+    // KPI completo
+    localStorage.setItem(
+        "resumenKPI",
+        data.resumen || ""
+    );
+
+    if(document.getElementById("kpiResumen")){
+        document.getElementById("kpiResumen").innerHTML =
+        data.resumen || "";
+    }
+
+    // Ranking colocación
+    if(document.getElementById("rankingKPI")){
+        document.getElementById("rankingKPI").innerHTML =
+        data.rankingKPIHTML || "";
+    }
+
+});
+let rankingGuardado =
+localStorage.getItem("rankingKPIHTML");
+
+if(
+rankingGuardado &&
+document.getElementById("rankingKPI")
+){
+document.getElementById("rankingKPI").innerHTML =
+rankingGuardado;
+}// 🔥 SINCRONIZAR DESDE FIREBASE
+db.ref("cartera").on("value", (snapshot)=>{
+
+    let dataFirebase = snapshot.val();
+
+    if(dataFirebase){
+
+        localStorage.setItem(
+            "cartera",
+            JSON.stringify(dataFirebase)
+        );
+
+        actualizarResumen();
+
+        if(document.getElementById("listaClientes")){
+            filtrarMora(filtroMin, filtroMax);
+        }
+
+        console.log("✅ Cartera sincronizada Firebase");
+    }
+
+});
+  
+  recuperarResultadoMensualFirebase();
+  
+};
+// LOGIN
+function login(){
+let user=usuario.value.trim();
+let pass=clave.value.trim();
+
+if(
+(user==="admin" && pass==="1234") ||
+(user==="operaciones" && pass==="1234")
+){
+
+asesor = user.toLowerCase().trim();
+
+window.esAdmin = true;
+
+cargarPerfilAsesor(asesor);
+
+loginDiv.style.display="none";
+dashboard.style.display="block";
+
+document.getElementById("boxAdmin").style.display="flex";
+document.getElementById("panelExcel").style.display="block";
+document.getElementById("panelAsesores").style.display="grid";
+document.getElementById("boxKpiFinanciero").style.display="flex";
+document.getElementById("boxResultadoMensual").style.display="flex";
+actualizarResumen();
+
+return;
+}
+
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+
+let encontrado = usuarios.find(
+    u =>
+    (u.user || "").toLowerCase().trim() === user.toLowerCase().trim() &&
+    (u.pass || "").trim() === pass.trim()
+);
+
+if(encontrado){
+
+    asesor = user.toLowerCase().trim();
+if(asesor==="ebenites"){
+
+document.getElementById("boxKpiFinanciero").style.display="flex";
+
+document.getElementById("boxResultadoMensual").style.display="flex";
+
+}else{
+
+document.getElementById("boxKpiFinanciero").style.display="none";
+
+document.getElementById("boxResultadoMensual").style.display="none";
+
+}
+    nombreAsesor.innerText = asesor;
+
+    cargarPerfilAsesor(asesor);
+
+    loginDiv.style.display="none";
+    dashboard.style.display="block";
+
+    document.getElementById("boxAdmin").style.display="none";
+
+    if(asesor === "slopez"){
+        document.getElementById("panelAsesores").style.display="grid";
+    }else{
+        document.getElementById("panelAsesores").style.display="none";
+    }
+
+    document.getElementById("panelExcel").style.display="none";
+
+    actualizarResumen();
+
+}else{
+
+    alert("❌ Usuario o clave incorrectos");
+
+}
+}
 function eliminarUsuarioManual(){
 
 let user = document.getElementById("nuevoUser").value.trim();
@@ -2207,7 +1535,495 @@ renderUsuarios();
 
 alert("✅ Usuario eliminado");
   }
+function obtenerTarifario(producto,monto,tipo){
 
+let config = null;
+
+// =========================
+// DIARIO
+// =========================
+
+if(producto === "diario"){
+
+if(tipo === "nuevo"){
+
+if(monto >= 300 && monto <= 600){
+config = {tem:35, plazo:25};
+}
+
+if(monto >= 601 && monto <= 2000){
+config = {tem:33, plazo:45};
+}
+
+}
+
+if(tipo === "recurrente"){
+
+if(monto >= 300 && monto <= 600){
+config = {tem:34, plazo:25};
+}
+
+if(monto >= 601 && monto <= 2000){
+config = {tem:32, plazo:45};
+}
+
+if(monto >= 2001 && monto <= 3000){
+config = {tem:30, plazo:60};
+}
+
+}
+
+if(tipo === "a1"){
+
+if(monto >= 300 && monto <= 600){
+config = {tem:32, plazo:10};
+}
+
+if(monto >= 601 && monto <= 3000){
+config = {tem:30, plazo:12};
+}
+
+if(monto >= 3001 && monto <= 5000){
+config = {tem:28, plazo:16};
+}
+
+if(monto >= 5001 && monto <= 10000){
+config = {tem:26, plazo:20};
+}
+
+}
+
+if(tipo === "gerencia"){
+
+if(monto >= 1001 && monto <= 5000){
+config = {tem:28, plazo:5};
+}
+
+if(monto >= 5001 && monto <= 10000){
+config = {tem:23, plazo:6};
+}
+
+if(monto >= 10100 && monto <= 15000){
+config = {tem:20, plazo:8};
+}
+
+}
+
+}
+
+// =========================
+// SEMANAL
+// =========================
+
+if(producto === "semanal"){
+
+if(tipo === "nuevo"){
+
+if(monto >= 500 && monto <= 1500){
+config = {tem:21, plazo:8};
+}
+
+if(monto >= 1501 && monto <= 3000){
+config = {tem:21, plazo:10};
+}
+
+}
+
+if(tipo === "recurrente"){
+
+if(monto >= 500 && monto <= 1000){
+config = {tem:14, plazo:4};
+}
+
+if(monto >= 1001 && monto <= 3000){
+config = {tem:18, plazo:10};
+}
+
+if(monto >= 3001 && monto <= 5000){
+config = {tem:17, plazo:12};
+}
+
+}
+
+if(tipo === "a1"){
+
+if(monto >= 500 && monto <= 1000){
+config = {tem:17, plazo:10};
+}
+
+if(monto >= 1001 && monto <= 5000){
+config = {tem:16, plazo:12};
+}
+
+if(monto >= 5001 && monto <= 10000){
+config = {tem:15, plazo:16};
+}
+
+if(monto >= 10001 && monto <= 15000){
+config = {tem:14, plazo:20};
+}
+
+}
+
+if(tipo === "gerencia"){
+
+if(monto >= 1001 && monto <= 5000){
+config = {tem:11, plazo:5};
+}
+
+if(monto >= 5001 && monto <= 10000){
+config = {tem:10, plazo:6};
+}
+
+if(monto >= 10100 && monto <= 15000){
+config = {tem:9, plazo:8};
+}
+
+}
+
+}
+
+// =========================
+// QUINCENAL
+// =========================
+
+if(producto === "quincenal"){
+
+if(tipo === "nuevo"){
+
+if(monto >= 500 && monto <= 1000){
+config = {tem:15, plazo:3};
+}
+
+if(monto >= 1001 && monto <= 2000){
+config = {tem:15, plazo:4};
+}
+
+}
+
+if(tipo === "recurrente"){
+
+if(monto >= 500 && monto <= 1000){
+config = {tem:14, plazo:4};
+}
+
+if(monto >= 1001 && monto <= 3000){
+config = {tem:13, plazo:6};
+}
+
+if(monto >= 3001 && monto <= 5000){
+config = {tem:12, plazo:8};
+}
+
+}
+
+if(tipo === "a1"){
+
+if(monto >= 500 && monto <= 1000){
+config = {tem:13, plazo:5};
+}
+
+if(monto >= 1001 && monto <= 5000){
+config = {tem:12, plazo:6};
+}
+
+if(monto >= 5001 && monto <= 10000){
+config = {tem:11, plazo:7};
+}
+
+if(monto >= 10001 && monto <= 15000){
+config = {tem:10, plazo:8};
+}
+
+}
+
+if(tipo === "gerencia"){
+
+if(monto >= 1001 && monto <= 5000){
+config = {tem:11, plazo:5};
+}
+
+if(monto >= 5001 && monto <= 10000){
+config = {tem:10, plazo:6};
+}
+
+if(monto >= 10100 && monto <= 15000){
+config = {tem:9, plazo:8};
+}
+
+}
+
+}
+
+// =========================
+// MENSUAL
+// =========================
+
+if(producto === "mensual"){
+
+if(tipo === "nuevo"){
+
+if(monto >= 500 && monto <= 1000){
+config = {tem:12, plazo:3};
+}
+
+if(monto >= 1001 && monto <= 2000){
+config = {tem:12, plazo:4};
+}
+
+}
+
+if(tipo === "recurrente"){
+
+if(monto >= 500 && monto <= 1000){
+config = {tem:11, plazo:4};
+}
+
+if(monto >= 1001 && monto <= 3000){
+config = {tem:11, plazo:5};
+}
+
+if(monto >= 3001 && monto <= 5000){
+config = {tem:11, plazo:6};
+}
+
+}
+
+if(tipo === "a1"){
+
+if(monto >= 500 && monto <= 1000){
+config = {tem:11, plazo:5};
+}
+
+if(monto >= 1001 && monto <= 5000){
+config = {tem:10, plazo:6};
+}
+
+if(monto >= 5001 && monto <= 10000){
+config = {tem:9, plazo:7};
+}
+
+if(monto >= 10001 && monto <= 15000){
+config = {tem:8, plazo:8};
+}
+
+}
+
+if(tipo === "gerencia"){
+
+if(monto >= 1001 && monto <= 5000){
+config = {tem:9, plazo:5};
+}
+
+if(monto >= 5001 && monto <= 10000){
+config = {tem:8, plazo:6};
+}
+
+if(monto >= 10100 && monto <= 15000){
+config = {tem:7, plazo:8};
+}
+
+}
+
+}
+
+return config;
+}  
+// SIMULADOR
+function calcular(){
+if(!tipoCliente.value){
+
+alert("Seleccione tipo cliente");
+return;
+
+}
+
+if(!producto.value){
+
+alert("Seleccione producto");
+return;
+
+}  
+let P = parseFloat(monto.value);
+
+let tipo = document.getElementById("tipoCliente").value;
+
+let tarifa = obtenerTarifario(producto.value, P, tipo);
+if(!tarifa){
+alert("❌ Monto fuera de tarifario");
+return;
+}  
+let tasaIngresada = parseFloat(
+document.getElementById("tasa").value
+);
+
+if(
+tasaIngresada &&
+tasaIngresada < tarifa.tem
+){
+
+alert(
+"❌ La TEM no puede ser menor al tarifario"
+);
+
+document.getElementById("tasa").value = tarifa.tem;
+
+return;
+
+}  
+
+if(!document.getElementById("tasa").value){
+
+document.getElementById("tasa").value = tarifa.tem;
+
+
+document.getElementById("plazo").value = tarifa.plazo;
+
+}
+
+let t = parseFloat(
+document.getElementById("tasa").value
+) / 100;
+
+let n = parseInt(
+document.getElementById("plazo").value
+);
+
+if(!P || !t || !n){
+alert("Completa datos");
+return;
+}
+
+// 🔥 definir tipo
+let i = 0;
+let dias = 0;
+
+if(producto.value==="diario"){ 
+
+// 🔥 conversión financiera real
+i = Math.pow(1 + t, 1/30) - 1;
+
+dias = 1;
+
+}
+
+if(producto.value==="semanal"){
+
+// 🔥 fórmula real usada por sistema financiero
+i = t / 4.3;
+
+dias = 7;
+
+}
+
+if(producto.value==="quincenal"){
+
+// 🔥 tasa efectiva quincenal real
+i = Math.pow(1 + t, 15/30) - 1;
+
+dias = 15;
+
+}
+if(producto.value==="mensual"){ i=t; dias=30; }
+
+// 🔥 fórmula financiera
+// 🔥 comisión
+let comision = 0;
+
+if(P >= 300 && P <= 2000){
+    comision = 5;
+}
+else if(P >= 2001 && P <= 5000){
+    comision = 10;
+}
+else if(P >= 5001){
+    comision = 15;
+}
+
+// 🔥 capital financiado
+let capitalFinanciado = P + comision;
+
+// 🔥 total entregado
+let totalEntrega = P;
+
+// 🔥 fórmula financiera
+let cuota = (
+capitalFinanciado * i
+) / (
+1 - Math.pow(1+i,-n)
+);
+
+let total = cuota * n;
+
+let interes = total - capitalFinanciado;  
+// 🔥 resumen completo
+resultado.innerHTML = `
+
+<b>💰 Monto solicitado:</b>
+S/ ${P.toFixed(2)}<br>
+
+<b>💸 Comisión:</b>
+S/ ${comision.toFixed(2)}<br>
+
+<b>🏦 Capital financiado:</b>
+S/ ${capitalFinanciado.toFixed(2)}<br>
+
+<b>✅ Total entregado:</b>
+S/ ${totalEntrega.toFixed(2)}<br>
+
+<b>💳 Cuota:</b>
+S/ ${cuota.toFixed(2)}<br>
+
+<b>📈 Total a pagar:</b>
+S/ ${total.toFixed(2)}<br>
+
+<b>🏛️ Interés:</b>
+S/ ${interes.toFixed(2)}
+
+`;
+
+// 🔥 cronograma REAL
+let saldo = capitalFinanciado;
+let fecha = new Date();
+let html = "<h4>Cronograma:</h4>";
+
+for(let c=1;c<=n;c++){
+
+// 🔥 ahora sí correcto
+let interesCuota = saldo * i;
+let capital = cuota - interesCuota;
+
+saldo -= capital;
+
+fecha.setDate(fecha.getDate()+dias);
+
+html += `
+<div class="item">
+Cuota ${c}<br>
+Fecha: ${fecha.toLocaleDateString()}<br>
+Cuota: S/ ${cuota.toFixed(2)}<br>
+Saldo: S/ ${saldo.toFixed(2)}
+</div>`;
+}
+
+cronograma.innerHTML = html;
+
+// guardar para WhatsApp
+window.simData = {
+monto:P,
+cuota:cuota.toFixed(2),
+total:total.toFixed(2),
+producto:producto.value
+};
+
+}
+
+// LIMPIAR
+function limpiar(){
+document.querySelectorAll("input").forEach(i=>i.value="");
+resultado.innerHTML="";
+cronograma.innerHTML="";
+}
 
 // EXCEL MEJORADO
 function cargarExcel(){
@@ -2418,31 +2234,22 @@ let clientes = {};
   let hoyFecha = new Date().toLocaleDateString();
 let hoyCount = 0;
 let moraCount = 0;
-let medioCount = 0;
-let graveCount = 0;
 let criticoCount = 0;
   data.forEach(c=>{
-total += parseFloat(c.saldoCapital || 0);
+
 let retraso = parseFloat(c.retraso) || 0;
 let monto = parseFloat(c.monto) || 0;
 
-if(!c.pagado_hoy){
+if(retraso === 0 && !c.pagado_hoy){
+    hoyCount++;
+}
 
-    if(retraso === 0){
-        hoyCount++;
-    }
-    else if(retraso <= 8){
-        moraCount++;
-    }
-    else if(retraso <= 30){
-        medioCount++;
-    }
-    else if(retraso <= 60){
-        graveCount++;
-    }
-    else{
-        criticoCount++;
-    }
+if(retraso >= 1 && retraso <= 8 && !c.pagado_hoy){
+    moraCount++;
+}
+
+if(retraso >= 9 && !c.pagado_hoy){
+    criticoCount++;
 
 }
 let pagado = parseFloat(c.pagado_monto) || 0;
@@ -2625,21 +2432,7 @@ if(btnCriticos){
 btnCriticos.innerHTML =
 `🔴 Mora crítica (${criticoCount})`;
 }
-// =============================
-// CONTADORES DASHBOARD
-// =============================
 
-const c0 = document.getElementById("contador0");
-const c8 = document.getElementById("contador8");
-const c30 = document.getElementById("contador30");
-const c60 = document.getElementById("contador60");
-const c61 = document.getElementById("contador61");
-
-if(c0) c0.innerHTML = hoyCount;
-if(c8) c8.innerHTML = moraCount;
-if(c30) c30.innerHTML = medioCount;
-if(c60) c60.innerHTML = graveCount;
-if(c61) c61.innerHTML = criticoCount;
 }
 function filtrarMora(min,max){
 
@@ -2952,7 +2745,67 @@ cargarResumen();
 console.log("Vista general activada");
 
 }
+// UI
+function mostrar(p){
+if(
+p === "admin" &&
+asesor !== "admin" &&
+asesor !== "operaciones"
+){
+alert("Acceso restringido");
+return;
+}
+dashboard.style.display="none";
 
+document.querySelector(".resumen").style.display = "none";
+
+app.style.display="block";
+
+[
+"simulador",
+"clientes",
+"pagos",
+"admin",
+"kpi",
+"kpiFinanciero",
+"resultadoMensual",
+"historialDiv",
+"historialGestionesDiv",
+"historialClienteDiv"
+].forEach(id=>{
+let el = document.getElementById(id);
+if(el) el.style.display="none";
+});
+
+document.getElementById(p).style.display="block";
+  if(p==="kpi"){
+
+    if(
+        asesor !== "admin" &&
+        asesor !== "operaciones"
+    ){
+
+        document.getElementById(
+            "panelCargaKPI"
+        ).style.display="none";
+
+    }else{
+
+        document.getElementById(
+            "panelCargaKPI"
+        ).style.display="block";
+
+    }
+
+}
+if(p==="clientes"){
+
+    filtrarMora(0,1000);
+
+    actualizarResumen();
+}
+if(p==="admin") renderUsuarios();
+}
 
 function volver(){
 
@@ -2965,7 +2818,6 @@ app.style.display="none";
 "kpi",
 "kpiFinanciero",
 "resultadoMensual",
-  "inteligencia",
 "historialDiv",
 "historialGestionesDiv",
 "historialClienteDiv"
@@ -2982,6 +2834,23 @@ dashboard.style.display="block";
   if(asesor === "slopez"){
     document.getElementById("panelAsesores").style.display="grid";
 }
+}
+// QR
+function abrirQR(el){
+imgQR.src=el.querySelector("img").src;
+modalQR.style.display="flex";
+}
+function cerrarQR(){modalQR.style.display="none";}
+function abrirTarifario(){
+
+document.getElementById("modalTarifario").style.display = "block";
+
+}
+
+function cerrarTarifario(){
+
+document.getElementById("modalTarifario").style.display = "none";
+
 }
 
 // 🔴 GEO CON CONTROL
@@ -3654,17 +3523,7 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 <script src="js/gestiones.js?v=20260624"></script>
-<script src="js/kpi.js?v=20260704"></script>
-<script src="js/resultadoMensual.js?v=20260704"></script>
-  <script src="js/inteligencia.js?v=20260702"></script>
-  <script src="js/utilidades.js?v=20260703"></script>
-  <script src="js/dashboard.js?v=20260704"></script>
-  <script src="js/app.js?v=20260703"></script>
-  <script src="js/firebase.js?v=20260703"></script>
-  <script src="js/login.js?v=20260703"></script>
-  <script src="js/clientes.js?v=20260703"></script>
-  <script src="js/simulador.js?v=20260703"></script>
-  <script src="js/config.js?v=20260703"></script>
+<script src="js/kpi.js?v=20260624"></script>
+<script src="js/resultadoMensual.js?v=20260626"></script>
 </body>
   </html>
-  

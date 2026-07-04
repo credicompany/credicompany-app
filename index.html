@@ -167,28 +167,43 @@ border-color:#123B63;
   margin:10px;
 }
 
-.card-resumen{background:#FFFFFF;color:#0D2D6C;border-radius:18px;
-padding:12px;text-align:center;min-height:90px;
+.card-resumen{
+background:#ffffff;
+border-radius:22px;
+padding:18px;
+text-align:center;
+min-height:120px;
 
 display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
 
-box-shadow:0 4px 12px rgba(0,0,0,.08);
+border:1px solid #E8EDF3;
+box-shadow:0 8px 20px rgba(15,23,42,.08);
 
-transition:.3s;
+transition:all .25s ease;
+}
+
+.card-resumen:hover{
+transform:translateY(-3px);
+box-shadow:0 14px 28px rgba(15,23,42,.12);
 }
 
  .card-resumen div:first-child{
-  font-size:12px;
-  line-height:14px;
-} 
+font-size:13px;
+font-weight:600;
+color:#64748B;
+line-height:18px;
+text-transform:uppercase;
+letter-spacing:.4px;
+}
   .card-resumen div:last-child{
-font-size:18px;
-font-weight:700;
-color:#0D2D6C;
-margin-top:6px;
+font-size:28px;
+font-weight:800;
+color:#123B63;
+margin-top:10px;
+line-height:1;
 }
   #rankingBox{
   background:white;
@@ -237,7 +252,18 @@ padding:12px;
 }
 
 @media(max-width:768px){
+.card-resumen{
+min-height:105px;
+padding:14px;
+}
 
+.card-resumen div:first-child{
+font-size:12px;
+}
+
+.card-resumen div:last-child{
+font-size:22px;
+}
    #rankingContainer{
     display:flex;
     flex-wrap:wrap;

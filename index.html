@@ -84,8 +84,39 @@ transition:all .25s ease;
 transform:translateY(-2px);
 box-shadow:0 14px 30px rgba(15,23,42,.12);
 }
-.volver{position:sticky;top:0;background:#0a2f5c;color:white;padding:14px;border-radius:12px;text-align:center;font-weight:bold;margin-bottom:15px;cursor:pointer;}
-input, select{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:none;}
+.volver{
+position:sticky;
+top:10px;
+background:#123B63;
+color:white;
+padding:14px;
+border-radius:14px;
+text-align:center;
+font-weight:700;
+margin-bottom:18px;
+cursor:pointer;
+box-shadow:0 6px 16px rgba(18,59,99,.18);
+z-index:20;
+}
+input,
+select{
+width:100%;
+padding:14px;
+margin-top:10px;
+border-radius:14px;
+border:1px solid #D9E2EC;
+background:#ffffff;
+font-size:15px;
+transition:.25s;
+box-sizing:border-box;
+}
+
+input:focus,
+select:focus{
+outline:none;
+border-color:#123B63;
+box-shadow:0 0 0 4px rgba(18,59,99,.10);
+}
 button{
 width:100%;
 padding:14px 18px;
@@ -159,8 +190,23 @@ border-color:#123B63;
 }
 .fila{display:flex;gap:6px;margin-top:6px;}
 .fila button{width:50%;}
-.item{background:white;padding:6px;margin-top:6px;border-radius:8px;color:#333;font-size:12px;line-height:1.1;
-} 
+.item{
+background:#ffffff;
+padding:16px;
+margin-top:12px;
+border-radius:18px;
+border:1px solid #E7EDF5;
+color:#334155;
+font-size:14px;
+line-height:1.6;
+box-shadow:0 6px 18px rgba(15,23,42,.06);
+transition:all .25s ease;
+}
+
+.item:hover{
+transform:translateY(-2px);
+box-shadow:0 12px 24px rgba(15,23,42,.10);
+}
 .pagos-container{display:flex;flex-direction:column;gap:20px;}
 .pago-box{background:white;padding:6px;border-radius:12px;cursor:pointer;}
 .pago-box img{width:100%;height:auto;max-height:500px;object-fit:contain;}

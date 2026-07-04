@@ -63,8 +63,21 @@ text-align:center;
 letter-spacing:1px;
 text-transform:uppercase;
 }
-.card{background:#FFFFFF;color:#1F2937;margin:15px;padding:20px;border-radius:18px;box-shadow:0 4px 12px rgba(0,0,0,.08);
-border:none;}
+.card{
+background:#FFFFFF;
+color:#1F2937;
+margin:16px;
+padding:22px;
+border-radius:22px;
+border:1px solid #E8EDF3;
+box-shadow:0 8px 24px rgba(15,23,42,.08);
+transition:all .25s ease;
+}
+
+.card:hover{
+transform:translateY(-2px);
+box-shadow:0 14px 30px rgba(15,23,42,.12);
+}
 .volver{position:sticky;top:0;background:#0a2f5c;color:white;padding:14px;border-radius:12px;text-align:center;font-weight:bold;margin-bottom:15px;cursor:pointer;}
 input, select{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:none;}
 button{padding:14px;border:none;border-radius:12px;color:white;font-weight:bold;width:100%;}

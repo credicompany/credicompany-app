@@ -1,1 +1,189 @@
+// =====================================
+// INICIALIZACIÓN DEL SISTEMA
+// =====================================
 
+function iniciarSistema(){
+
+    console.log("🚀 Iniciando CREDICOMPANY...");
+
+    iniciarResetDiario();
+
+    setTimeout(()=>{
+
+        sincronizarCartera();
+
+        console.log(
+            "Existe recuperarResultadoMensualFirebase:",
+            typeof recuperarResultadoMensualFirebase
+        );
+
+        if(typeof recuperarResultadoMensualFirebase === "function"){
+
+            recuperarResultadoMensualFirebase();
+
+        }else{
+
+            console.error("❌ No existe recuperarResultadoMensualFirebase");
+
+        }
+
+    },300);
+
+}
+// QR
+function abrirQR(el){
+imgQR.src=el.querySelector("img").src;
+modalQR.style.display="flex";
+}
+function cerrarQR(){modalQR.style.display="none";}
+function abrirTarifario(){
+
+document.getElementById("modalTarifario").style.display = "block";
+
+}
+
+function cerrarTarifario(){
+
+document.getElementById("modalTarifario").style.display = "none";
+
+}
+// UI
+function mostrar(p){
+if(
+p === "admin" &&
+asesor !== "admin" &&
+asesor !== "operaciones"
+){
+alert("Acceso restringido");
+return;
+}
+dashboard.style.display="none";
+
+document.querySelector(".resumen").style.display = "none";
+
+app.style.display="block";
+
+[
+"simulador",
+"clientes",
+"pagos",
+"admin",
+"kpi",
+"kpiFinanciero",
+"resultadoMensual",
+  "inteligencia",
+"historialDiv",
+"historialGestionesDiv",
+"historialClienteDiv"
+].forEach(id=>{
+let el = document.getElementById(id);
+if(el) el.style.display="none";
+});
+
+document.getElementById(p).style.display="block";
+// Esperar que el módulo termine de mostrarse
+setTimeout(()=>{
+
+    if(p==="kpi"){
+        cargarGerencialFirebase();
+    }
+
+    if(p==="kpiFinanciero"){
+        cargarFinancieroFirebase();
+    }
+
+},100);
+  if(p==="inteligencia"){
+
+    cargarCentroInteligencia();
+
+}
+  if(p==="kpi"){
+
+    if(
+        asesor !== "admin" &&
+        asesor !== "operaciones"
+    ){
+
+        document.getElementById(
+            "panelCargaKPI"
+        ).style.display="none";
+
+    }else{
+
+        document.getElementById(
+            "panelCargaKPI"
+        ).style.display="block";
+
+    }
+
+}
+if(p==="clientes"){
+
+    filtrarMora(0,1000);
+
+    actualizarResumen();
+}
+if(p==="admin") renderUsuarios();
+}
+function volver(){
+
+app.style.display="none";
+[
+"simulador",
+"clientes",
+"pagos",
+"admin",
+"kpi",
+"kpiFinanciero",
+"resultadoMensual",
+  "inteligencia",
+"historialDiv",
+"historialGestionesDiv",
+"historialClienteDiv"
+].forEach(id=>{
+let el=document.getElementById(id);
+if(el) el.style.display="none";
+});
+
+document.querySelector(".resumen").style.display = "grid";
+
+document.getElementById("historialDiv").style.display="none";
+
+dashboard.style.display="block";
+  if(asesor === "slopez"){
+    document.getElementById("panelAsesores").style.display="grid";
+}
+}
+// =====================================
+// RESET DIARIO
+// =====================================
+
+function iniciarResetDiario(){
+
+    let hoy = new Date().toLocaleDateString('en-CA');
+    let ultimo = localStorage.getItem("fechaSistema");
+
+    if(ultimo !== hoy){
+
+        let data = JSON.parse(localStorage.getItem("cartera")) || [];
+
+        data.forEach(c=>{
+            c.pagado_hoy = false;
+            c.pagado_monto = 0;
+        });
+
+        localStorage.setItem("cartera", JSON.stringify(data));
+        localStorage.setItem("bonosHoy", JSON.stringify({}));
+        localStorage.setItem("fechaSistema", hoy);
+
+        console.log("✅ Reset diario ejecutado");
+
+    }
+
+}
+// =====================================
+// INICIO DEL SISTEMA
+// =====================================
+
+window.onload = iniciarSistema;

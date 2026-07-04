@@ -1075,64 +1075,6 @@ function mostrarArchivosActivos(){
     }
 
 }
-
-// ======================================================
-// ARCHIVOS ACTIVOS
-// ======================================================
-
- let div =
-    document.getElementById("metaActivaKPI");
-
-    let nombre =
-    localStorage.getItem("nombreMetaKPI");
-
-    let fecha =
-    localStorage.getItem("fechaMetaKPI");
-
-    if(div && nombre){
-
-        div.innerHTML =
-        `📅 Meta vigente: ${nombre}<br>
-        🕒 Cargada: ${fecha}`;
-
-    }
-
-     let nombreProd =
-    localStorage.getItem("nombreProduccionKPI");
-
-    let fechaProd =
-    localStorage.getItem("fechaProduccionKPI");
-
-    if(div && nombreProd){
-
-        div.innerHTML +=
-        `<br><br>
-        📂 Producción vigente: ${nombreProd}<br>
-        🕒 Cargada: ${fechaProd}`;
-
-    }
-
-     let nombreFinanciero =
-localStorage.getItem(
-"nombreFinanciero"
-);
-
-if(
-document.getElementById(
-"archivoFinancieroActivo"
-)
-){
-
-document.getElementById(
-"archivoFinancieroActivo"
-).innerHTML =
-
-"📂 Archivo vigente: " +
-(nombreFinanciero || "Sin archivo");
-
-   }
-
-}
 // ======================================================
 // INICIALIZACIÓN
 // ======================================================

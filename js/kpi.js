@@ -928,32 +928,27 @@ function cargarFinancieroFirebase(){
 const divFinanciero =
 document.getElementById("resumenFinanciero");
 
+console.log("HTML FINANCIERO:", datos.html);
 console.log("DIV FINANCIERO:", divFinanciero);
 
-if(divFinanciero){
+if(datos && divFinanciero){
 
     divFinanciero.innerHTML = datos.html || "";
 
+    console.log("✅ KPI FINANCIERO DESDE FIREBASE");
+
+}else{
+
+    let financieroGuardado =
+    localStorage.getItem("financiero");
+
+    if(financieroGuardado){
+
+        mostrarResumenFinanciero();
+
+    }
+
 }
-
-            console.log(
-                "✅ KPI FINANCIERO DESDE FIREBASE"
-            );
-
-        }else{
-
-            let financieroGuardado =
-            localStorage.getItem("financiero");
-
-            if(financieroGuardado){
-
-                mostrarResumenFinanciero();
-
-            }
-
-        }
-
-    })
     .catch(error=>{
 
         console.error(

@@ -903,7 +903,9 @@ clientes.style.display="block";
 // ======================================================
 // INICIALIZACIÓN
 // ======================================================
-window.addEventListener("load",()=>{
+window.addEventListener("load", iniciarKPI);
+
+function iniciarKPI(){
 
     let div =
     document.getElementById("metaActivaKPI");

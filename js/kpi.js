@@ -871,16 +871,17 @@ console.log(datos);
 console.log("================================");
         if(!datos) return;
 
-        if(
-            datos.resumen &&
-            document.getElementById("kpiResumen")
-        ){
+       console.log("RESUMEN GERENCIAL:", datos.resumen);
 
-            document.getElementById(
-                "kpiResumen"
-            ).innerHTML = datos.resumen;
+const divResumen = document.getElementById("kpiResumen");
 
-        }
+console.log("DIV KPI:", divResumen);
+
+if(divResumen){
+
+    divResumen.innerHTML = datos.resumen || "";
+
+}
 
         if(
             datos.rankingKPIHTML &&
@@ -922,15 +923,18 @@ function cargarFinancieroFirebase(){
 
         let datos = snapshot.val();
 
-        if(
-            datos &&
-            datos.html &&
-            document.getElementById("resumenFinanciero")
-        ){
+       console.log("HTML FINANCIERO:", datos.html);
 
-            document.getElementById(
-                "resumenFinanciero"
-            ).innerHTML = datos.html;
+const divFinanciero =
+document.getElementById("resumenFinanciero");
+
+console.log("DIV FINANCIERO:", divFinanciero);
+
+if(divFinanciero){
+
+    divFinanciero.innerHTML = datos.html || "";
+
+}
 
             console.log(
                 "✅ KPI FINANCIERO DESDE FIREBASE"

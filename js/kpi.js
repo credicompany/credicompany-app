@@ -923,32 +923,31 @@ function cargarFinancieroFirebase(){
 
         let datos = snapshot.val();
 
-       console.log("HTML FINANCIERO:", datos.html);
+        console.log(datos);
 
-const divFinanciero =
-document.getElementById("resumenFinanciero");
+        const divFinanciero =
+        document.getElementById("resumenFinanciero");
 
-console.log("HTML FINANCIERO:", datos.html);
-console.log("DIV FINANCIERO:", divFinanciero);
+        if(datos && divFinanciero){
 
-if(datos && divFinanciero){
+            divFinanciero.innerHTML = datos.html || "";
 
-    divFinanciero.innerHTML = datos.html || "";
+            console.log("✅ KPI FINANCIERO DESDE FIREBASE");
 
-    console.log("✅ KPI FINANCIERO DESDE FIREBASE");
+        }else{
 
-}else{
+            let financieroGuardado =
+            localStorage.getItem("financiero");
 
-    let financieroGuardado =
-    localStorage.getItem("financiero");
+            if(financieroGuardado){
 
-    if(financieroGuardado){
+                mostrarResumenFinanciero();
 
-        mostrarResumenFinanciero();
+            }
 
-    }
+        }
 
-}
+    })
     .catch(error=>{
 
         console.error(
@@ -959,7 +958,6 @@ if(datos && divFinanciero){
     });
 
 }
-
 
 // ======================================================
 // FUNCIONES GENERALES

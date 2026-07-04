@@ -865,7 +865,10 @@ function cargarGerencialFirebase(){
     .then(snapshot=>{
 
         const datos = snapshot.val();
-
+console.log("================================");
+console.log("GERENCIAL FIREBASE");
+console.log(datos);
+console.log("================================");
         if(!datos) return;
 
         if(

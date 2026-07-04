@@ -1,0 +1,2245 @@
+// =====================
+// KPI CREDICOMPANY
+// =====================
+// ======================================================
+// MÓDULO KPI CREDICOMPANY
+// ======================================================
+//
+// 1. Funciones Generales
+// 2. KPI Gerencial
+// 3. KPI Financiero
+// 4. Firebase
+// 5. Eventos
+// 6. Carga de Excel
+//
+// ======================================================
+
+// ======================================================
+// KPI GERENCIAL
+// ======================================================
+function generarKPI(json){
+
+// ======================================
+// KPI GERENCIAL
+// DETECCIÓN AUTOMÁTICA DEL MES
+// ======================================
+
+const jsonGeneral = [...json];
+
+let ultimaFecha = null;
+
+jsonGeneral.forEach(c=>{
+
+    let fechaExcel =
+    Number(c["Fecha Desembolso"]);
+
+    if(!isNaN(fechaExcel)){
+
+        let fecha =
+        new Date(
+            (fechaExcel-25569)*
+            86400*1000
+        );
+
+        if(
+            !ultimaFecha ||
+            fecha>ultimaFecha
+        ){
+            ultimaFecha=fecha;
+        }
+
+    }
+
+});
+
+if(!ultimaFecha){
+
+    alert(
+    "No existe ninguna fecha válida."
+    );
+
+    return;
+
+}
+
+const meses=[
+"Enero","Febrero","Marzo","Abril",
+"Mayo","Junio","Julio","Agosto",
+"Septiembre","Octubre",
+"Noviembre","Diciembre"
+];
+
+const indiceMes =
+ultimaFecha.getUTCMonth();
+
+const anioActual =
+ultimaFecha.getUTCFullYear();
+
+const mesActual =
+meses[indiceMes];
+
+const mesAnterior =
+meses[(indiceMes+11)%12];
+
+json=jsonGeneral.filter(c=>{
+
+    let fechaExcel=
+    Number(c["Fecha Desembolso"]);
+
+    if(isNaN(fechaExcel))
+    return false;
+
+    let fecha=
+    new Date(
+        (fechaExcel-25569)*
+        86400*1000
+    );
+
+    return(
+
+        fecha.getUTCMonth()
+        ===
+        indiceMes
+
+        &&
+
+        fecha.getUTCFullYear()
+        ===
+        anioActual
+
+    );
+
+});
+
+console.log(
+"KPI:",
+mesActual,
+json.length,
+"REGISTROS"
+);let metas =
+JSON.parse(
+    localStorage.getItem("metasKPI")
+) || [];
+
+console.log(
+"REGISTROS MES ACTUAL:",
+json.length
+);
+    let totalClientes = json.length;
+
+  let montoOtorgadoTotal = 0;
+let costoDesembolsoTotal = 0;
+
+json.forEach(c=>{
+
+    montoOtorgadoTotal +=
+    parseFloat(c["Monto Otorgado"]) || 0;
+let atraso =
+parseFloat(c["Dias de retraso"]) || 0;
+    let costo =
+    parseFloat(c["Costo por Desembolso"]) || 0;
+console.log(
+"COSTO:",
+c["Costo por Desembolso"]
+);  
+
+costoDesembolsoTotal += costo;
+});
+
+    let totalOperaciones = json.length;
+let metaEmpresa = 0;
+
+metas.forEach(m=>{
+
+   metaEmpresa +=
+   parseFloat(
+      String(
+         m["COLOCACION"] ||
+         m["COLOC."] ||
+         0
+      ).replace(/,/g,"")
+   ) || 0;
+
+});
+let avanceEmpresa =
+metaEmpresa > 0
+?
+((montoOtorgadoTotal / metaEmpresa) * 100)
+.toFixed(1)
+:
+0;
+let temGeneral = 0;
+
+json.forEach(c=>{
+
+    temGeneral +=
+    parseFloat(
+        String(c["TEM"] || 0)
+        .replace(",",".")
+    ) || 0;
+
+});
+
+temGeneral =
+totalClientes > 0
+?
+(temGeneral / totalClientes).toFixed(2)
+:
+0;
+
+let resumen = `
+
+<h3 style="
+text-align:center;
+margin-bottom:20px;
+color:#0A3A63;
+font-size:24px;
+font-weight:700;
+">
+KPI GERENCIAL
+</h3>
+<div style="
+background:#f8f9fa;
+padding:10px;
+border-radius:10px;
+margin-bottom:10px;
+text-align:center;
+font-size:14px;
+font-weight:bold;
+">
+
+📊 KPI FINANCIERO
+
+<br>
+
+🕒 Actualizado:
+${new Date().toLocaleString()}
+
+</div><div style="
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:5px;
+margin-bottom:10px;
+">
+<div style="
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
+padding:6px;
+border-radius:8px;
+text-align:center;
+min-height:55px;
+">
+<div style="font-size:16px;">👥</div>
+<div style="font-size:11px;">Clientes</div>
+<div style="font-size:15px;font-weight:bold;">
+${totalClientes}
+</div>
+</div>
+
+<div style="
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
+padding:6px;
+border-radius:8px;
+text-align:center;
+min-height:55px;
+">
+<div style="font-size:16px;">💰</div>
+<div style="font-size:11px;">Colocación</div>
+<div style="font-size:15px;font-weight:bold;">
+S/ ${(montoOtorgadoTotal/1000).toFixed(0)}K
+</div>
+</div>
+
+<div style="
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
+padding:6px;
+border-radius:8px;
+text-align:center;
+min-height:55px;
+">
+<div style="font-size:16px;">📋</div>
+<div style="font-size:11px;">Operaciones</div>
+<div style="font-size:15px;font-weight:bold;">
+${totalOperaciones}
+</div>
+</div>
+
+<div style="
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
+padding:6px;
+border-radius:8px;
+text-align:center;
+min-height:55px;
+">
+<div style="font-size:16px;">📈</div>
+<div style="font-size:11px;">TEM</div>
+<div style="font-size:15px;font-weight:bold;">
+${temGeneral}%
+</div>
+</div>
+<div style="
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
+padding:6px;
+border-radius:8px;
+text-align:center;
+min-height:55px;
+">
+<div style="font-size:16px;">🎯</div>
+<div style="font-size:11px;">
+Meta Empresa
+</div>
+<div style="
+font-size:15px;
+font-weight:bold;
+">
+${avanceEmpresa}%
+</div>
+</div>
+</div>
+`;
+
+    let ranking = {};
+let operaciones = {};
+let temPromedio = {};
+let clientes = {};
+let moraAsesor = {};
+
+    json.forEach(c => {
+console.log(Object.keys(c));
+        let asesor =
+        (c["Asesor(a)"] || "SIN ASESOR")
+        .trim()
+        .toUpperCase();
+console.log(
+    "ASESOR:",
+    JSON.stringify(c["Asesor(a)"]),
+    "| PRESTAMO:",
+    c["Prestamo"],
+    "| FECHA:",
+    c["Fecha Desembolso"]
+);
+        let monto =
+        parseFloat(c["Monto Otorgado"]) || 0;
+
+        let tem =
+parseFloat(
+    String(c["TEM"])
+    .replace(",",".")
+) || 0;
+
+        let dni =
+        (c["DNI"] || "").toString();
+let saldoCapitalVencido =
+parseFloat(
+    c["Saldo capital vencido"] ??
+    c["Saldo Capital Vencido"] ??
+    c["SALDO CAPITAL VENCIDO"] ??
+    0
+) || 0;
+
+
+       if(!ranking[asesor]){
+
+    ranking[asesor] = 0;
+    operaciones[asesor] = 0;
+    temPromedio[asesor] = [];
+    clientes[asesor] = new Set();
+    moraAsesor[asesor] = 0;
+
+}
+
+        ranking[asesor] += monto;
+        operaciones[asesor]++;
+        temPromedio[asesor].push(tem);
+        
+moraAsesor[asesor] += saldoCapitalVencido;
+       
+        if(dni){
+            clientes[asesor].add(dni);
+        }
+
+    });
+let top =
+Object.entries(ranking)
+
+.filter(([asesor]) =>
+!["SLOPEZ","ADMIN"].includes(
+asesor.toUpperCase()
+)
+)
+
+.sort((a,b)=>b[1]-a[1]);
+let mejorAsesor =
+top.length > 0
+?
+top[0]
+:
+null;
+
+if(mejorAsesor){
+
+resumen += `
+
+<div style="
+background:#FFFFFF;
+border-left:5px solid #0A3A63;
+color:#1F2937;
+padding:12px;
+border-radius:12px;
+margin-bottom:12px;
+">
+
+<div style="
+font-size:14px;
+font-weight:600;
+color:#6B7280;
+">
+🏆 Líder del Mes
+</div>
+
+<div style="
+font-size:20px;
+font-weight:bold;
+margin-top:5px;
+">
+${mejorAsesor[0]}
+</div>
+
+<div style="
+font-size:18px;
+margin-top:4px;
+">
+💰 S/${mejorAsesor[1].toLocaleString()}
+</div>
+
+</div>
+`;
+
+}
+   resumen += `
+
+<div class="card">
+
+<h4 style="
+margin:5px 0;
+font-size:14px;
+">
+🎯 KPI POR ASESOR
+</h4>
+
+<div style="
+overflow-x:auto;
+overflow-y:hidden;
+width:100%;
+-webkit-overflow-scrolling:touch;
+padding-bottom:8px;
+">
+
+<table style="
+width:100%;
+min-width:1100px;
+border-collapse:collapse;
+font-size:14px;
+text-align:center;
+">
+
+<tr style="
+background:#0A3A63;
+color:white;
+">
+
+<th>ASESOR</th>
+<th>META COLOCACIÓN</th>
+<th>AVANCE</th>
+<th>% AVANCE</th>
+<th>META OPERACIONES</th>
+<th>AVANCE</th>
+<th>% AVANCE OPER</th>
+<th>TEM ${mesAnterior.toUpperCase()}</th>
+<th>TEM ${mesActual.toUpperCase()}</th>
+<th>MORA ${mesAnterior.toUpperCase()}</th>
+<th>MORA ${mesActual.toUpperCase()}</th>
+<th>🚦</th>
+
+</tr>
+`;
+// ==========================
+// MORA ACTUAL (TODA LA CARTERA)
+// ==========================
+
+let moraActualAsesor = {};
+
+jsonGeneral.forEach(c=>{
+
+    let asesor =
+    (c["Asesor(a)"] || "")
+    .toString()
+    .trim()
+    .toUpperCase();
+
+    let atraso =
+    parseFloat(c["Dias de retraso"] || 0) || 0;
+
+    let saldo =
+    parseFloat(c["Saldo Capital"] || 0) || 0;
+
+    if(!moraActualAsesor[asesor]){
+        moraActualAsesor[asesor] = 0;
+    }
+
+    if(atraso >= 1){
+        moraActualAsesor[asesor] += saldo;
+    }
+
+});    Object.keys(ranking).forEach(asesor=>{
+
+        let colocacion =
+        ranking[asesor];
+
+        let oper =
+        operaciones[asesor];
+       // TEM DEL MES ACTUAL (Excel General)
+
+let tem =
+temPromedio[asesor].length
+?
+(
+    temPromedio[asesor]
+    .reduce((a,b)=>a+b,0)
+    /
+    temPromedio[asesor].length
+).toFixed(2)
+:
+0;
+        
+        let cli =
+        clientes[asesor].size;
+
+        let meta =
+        metas.find(m =>
+
+            String(
+                m["Asesor (A)"] ||
+                m["ASESOR"] ||
+                ""
+            )
+            .trim()
+            .toUpperCase()
+            .replace(/\s+/g,"")
+
+            ===
+
+            asesor
+            .trim()
+            .toUpperCase()
+            .replace(/\s+/g,"")
+
+        );
+//==================================
+// HISTÓRICO AUTOMÁTICO
+//==================================
+
+let temAnterior = 0;
+let moraAnterior = 0;
+
+if(meta){
+
+    const columnas =
+    Object.keys(meta);
+
+    const buscarColumna = (tipo,mes)=>{
+
+        const buscado =
+        (tipo+" "+mes)
+        .toUpperCase();
+
+        let encontrada =
+        columnas.find(col=>{
+
+            let nombre =
+            col
+            .toUpperCase()
+            .trim()
+            .replace(/\s+/g," ");
+
+            return(
+                nombre.includes(tipo)
+                &&
+                nombre.includes(
+                    mes.toUpperCase()
+                )
+            );
+
+        });
+
+        return encontrada;
+
+    };
+
+    let colTEM =
+    buscarColumna(
+        "TEM",
+        mesAnterior
+    );
+
+    let colMORA =
+    buscarColumna(
+        "MORA",
+        mesAnterior
+    );
+
+    if(colTEM){
+
+        temAnterior =
+        parseFloat(
+            String(
+                meta[colTEM]
+            ).replace(/,/g,"")
+        ) || 0;
+
+    }
+
+    if(colMORA){
+
+        moraAnterior =
+        parseFloat(
+            String(
+                meta[colMORA]
+            ).replace(/,/g,"")
+        ) || 0;
+
+    }
+
+}       
+       let moraActual =
+moraActualAsesor[asesor] || 0;
+    
+        let metaDesembolso =
+        meta
+        ?
+        parseFloat(
+            String(
+                meta["COLOCACION"] ||
+                meta["COLOC."] ||
+                0
+            ).replace(/,/g,"")
+        )
+        :
+        0;
+
+        let metaOperaciones =
+        meta
+        ?
+        parseFloat(
+            String(
+                meta["OPERACIONES"] || 0
+            ).replace(/,/g,"")
+        )
+        :
+        0;
+        let porcentajeOperaciones =
+metaOperaciones > 0
+?
+((oper / metaOperaciones) * 100).toFixed(1)
+:
+0;
+let porcentajeDesembolso =
+metaDesembolso > 0
+?
+((colocacion / metaDesembolso) * 100).toFixed(1)
+:
+0;
+
+let colorEstado = "🔴";
+
+if(Number(porcentajeDesembolso) >= 100){
+
+   colorEstado = "🟢";
+
+}
+else if(Number(porcentajeDesembolso) >= 80){
+
+   colorEstado = "🟡";
+
+}
+resumen += `
+
+<tr>
+
+<td>
+<b>${asesor}</b>
+</td>
+
+<td>
+S/${metaDesembolso.toLocaleString()}
+</td>
+
+<td>
+S/${Math.round(colocacion).toLocaleString()}
+</td>
+
+<td style="
+background:${Number(porcentajeDesembolso) >= 100 ? '#22c55e' : '#ffffff'};
+color:${Number(porcentajeDesembolso) >= 100 ? 'white' : '#000'};
+font-weight:bold;
+border-radius:4px;
+">
+${porcentajeDesembolso}%
+</td>
+<td>
+${metaOperaciones}
+</td>
+
+<td>
+${oper}
+</td>
+
+<td style="
+background:
+${Number(porcentajeOperaciones) >= 100
+? '#22c55e'
+: Number(porcentajeOperaciones) >= 80
+? '#facc15'
+: '#ef4444'};
+color:white;
+font-weight:bold;
+">
+${porcentajeOperaciones}%
+</td>
+
+<td>
+${Number(temAnterior).toFixed(1)}%
+</td>
+
+<td>
+${tem}%
+</td>
+
+<td>
+S/${Number(moraAnterior).toLocaleString()}
+</td>
+
+<td style="
+font-weight:bold;
+color:#c62828;
+">
+S/${Math.round(moraActual).toLocaleString()}
+</td>
+${colorEstado}
+</td>
+
+</tr>
+
+`;
+    });
+
+    resumen += `
+</table>
+</div>
+`;
+let rankingKPIHTML = "";
+
+top
+
+.filter(([asesor]) =>
+!["SLOPEZ","ADMIN"].includes(
+asesor.toUpperCase()
+)
+)
+
+.slice(0,10)
+
+.forEach((r,index)=>{
+
+let medalla="🥉";
+
+if(index===0) medalla="🥇";
+if(index===1) medalla="🥈";
+
+rankingKPIHTML += `
+<div style="
+font-size:11px;
+line-height:1.2;
+margin:2px 0;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+">
+
+${medalla}
+${r[0].substring(0,8)}
+→ S/${Math.round(r[1]/1000)}K
+
+</div>
+`;
+
+});
+
+localStorage.setItem(
+"rankingKPIHTML",
+rankingKPIHTML
+);
+
+if(document.getElementById("rankingKPI")){
+document.getElementById("rankingKPI").innerHTML =
+rankingKPIHTML;
+}    
+document.getElementById(
+    "kpiResumen"
+).innerHTML = resumen;
+
+localStorage.setItem(
+    "resumenKPI",
+    resumen
+);
+guardarGerencialFirebase(
+    resumen,
+    rankingKPIHTML
+);
+
+
+}
+
+// ======================================================
+// FIREBASE KPI GERENCIAL
+// ======================================================
+function guardarGerencialFirebase(
+    resumen,
+    rankingKPIHTML
+){
+
+    db.ref("kpiGerencial").set({
+
+        resumen,
+        rankingKPIHTML,
+
+        nombreMeta:
+        localStorage.getItem("nombreMetaKPI") || "",
+
+        fechaMeta:
+        localStorage.getItem("fechaMetaKPI") || "",
+
+        nombreProduccion:
+        localStorage.getItem("nombreProduccionKPI") || "",
+
+        fechaProduccion:
+        localStorage.getItem("fechaProduccionKPI") || "",
+
+        fechaActualizacion:
+        new Date().toLocaleString()
+
+    })
+
+    .then(()=>{
+
+        console.log(
+            "✅ KPI GERENCIAL FIREBASE"
+        );
+
+    })
+
+    .catch(error=>{
+
+        console.error(
+            "❌ ERROR KPI GERENCIAL",
+            error
+        );
+
+    });
+
+}
+
+function cargarGerencialFirebase(){
+
+    db.ref("kpiGerencial")
+    .once("value")
+    .then(snapshot=>{
+
+        const datos = snapshot.val();
+console.log("================================");
+console.log("GERENCIAL FIREBASE");
+console.log(datos);
+console.log("================================");
+        if(!datos) return;
+
+       console.log("RESUMEN GERENCIAL:", datos.resumen);
+
+const divResumen = document.getElementById("kpiResumen");
+
+console.log("DIV KPI:", divResumen);
+
+if(divResumen){
+
+    divResumen.innerHTML = datos.resumen || "";
+
+}
+
+        if(
+            datos.rankingKPIHTML &&
+            document.getElementById("rankingKPI")
+        ){
+
+            document.getElementById(
+                "rankingKPI"
+            ).innerHTML =
+            datos.rankingKPIHTML;
+
+        }
+
+        console.log(
+            "✅ KPI GERENCIAL DESDE FIREBASE"
+        );
+
+    })
+
+    .catch(error=>{
+
+        console.error(
+            "❌ ERROR CARGANDO KPI GERENCIAL",
+            error
+        );
+
+    });
+
+}
+// ======================================================
+// FIREBASE KPI FINANCIERO
+// ======================================================
+
+function cargarFinancieroFirebase(){
+
+    db.ref("kpiFinanciero")
+    .once("value")
+    .then(snapshot=>{
+
+        let datos = snapshot.val();
+
+        console.log(datos);
+
+        const divFinanciero =
+        document.getElementById("resumenFinanciero");
+
+        if(datos && divFinanciero){
+
+            divFinanciero.innerHTML = datos.html || "";
+
+            console.log("✅ KPI FINANCIERO DESDE FIREBASE");
+
+        }else{
+
+            let financieroGuardado =
+            localStorage.getItem("financiero");
+
+            if(financieroGuardado){
+
+                mostrarResumenFinanciero();
+
+            }
+
+        }
+
+    })
+    .catch(error=>{
+
+        console.error(
+            "❌ ERROR CARGANDO KPI FINANCIERO",
+            error
+        );
+
+    });
+
+}
+
+// ======================================================
+// FUNCIONES GENERALES
+// ======================================================
+function toggleKPI(asesor){
+
+    let detalle =
+    document.getElementById(
+        "detalle_" + asesor
+    );
+
+    if(!detalle) return;
+
+    if(detalle.style.display==="none"){
+
+        detalle.style.display="block";
+
+    }else{
+
+        detalle.style.display="none";
+}
+
+ }
+function mostrarPanel(panel){
+
+let resumen =
+document.getElementById("panelResumen");
+
+let asesores =
+document.getElementById("panelAsesores");
+
+let rentabilidad =
+document.getElementById("panelRentabilidad");
+
+let clientes =
+document.getElementById("panelClientes");
+
+if(resumen)
+resumen.style.display="none";
+
+if(asesores)
+asesores.style.display="none";
+
+if(rentabilidad)
+rentabilidad.style.display="none";
+
+if(clientes)
+clientes.style.display="none";
+
+if(panel==="resumen")
+resumen.style.display="block";
+
+if(panel==="asesores")
+asesores.style.display="block";
+
+if(panel==="rentabilidad")
+rentabilidad.style.display="block";
+
+if(panel==="clientes")
+clientes.style.display="block";
+
+}
+// ======================================================
+// ARCHIVOS ACTIVOS
+// ======================================================
+
+function mostrarArchivosActivos(){
+
+    let div =
+    document.getElementById("metaActivaKPI");
+
+    let nombre =
+    localStorage.getItem("nombreMetaKPI");
+
+    let fecha =
+    localStorage.getItem("fechaMetaKPI");
+
+    if(div && nombre){
+
+        div.innerHTML =
+        `📅 Meta vigente: ${nombre}<br>
+        🕒 Cargada: ${fecha}`;
+
+    }
+
+    let nombreProd =
+    localStorage.getItem("nombreProduccionKPI");
+
+    let fechaProd =
+    localStorage.getItem("fechaProduccionKPI");
+
+    if(div && nombreProd){
+
+        div.innerHTML +=
+        `<br><br>
+        📂 Producción vigente: ${nombreProd}<br>
+        🕒 Cargada: ${fechaProd}`;
+
+    }
+
+    let nombreFinanciero =
+    localStorage.getItem("nombreFinanciero");
+
+    let archivo =
+    document.getElementById(
+        "archivoFinancieroActivo"
+    );
+
+    if(archivo){
+
+        archivo.innerHTML =
+        "📂 Archivo vigente: " +
+        (nombreFinanciero || "Sin archivo");
+
+    }
+
+}
+// ======================================================
+// INICIALIZACIÓN
+// ======================================================
+window.addEventListener("load", iniciarKPI);
+
+function iniciarKPI(){
+mostrarArchivosActivos();
+    // KPI GERENCIAL
+cargarGerencialFirebase();
+// KPI FINANCIERO
+cargarFinancieroFirebase();
+    
+}  
+// ======================================================
+// KPI FINANCIERO
+// ======================================================
+function cargarExcelFinanciero(){
+let archivo =
+document.getElementById(
+"excelFinanciero"
+).files[0];
+
+if(!archivo){
+
+alert(
+"Seleccione archivo financiero"
+);
+
+return;
+
+}
+
+let lector =
+new FileReader();
+
+lector.onload = function(e){
+
+let data =
+new Uint8Array(
+e.target.result
+);
+
+let wb =
+XLSX.read(
+data,
+{type:"array"}
+);
+
+let hoja =
+wb.Sheets[
+wb.SheetNames[0]
+];
+
+let json =
+XLSX.utils
+.sheet_to_json(hoja);
+console.log(json[0]);
+localStorage.setItem(
+"financiero",
+JSON.stringify(json)
+);
+localStorage.setItem(
+"nombreFinanciero",
+archivo.name
+);
+    localStorage.setItem(
+"fechaFinanciero",
+new Date().toLocaleString()
+);
+alert(
+"✅ Excel financiero cargado"
+);
+
+mostrarResumenFinanciero();
+
+setTimeout(()=>{
+    guardarFinancieroFirebase();
+},500);
+};
+lector.readAsArrayBuffer(
+archivo
+);
+
+}
+function guardarFinancieroFirebase(){
+
+db.ref("kpiFinanciero").set({
+
+archivo:
+localStorage.getItem("nombreFinanciero") || "",
+
+fecha:
+localStorage.getItem("fechaFinanciero") || "",
+
+actualizacion:
+new Date().toLocaleString(),
+
+html:
+document.getElementById(
+"resumenFinanciero"
+).innerHTML
+
+})
+.then(()=>{
+
+console.log(
+"✅ KPI FINANCIERO FIREBASE"
+);
+
+})
+.catch(error=>{
+
+console.error(
+"❌ FIREBASE ERROR",
+error
+);
+
+});
+
+}
+function mostrarResumenFinanciero(){
+let data =
+JSON.parse(
+localStorage.getItem(
+"financiero"
+)
+) || [];
+
+let carteraTotal = 0;
+let capitalVencido = 0;
+let carteraSana = 0;
+let moraPorcentaje = 0;
+let clientesCriticos = 0;
+let rentabilidad = 0;
+let rankingCartera = {};
+let carteraProducto = {};
+let vencidoProducto = {};
+let clientesProducto = {};
+let costoDesembolsoTotal = 0;
+let registrosMes = 0;
+let rankingAsesores = {};
+let rentabilidadAsesor = {};
+let clientesAsesor = {};
+let moraAsesor = {};
+let vencidoAsesor = {};
+    let ultimaFecha = null;
+
+data.forEach(c=>{
+
+let fechaExcel =
+parseFloat(c["Fecha Desembolso"]);
+
+if(!isNaN(fechaExcel)){
+
+let fecha =
+new Date(
+(fechaExcel - 25569) * 86400 * 1000
+);
+console.log(
+"EXCEL:",
+fechaExcel,
+"FECHA:",
+fecha.toISOString()
+);if(
+!ultimaFecha ||
+fecha > ultimaFecha
+){
+
+ultimaFecha = fecha;
+
+}
+
+}
+
+});
+if(!ultimaFecha){
+
+alert(
+"No se encontró ninguna fecha de desembolso válida"
+);
+
+return;
+
+}
+    let mesConsulta =
+ultimaFecha.getUTCMonth();
+
+let anioConsulta =
+ultimaFecha.getUTCFullYear();
+  console.log(
+"ULTIMA FECHA:",
+ultimaFecha
+);
+
+
+console.log(
+"MES DETECTADO:",
+mesConsulta + 1
+);
+
+console.log(
+"AÑO DETECTADO:",
+anioConsulta
+);
+data.forEach(c=>{
+
+let saldo =
+parseFloat(c["Saldo Capital"]) || 0;
+
+let atraso =
+parseFloat(c["Dias de retraso"]) || 0;
+let asesor =
+(c["Asesor(a)"] || "SIN ASESOR")
+.toString()
+.trim()
+.toUpperCase();
+if(!moraAsesor[asesor]){
+    moraAsesor[asesor] = 0;
+}
+
+if(!vencidoAsesor[asesor]){
+    vencidoAsesor[asesor] = 0;
+}
+
+if(atraso > 30){
+
+    moraAsesor[asesor] += saldo;
+
+}
+let producto =
+(c["Producto"] || "SIN PRODUCTO")
+.toString()
+.trim()
+.toUpperCase();
+let dni =
+(c["DNI"] || "")
+.toString()
+.trim();
+if(!clientesAsesor[asesor]){
+clientesAsesor[asesor] = new Set();
+}
+
+if(dni){
+clientesAsesor[asesor].add(dni);
+}
+if(!clientesProducto[producto]){
+clientesProducto[producto] = new Set();
+}
+
+if(dni){
+clientesProducto[producto].add(dni);
+}
+if(!carteraProducto[producto]){
+carteraProducto[producto] = 0;
+}
+
+carteraProducto[producto] += saldo;
+if(!rankingCartera[asesor]){
+rankingCartera[asesor] = 0;
+}
+
+rankingCartera[asesor] += saldo;
+if(!vencidoProducto[producto]){
+vencidoProducto[producto] = 0;
+}
+
+if(atraso > 0){
+vencidoProducto[producto] += saldo;
+}
+if(atraso > 30){
+
+vencidoAsesor[asesor] += saldo;
+
+}
+let interes =
+parseFloat(c["Interes Devengado"]) || 0;
+
+rentabilidad += interes;
+    if(!rentabilidadAsesor[asesor]){
+    rentabilidadAsesor[asesor] = 0;
+}
+
+rentabilidadAsesor[asesor] += interes;
+let costo =
+parseFloat(c["Costo por Desembolso"]) || 0;
+
+let fechaExcel =
+parseFloat(c["Fecha Desembolso"]);
+
+if(!isNaN(fechaExcel)){
+
+let fecha =
+new Date(
+Date.UTC(
+1899,
+11,
+30 + fechaExcel
+)
+);
+
+if(
+fecha.getUTCMonth() === mesConsulta
+&&
+fecha.getUTCFullYear() === anioConsulta
+){
+
+costoDesembolsoTotal += costo;
+registrosMes++;
+
+console.log(
+"SUMANDO:",
+fecha,
+"COSTO:",
+costo,
+"ACUMULADO:",
+costoDesembolsoTotal
+);
+
+}
+
+}
+
+carteraTotal += saldo;
+if(!rankingAsesores[asesor]){
+
+rankingAsesores[asesor] = 0;
+
+}
+
+rankingAsesores[asesor] += saldo;
+
+   if(atraso > 30){
+
+capitalVencido += saldo;
+
+}else{
+
+carteraSana += saldo;
+
+}
+if(atraso > 30){
+
+clientesCriticos++;
+
+}
+});
+console.log(
+Object.keys(rankingAsesores)
+);
+let rankingHTML = "";
+
+Object.entries(rankingAsesores)
+
+.filter(([asesor]) =>
+!asesor.toLowerCase().includes("slopez")
+)
+
+.filter(([asesor]) =>
+!["slopez","admin"].includes(
+asesor.toLowerCase()
+)
+)
+
+.sort((a,b)=>b[1]-a[1])
+
+.slice(0,7)
+
+.forEach((r,index)=>{
+
+let medalla = "🥉";
+
+if(index===0) medalla="🥇";
+if(index===1) medalla="🥈";
+
+let cantidadClientes =
+clientesAsesor[r[0]]
+?
+clientesAsesor[r[0]].size
+:
+0;
+
+let ticket =
+cantidadClientes > 0
+?
+(r[1] / cantidadClientes)
+:
+0;
+
+rankingHTML += `
+
+<div style="
+background:white;
+padding:12px;
+margin:6px 0;
+border-radius:12px;
+border:1px solid #E5E7EB;
+font-size:14px;
+font-weight:500;
+box-shadow:0 1px 4px rgba(0,0,0,.04);
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+">
+
+<span>
+${medalla}
+<b>${r[0]}</b>
+</span>
+
+<span>
+👥 ${cantidadClientes}
+</span>
+
+<span>
+💰 ${Math.round(r[1]/1000)}K
+</span>
+
+<span>
+🎯 ${Math.round(ticket)}
+</span>
+
+</div>
+
+`;
+
+});
+    console.log(
+"TOTAL COSTO DESEMBOLSO:",
+costoDesembolsoTotal
+);
+    console.log(
+"REGISTROS FINANCIEROS:",
+data.length
+);
+    console.log(
+"REGISTROS MES:",
+registrosMes
+);
+moraPorcentaje =
+carteraTotal > 0
+?
+((capitalVencido / carteraTotal) * 100).toFixed(2)
+:
+0;
+let topCartera =
+Object.entries(rankingCartera)
+.sort((a,b)=>b[1]-a[1])
+.slice(0,5);
+let moraProductoHTML = "";
+let rankingProductoHTML = "";
+Object.entries(carteraProducto)
+.sort((a,b)=>b[1]-a[1])
+.forEach(r=>{
+
+let cantidadClientes =
+clientesProducto[r[0]]
+?
+clientesProducto[r[0]].size
+:
+0;
+let participacion =
+carteraTotal > 0
+?
+((r[1] / carteraTotal) * 100).toFixed(1)
+:
+0;
+rankingProductoHTML += `
+
+<div style="
+background:white;
+padding:12px;
+border-radius:12px;
+border:1px solid #F1F5F9;
+margin:6px 0;
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+font-size:14px;
+">
+
+<span>
+💰 <b>${r[0]}</b>
+</span>
+
+<span>
+👥 ${cantidadClientes}
+</span>
+
+<span>
+💵 ${Math.round(r[1]/1000)}K
+</span>
+
+<span>
+📈 ${participacion}%
+</span>
+
+</div>
+
+`;
+
+});
+Object.entries(carteraProducto)
+.sort((a,b)=>b[1]-a[1])
+.forEach(r=>{
+
+let cartera =
+r[1];
+
+let vencido =
+vencidoProducto[r[0]] || 0;
+
+let mora =
+cartera > 0
+?
+((vencido / cartera) * 100).toFixed(1)
+:
+0;
+
+let color =
+mora <= 5
+? "#198754"
+: mora <= 10
+? "#ffc107"
+: "#dc3545";
+
+let fondo =
+mora <= 5
+? "#F0FDF4"
+: mora <= 10
+? "#FFFBEB"
+: "#FEF2F2";
+
+let borde =
+mora <= 5
+? "#22C55E"
+: mora <= 10
+? "#F59E0B"
+: "#EF4444";
+moraProductoHTML += `
+<div style="
+background:${fondo};
+color:#1F2937;
+border-left:5px solid ${borde};
+padding:14px;
+margin:10px 0;
+border-radius:12px;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
+">
+
+<div style="
+font-size:18px;
+font-weight:700;
+margin-bottom:8px;
+">
+${r[0]}
+</div>
+
+💰 Cartera: S/${cartera.toLocaleString()}<br>
+
+📍 Vencido: S/${vencido.toLocaleString()}<br>
+
+📉 Mora: ${mora}%
+
+</div>
+`;
+});
+
+let topClientesHTML = "";
+
+let topClientes = [...data]
+
+.sort((a,b)=>
+
+(parseFloat(b["Saldo Capital"]) || 0)
+
+-
+
+(parseFloat(a["Saldo Capital"]) || 0)
+
+)
+
+.slice(0,30);
+
+topClientes.forEach((c,index)=>{
+
+topClientesHTML += `
+
+<div style="
+background:white;
+padding:10px;
+margin:5px 0;
+border-radius:10px;
+border:1px solid #E5E7EB;
+display:flex;
+justify-content:space-between;
+font-size:13px;
+">
+
+<div style="
+display:flex;
+flex-direction:column;
+">
+
+<span style="
+font-weight:bold;
+">
+${index+1}. ${
+(
+(c["Apellido Paterno"] || "") + " " +
+(c["Apellido Materno"] || "") + " " +
+(c["Nombre"] || "")
+).trim()
+}
+</span>
+
+<span style="
+font-size:11px;
+color:#6B7280;
+">
+👤 ${c["Asesor(a)"] || "SIN ASESOR"}
+</span>
+
+<span style="
+font-size:11px;
+color:#6B7280;
+">
+📦 ${c["Producto"] || ""}
+</span>
+
+</div>
+
+<div style="
+text-align:right;
+font-weight:bold;
+color:#198754;
+">
+💰 S/${(parseFloat(c["Saldo Capital"]) || 0).toLocaleString()}
+</div>
+
+</div>
+
+`;
+
+});
+let moraAsesorHTML = "";
+
+Object.keys(moraAsesor)
+
+.forEach(asesor=>{
+
+let cartera =
+moraAsesor[asesor] || 0;
+
+let vencido =
+vencidoAsesor[asesor] || 0;
+
+let mora =
+cartera > 0
+?
+((vencido / cartera) * 100)
+.toFixed(1)
+:
+0;
+
+moraAsesorHTML += `
+
+<div style="
+background:white;
+padding:12px;
+margin:6px 0;
+border-radius:10px;
+border:1px solid #E5E7EB;
+display:flex;
+justify-content:space-between;
+font-size:14px;
+">
+
+<span>
+👨‍💼 ${asesor}
+</span>
+
+<span>
+📉 ${mora}%
+</span>
+
+</div>
+
+`;
+
+});
+    let rentabilidadHTML = "";
+
+Object.entries(rentabilidadAsesor)
+
+.sort((a,b)=>b[1]-a[1])
+
+.forEach((r,index)=>{
+
+let medalla = "🏅";
+
+if(index===0) medalla="🥇";
+if(index===1) medalla="🥈";
+if(index===2) medalla="🥉";
+
+rentabilidadHTML += `
+
+<div style="
+background:white;
+padding:12px;
+margin:6px 0;
+border-radius:10px;
+border:1px solid #E5E7EB;
+display:flex;
+justify-content:space-between;
+font-size:14px;
+">
+
+<span>
+${medalla} ${r[0]}
+</span>
+
+<span>
+💰 S/${Math.round(r[1]).toLocaleString()}
+</span>
+
+</div>
+
+`;
+
+});
+let rankingCarteraHTML = "";
+
+topCartera.forEach((r,index)=>{
+
+let medalla = "🥉";
+
+if(index===0) medalla="🥇";
+if(index===1) medalla="🥈";
+
+rankingCarteraHTML += `
+<div style="
+font-size:13px;
+margin:5px 0;
+">
+${medalla}
+${r[0]}
+→ S/${r[1].toLocaleString()}
+</div>
+`;
+
+});
+document.getElementById(
+"resumenFinanciero"
+).innerHTML =
+
+`
+
+<div style="
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px;
+margin-bottom:15px;
+">
+
+<div class="card-resumen"
+onclick="mostrarPanel('resumen')">
+📊<br>Resumen
+</div>
+
+<div class="card-resumen"
+onclick="mostrarPanel('asesores')">
+👨‍💼<br>Asesores
+</div>
+
+<div class="card-resumen"
+onclick="mostrarPanel('rentabilidad')">
+💰<br>Rentabilidad
+</div>
+
+<div class="card-resumen"
+onclick="mostrarPanel('resumen')">
+📦<br>Productos
+</div>
+
+<div class="card-resumen"
+onclick="mostrarPanel('resumen')">
+📉<br>Mora
+</div>
+
+<div class="card-resumen"
+onclick="mostrarPanel('clientes')">
+🏆<br>Clientes
+</div>
+
+</div>
+
+<div id="panelResumen"
+style="display:block;">
+
+<div style="
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+">
+
+<div style="
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
+text-align:center;
+min-height:80px;
+">
+<div style="
+font-size:28px;
+margin-bottom:5px;
+">
+💰
+</div>
+<div>Cartera Total</div>
+<div style="font-size:22px;font-weight:bold;">
+S/${carteraTotal.toLocaleString()}
+</div>
+</div>
+
+<div style="
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
+text-align:center;
+min-height:80px;
+">
+<div style="font-size:22px;">💵</div>
+<div>Capital Vencido</div>
+<div style="font-size:22px;font-weight:bold;">
+S/${capitalVencido.toLocaleString()}
+</div>
+</div>
+<div style="
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
+text-align:center;
+min-height:80px;
+">
+<div style="font-size:22px;">💸</div>
+<div>Costo Desembolso</div>
+<div style="font-size:22px;font-weight:bold;">
+S/${costoDesembolsoTotal.toLocaleString()}
+</div>
+</div>
+<div style="
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
+padding:10px;
+border-radius:12px;
+text-align:center;
+min-height:80px;
+">
+<div style="font-size:22px;">📉</div>
+<div>% Mora</div>
+<div style="font-size:22px;font-weight:bold;">
+${moraPorcentaje}%
+</div>
+</div>
+<div style="
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
+padding:10px;
+border-radius:12px;
+text-align:center;
+min-height:80px;
+">
+<div style="font-size:22px;">🚨</div>
+<div>Clientes +30</div>
+<div style="font-size:22px;font-weight:bold;">
+${clientesCriticos}
+</div>
+</div>
+<div style="
+background:#FFFFFF;
+color:#1F2937;
+border:1px solid #E5E7EB;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
+text-align:center;
+min-height:80px;
+">
+<div style="font-size:22px;">📈</div>
+<div>Rentabilidad</div>
+<div style="font-size:18px;font-weight:bold;">
+S/${rentabilidad.toLocaleString()}
+</div>
+</div>
+</div>
+<div style="
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+margin-top:15px;
+">
+
+<div style="
+background:#198754;
+color:white;
+padding:15px;
+border-radius:12px;
+text-align:center;
+">
+
+<div style="font-size:24px;">
+🟢
+</div>
+
+<div>
+Cartera Sana
+</div>
+
+<div style="
+font-size:22px;
+font-weight:bold;
+">
+S/${carteraSana.toLocaleString()}
+</div>
+
+</div>
+
+<div style="
+background:#dc3545;
+color:white;
+padding:15px;
+border-radius:12px;
+text-align:center;
+">
+
+<div style="font-size:24px;">
+🔴
+</div>
+
+<div>
+Cartera Vencida
+</div>
+
+<div style="
+font-size:22px;
+font-weight:bold;
+">
+S/${capitalVencido.toLocaleString()}
+</div>
+
+</div>
+
+</div>
+
+<div style="
+background:#FFFFFF;
+border:1px solid #E5E7EB;
+padding:15px;
+border-radius:12px;
+margin-top:10px;
+text-align:center;
+font-weight:bold;
+">
+
+🟢 ${((carteraSana/carteraTotal)*100).toFixed(1)}%
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+🔴 ${((capitalVencido/carteraTotal)*100).toFixed(1)}%
+
+</div>
+<div style="
+background:#FFFFFF;
+padding:20px;
+border-radius:16px;
+box-shadow:0 2px 10px rgba(0,0,0,.06);
+margin-top:15px;
+">
+</div>
+
+</div>
+
+<div id="panelAsesores"
+style="display:none;">
+
+<h3 style="
+text-align:center;
+color:black;
+">
+👨‍💼 Ranking Asesores
+</h3>
+
+${rankingHTML}
+
+</div>
+
+<hr style="margin:15px 0;">
+<h3 style="
+text-align:center;
+color:black;
+">
+📊 Cartera por Producto
+</h3>
+
+${rankingProductoHTML}
+<hr style="margin:15px 0;">
+
+<h3 style="
+text-align:center;
+color:black;
+">
+📉 Mora por Producto
+</h3>
+
+${moraProductoHTML}
+<hr style="margin:15px 0;">
+
+<div id="panelRentabilidad"
+style="display:none;">
+
+<h3 style="
+text-align:center;
+color:black;
+">
+💰 RENTABILIDAD POR ASESOR
+</h3>
+
+${rentabilidadHTML}
+<hr style="margin:15px 0;">
+
+<h3 style="
+text-align:center;
+color:black;
+">
+📉 MORA POR ASESOR
+</h3>
+
+${moraAsesorHTML}
+</div>
+<hr style="margin:15px 0;">
+
+<div id="panelClientes"
+style="display:none;">
+
+<h3 style="
+text-align:center;
+color:black;
+">
+🏆 TOP 30 CLIENTES
+</h3>
+
+${topClientesHTML}
+
+</div>
+`;
+
+}
+// ======================================================
+// CARGA DE ARCHIVOS KPI
+// ======================================================
+function cargarMetasKPI(){
+
+    const archivo =
+    document.getElementById("excelMetas").files[0];
+
+    if(!archivo){
+        alert("Seleccione el archivo de metas.");
+        return;
+    }
+
+    const lector = new FileReader();
+
+    lector.onload = function(e){
+
+        const data =
+        new Uint8Array(e.target.result);
+
+        const wb =
+        XLSX.read(data,{type:"array"});
+
+        const hoja =
+        wb.Sheets[wb.SheetNames[0]];
+
+        const json =
+        XLSX.utils.sheet_to_json(hoja);
+
+        localStorage.setItem(
+            "metasKPI",
+            JSON.stringify(json)
+        );
+
+        localStorage.setItem(
+            "nombreMetaKPI",
+            archivo.name
+        );
+
+        localStorage.setItem(
+            "fechaMetaKPI",
+            new Date().toLocaleString()
+        );
+
+        alert("✅ Metas cargadas correctamente.");
+
+    };
+
+    lector.readAsArrayBuffer(archivo);
+
+}
+// ==========================================
+// CARGAR PRODUCCIÓN KPI
+// ==========================================
+function cargarExcelKPI(){
+
+    const archivo =
+    document.getElementById("excelKPI").files[0];
+
+    if(!archivo){
+        alert("Seleccione el archivo de producción.");
+        return;
+    }
+
+    const lector = new FileReader();
+
+    lector.onload = function(e){
+
+        const data =
+        new Uint8Array(e.target.result);
+
+        const wb =
+        XLSX.read(data,{type:"array"});
+
+        const hoja =
+        wb.Sheets[wb.SheetNames[0]];
+
+        const json =
+        XLSX.utils.sheet_to_json(hoja);
+
+        localStorage.setItem(
+            "produccionKPI",
+            JSON.stringify(json)
+        );
+
+        localStorage.setItem(
+            "nombreProduccionKPI",
+            archivo.name
+        );
+
+        localStorage.setItem(
+            "fechaProduccionKPI",
+            new Date().toLocaleString()
+        );
+
+        generarKPI(json);
+
+        alert("✅ Producción cargada correctamente.");
+
+    };
+
+    lector.readAsArrayBuffer(archivo);
+
+}

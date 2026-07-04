@@ -801,8 +801,21 @@ localStorage.setItem(
     "resumenKPI",
     resumen
 );
+guardarGerencialFirebase(
+    resumen,
+    rankingKPIHTML
+);
 
-// 🔥 FIREBASE KPI
+
+}
+
+// ======================================================
+// FIREBASE KPI GERENCIAL
+// ======================================================
+function guardarGerencialFirebase(
+    resumen,
+    rankingKPIHTML
+){
 db.ref("kpiGerencial").set({
 
     resumen: resumen,
@@ -822,9 +835,9 @@ db.ref("kpiGerencial").set({
     fechaActualizacion:
     new Date().toLocaleString()
 
-});
+    });
 
-}
+    }
 // ======================================================
 // FUNCIONES GENERALES
 // ======================================================

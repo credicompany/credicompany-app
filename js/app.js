@@ -81,7 +81,18 @@ if(el) el.style.display="none";
 });
 
 document.getElementById(p).style.display="block";
+// Esperar que el módulo termine de mostrarse
+setTimeout(()=>{
 
+    if(p==="kpi"){
+        cargarGerencialFirebase();
+    }
+
+    if(p==="kpiFinanciero"){
+        cargarFinancieroFirebase();
+    }
+
+},100);
   if(p==="inteligencia"){
 
     cargarCentroInteligencia();

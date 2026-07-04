@@ -1080,7 +1080,6 @@ function mostrarArchivosActivos(){
 // ARCHIVOS ACTIVOS
 // ======================================================
 
-function mostrarArchivosActivos(){
  let div =
     document.getElementById("metaActivaKPI");
 
@@ -1145,7 +1144,8 @@ mostrarArchivosActivos();
 cargarGerencialFirebase();
 // KPI FINANCIERO
 cargarFinancieroFirebase();
-   
+    
+}  
 // ======================================================
 // KPI FINANCIERO
 // ======================================================

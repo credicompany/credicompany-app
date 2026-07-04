@@ -816,28 +816,149 @@ function guardarGerencialFirebase(
     resumen,
     rankingKPIHTML
 ){
-db.ref("kpiGerencial").set({
 
-    resumen: resumen,
-    rankingKPIHTML: rankingKPIHTML,
-    nombreMeta:
-    localStorage.getItem("nombreMetaKPI") || "",
+    db.ref("kpiGerencial").set({
 
-    fechaMeta:
-    localStorage.getItem("fechaMetaKPI") || "",
+        resumen,
+        rankingKPIHTML,
 
-    nombreProduccion:
-    localStorage.getItem("nombreProduccionKPI") || "",
+        nombreMeta:
+        localStorage.getItem("nombreMetaKPI") || "",
 
-    fechaProduccion:
-    localStorage.getItem("fechaProduccionKPI") || "",
+        fechaMeta:
+        localStorage.getItem("fechaMetaKPI") || "",
 
-    fechaActualizacion:
-    new Date().toLocaleString()
+        nombreProduccion:
+        localStorage.getItem("nombreProduccionKPI") || "",
+
+        fechaProduccion:
+        localStorage.getItem("fechaProduccionKPI") || "",
+
+        fechaActualizacion:
+        new Date().toLocaleString()
+
+    })
+
+    .then(()=>{
+
+        console.log(
+            "✅ KPI GERENCIAL FIREBASE"
+        );
+
+    })
+
+    .catch(error=>{
+
+        console.error(
+            "❌ ERROR KPI GERENCIAL",
+            error
+        );
 
     });
 
-    }
+}
+
+function cargarGerencialFirebase(){
+
+    db.ref("kpiGerencial")
+    .once("value")
+    .then(snapshot=>{
+
+        const datos = snapshot.val();
+
+        if(!datos) return;
+
+        if(
+            datos.resumen &&
+            document.getElementById("kpiResumen")
+        ){
+
+            document.getElementById(
+                "kpiResumen"
+            ).innerHTML = datos.resumen;
+
+        }
+
+        if(
+            datos.rankingKPIHTML &&
+            document.getElementById("rankingKPI")
+        ){
+
+            document.getElementById(
+                "rankingKPI"
+            ).innerHTML =
+            datos.rankingKPIHTML;
+
+        }
+
+        console.log(
+            "✅ KPI GERENCIAL DESDE FIREBASE"
+        );
+
+    })
+
+    .catch(error=>{
+
+        console.error(
+            "❌ ERROR CARGANDO KPI GERENCIAL",
+            error
+        );
+
+    });
+
+}
+// ======================================================
+// FIREBASE KPI FINANCIERO
+// ======================================================
+
+function cargarFinancieroFirebase(){
+
+    db.ref("kpiFinanciero")
+    .once("value")
+    .then(snapshot=>{
+
+        let datos = snapshot.val();
+
+        if(
+            datos &&
+            datos.html &&
+            document.getElementById("resumenFinanciero")
+        ){
+
+            document.getElementById(
+                "resumenFinanciero"
+            ).innerHTML = datos.html;
+
+            console.log(
+                "✅ KPI FINANCIERO DESDE FIREBASE"
+            );
+
+        }else{
+
+            let financieroGuardado =
+            localStorage.getItem("financiero");
+
+            if(financieroGuardado){
+
+                mostrarResumenFinanciero();
+
+            }
+
+        }
+
+    })
+    .catch(error=>{
+
+        console.error(
+            "❌ ERROR CARGANDO KPI FINANCIERO",
+            error
+        );
+
+    });
+
+}
+
+
 // ======================================================
 // FUNCIONES GENERALES
 // ======================================================
@@ -899,13 +1020,11 @@ if(panel==="clientes")
 clientes.style.display="block";
 
 }
-
 // ======================================================
-// INICIALIZACIÓN
+// ARCHIVOS ACTIVOS
 // ======================================================
-window.addEventListener("load", iniciarKPI);
 
-function iniciarKPI(){
+function mostrarArchivosActivos(){
 
     let div =
     document.getElementById("metaActivaKPI");
@@ -939,59 +1058,62 @@ function iniciarKPI(){
 
     }
 
-    let resumenGuardado =
-    localStorage.getItem("resumenKPI");
+    let nombreFinanciero =
+    localStorage.getItem("nombreFinanciero");
 
-    if(
-        resumenGuardado &&
-        document.getElementById("kpiResumen")
-    ){
+    let archivo =
+    document.getElementById(
+        "archivoFinancieroActivo"
+    );
 
-        document.getElementById(
-            "kpiResumen"
-        ).innerHTML =
-        resumenGuardado;
+    if(archivo){
+
+        archivo.innerHTML =
+        "📂 Archivo vigente: " +
+        (nombreFinanciero || "Sin archivo");
 
     }
-// KPI FINANCIERO
-db.ref("kpiFinanciero")
-.once("value")
-.then(snapshot=>{
-
-let datos = snapshot.val();
-
-if(
-datos &&
-datos.html &&
-document.getElementById(
-"resumenFinanciero"
-)
-){
-
-document.getElementById(
-"resumenFinanciero"
-).innerHTML =
-datos.html;
-
-console.log(
-"✅ KPI FINANCIERO DESDE FIREBASE"
-);
-
-}else{
-
-let financieroGuardado =
-localStorage.getItem("financiero");
-
-if(financieroGuardado){
-
-mostrarResumenFinanciero();
 
 }
 
-}
+// ======================================================
+// ARCHIVOS ACTIVOS
+// ======================================================
 
-});
-    let nombreFinanciero =
+function mostrarArchivosActivos(){
+ let div =
+    document.getElementById("metaActivaKPI");
+
+    let nombre =
+    localStorage.getItem("nombreMetaKPI");
+
+    let fecha =
+    localStorage.getItem("fechaMetaKPI");
+
+    if(div && nombre){
+
+        div.innerHTML =
+        `📅 Meta vigente: ${nombre}<br>
+        🕒 Cargada: ${fecha}`;
+
+    }
+
+     let nombreProd =
+    localStorage.getItem("nombreProduccionKPI");
+
+    let fechaProd =
+    localStorage.getItem("fechaProduccionKPI");
+
+    if(div && nombreProd){
+
+        div.innerHTML +=
+        `<br><br>
+        📂 Producción vigente: ${nombreProd}<br>
+        🕒 Cargada: ${fechaProd}`;
+
+    }
+
+     let nombreFinanciero =
 localStorage.getItem(
 "nombreFinanciero"
 );
@@ -1009,10 +1131,21 @@ document.getElementById(
 "📂 Archivo vigente: " +
 (nombreFinanciero || "Sin archivo");
 
-}
-    
-});
+   }
 
+}
+// ======================================================
+// INICIALIZACIÓN
+// ======================================================
+window.addEventListener("load", iniciarKPI);
+
+function iniciarKPI(){
+mostrarArchivosActivos();
+    // KPI GERENCIAL
+cargarGerencialFirebase();
+// KPI FINANCIERO
+cargarFinancieroFirebase();
+   
 // ======================================================
 // KPI FINANCIERO
 // ======================================================

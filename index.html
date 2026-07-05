@@ -712,27 +712,26 @@ box-shadow:0 12px 24px rgba(18,59,99,.10);
 
 }
 
-.btnFiltro.verde{
+.verde{
 
-border-top-color:#22C55E !important;
-
-}
-
-.btnFiltro.amarillo{
-
-border-top-color:#FACC15 !important;
+border-top:4px solid #22C55E;
 
 }
 
-.btnFiltro.naranja{
+.amarillo{
 
-border-top-color:#FB923C !important;
+border-top:4px solid #FACC15;
 
 }
 
-.btnFiltro.rojo{
+.naranja{
 
-border-top-color:#EF4444 !important;
+border-top:4px solid #FB923C;
+
+}
+.rojo{
+
+border-top:4px solid #EF4444;
 
 }
 
@@ -885,13 +884,11 @@ background:linear-gradient(135deg,#0F2F50,#123B63);
 
 .filaMora{
 display:flex;
-gap:8px;
-overflow-x:auto;
-padding:6px 2px;
-margin-top:10px;
-margin-bottom:10px;
--webkit-overflow-scrolling:touch;
-scrollbar-width:none;
+flex-wrap:wrap;
+justify-content:center;
+gap:10px;
+margin-top:14px;
+margin-bottom:18px;
 }
 
 .filaMora::-webkit-scrollbar{
@@ -1208,17 +1205,49 @@ font-weight:700;
 
 .btnFiltro{
 
-background:#ffffff !important;
+width:92px;
 
-border:1px solid #E8EDF4 !important;
+height:74px;
 
-height:54px;
+background:#FFFFFF;
 
-border-radius:18px;
+border:none;
 
-box-shadow:none;
+border-top:4px solid #D1D5DB;
 
-font-size:15px;
+border-radius:16px;
+
+box-shadow:0 4px 12px rgba(0,0,0,.08);
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+align-items:center;
+
+gap:3px;
+
+font-size:13px;
+
+font-weight:700;
+
+color:#334155;
+
+cursor:pointer;
+
+transition:.25s;
+
+margin:4px;
+
+}
+
+.btnFiltro:hover{
+
+transform:translateY(-2px);
+
+box-shadow:0 8px 18px rgba(0,0,0,.12);
 
 }
 
@@ -1608,41 +1637,27 @@ onclick="filtrarPorAsesor('slopez')">
 👤 Slopez
 </button>
 </div>
-  <div class="filaMora">
+ 
+ <div class="filaMora">
 
-<button
-id="btn0dias"
-class="btnFiltro verde"
-onclick="filtrarMora(0,0)">
-🟢 0 días
+<button id="btn0dias" class="btnFiltro verde" onclick="filtrarMora(0,0)">
+🟢<br>0 días
 </button>
 
-<button
-id="btn1a8dias"
-class="btnFiltro verde"
-onclick="filtrarMora(1,8)">
-🟢 1-8 días
+<button id="btn1a8dias" class="btnFiltro verde" onclick="filtrarMora(1,8)">
+🟢<br>1-8 días
 </button>
 
-<button
-id="btn9a30dias"
-class="btnFiltro amarillo"
-onclick="filtrarMora(9,30)">
-🟡 9-30 días
+<button id="btn9a30dias" class="btnFiltro amarillo" onclick="filtrarMora(9,30)">
+🟡<br>9-30 días
 </button>
 
-<button
-id="btn31a60dias"
-class="btnFiltro naranja"
-onclick="filtrarMora(31,60)">
-🟠 31-60 días
+<button id="btn31a60dias" class="btnFiltro naranja" onclick="filtrarMora(31,60)">
+🟠<br>31-60 días
 </button>
 
-<button
-id="btn61dias"
-class="btnFiltro rojo"
-onclick="filtrarMora(61,2000)">
-🔴 61+ días
+<button id="btn61dias" class="btnFiltro rojo" onclick="filtrarMora(61,99999)">
+🔴<br>61+ días
 </button>
 
 </div>

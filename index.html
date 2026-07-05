@@ -1557,14 +1557,16 @@ Mensual
 ← Volver
 </div>
 <div id="panelExcel">
-
-<input type="file"
+<input
+type="file"
 id="excelFile"
 accept=".csv,.xlsx"
-style="margin-top:15px;">
+style="display:none;"
+onchange="cargarExcel()">
 
-<button class="btn-azul"
-onclick="cargarExcel()">
+<button
+class="btn-azul"
+onclick="document.getElementById('excelFile').click()">
 📂 Cargar Excel
 </button>
 
@@ -3968,17 +3970,6 @@ function cerrarTarifario(){
 
 document.getElementById("modalTarifario").style.display = "none";
 
-}
-
-// 🔴 GEO CON CONTROL
-function enviarUbicacion(){
-navigator.geolocation.getCurrentPosition(
-pos=>{
-let link=`https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-window.open("https://wa.me/?text="+encodeURIComponent(link));
-},
-()=>alert("No se pudo obtener ubicación")
-);
 }
 
 // WHATSAPP

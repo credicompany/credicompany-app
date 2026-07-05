@@ -245,21 +245,51 @@ background:linear-gradient(
 .fila{display:flex;gap:6px;margin-top:6px;}
 .fila button{width:50%;}
 .item{
-background:#ffffff;
-padding:16px;
-margin-top:12px;
+background:#FFFFFF;
 border-radius:18px;
-border:1px solid #E7EDF5;
+padding:18px;
+margin:14px 10px;
+border:1px solid #E5EAF1;
+
+box-shadow:
+0 6px 18px rgba(15,23,42,.05);
+
+transition:.25s;
+
 color:#334155;
-font-size:14px;
-line-height:1.6;
-box-shadow:0 6px 18px rgba(15,23,42,.06);
-transition:all .25s ease;
+
+line-height:1.55;
 }
 
 .item:hover{
-transform:translateY(-2px);
-box-shadow:0 12px 24px rgba(15,23,42,.10);
+
+transform:translateY(-3px);
+
+box-shadow:
+0 12px 24px rgba(18,59,99,.10);
+
+border-color:#123B63;
+
+}
+  .item strong{
+
+color:#123B63;
+
+font-size:15px;
+
+font-weight:700;
+
+}
+  .item hr{
+
+border:none;
+
+height:1px;
+
+background:#E8EDF3;
+
+margin:12px 0;
+
 }
 .pagos-container{display:flex;flex-direction:column;gap:20px;}
 .pago-box{background:white;padding:6px;border-radius:12px;cursor:pointer;}

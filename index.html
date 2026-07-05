@@ -632,6 +632,99 @@ font-size:22px;
 }
 
 } 
+
+  /*=====================================
+FILTROS DE MORA - CREDICOMPANY
+=====================================*/
+
+.fila{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:10px;
+margin-top:14px;
+}
+
+.btnFiltro{
+
+background:#FFFFFF !important;
+
+color:#334155 !important;
+
+border:1px solid #E5EAF1 !important;
+
+border-top:5px solid #123B63 !important;
+
+border-radius:18px;
+
+height:68px;
+
+font-size:15px;
+
+font-weight:700;
+
+box-shadow:0 6px 16px rgba(15,23,42,.06);
+
+transition:.25s;
+
+}
+
+.btnFiltro:hover{
+
+transform:translateY(-2px);
+
+box-shadow:0 12px 24px rgba(18,59,99,.10);
+
+}
+
+.btnFiltro.verde{
+
+border-top-color:#22C55E !important;
+
+}
+
+.btnFiltro.amarillo{
+
+border-top-color:#FACC15 !important;
+
+}
+
+.btnFiltro.naranja{
+
+border-top-color:#FB923C !important;
+
+}
+
+.btnFiltro.rojo{
+
+border-top-color:#EF4444 !important;
+
+}
+
+@media(max-width:768px){
+
+.fila{
+
+grid-template-columns:repeat(2,1fr);
+
+gap:8px;
+
+}
+
+.btnFiltro{
+
+height:60px;
+
+font-size:14px;
+
+}
+
+.btnFiltro:last-child{
+
+grid-column:1 / span 2;
+
+}
+
+}
 </style>
  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -885,15 +978,41 @@ onclick="cargarExcel()">
 </div>
 
 <div class="fila">
-<button id="btn0dias" style="background:#2ecc71;color:white" onclick="filtrarMora(0,0)">0 días</button>
 
-<button id="btn1a8dias" style="background:#27ae60;color:white" onclick="filtrarMora(1,8)">1-8 días</button>
+<button
+id="btn0dias"
+class="btnFiltro verde"
+onclick="filtrarMora(0,0)">
+🟢 0 días
+</button>
 
-<button style="background:#f1c40f;color:black" onclick="filtrarMora(9,30)">9-30 días</button>
+<button
+id="btn1a8dias"
+class="btnFiltro verde"
+onclick="filtrarMora(1,8)">
+🟢 1-8 días
+</button>
 
-<button style="background:#e74c3c;color:white" onclick="filtrarMora(31,60)">31-60 días</button>
+<button
+id="btn9a30dias"
+class="btnFiltro amarillo"
+onclick="filtrarMora(9,30)">
+🟡 9-30 días
+</button>
 
-<button style="background:black;color:white" onclick="filtrarMora(61,2000)">61+ días</button>
+<button
+id="btn31a60dias"
+class="btnFiltro naranja"
+onclick="filtrarMora(31,60)">
+🟠 31-60 días
+</button>
+
+<button
+id="btn61dias"
+class="btnFiltro rojo"
+onclick="filtrarMora(61,2000)">
+🔴 61+ días
+</button>
 
 </div>
   

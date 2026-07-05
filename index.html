@@ -844,6 +844,32 @@ box-shadow:0 12px 24px rgba(18,59,99,.28);
 background:linear-gradient(135deg,#0F2F50,#123B63);
 
 }
+
+  /* ===== FILTROS MORA HORIZONTAL ===== */
+
+.filaMora{
+display:flex;
+gap:8px;
+overflow-x:auto;
+padding:6px 2px;
+margin-top:10px;
+margin-bottom:10px;
+-webkit-overflow-scrolling:touch;
+scrollbar-width:none;
+}
+
+.filaMora::-webkit-scrollbar{
+display:none;
+}
+
+.filaMora .btnFiltro{
+min-width:85px;
+height:56px;
+flex:none;
+border-radius:14px;
+font-size:13px;
+padding:6px;
+}
 </style>
  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -1096,44 +1122,6 @@ onclick="cargarExcel()">
 
 </div>
 
-<div class="fila">
-
-<button
-id="btn0dias"
-class="btnFiltro verde"
-onclick="filtrarMora(0,0)">
-🟢 0 días
-</button>
-
-<button
-id="btn1a8dias"
-class="btnFiltro verde"
-onclick="filtrarMora(1,8)">
-🟢 1-8 días
-</button>
-
-<button
-id="btn9a30dias"
-class="btnFiltro amarillo"
-onclick="filtrarMora(9,30)">
-🟡 9-30 días
-</button>
-
-<button
-id="btn31a60dias"
-class="btnFiltro naranja"
-onclick="filtrarMora(31,60)">
-🟠 31-60 días
-</button>
-
-<button
-id="btn61dias"
-class="btnFiltro rojo"
-onclick="filtrarMora(61,2000)">
-🔴 61+ días
-</button>
-
-</div>
   
 <div id="moraVencidaBox"
 style="
@@ -1195,6 +1183,44 @@ style="width:100%;"
 onclick="filtrarPorAsesor('slopez')">
 👤 Slopez
 </button>
+</div>
+  <div class="filaMora">
+
+<button
+id="btn0dias"
+class="btnFiltro verde"
+onclick="filtrarMora(0,0)">
+🟢 0 días
+</button>
+
+<button
+id="btn1a8dias"
+class="btnFiltro verde"
+onclick="filtrarMora(1,8)">
+🟢 1-8 días
+</button>
+
+<button
+id="btn9a30dias"
+class="btnFiltro amarillo"
+onclick="filtrarMora(9,30)">
+🟡 9-30 días
+</button>
+
+<button
+id="btn31a60dias"
+class="btnFiltro naranja"
+onclick="filtrarMora(31,60)">
+🟠 31-60 días
+</button>
+
+<button
+id="btn61dias"
+class="btnFiltro rojo"
+onclick="filtrarMora(61,2000)">
+🔴 61+ días
+</button>
+
 </div>
 <div id="panelRecordatorios" style="display:none;"
 style="

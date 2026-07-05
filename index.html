@@ -870,6 +870,155 @@ border-radius:14px;
 font-size:13px;
 padding:6px;
 }
+
+ /*====================================================
+CREDICOMPANY MOBILE PRO V3
+====================================================*/
+
+@media (max-width:768px){
+
+/* TARJETA CLIENTE */
+
+.item{
+padding:8px !important;
+margin:5px 3px !important;
+border-radius:14px !important;
+box-shadow:0 2px 8px rgba(0,0,0,.05) !important;
+}
+
+/* NOMBRE */
+
+.item div[onclick^="verHistorialCliente"]{
+font-size:14px !important;
+font-weight:700 !important;
+line-height:1.1 !important;
+margin-bottom:3px !important;
+}
+
+/* TITULOS */
+
+.item div[style*="text-transform:uppercase"]{
+font-size:8px !important;
+letter-spacing:.3px !important;
+margin-bottom:2px !important;
+}
+
+/* SALDO */
+
+.item div[style*="Saldo Capital"]{
+font-size:8px !important;
+}
+
+.item div[style*="color:#16A34A"]{
+font-size:16px !important;
+margin-top:1px !important;
+font-weight:700 !important;
+}
+
+/* CUADROS */
+
+.item div[style*="grid-template-columns:repeat(3,1fr)"]{
+
+gap:6px !important;
+margin:8px 0 !important;
+
+}
+
+.item div[style*="border-radius:14px"]{
+
+padding:5px !important;
+border-radius:10px !important;
+
+}
+
+.item div[style*="font-size:20px"]{
+
+font-size:16px !important;
+font-weight:800 !important;
+
+}
+
+.item div[style*="font-size:11px"]{
+
+font-size:8px !important;
+
+}
+
+/* INFORMACIÓN */
+
+.item div[style*="font-size:14px"]{
+
+font-size:11px !important;
+line-height:1.15 !important;
+
+}
+
+.item div[style*="font-size:13px"]{
+
+font-size:11px !important;
+line-height:1.15 !important;
+
+}
+
+/* AVAL */
+
+.item b{
+
+font-size:11px !important;
+
+}
+
+/* BOTÓN */
+
+.item button{
+
+height:40px !important;
+padding:6px !important;
+font-size:12px !important;
+border-radius:10px !important;
+
+}
+
+/* SEPARADORES */
+
+.item hr{
+
+margin:5px 0 !important;
+
+}
+
+/* RESUMEN SUPERIOR */
+
+.card-resumen{
+
+padding:8px !important;
+min-height:72px !important;
+border-radius:14px !important;
+
+}
+
+.card-resumen div:first-child{
+
+font-size:9px !important;
+
+}
+
+.card-resumen div:last-child{
+
+font-size:16px !important;
+
+}
+
+/* RESUMEN AZUL */
+
+#listaClientes .item:first-child{
+
+padding:8px !important;
+font-size:11px !important;
+
+}
+
+}
 </style>
  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";

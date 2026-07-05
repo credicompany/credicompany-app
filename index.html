@@ -3458,16 +3458,14 @@ document.getElementById(p).style.display="block";
 
 }
 if(p==="clientes"){
-
+    document.getElementById("rankingContainer").style.display="none";
     filtrarMora(0,1000);
-
     actualizarResumen();
 }
 if(p==="admin") renderUsuarios();
 }
 
 function volver(){
-
 app.style.display="none";
 [
 "simulador",
@@ -3488,7 +3486,7 @@ if(el) el.style.display="none";
 document.querySelector(".resumen").style.display = "grid";
 
 document.getElementById("historialDiv").style.display="none";
-
+document.getElementById("rankingContainer").style.display="flex";
 dashboard.style.display="block";
   if(asesor === "slopez"){
     document.getElementById("panelAsesores").style.display="grid";

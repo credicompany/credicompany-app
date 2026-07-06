@@ -1,9 +1,3 @@
-// =====================================
-// SIMULADOR CREDICOMPANY
-// =====================================
-
-console.log("✅ simulador.js cargado");
-
 function obtenerTarifario(producto,monto,tipo){
 
 let config = null;

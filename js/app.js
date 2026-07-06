@@ -47,92 +47,86 @@ function cerrarTarifario(){
 document.getElementById("modalTarifario").style.display = "none";
 
 }
-// UI
 function mostrar(p){
-if(
-p === "admin" &&
-asesor !== "admin" &&
-asesor !== "operaciones"
-){
-alert("Acceso restringido");
-return;
-}
-dashboard.style.display="none";
-
-document.querySelector(".resumen").style.display = "none";
-
-app.style.display="block";
-
-[
-"simulador",
-"clientes",
-"pagos",
-"admin",
-"kpi",
-"kpiFinanciero",
-"resultadoMensual",
-  "inteligencia",
-"historialDiv",
-"historialGestionesDiv",
-"historialClienteDiv"
-].forEach(id=>{
-let el = document.getElementById(id);
-if(el) el.style.display="none";
-});
-
-document.getElementById(p).style.display="block";
-// Esperar que el módulo termine de mostrarse
-setTimeout(()=>{
-
-    if(p==="kpi"){
-        cargarGerencialFirebase();
-    }
-
-    if(p==="kpiFinanciero"){
-        cargarFinancieroFirebase();
-    }
-
-},100);
-  if(p==="inteligencia"){
-
-    cargarCentroInteligencia();
-
-}
-  if(p==="kpi"){
 
     if(
+        p === "admin" &&
         asesor !== "admin" &&
         asesor !== "operaciones"
     ){
+        alert("Acceso restringido");
+        return;
+    }
 
-        document.getElementById(
-            "panelCargaKPI"
-        ).style.display="none";
+    dashboard.style.display="none";
+    document.querySelector(".resumen").style.display="none";
+    app.style.display="block";
 
-    }else{
+    [
+        "simulador",
+        "clientes",
+        "pagos",
+        "admin",
+        "kpi",
+        "kpiFinanciero",
+        "resultadoMensual",
+        "inteligencia",
+        "historialDiv",
+        "historialGestionesDiv",
+        "historialClienteDiv"
+    ].forEach(id=>{
+        let el=document.getElementById(id);
+        if(el) el.style.display="none";
+    });
 
-        document.getElementById(
-            "panelCargaKPI"
-        ).style.display="block";
+    document.getElementById(p).style.display="block";
+
+    setTimeout(()=>{
+
+        if(p==="kpi"){
+            cargarGerencialFirebase();
+        }
+
+        if(p==="kpiFinanciero"){
+            cargarFinancieroFirebase();
+        }
+
+    },100);
+
+    if(p==="inteligencia"){
+        cargarCentroInteligencia();
+    }
+
+    if(p==="kpi"){
+
+        if(
+            asesor!=="admin" &&
+            asesor!=="operaciones"
+        ){
+            document.getElementById("panelCargaKPI").style.display="none";
+        }else{
+            document.getElementById("panelCargaKPI").style.display="block";
+        }
 
     }
 
-}
-if(p==="clientes"){
+    if(p==="clientes"){
 
-    document.getElementById("rankingContainer").style.display="none";
+        document.getElementById("rankingContainer").style.display="none";
 
-    filtrarMora(0,1000);
+        setTimeout(()=>{
 
-    actualizarResumen();
+            filtrarMora(0,1000);
+            actualizarResumen();
 
-}
+        },50);
 
-    filtrarMora(0,1000);
+    }
 
-    actualizarResumen();
-}
-if(p==="admin") renderUsuarios();
+    if(p==="admin"){
+        renderUsuarios();
+    }
+
 }
 function volver(){
 

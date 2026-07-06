@@ -1099,10 +1099,6 @@ document.getElementById(
 
 if(!archivo){
 
-alert(
-"Seleccione archivo financiero"
-);
-
 return;
 
 }

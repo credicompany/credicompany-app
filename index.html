@@ -3360,7 +3360,8 @@ function filtrarMora(min,max){
 
 let lista = document.getElementById("listaClientes");
 lista.innerHTML="";
-
+let html = "";
+  
 let data = JSON.parse(localStorage.getItem("cartera")) || [];
 filtroMin = min;
 filtroMax = max;
@@ -3442,7 +3443,7 @@ filtrados.forEach(c=>{
     else critico++;
 });
 
-lista.innerHTML+=`
+html+=`
 <div class="item" style="background:#123B63;color:white">
 <b>📊 Resumen</b><br>
 🟢 ${hoy} | 🟢 ${alDia} | 🟡 ${leve} | 🔴 ${medio} | ⚫ ${critico}
@@ -3456,7 +3457,7 @@ if(c.retraso>8) color="#f1c40f";
 if(c.retraso>30) color="#e74c3c";
 if(c.retraso>60) color="black";
 
-lista.innerHTML+=`
+html+=`
 <div class="item" style="border-left:4px solid ${color}">
 <div style="
 padding-bottom:12px;
@@ -3792,6 +3793,9 @@ onclick="abrirGestion('${c.nombre}','${c.celular}')">
 
 </div>`;
 });
+  
+lista.innerHTML = html;
+  
 }
 function filtrarPorAsesor(nombreAsesor){
     filtroAsesor = nombreAsesor;
@@ -3918,9 +3922,16 @@ document.getElementById(p).style.display="block";
 
 }
 if(p==="clientes"){
+
     document.getElementById("rankingContainer").style.display="none";
-    filtrarMora(0,1000);
-    actualizarResumen();
+
+    setTimeout(function(){
+
+        actualizarResumen();
+        filtrarMora(0,1000);
+
+    },50);
+
 }
 if(p==="admin") renderUsuarios();
 }

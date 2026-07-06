@@ -1045,7 +1045,26 @@ padding:8px !important;
 font-size:11px !important;
 
 }
+/* ===== SIMULADOR MOBILE ===== */
 
+#simulador .fila{
+    display:grid;
+   grid-template-columns:repeat(2,1fr);
+    gap:8px;
+    margin-top:12px;
+}
+
+#simulador .fila button{
+    height:58px;
+    padding:6px;
+    font-size:13px;
+    border-radius:14px;
+}
+
+#simulador .btn-azul{
+    height:52px;
+    font-size:16px;
+}
 }
 
   /*====================================================
@@ -1474,7 +1493,6 @@ onclick="mostrar('resultadoMensual')">
 <div id="app" style="display:none">
 
 <div id="simulador" class="card">
-<div class="volver" onclick="volver()">← Volver</div>
 
 <input id="cliente" placeholder="Nombre">
 <input id="apellidos" placeholder="Apellidos">

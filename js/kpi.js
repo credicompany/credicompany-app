@@ -1581,7 +1581,12 @@ font-size:14px;
 Object.entries(carteraProducto)
 .sort((a,b)=>b[1]-a[1])
 .forEach(r=>{
-
+let cantidadClientes =
+clientesProducto[r[0]]
+?
+clientesProducto[r[0]].size
+:
+0;
 let cartera =
 r[1];
 
@@ -1637,11 +1642,13 @@ margin-bottom:8px;
 ${r[0]}
 </div>
 
-💰 Cartera: S/${cartera.toLocaleString()}<br>
+👥 Clientes: <b>${cantidadClientes}</b><br>
 
-📍 Vencido: S/${vencido.toLocaleString()}<br>
+💰 Cartera: <b>S/${cartera.toLocaleString()}</b><br>
 
-📉 Mora: ${mora}%
+📍 Vencido: <b>S/${vencido.toLocaleString()}</b><br>
+
+📉 Mora: <b>${mora}%</b>
 
 </div>
 `;
@@ -2099,8 +2106,14 @@ color:black;
 📉 Mora por Producto
 </h3>
 
+<div id="listaProductos">
+
 ${moraProductoHTML}
-<div id="detalleProducto"></div>
+
+</div>
+
+<div id="detalleProducto" style="display:none;"></div>
+
 <hr style="margin:15px 0;">
 
 <div id="panelRentabilidad"
@@ -2270,8 +2283,30 @@ let totalMonto=0;
 let totalSaldo=0;
 
 let html=`
+
+<div style="margin-bottom:15px;">
+
+<button
+onclick="volverProductos()"
+style="
+width:100%;
+background:#0A3A63;
+color:white;
+border:none;
+padding:14px;
+border-radius:14px;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+">
+
+← Volver
+
+</button>
+
+</div>
+
 <div style="
-margin-top:15px;
 background:white;
 border-radius:14px;
 padding:15px;
@@ -2279,9 +2314,26 @@ box-shadow:0 2px 10px rgba(0,0,0,.08);
 overflow:auto;
 ">
 
-<h3 style="margin:0 0 15px 0;color:#0A3A63;">
-📋 ${producto}
-</h3>
+<h2 style="
+margin:0;
+color:#0A3A63;
+text-align:center;
+">
+
+${producto}
+
+</h2>
+
+<p style="
+text-align:center;
+font-size:15px;
+margin-top:5px;
+color:#666;
+">
+
+👥 ${clientes.length} Clientes
+
+</p>
 
 <table style="
 width:100%;
@@ -2407,9 +2459,26 @@ ${clientes.length} Clientes
 </div>
 `;
 
+document.getElementById("listaProductos").style.display="none";
+
+document.getElementById("detalleProducto").style.display="block";
+
 document.getElementById("detalleProducto").innerHTML=html;
 
 document.getElementById("detalleProducto")
+.scrollIntoView({
+behavior:"smooth",
+block:"start"
+});
+
+}
+function volverProductos(){
+
+document.getElementById("detalleProducto").style.display="none";
+
+document.getElementById("listaProductos").style.display="block";
+
+document.getElementById("listaProductos")
 .scrollIntoView({
 behavior:"smooth",
 block:"start"

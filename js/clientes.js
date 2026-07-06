@@ -1,9 +1,4 @@
-// =====================================
-// CLIENTES / COBRANZA
-// =====================================
-
-console.log("✅ clientes.js cargado");
-
+// EXCEL MEJORADO
 function cargarExcel(){
 
 let file=document.getElementById("excelFile").files[0];
@@ -147,54 +142,43 @@ if(
 }); // cierre de headers.forEach
 
 return obj;
-}); 
- 
- console.log("========== JSON A FIREBASE ==========");
-console.log(json);
-console.log(JSON.stringify(json, null, 2));
- // 🔥 GUARDADO REAL
+}); // 🔥 GUARDADO REAL
 db.ref("cartera")
 .set(json)
 .then(()=>{
 
     console.log("✅ Cartera enviada a Firebase");
 
-    localStorage.setItem(
-        "cartera",
-        JSON.stringify(json)
-    );
-
-    localStorage.setItem(
-        "cartera_backup",
-        JSON.stringify(json)
-    );
-
-    let dataReset =
-    JSON.parse(localStorage.getItem("cartera")) || [];
-
-    dataReset.forEach(c=>{
-        c.pagado_hoy = false;
-    });
-
-    localStorage.setItem(
-        "cartera",
-        JSON.stringify(dataReset)
-    );
-
-    filtrarMora(0,1000);
-
-    actualizarResumen();
-
-    alert("✅ Cartera cargada correctamente");
+    alert("✅ Cartera enviada a Firebase");
 
 })
 .catch(err=>{
 
-    console.error("❌ Error Firebase:",err);
+    console.error(
+        "❌ Error Firebase:",
+        err
+    );
 
-    alert("❌ "+err.message);
+    alert(
+        "❌ Error Firebase: " +
+        err.message
+    );
 
 });
+localStorage.setItem("cartera", JSON.stringify(json));
+localStorage.setItem("cartera_backup", JSON.stringify(json));
+// 🔥 RESET DIARIO (LÍNEA 357)
+let dataReset = JSON.parse(localStorage.getItem("cartera")) || [];
+
+dataReset.forEach(c=>{
+c.pagado_hoy = false;
+});
+
+localStorage.setItem("cartera", JSON.stringify(dataReset));
+// 🔥 MOSTRAR
+filtrarMora(0,1000);
+actualizarResumen();
+alert("✅ Cartera cargada y guardada correctamente");
 };
 
 reader.readAsArrayBuffer(file);

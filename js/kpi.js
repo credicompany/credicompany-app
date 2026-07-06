@@ -2290,34 +2290,42 @@ let html=`
 onclick="volverProductos()"
 style="
 width:100%;
-background:#0A3A63;
+background:linear-gradient(135deg,#0A3A63,#124F8C);
 color:white;
 border:none;
-padding:14px;
-border-radius:14px;
+padding:16px;
+border-radius:16px;
 font-size:18px;
-font-weight:bold;
+font-weight:700;
 cursor:pointer;
+box-shadow:0 6px 18px rgba(10,58,99,.25);
+transition:.25s;
 ">
 
-← Volver
+← Volver a Productos
 
 </button>
 
 </div>
 
 <div style="
-background:white;
-border-radius:14px;
-padding:15px;
-box-shadow:0 2px 10px rgba(0,0,0,.08);
-overflow:auto;
+background:#ffffff;
+border-radius:20px;
+padding:18px;
+box-shadow:0 8px 25px rgba(0,0,0,.08);
+border:1px solid #E5E7EB;
+overflow-x:auto;
+overflow-y:hidden;
+-webkit-overflow-scrolling:touch;
 ">
 
 <h2 style="
 margin:0;
 color:#0A3A63;
 text-align:center;
+font-size:26px;
+font-weight:700;
+letter-spacing:.5px;
 ">
 
 ${producto}
@@ -2327,8 +2335,9 @@ ${producto}
 <p style="
 text-align:center;
 font-size:15px;
-margin-top:5px;
-color:#666;
+margin:8px 0 18px;
+color:#6B7280;
+font-weight:600;
 ">
 
 👥 ${clientes.length} Clientes
@@ -2337,9 +2346,10 @@ color:#666;
 
 <table style="
 width:100%;
-min-width:900px;
-border-collapse:collapse;
-font-size:13px;
+min-width:760px;
+border-collapse:separate;
+border-spacing:0;
+font-size:14px;
 ">
 
 <tr style="

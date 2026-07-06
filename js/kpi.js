@@ -1616,7 +1616,9 @@ mora <= 5
 ? "#F59E0B"
 : "#EF4444";
 moraProductoHTML += `
-<div style="
+<div
+onclick="mostrarDetalleProducto('${r[0]}')"
+style="
 background:${fondo};
 color:#1F2937;
 border-left:5px solid ${borde};
@@ -1624,8 +1626,9 @@ padding:14px;
 margin:10px 0;
 border-radius:12px;
 box-shadow:0 2px 8px rgba(0,0,0,.05);
+cursor:pointer;
+transition:.25s;
 ">
-
 <div style="
 font-size:18px;
 font-weight:700;
@@ -2097,6 +2100,7 @@ color:black;
 </h3>
 
 ${moraProductoHTML}
+<div id="detalleProducto"></div>
 <hr style="margin:15px 0;">
 
 <div id="panelRentabilidad"
@@ -2241,5 +2245,174 @@ function cargarExcelKPI(){
     };
 
     lector.readAsArrayBuffer(archivo);
+
+}
+// ======================================================
+// DETALLE MORA POR PRODUCTO
+// ======================================================
+function mostrarDetalleProducto(producto){
+
+const data =
+JSON.parse(localStorage.getItem("financiero")) || [];
+
+const clientes = data
+.filter(c=>
+String(c["Producto"]||"")
+.trim()
+.toUpperCase()===producto.toUpperCase()
+)
+.sort((a,b)=>
+(parseFloat(b["Dias de retraso"])||0)-
+(parseFloat(a["Dias de retraso"])||0)
+);
+
+let totalMonto=0;
+let totalSaldo=0;
+
+let html=`
+<div style="
+margin-top:15px;
+background:white;
+border-radius:14px;
+padding:15px;
+box-shadow:0 2px 10px rgba(0,0,0,.08);
+overflow:auto;
+">
+
+<h3 style="margin:0 0 15px 0;color:#0A3A63;">
+📋 ${producto}
+</h3>
+
+<table style="
+width:100%;
+min-width:900px;
+border-collapse:collapse;
+font-size:13px;
+">
+
+<tr style="
+background:#0A3A63;
+color:white;
+">
+
+<th>#</th>
+<th>Cliente</th>
+<th>Monto</th>
+<th>Saldo</th>
+<th>Días</th>
+<th>CC</th>
+<th>CP</th>
+
+</tr>
+`;
+
+clientes.forEach((c,i)=>{
+
+const monto =
+parseFloat(c["Monto Otorgado"])||0;
+
+const saldo =
+parseFloat(c["Saldo Capital"])||0;
+
+const dias =
+parseFloat(c["Dias de retraso"])||0;
+
+totalMonto+=monto;
+totalSaldo+=saldo;
+
+const color =
+dias>=30?"#dc3545":
+dias>=9?"#ffc107":
+dias>=1?"#fd7e14":
+"#198754";
+
+const cliente=(
+
+(c["Apellido Paterno"]||"")+" "+
+(c["Apellido Materno"]||"")+" "+
+(c["Nombre"]||"")
+
+).trim();
+
+html+=`
+
+<tr style="border-bottom:1px solid #ECECEC;">
+
+<td style="padding:8px;text-align:center;">
+${i+1}
+</td>
+
+<td>
+${cliente}
+</td>
+
+<td style="text-align:right;">
+S/${monto.toLocaleString()}
+</td>
+
+<td style="text-align:right;">
+S/${saldo.toLocaleString()}
+</td>
+
+<td
+style="
+text-align:center;
+font-weight:bold;
+color:${color};
+">
+${dias}
+</td>
+
+<td style="text-align:center;">
+${c["CC"]||0}
+</td>
+
+<td style="text-align:center;">
+${c["CP"]||0}
+</td>
+
+</tr>
+
+`;
+
+});
+
+html+=`
+
+<tr style="
+background:#F4F7FB;
+font-weight:bold;
+">
+
+<td colspan="2">
+TOTAL
+</td>
+
+<td style="text-align:right;">
+S/${totalMonto.toLocaleString()}
+</td>
+
+<td style="text-align:right;">
+S/${totalSaldo.toLocaleString()}
+</td>
+
+<td colspan="3" style="text-align:center;">
+${clientes.length} Clientes
+</td>
+
+</tr>
+
+</table>
+
+</div>
+`;
+
+document.getElementById("detalleProducto").innerHTML=html;
+
+document.getElementById("detalleProducto")
+.scrollIntoView({
+behavior:"smooth",
+block:"start"
+});
 
 }

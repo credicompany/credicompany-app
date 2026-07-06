@@ -120,6 +120,14 @@ setTimeout(()=>{
 }
 if(p==="clientes"){
 
+    document.getElementById("rankingContainer").style.display="none";
+
+    filtrarMora(0,1000);
+
+    actualizarResumen();
+
+}
+
     filtrarMora(0,1000);
 
     actualizarResumen();
@@ -149,6 +157,8 @@ if(el) el.style.display="none";
 document.querySelector(".resumen").style.display = "grid";
 
 document.getElementById("historialDiv").style.display="none";
+    
+ document.getElementById("rankingContainer").style.display="flex";
 
 dashboard.style.display="block";
   if(asesor === "slopez"){
@@ -187,3 +197,5 @@ function iniciarResetDiario(){
 // =====================================
 
 window.onload = iniciarSistema;
+
+console.log("✅ app.js cargado");

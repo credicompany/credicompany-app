@@ -1804,24 +1804,31 @@ font-weight:bold;
 </div>
 <div id="panelCargaKPI">
 
-<input type="file" id="excelMetas" accept=".xlsx,.xls">
+<input
+type="file"
+id="excelMetas"
+accept=".xlsx,.xls"
+style="display:none"
+onchange="cargarMetasKPI()">
 
 <button
 class="btn-verde"
-onclick="cargarMetasKPI()">
+onclick="document.getElementById('excelMetas').click()">
 🎯 Cargar Metas
 </button>
 
-<br><br>
+<br>
 
 <input
 type="file"
 id="excelKPI"
-accept=".xlsx,.xls">
+accept=".xlsx,.xls"
+style="display:none"
+onchange="cargarExcelKPI()">
 
 <button
 class="btn-verde"
-onclick="cargarExcelKPI()">
+onclick="document.getElementById('excelKPI').click()">
 📂 Cargar Producción
 </button>
 

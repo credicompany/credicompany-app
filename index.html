@@ -1850,11 +1850,13 @@ onclick="volver()">
 <input
 type="file"
 id="excelFinanciero"
-accept=".xlsx,.xls">
+accept=".xlsx,.xls"
+style="display:none;"
+onchange="cargarExcelFinanciero()">
 
 <button
 class="btn-verde"
-onclick="cargarExcelFinanciero()">
+onclick="document.getElementById('excelFinanciero').click()">
 
 📂 Cargar Excel Financiero
 

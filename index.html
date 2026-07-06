@@ -3449,7 +3449,9 @@ html+=`
 🟢 ${hoy} | 🟢 ${alDia} | 🟡 ${leve} | 🔴 ${medio} | ⚫ ${critico}
 </div>`;
 
-filtrados.sort((a,b)=>(b.retraso||0)-(a.retraso||0));
+filtrados.sort((a,b)=>{
+    return (b.retraso||0)-(a.retraso||0);
+});
 
 filtrados.forEach((c,index)=>{
 let color="#2ecc71";
@@ -3788,13 +3790,16 @@ onclick="abrirGestion('${c.nombre}','${c.celular}')">
 
 </div>
 ` : ""}
+</div>
 
 </div>
 
 </div>`;
 });
   
-lista.innerHTML = html;
+const fragment = document.createRange().createContextualFragment(html);
+
+lista.replaceChildren(fragment);
   
 }
 function filtrarPorAsesor(nombreAsesor){

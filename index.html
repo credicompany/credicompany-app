@@ -4275,33 +4275,41 @@ function enviarFiltro(){
   window.open("https://wa.me/?text=" + encodeURIComponent(msg));
 }
  
- function abrirGestion(nombre, celular){
+function abrirGestion(nombre, celular){
 
-let comentario = prompt("Ingrese gestión realizada:");
+    alert("Entró a abrirGestion");
 
-if(!comentario) return;
+    console.log("Nombre:", nombre);
+    console.log("Celular:", celular);
 
-let gestion = {
-    cliente: nombre,
-    celular: celular,
-    tipo: "GESTIÓN",
-    comentario: comentario,
-    asesor: asesor,
-    fecha: new Date().toLocaleString(),
-    timestamp: Date.now()
-};
+    let comentario = prompt("Ingrese gestión realizada:");
 
-console.log("DB:", db);
-console.log("GESTIÓN:", gestion);
+    if(!comentario){
+        alert("No se ingresó comentario");
+        return;
+    }
 
-db.ref("gestiones").push(gestion)
-.then(()=>{
-    alert("✅ Gestión guardada");
-})
-.catch(error=>{
-    console.error("ERROR FIREBASE:", error);
-    alert("Error: " + error.message);
-});
+    let gestion = {
+        cliente: nombre,
+        celular: celular,
+        tipo: "GESTIÓN",
+        comentario: comentario,
+        asesor: (typeof asesor !== "undefined") ? asesor : "",
+        fecha: new Date().toLocaleString(),
+        timestamp: Date.now()
+    };
+
+    console.log("DB:", db);
+    console.log("Gestión:", gestion);
+
+    db.ref("gestiones").push(gestion)
+    .then(()=>{
+        alert("✅ Gestión guardada");
+    })
+    .catch(err=>{
+        console.error(err);
+        alert(err.message);
+    });
 
 }
 function verHistorialGestiones(){

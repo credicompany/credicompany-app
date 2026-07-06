@@ -1,3 +1,19 @@
+const firebaseConfig = {
+ apiKey: "AIzaSyB5G2MyTkYZT0b7RMfLoBegcfAY4-ewdkc",
+ authDomain: "credicompany-88693.firebaseapp.com",
+ databaseURL: "https://credicompany-88693-default-rtdb.firebaseio.com",
+ projectId: "credicompany-88693",
+ storageBucket: "credicompany-88693.firebasestorage.app",
+ messagingSenderId: "890359636696",
+ appId: "1:890359636696:web:1e9f4ca349606817212dad"
+};
+
+firebase.initializeApp(firebaseConfig);
+window.db = firebase.database();
+  console.log(db);
+
+alert("Firebase conectado");
+
 // ========================================
 // FIREBASE
 // Credicompany V2

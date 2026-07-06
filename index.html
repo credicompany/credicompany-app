@@ -4277,25 +4277,31 @@ function enviarFiltro(){
  
  function abrirGestion(nombre, celular){
 
-let comentario = prompt(
-"Ingrese gestión realizada:"
-);
+let comentario = prompt("Ingrese gestión realizada:");
 
 if(!comentario) return;
 
 let gestion = {
-cliente: nombre,
-celular: celular,
-tipo: "GESTIÓN",
-comentario: comentario,
-asesor: asesor,
-fecha: new Date().toLocaleString(),
-timestamp: Date.now()
+    cliente: nombre,
+    celular: celular,
+    tipo: "GESTIÓN",
+    comentario: comentario,
+    asesor: asesor,
+    fecha: new Date().toLocaleString(),
+    timestamp: Date.now()
 };
 
-db.ref("gestiones").push(gestion);
+console.log("DB:", db);
+console.log("GESTIÓN:", gestion);
 
-alert("✅ Gestión guardada");
+db.ref("gestiones").push(gestion)
+.then(()=>{
+    alert("✅ Gestión guardada");
+})
+.catch(error=>{
+    console.error("ERROR FIREBASE:", error);
+    alert("Error: " + error.message);
+});
 
 }
 function verHistorialGestiones(){

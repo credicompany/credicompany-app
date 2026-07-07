@@ -2340,94 +2340,72 @@ font-weight:600;
 
 </p>
 
+//============================
+// VISTA PC
+//============================
+html += `
+
+<div class="detallePC">
+
 <table style="
 width:100%;
-min-width:760px;
-border-collapse:separate;
-border-spacing:0;
-font-size:14px;
+border-collapse:collapse;
 ">
 
-<tr style="
-background:#0A3A63;
-color:white;
-">
+<thead>
+
+<tr>
 
 <th>#</th>
-<th>Cliente</th>
+<th>Nombre y Apellido</th>
 <th>Monto</th>
-<th>Saldo</th>
 <th>Días</th>
-<th>CC</th>
 <th>CP</th>
+<th>CC</th>
 
 </tr>
+
+</thead>
+
+<tbody>
+
 `;
 
 clientes.forEach((c,i)=>{
 
+const nombre = `
+${c["Apellido Paterno"]||""}
+${c["Apellido Materno"]||""}
+${c["Nombre"]||""}
+`.replace(/\s+/g," ").trim();
+
 const monto =
 parseFloat(c["Monto Otorgado"])||0;
-
-const saldo =
-parseFloat(c["Saldo Capital"])||0;
 
 const dias =
 parseFloat(c["Dias de retraso"])||0;
 
-totalMonto+=monto;
-totalSaldo+=saldo;
+const cp =
+parseFloat(c["CP"])||0;
 
-const color =
-dias>=30?"#dc3545":
-dias>=9?"#ffc107":
-dias>=1?"#fd7e14":
-"#198754";
+const cc =
+parseFloat(c["CC"])||0;
 
-const cliente=(
+html += `
 
-(c["Apellido Paterno"]||"")+" "+
-(c["Apellido Materno"]||"")+" "+
-(c["Nombre"]||"")
+<tr>
 
-).trim();
+<td>${i+1}</td>
 
-html+=`
+<td>${nombre}</td>
 
-<tr style="border-bottom:1px solid #ECECEC;">
+<td>S/${monto.toLocaleString()}</td>
 
-<td style="padding:8px;text-align:center;">
-${i+1}
-</td>
+<td>${dias}</td>
 
-<td>
-${cliente}
-</td>
+<td>S/${cp.toLocaleString()}</td>
 
-<td style="text-align:right;">
-S/${monto.toLocaleString()}
-</td>
-
-<td style="text-align:right;">
-S/${saldo.toLocaleString()}
-</td>
-
-<td
-style="
-text-align:center;
-font-weight:bold;
-color:${color};
-">
-${dias}
-</td>
-
-<td style="text-align:center;">
-${c["CC"]||0}
-</td>
-
-<td style="text-align:center;">
-${c["CP"]||0}
-</td>
+<td>S/${cc.toLocaleString()}</td>
 
 </tr>
 
@@ -2435,34 +2413,82 @@ ${c["CP"]||0}
 
 });
 
-html+=`
-
-<tr style="
-background:#F4F7FB;
-font-weight:bold;
-">
-
-<td colspan="2">
-TOTAL
-</td>
-
-<td style="text-align:right;">
-S/${totalMonto.toLocaleString()}
-</td>
-
-<td style="text-align:right;">
-S/${totalSaldo.toLocaleString()}
-</td>
-
-<td colspan="3" style="text-align:center;">
-${clientes.length} Clientes
-</td>
-
-</tr>
-
+html += `
+</tbody>
 </table>
 
 </div>
+
+
+<div class="detalleMobile">
+`;
+
+clientes.forEach(c=>{
+
+const nombre = `
+${c["Apellido Paterno"]||""}
+${c["Apellido Materno"]||""}
+${c["Nombre"]||""}
+`.replace(/\s+/g," ").trim();
+
+const monto =
+parseFloat(c["Monto Otorgado"])||0;
+
+const dias =
+parseFloat(c["Dias de retraso"])||0;
+
+const cp =
+parseFloat(c["CP"])||0;
+
+const cc =
+parseFloat(c["CC"])||0;
+
+html += `
+
+<div class="cardDetalle">
+
+<div class="nombre">
+
+👤 ${nombre}
+
+</div>
+
+<div class="fila">
+
+<span>💰 S/${monto.toLocaleString()}</span>
+
+<span>⏳ ${dias} días</span>
+
+</div>
+
+<div class="fila">
+
+<span>CP</span>
+
+<b>S/${cp.toLocaleString()}</b>
+
+</div>
+
+<div class="fila">
+
+<span>CC</span>
+
+<b>S/${cc.toLocaleString()}</b>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+html += `
+
+</div>
+
+</div>
+
 `;
 
 document.getElementById("listaProductos").style.display="none";
@@ -2475,6 +2501,7 @@ document.getElementById("detalleProducto")
 .scrollIntoView({
 behavior:"smooth",
 block:"start"
+
 });
 
 }

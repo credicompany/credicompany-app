@@ -1426,6 +1426,120 @@ display:block;
 }
 
 }
+
+  /*=====================================
+HEADER COMPACTO V3
+=====================================*/
+
+.headerNuevo{
+
+background:linear-gradient(180deg,#123B63,#174878);
+
+padding:14px 18px;
+
+border-radius:0 0 26px 26px;
+
+box-shadow:0 6px 18px rgba(0,0,0,.10);
+
+}
+
+.topBar{
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+margin-bottom:14px;
+
+}
+
+.logoMini img{
+
+height:42px;
+
+margin-right:10px;
+
+}
+
+.tituloEmpresa{
+
+display:flex;
+
+flex-direction:column;
+
+}
+
+.titulo1{
+
+font-size:28px;
+
+font-weight:700;
+
+color:white;
+
+}
+
+.titulo2{
+
+font-size:13px;
+
+color:#D6E4F2;
+
+}
+
+.perfilCompacto{
+
+display:flex;
+
+align-items:center;
+
+background:white;
+
+border-radius:18px;
+
+padding:12px;
+
+}
+
+.fotoMini{
+
+width:54px;
+
+height:54px;
+
+border-radius:50%;
+
+object-fit:cover;
+
+border:3px solid #16A34A;
+
+margin-right:12px;
+
+display:none;
+
+}
+
+.nombreMini{
+
+font-size:22px;
+
+font-weight:700;
+
+color:#123B63;
+
+}
+
+.cargoMini{
+
+font-size:14px;
+
+color:#64748B;
+
+margin-top:2px;
+
+}
 </style>
  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -1439,14 +1553,34 @@ getDoc
 </head>
 
 <body>
+<div class="headerNuevo">
 
-<div class="header">
-<img src="logo.png" class="logoPrincipal">
-<img id="fotoPerfil" style="display:none;">
+    <div class="topBar">
 
-<div id="nombreCompletoAsesor" style="display:none;"></div>
+        <div class="logoMini">
+            <img src="logo.png">
+        </div>
 
-<div id="nombreAsesor" style="display:none;"></div>
+        <div class="tituloEmpresa">
+            <div class="titulo1">Credicompany</div>
+            <div class="titulo2">Crecemos juntos.</div>
+        </div>
+
+    </div>
+
+    <div class="perfilCompacto">
+
+        <img id="fotoPerfil" class="fotoMini">
+
+        <div class="datosUsuario">
+
+            <div id="nombreCompletoAsesor" class="nombreMini"></div>
+
+            <div id="nombreAsesor" class="cargoMini"></div>
+
+        </div>
+
+    </div>
 </div>
 
 <div id="rankingContainer">
@@ -3743,6 +3877,7 @@ u.nombre || usuario;
 nombreAsesor.innerText =
 u.user;
 
+foto.className = "fotoMini";
 foto.style.display = "block";
 
 return;

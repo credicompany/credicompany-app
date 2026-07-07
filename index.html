@@ -1843,7 +1843,7 @@ Mensual
 
 <div id="clientes" class="card" style="display:none">
 <div class="volver" onclick="volver()">
-← Volver
+🏠 Inicio
 </div>
 <div id="panelExcel">
 <input
@@ -2023,7 +2023,9 @@ onkeyup="filtrarMora(filtroMin,filtroMax)">
 </div>
 
 <div id="admin" class="card" style="display:none">
-<div class="volver" onclick="volver()">← Volver</div>
+<div class="volver" onclick="volver()">
+🏠 Inicio
+</div>
 
 <input id="nuevoUser" placeholder="Usuario">
 
@@ -2040,7 +2042,9 @@ Eliminar Usuario
 <div id="listaUsuarios"></div>
 </div>
 <div id="pagos" class="card" style="display:none">
-<div class="volver" onclick="volver()">← Volver</div>
+<div class="volver" onclick="volver()">
+🏠 Inicio
+</div>
 
 <div class="pagos-container">
 
@@ -2064,14 +2068,18 @@ Eliminar Usuario
 
 </div>
 <div id="historialDiv" class="card" style="display:none;">
-    <div class="volver" onclick="volver()">← Volver</div>
+  <div class="volver" onclick="volver()">
+🏠 Inicio
+</div>
     <h3>📋 Historial de Pagos</h3>
     <h3>💰 Historial de Bonos</h3>
     <div id="listaHistorial"></div>
 </div>
 
 <div id="historialGestionesDiv" class="card" style="display:none;">
-    <div class="volver" onclick="volver()">← Volver</div>
+ <div class="volver" onclick="volver()">
+🏠 Inicio
+</div>
     <h3>📝 Historial de Gestiones</h3>
     <div id="listaGestiones"></div>
 </div>
@@ -3285,9 +3293,7 @@ if(el) el.style.display="none";
 });
 
 document.getElementById(p).style.display="block";
-if(p!="dashboard"){
-document.getElementById("btnVolverTop").style.display="block";
-}
+  
 if(p==="kpi"){
 
     if(
@@ -3351,6 +3357,8 @@ document.querySelector(".resumen").style.display = "grid";
 document.getElementById("historialDiv").style.display="none";
 
 document.getElementById("rankingContainer").style.display="flex";
+
+document.getElementById("btnVolverTop").style.display="none";
 
 dashboard.style.display="block";
 

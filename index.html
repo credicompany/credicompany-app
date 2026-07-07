@@ -1530,9 +1530,9 @@ padding:12px;
 
 .fotoMini{
 
-width:82px;
+width:110px;
 
-height:82px;
+height:110px;
 
 object-fit:cover;
 
@@ -1594,16 +1594,29 @@ getDoc
 
         <img id="fotoPerfil" class="fotoMini">
 
-        <div class="datosUsuario">
+       <div class="datosUsuario">
 
-           <div id="saludoUsuario" class="saludoMini"></div>
+    <div
+    id="saludoUsuario"
+    style="
+    font-size:14px;
+    color:#64748B;
+    font-weight:500;
+    margin-bottom:3px;
+    ">
+    </div>
 
-<div id="nombreCompletoAsesor" class="nombreMini"></div>
+    <div
+    id="nombreCompletoAsesor"
+    class="nombreMini">
+    </div>
 
-            <div id="nombreAsesor" class="cargoMini"></div>
+    <div
+    id="nombreAsesor"
+    class="cargoMini">
+    </div>
 
-        </div>
-
+</div>
     </div>
 </div>
 
@@ -3890,6 +3903,7 @@ function cargarPerfilAsesor(usuario){
 
 let foto = document.getElementById("fotoPerfil");
 let nombreCompleto = document.getElementById("nombreCompletoAsesor");
+  let saludo = document.getElementById("saludoUsuario");
 let usuarios =
 JSON.parse(localStorage.getItem("usuarios")) || [];
 

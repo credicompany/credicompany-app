@@ -2219,7 +2219,6 @@ function cargarExcelKPI(){
     const lector = new FileReader();
 
     lector.onload = function(e){
-
         const data =
         new Uint8Array(e.target.result);
 

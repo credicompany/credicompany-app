@@ -2261,249 +2261,82 @@ function cargarExcelKPI(){
 // ======================================================
 function mostrarDetalleProducto(producto){
 
-const data =
-JSON.parse(localStorage.getItem("financiero")) || [];
+const data=JSON.parse(localStorage.getItem("financiero"))||[];
 
-const clientes = data
-.filter(c=>
-String(c["Producto"]||"")
-.trim()
-.toUpperCase()===producto.toUpperCase()
-)
-.sort((a,b)=>
+const clientes=data.filter(c=>
+String(c["Producto"]||"").trim().toUpperCase()===producto.toUpperCase()
+).sort((a,b)=>
 (parseFloat(b["Dias de retraso"])||0)-
 (parseFloat(a["Dias de retraso"])||0)
 );
 
-let totalMonto=0;
-let totalSaldo=0;
-
 let html=`
-
-<div style="margin-bottom:15px;">
-
-<button
-onclick="volverProductos()"
-style="
-width:100%;
-background:linear-gradient(135deg,#0A3A63,#124F8C);
-color:white;
-border:none;
-padding:16px;
-border-radius:16px;
-font-size:18px;
-font-weight:700;
-cursor:pointer;
-box-shadow:0 6px 18px rgba(10,58,99,.25);
-transition:.25s;
-">
-
+<div style="margin-bottom:15px">
+<button onclick="volverProductos()" style="width:100%;padding:14px;border:none;border-radius:12px;background:#0A3A63;color:#fff;font-weight:bold;cursor:pointer">
 ← Volver a Productos
-
 </button>
-
 </div>
 
-<div style="
-background:#ffffff;
-border-radius:20px;
-padding:18px;
-box-shadow:0 8px 25px rgba(0,0,0,.08);
-border:1px solid #E5E7EB;
-overflow-x:auto;
-overflow-y:hidden;
--webkit-overflow-scrolling:touch;
-">
-
-<h2 style="
-margin:0;
-color:#0A3A63;
-text-align:center;
-font-size:26px;
-font-weight:700;
-letter-spacing:.5px;
-">
-
-${producto}
-
-</h2>
-
-<p style="
-text-align:center;
-font-size:15px;
-margin:8px 0 18px;
-color:#6B7280;
-font-weight:600;
-">
-
-👥 ${clientes.length} Clientes
-
-</p>
-
-//============================
-// VISTA PC
-//============================
-html += `
+<div style="background:#fff;border-radius:16px;padding:16px;border:1px solid #E5E7EB">
+<h2 style="margin:0;text-align:center;color:#0A3A63">${producto}</h2>
+<p style="text-align:center">👥 ${clientes.length} Clientes</p>
 
 <div class="detallePC">
-
-<table style="
-width:100%;
-border-collapse:collapse;
-">
-
+<table style="width:100%;border-collapse:collapse">
 <thead>
-
 <tr>
-
 <th>#</th>
 <th>Nombre y Apellido</th>
 <th>Monto</th>
 <th>Días</th>
 <th>CP</th>
 <th>CC</th>
-
 </tr>
-
 </thead>
-
 <tbody>
-
 `;
 
 clientes.forEach((c,i)=>{
-
-const nombre = `
-${c["Apellido Paterno"]||""}
-${c["Apellido Materno"]||""}
-${c["Nombre"]||""}
-`.replace(/\s+/g," ").trim();
-
-const monto =
-parseFloat(c["Monto Otorgado"])||0;
-
-const dias =
-parseFloat(c["Dias de retraso"])||0;
-
-const cp =
-parseFloat(c["CP"])||0;
-
-const cc =
-parseFloat(c["CC"])||0;
-
-html += `
-
+const nombre=`${c["Apellido Paterno"]||""} ${c["Apellido Materno"]||""} ${c["Nombre"]||""}`.replace(/\s+/g," ").trim();
+html+=`
 <tr>
-
 <td>${i+1}</td>
-
 <td>${nombre}</td>
-
-<td>S/${monto.toLocaleString()}</td>
-
-<td>${dias}</td>
-
-<td>S/${cp.toLocaleString()}</td>
-
-<td>S/${cc.toLocaleString()}</td>
-
-</tr>
-
-`;
-
+<td>S/${(parseFloat(c["Monto Otorgado"])||0).toLocaleString()}</td>
+<td>${parseFloat(c["Dias de retraso"])||0}</td>
+<td>S/${(parseFloat(c["CP"])||0).toLocaleString()}</td>
+<td>S/${(parseFloat(c["CC"])||0).toLocaleString()}</td>
+</tr>`;
 });
 
-html += `
+html+=`
 </tbody>
 </table>
-
 </div>
-
 
 <div class="detalleMobile">
 `;
 
 clientes.forEach(c=>{
-
-const nombre = `
-${c["Apellido Paterno"]||""}
-${c["Apellido Materno"]||""}
-${c["Nombre"]||""}
-`.replace(/\s+/g," ").trim();
-
-const monto =
-parseFloat(c["Monto Otorgado"])||0;
-
-const dias =
-parseFloat(c["Dias de retraso"])||0;
-
-const cp =
-parseFloat(c["CP"])||0;
-
-const cc =
-parseFloat(c["CC"])||0;
-
-html += `
-
+const nombre=`${c["Apellido Paterno"]||""} ${c["Apellido Materno"]||""} ${c["Nombre"]||""}`.replace(/\s+/g," ").trim();
+html+=`
 <div class="cardDetalle">
-
-<div class="nombre">
-
-👤 ${nombre}
-
-</div>
-
-<div class="fila">
-
-<span>💰 S/${monto.toLocaleString()}</span>
-
-<span>⏳ ${dias} días</span>
-
-</div>
-
-<div class="fila">
-
-<span>CP</span>
-
-<b>S/${cp.toLocaleString()}</b>
-
-</div>
-
-<div class="fila">
-
-<span>CC</span>
-
-<b>S/${cc.toLocaleString()}</b>
-
-</div>
-
-</div>
-
-`;
-
+<div class="nombre">👤 ${nombre}</div>
+<div class="fila"><span>💰 S/${(parseFloat(c["Monto Otorgado"])||0).toLocaleString()}</span><span>⏳ ${parseFloat(c["Dias de retraso"])||0} días</span></div>
+<div class="fila"><span>CP</span><b>S/${(parseFloat(c["CP"])||0).toLocaleString()}</b></div>
+<div class="fila"><span>CC</span><b>S/${(parseFloat(c["CC"])||0).toLocaleString()}</b></div>
+</div>`;
 });
 
-html += `
-
+html+=`
 </div>
-
 </div>
-
 `;
 
 document.getElementById("listaProductos").style.display="none";
-
 document.getElementById("detalleProducto").style.display="block";
-
 document.getElementById("detalleProducto").innerHTML=html;
-
-document.getElementById("detalleProducto")
-.scrollIntoView({
-behavior:"smooth",
-block:"start"
-
-});
-
+document.getElementById("detalleProducto").scrollIntoView({behavior:"smooth",block:"start"});
 }
 function volverProductos(){
 

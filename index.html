@@ -446,12 +446,7 @@ font-size:22px;
     justify-content:center;
     gap:8px;
 }
-#btnVolverTop{
-    flex-basis:100%;
-    display:block;
-    width:100%;
-    margin-top:8px;
-}
+  
     #rankingBox,
     #rankingKPIBox{
         width:45%;
@@ -476,31 +471,8 @@ margin:2px 0 6px;
         line-height:1.2;
     }
 
-   #btnVolverTop{
-    display:block;
-    width:100%;
-    margin-top:8px;
 }
 
-}
-
-#btnVolverTop{
-
-background:#25D366;
-
-color:white;
-
-padding:10px;
-
-font-size:14px;
-
-border-radius:14px;
-
-height:46px;
-
-font-weight:700;
-
-}
   .modalTarifario{
     display:none;
     position:fixed;
@@ -2633,6 +2605,8 @@ cargarPerfilAsesor(asesor);
 
 loginDiv.style.display="none";
 dashboard.style.display="block";
+  document.querySelector(".headerNuevo").style.display="block";
+document.querySelector(".resumen").style.display="grid";
 
 document.getElementById("boxAdmin").style.display="flex";
 document.getElementById("panelExcel").style.display="block";
@@ -3270,7 +3244,8 @@ return;
 }
 
 dashboard.style.display="none";
-
+document.querySelector(".headerNuevo").style.display="none";
+document.getElementById("rankingContainer").style.display="none";
 document.querySelector(".resumen").style.display = "none";
 
 app.style.display="block";
@@ -3357,10 +3332,10 @@ document.getElementById("historialDiv").style.display="none";
 
 document.getElementById("rankingContainer").style.display="flex";
 
-document.getElementById("btnVolverTop").style.display="none";
 
 dashboard.style.display="block";
-
+document.querySelector(".headerNuevo").style.display="block";
+document.getElementById("rankingContainer").style.display="flex";
 if(asesor === "slopez"){
 document.getElementById("panelAsesores").style.display="grid";
 }

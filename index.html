@@ -1115,20 +1115,45 @@ body{
 
 .volver{
 
-    background:#183E68;
+display:inline-flex;
 
-    border-radius:18px;
+align-items:center;
 
-    padding:14px;
+justify-content:center;
 
-    font-size:18px;
+background:#123B63;
 
-    font-weight:700;
+color:#fff;
 
-    box-shadow:none;
+width:120px;
+
+height:42px;
+
+padding:0;
+
+border-radius:18px;
+
+font-size:14px;
+
+font-weight:700;
+
+cursor:pointer;
+
+margin-bottom:16px;
+
+box-shadow:0 6px 16px rgba(18,59,99,.18);
+
+transition:.25s;
 
 }
 
+.volver:hover{
+
+background:#0F2F50;
+
+transform:translateY(-2px);
+
+}
 /* INPUT */
 
 input{
@@ -1626,7 +1651,7 @@ getDoc
 id="btnVolverTop"
 onclick="volver()"
 style="display:none;">
-← Volver
+🏠 Inicio
 </button>
 </div>
 <div id="loginDiv" class="card">

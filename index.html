@@ -1647,12 +1647,7 @@ getDoc
         <h3>📊 Ranking Colocación</h3>
         <div id="rankingKPI"></div>
     </div>
-   <button
-id="btnVolverTop"
-onclick="volver()"
-style="display:none;">
-🏠 Inicio
-</button>
+ 
 </div>
 <div id="loginDiv" class="card">
 <input id="usuario" placeholder="Usuario">
@@ -2084,6 +2079,11 @@ Eliminar Usuario
     <div id="listaGestiones"></div>
 </div>
 <div id="kpi" class="card" style="display:none">
+
+<div class="volver" onclick="volver()">
+🏠 Inicio
+</div>
+
 <h3>📊 KPI Gerencial</h3>
 <div id="metaActivaKPI"
 style="
@@ -2129,11 +2129,14 @@ onclick="document.getElementById('excelKPI').click()">
 
 <div id="kpiResumen"></div>
 
-</div>
 <div
 id="kpiFinanciero"
 class="card"
 style="display:none">
+
+<div class="volver" onclick="volver()">
+🏠 Inicio
+</div>
 
 <h3>🏦 KPI FINANCIERO</h3>
 
@@ -2181,12 +2184,8 @@ id="resultadoMensual"
 class="card"
 style="display:none;">
 
-<div
-class="volver"
-onclick="volver()">
-
-← Volver
-
+<div class="volver" onclick="volver()">
+🏠 Inicio
 </div>
 
 <h3>
@@ -3948,6 +3947,23 @@ nombreAsesor.innerText =
 u.user;
 
 foto.className = "fotoMini";
+
+  const hora = new Date().getHours();
+
+let mensaje = "¡Bienvenido!";
+
+if(hora < 12){
+    mensaje = "☀️ Hola";
+}else if(hora < 18){
+    mensaje = "👋 Buenas tardes";
+}else{
+    mensaje = "🌙 Buenas noches";
+}
+
+saludo.innerHTML = `
+<b>${mensaje}, ${nombreCompleto.innerText}</b><br>
+<small>Empecemos a recuperar la cartera de hoy.</small>
+`;
 foto.style.display = "block";
 
 return;

@@ -2959,15 +2959,53 @@ DÍAS
 </div>
 
 <div style="
-background:#F8FAFC;
-border:1px solid #E5EAF1;
-border-radius:14px;
-padding:8px;
-text-align:center;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+margin-top:14px;
+margin-bottom:14px;
+padding:10px 0;
+border-top:1px solid #E5EAF1;
+border-bottom:1px solid #E5EAF1;
 ">
 
 <div style="
-font-size:20px;
+font-size:24px;
+font-weight:800;
+color:#16A34A;
+flex:2;
+">
+S/${parseFloat(c.monto).toLocaleString()}
+</div>
+
+<div style="
+text-align:center;
+flex:1;
+">
+<div style="
+font-size:22px;
+font-weight:800;
+color:${color};
+">
+${parseInt(c.retraso || 0)}
+</div>
+
+<div style="
+font-size:11px;
+color:#64748B;
+font-weight:700;
+">
+DÍAS
+</div>
+</div>
+
+<div style="
+text-align:center;
+flex:1;
+">
+<div style="
+font-size:22px;
 font-weight:800;
 color:#EF4444;
 ">
@@ -2976,25 +3014,19 @@ ${c.cuotasVencidas || 0}
 
 <div style="
 font-size:11px;
-font-weight:700;
 color:#64748B;
-margin-top:4px;
+font-weight:700;
 ">
-VENCIDAS
+VENC.
 </div>
-
 </div>
 
 <div style="
-background:#F8FAFC;
-border:1px solid #E5EAF1;
-border-radius:14px;
-padding:8px;
 text-align:center;
+flex:1;
 ">
-
 <div style="
-font-size:20px;
+font-size:22px;
 font-weight:800;
 color:#2563EB;
 ">
@@ -3003,16 +3035,13 @@ ${c.cuotasPorPagar || 0}
 
 <div style="
 font-size:11px;
-font-weight:700;
 color:#64748B;
-margin-top:4px;
+font-weight:700;
 ">
 P/PAGAR
 </div>
-
 </div>
 
-</div>
 </div>
 <div style="
 color:#e74c3c;

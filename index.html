@@ -48,17 +48,13 @@ margin-bottom:14px;
 transition:.30s;
 }
 .logoPrincipal{
-
-width:230px;
-
-max-width:75%;
-
+width:320px;
+max-width:92%;
+height:auto;
 display:block;
-
-margin:0 auto 25px;
-
-filter:drop-shadow(0 10px 22px rgba(0,0,0,.20));
-
+margin:0 auto;
+filter:drop-shadow(0 10px 22px rgba(0,0,0,.25));
+animation:fadeLogo .5s ease;
 }
 
 .perfilBox{
@@ -1494,18 +1490,16 @@ HEADER COMPACTO V3
 
 background:linear-gradient(180deg,#123B63,#174878);
 
-padding:18px 20px 40px;
+padding:22px 18px 18px;
 
-border-radius:0 0 70px 70px;
+border-radius:0 0 28px 28px;
 
-box-shadow:0 12px 28px rgba(0,0,0,.18);
+box-shadow:0 8px 20px rgba(0,0,0,.12);
 
 text-align:center;
 
 }
-  #rankingContainer{
-    margin-top:25px;
-}
+
 .topBar{
 
 display:flex;
@@ -1562,67 +1556,45 @@ color:#D6E4F2;
 
 .perfilCompacto{
 
-width:88%;
-
-max-width:900px;
-
-margin:auto;
-
-background:white;
-
-border-radius:28px;
-
-padding:18px 22px;
-
 display:flex;
 
 align-items:center;
 
-box-shadow:0 10px 30px rgba(0,0,0,.15);
+background:white;
 
-}
-  #rankingContainer{
-    margin-top:25px;
+border-radius:18px;
+
+padding:12px;
+
 }
 
 .fotoMini{
-
-width:90px;
-
-height:90px;
-
-border-radius:50%;
-
-object-fit:cover;
-
-border:4px solid white;
-
-margin-right:18px;
-
-display:none;
-
-box-shadow:0 8px 18px rgba(0,0,0,.20);
-
+    width:120px;
+    height:150px;      /* Más alta */
+    object-fit:cover;
+    object-position:center top;
+    border-radius:18px;
+    box-shadow:0 8px 18px rgba(0,0,0,.18);
+    margin-right:18px;
+    display:none;
 }
 .nombreMini{
 
-font-size:34px;
+font-size:22px;
 
-font-weight:800;
+font-weight:700;
 
 color:#123B63;
-
-margin-bottom:6px;
 
 }
 
 .cargoMini{
 
-font-size:20px;
+font-size:14px;
 
-font-weight:600;
+color:#64748B;
 
-color:#16A34A;
+margin-top:2px;
 
 }
   html,
@@ -1681,29 +1653,17 @@ getDoc
 
     <div class="topBar">
 
-        <img
-        src="logo.png"
-        class="logoPrincipal">
+        <div class="tituloEmpresa">
 
+    <img
+    src="logo.png"
+    alt="Credicompany"
+    class="logoPrincipal">
+
+</div>
     </div>
 
     <div class="perfilCompacto">
-
-        <img id="fotoPerfil" class="fotoMini">
-
-        <div class="datosUsuario">
-
-            <div id="saludoUsuario"></div>
-
-            <div id="nombreCompletoAsesor" class="nombreMini"></div>
-
-            <div id="nombreAsesor" class="cargoMini"></div>
-
-        </div>
-
-    </div>
-
-</div>
 
         <img id="fotoPerfil" class="fotoMini">
 
@@ -4164,4 +4124,3 @@ if ("serviceWorker" in navigator) {
   
 </body>
   </html>
-

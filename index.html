@@ -1150,23 +1150,16 @@ transition:.25s;
 #panelExcel{
     flex:1;
 }
-
-@media(max-width:768px){
-
-    .barraSuperior{
-        gap:8px;
-    }
-
-    .barraSuperior .volver,
-    .barraSuperior #panelExcel button{
-
-        height:48px;
-        font-size:16px;
-        font-weight:700;
-    }
-
+.barraSuperior{
+    gap:8px;
 }
 
+.barraSuperior .volver,
+.barraSuperior #panelExcel button{
+    height:48px;
+    font-size:16px;
+    font-weight:700;
+}
 .volver:hover{
 
 background:#0F2F50;
@@ -1601,6 +1594,17 @@ color:#64748B;
 
 margin-top:2px;
 
+}
+  html,
+body{
+    overflow-x:hidden;
+}
+
+.card,
+.item,
+#listaClientes{
+    max-width:100%;
+    overflow-x:hidden;
 }
 </style>
  <script type="module">

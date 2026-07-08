@@ -1768,59 +1768,69 @@ onclick="mostrar('resultadoMensual')">
 
 <div class="resumen" style="display:none;">
 
-  <div class="card-resumen">
-    <div>💰 Cartera</div>
-    <div id="totalCartera">S/ 0</div>
-  </div>
+    <div class="card-resumen">
+        <div>💰 Cartera</div>
+        <div id="totalCartera">S/ 0</div>
+    </div>
 
-  <div class="card-resumen">
-    <div>📉 Mora</div>
-    <div id="porcentajeMora">0%</div>
-  </div>
+    <div class="card-resumen">
+        <div>📉 Mora</div>
+        <div id="porcentajeMora">0%</div>
+    </div>
 
-  <div class="card-resumen">
-    <div>💵 Hoy</div>
-    <div id="cobradoHoy">S/ 0</div>
-  </div>
+    <div class="card-resumen">
+        <div>💵 Hoy</div>
+        <div id="cobradoHoy">S/ 0</div>
+    </div>
 
-  <div class="card-resumen">
-    <div>⏰ Vencen Hoy</div>
-    <div id="vencenHoy">0</div>
-  </div>
+    <div class="card-resumen">
+        <div>⏰ Vencen Hoy</div>
+        <div id="vencenHoy">0</div>
+    </div>
 
-  <div class="card-resumen">
-    <div>🚨 +30 días</div>
-    <div id="criticos">0</div>
-  </div>
+    <div class="card-resumen">
+        <div>🚨 +30 días</div>
+        <div id="criticos">0</div>
+    </div>
 
-  <div class="card-resumen">
-    <div>👥 Clientes</div>
-    <div id="totalClientes">0</div>
-  </div>
-<div class="card-resumen">
-    <div>🚨 Mi Mora</div>
-    <div id="miMora">S/0</div>
+    <div class="card-resumen">
+        <div>👥 Clientes</div>
+        <div id="totalClientes">0</div>
+    </div>
+
+    <div class="card-resumen">
+        <div>🚨 Mi Mora</div>
+        <div id="miMora">S/0</div>
+    </div>
+
+    <div class="card-resumen">
+        <div>📌 Mis Morosos</div>
+        <div id="misMorosos">0</div>
+    </div>
+
+    <div class="card-resumen">
+        <div>💸 Mora Recuperada</div>
+        <div id="moraRecuperada">S/0</div>
+    </div>
+
 </div>
 
-<div class="card-resumen">
-    <div>📌 Mis Morosos</div>
-    <div id="misMorosos">0</div>
-</div>
-<div class="card-resumen">
-    <div>💸 Mora Recuperada</div>
-    <div id="moraRecuperada">S/0</div>
-</div>
-</div>
-
+<!-- CONTENEDOR PRINCIPAL -->
+<div id="app" style="display:none">
+    <!-- SIMULADOR -->
 <div id="simulador" class="card">
 
-<div class="volver" onclick="volver()">
-    🏠 Inicio
-</div>
+        <div class="barraSuperior">
 
-<input id="cliente" placeholder="Nombre">
-<input id="apellidos" placeholder="Apellidos">
-<input id="dni" placeholder="DNI">
+            <div class="volver" onclick="volver()">
+                🏠 Inicio
+            </div>
+
+        </div>
+
+        <input id="cliente" placeholder="Nombre">
+        <input id="apellidos" placeholder="Apellidos">
+        <input id="dni" placeholder="DNI">
 
 <!-- TIPO CLIENTE -->
 <select id="tipoCliente">

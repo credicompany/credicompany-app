@@ -1606,6 +1606,34 @@ body{
     max-width:100%;
     overflow-x:hidden;
 }
+
+  /* ===== CORRECCIÓN LÍNEAS NEGRAS ===== */
+
+html,
+body{
+    overflow-x:hidden !important;
+}
+
+body{
+    width:100%;
+}
+
+#app,
+#clientes,
+#listaClientes{
+    overflow-x:hidden !important;
+}
+
+.item{
+    overflow:hidden !important;
+    width:100% !important;
+    max-width:100% !important;
+}
+
+.item *{
+    max-width:100%;
+    box-sizing:border-box;
+}
 </style>
  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";

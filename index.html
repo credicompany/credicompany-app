@@ -3574,13 +3574,6 @@ _Crecemos juntos_
 // 🟢 VENCE HOY
 if(dias === 0){
 
-const ahora = new Date();
-const horaActual = ahora.getHours();
-const minutoActual = ahora.getMinutes();
-
-// Antes de las 6:30 p.m.
-if(horaActual < 18 || (horaActual === 18 && minutoActual < 30)){
-
 msg = `📌 *RECORDATORIO - CREDICOMPANY*
 
 Estimado(a)
@@ -3591,44 +3584,13 @@ Estimado(a)
 💰 *Monto a pagar:*
 S/ ${monto}
 
-━━━━━━━━━━━━━━
+⏰ *Evite intereses moratorios realizando su pago antes de las 6:30 p.m.*
 
-🟢 *IMPORTANTE*
-
-⏰ *Realice su pago antes de las 6:30 p.m.*
-
-⚠️ *Después de las 6:30 p.m. se aplicará el interés moratorio correspondiente.*
-
-━━━━━━━━━━━━━━
+Pasada esa hora, se aplicará el interés moratorio correspondiente.
 
 Agradecemos su puntualidad. Quedamos atentos a su confirmación.
 
 ${firma}`;
-
-}
-
-// Después de las 6:30 p.m.
-else{
-
-msg = `🔴 *COBRANZA - CREDICOMPANY*
-
-Estimado(a)
-*${nombre}*,
-
-Su cuota programada **venció el día de hoy**.
-
-💰 *Monto pendiente:*
-S/ ${monto}
-
-⚠️ *Se ha generado el interés moratorio correspondiente.*
-
-Le solicitamos regularizar su pago a la brevedad para evitar un mayor incremento de su deuda.
-
-Quedamos atentos a su confirmación.
-
-${firma}`;
-
-}
 
 }
 

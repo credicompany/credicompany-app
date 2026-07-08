@@ -1118,6 +1118,43 @@ box-shadow:0 6px 16px rgba(18,59,99,.18);
 transition:.25s;
 
 }
+  .barraSuperior{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.barraSuperior .volver{
+    flex:1;
+    margin:0;
+    position:static;
+}
+
+#panelExcel{
+    flex:1;
+}
+
+#panelExcel button{
+    width:100%;
+    height:42px;
+    margin:0;
+}
+
+@media(max-width:768px){
+
+.barraSuperior{
+    display:flex;
+    flex-direction:row;
+    gap:8px;
+}
+
+.barraSuperior .volver,
+#panelExcel{
+    flex:1;
+}
+
+}
 
 .volver:hover{
 
@@ -1809,22 +1846,28 @@ Mensual
 </div>
 
 <div id="clientes" class="card" style="display:none">
-<div class="volver" onclick="volver()">
-🏠 Inicio
-</div>
-<div id="panelExcel">
-<input
-type="file"
-id="excelFile"
-accept=".csv,.xlsx"
-style="display:none;"
-onchange="cargarExcel()">
+<div class="barraSuperior">
 
-<button
-class="btn-azul"
-onclick="document.getElementById('excelFile').click()">
-📂 Cargar Excel
-</button>
+    <div class="volver" onclick="volver()">
+        🏠 Inicio
+    </div>
+
+    <div id="panelExcel">
+
+        <input
+        type="file"
+        id="excelFile"
+        accept=".csv,.xlsx"
+        style="display:none;"
+        onchange="cargarExcel()">
+
+        <button
+        class="btn-azul btnCargaExcel"
+        onclick="document.getElementById('excelFile').click()">
+            📂 Cargar Excel
+        </button>
+
+    </div>
 
 </div>
 

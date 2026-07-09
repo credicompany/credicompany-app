@@ -57,8 +57,8 @@ let key = h
     .replace(/[^\w]/g,"")
     .toLowerCase();
  let val = r[i] || "";
- /* DNI */
-if(
+/* DNI */
+if (
     key === "dni" ||
     key.includes("dni")
 ){
@@ -160,7 +160,6 @@ console.log(
 );
 return obj;
 }); // 🔥 GUARDADO REAL
- console.log(json[0]);
 db.ref("cartera")
 .set(json)
 .then(()=>{

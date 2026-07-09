@@ -44,7 +44,12 @@ Number(localStorage.getItem("rmGastos")) || 0;
     let utilidadOperativa = ingresos - gastos;
 
     let utilidadNeta = utilidadOperativa;
-
+let margenUtilidad =
+ingresos > 0
+?
+(utilidadNeta / ingresos) * 100
+:
+0;
 document.getElementById("rmIngresos").innerHTML =
 "S/ " + ingresos.toLocaleString("es-PE",{
 minimumFractionDigits:2

@@ -50,7 +50,12 @@ telefonoAval:""
 headers.forEach((h,i)=>{
 if(!h)return;
 
-let key=h.toString().toLowerCase().replace(/\s+/g,"");
+let key = h
+    .toString()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^\w]/g,"")
+    .toLowerCase();
  let val = r[i] || "";
  /* DNI */
 if(

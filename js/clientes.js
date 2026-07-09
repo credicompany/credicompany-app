@@ -58,10 +58,12 @@ let key = h
     .toLowerCase();
  let val = r[i] || "";
  /* DNI */
-if(i===0){
+if(
+    key === "dni" ||
+    key.includes("dni")
+){
     obj.dni = String(val).trim();
 }
-
 // NOMBRE TITULAR
 if(
    key.includes("nombreyapellido")
@@ -150,7 +152,12 @@ if(
 }
 
 }); // cierre de headers.forEach
-
+console.log(
+    "Cliente:",
+    obj.nombre,
+    "DNI:",
+    obj.dni
+);
 return obj;
 }); // 🔥 GUARDADO REAL
  console.log(json[0]);

@@ -29,6 +29,7 @@ let dataRows=raw.slice(headerIndex+1);
 let json=dataRows.map(r=>{
 
 let obj={
+ dni:"",
 nombre:"",
 asesor:"",
 monto:"",
@@ -51,6 +52,14 @@ if(!h)return;
 
 let key=h.toString().toLowerCase().replace(/\s+/g,"");
  let val = r[i] || "";
+ /* DNI */
+if(
+    key==="dni" ||
+    key.includes("dni") ||
+    key.includes("documento")
+){
+    obj.dni = String(val).trim();
+}
 
 // NOMBRE TITULAR
 if(

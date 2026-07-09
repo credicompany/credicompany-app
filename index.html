@@ -2282,14 +2282,14 @@ margin-bottom:20px;
 <input
 type="file"
 id="excelIngresos"
-accept=".xlsx,.xls">
+accept=".xlsx,.xls"
+style="display:none;"
+onchange="cargarExcelIngresos()">
 
 <button
 class="btn-verde"
-onclick="cargarExcelIngresos()">
-
+onclick="document.getElementById('excelIngresos').click()">
 💰 Cargar Ingresos
-
 </button>
 
 <br><br>
@@ -2319,11 +2319,13 @@ margin-bottom:20px;
 <input
 type="file"
 id="excelGastos"
-accept=".xlsx,.xls">
+accept=".xlsx,.xls"
+style="display:none;"
+onchange="cargarExcelGastos()">
 
 <button
 class="btn-verde"
-onclick="cargarExcelGastos()">
+onclick="document.getElementById('excelGastos').click()">
 
 💸 Cargar Gastos
 

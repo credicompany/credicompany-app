@@ -58,11 +58,7 @@ let key = h
     .toLowerCase();
  let val = r[i] || "";
  /* DNI */
-if(
-    key==="dni" ||
-    key.includes("dni") ||
-    key.includes("documento")
-){
+if(i===0){
     obj.dni = String(val).trim();
 }
 

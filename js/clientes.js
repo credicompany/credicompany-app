@@ -152,6 +152,7 @@ if(
 
 return obj;
 }); // 🔥 GUARDADO REAL
+ console.log(json[0]);
 db.ref("cartera")
 .set(json)
 .then(()=>{

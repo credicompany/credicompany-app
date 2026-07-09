@@ -1,5 +1,6 @@
-
-// CLIENTES + RESUMEN
+// ======================================
+// RESUMEN GENERAL
+// ======================================
 function actualizarResumen(){
 
   let data = JSON.parse(localStorage.getItem("cartera")) || [];

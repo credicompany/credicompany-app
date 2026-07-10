@@ -57,6 +57,9 @@ let key = h
     .replace(/[\u0300-\u036f]/g,"")
     .replace(/[^\w]/g,"")
     .toLowerCase();
+
+ console.log("HEADER:", h);
+console.log("KEY:", key);
  let val = r[i] || "";
 /* DNI */
 if (
@@ -82,10 +85,10 @@ if(key.includes("asesor")){
     let nombre = (val || "").toLowerCase().trim();
 
     if(nombre.includes("benites")) nombre = "ebenites";
-    if(nombre.includes("medina")) nombre = "emedina";
+  
     if(nombre.includes("leon")) nombre = "tleon";
     if(nombre.includes("huerta")) nombre = "bhuerta";
-    if(nombre.includes("garcia")) nombre = "dgarcia";
+ 
     if(nombre.includes("lopez")) nombre = "slopez";
     obj.asesor = nombre;
 }

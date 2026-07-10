@@ -44,12 +44,6 @@ Number(localStorage.getItem("rmGastos")) || 0;
     let utilidadOperativa = ingresos - gastos;
 
     let utilidadNeta = utilidadOperativa;
-let margenUtilidad =
-ingresos > 0
-?
-(utilidadNeta / ingresos) * 100
-:
-0;
 document.getElementById("rmIngresos").innerHTML =
 "S/ " + ingresos.toLocaleString("es-PE",{
 minimumFractionDigits:2
@@ -435,25 +429,25 @@ const datosGuardar = {
         Number(localStorage.getItem("rmGastos") || 0)
     ).toFixed(2)),
 
-    utilidadNeta:
-    Number((
-        margenUtilidad:
+   utilidadNeta:
 Number((
-(
-(Number(localStorage.getItem("rmInteres") || 0) +
-Number(localStorage.getItem("rmMoraReal") || 0))
--
-Number(localStorage.getItem("rmGastos") || 0)
-)
-/
-(
-Number(localStorage.getItem("rmInteres") || 0) +
-Number(localStorage.getItem("rmMoraReal") || 0)
-||1
-)
-*100
+    (Number(localStorage.getItem("rmInteres") || 0) +
+    Number(localStorage.getItem("rmMoraReal") || 0))
+    -
+    Number(localStorage.getItem("rmGastos") || 0)
 ).toFixed(2)),
 
+nombreResultadoIngresos:
+localStorage.getItem("nombreResultadoIngresos") || "",
+
+nombreResultadoGastos:
+localStorage.getItem("nombreResultadoGastos") || "",
+
+rankingRentabilidadAsesor:
+JSON.parse(localStorage.getItem("rankingRentabilidadAsesor")) || {},
+
+fecha:
+new Date().toLocaleString("es-PE")
     nombreResultadoIngresos:
     localStorage.getItem("nombreResultadoIngresos") || "",
 

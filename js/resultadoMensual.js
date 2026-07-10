@@ -421,15 +421,15 @@ const datosGuardar = {
     gastos:
     Number((Number(localStorage.getItem("rmGastos") || 0)).toFixed(2)),
 
-    utilidadOperativa:
-    Number((
-        (Number(localStorage.getItem("rmInteres") || 0) +
-        Number(localStorage.getItem("rmMoraReal") || 0))
-        -
-        Number(localStorage.getItem("rmGastos") || 0)
-    ).toFixed(2)),
+   utilidadOperativa:
+Number((
+    (Number(localStorage.getItem("rmInteres") || 0) +
+    Number(localStorage.getItem("rmMoraReal") || 0))
+    -
+    Number(localStorage.getItem("rmGastos") || 0)
+).toFixed(2)),
 
-   utilidadNeta:
+utilidadNeta:
 Number((
     (Number(localStorage.getItem("rmInteres") || 0) +
     Number(localStorage.getItem("rmMoraReal") || 0))

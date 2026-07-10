@@ -259,22 +259,39 @@ text-transform:uppercase;
 letter-spacing:.8px;
 font-weight:600;
 ">
-
 Saldo Capital
-
 </div>
 
 <div
-
 style="
 font-size:17px;
 font-weight:700;
 color:#16A34A;
 margin-top:4px;
 ">
+S/${parseFloat(c.monto || 0).toLocaleString()}
+</div>
 
-S/${parseFloat(c.monto).toLocaleString()}
+<div
+style="
+margin-top:12px;
+font-size:13px;
+color:#64748B;
+text-transform:uppercase;
+letter-spacing:.8px;
+font-weight:600;
+">
+Monto Desembolsado
+</div>
 
+<div
+style="
+font-size:17px;
+font-weight:700;
+color:#2563EB;
+margin-top:4px;
+">
+S/${parseFloat(c.montoDesembolsado || 0).toLocaleString()}
 </div>
 
 </div>

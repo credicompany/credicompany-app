@@ -252,7 +252,17 @@ onclick="verHistorialCliente(
 
 <div
 style="
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:24px;
 margin-top:14px;
+margin-bottom:18px;
+">
+
+<div>
+
+<div
+style="
 font-size:13px;
 color:#64748B;
 text-transform:uppercase;
@@ -272,9 +282,12 @@ margin-top:4px;
 S/${parseFloat(c.monto || 0).toLocaleString()}
 </div>
 
+</div>
+
+<div>
+
 <div
 style="
-margin-top:12px;
 font-size:13px;
 color:#64748B;
 text-transform:uppercase;
@@ -292,6 +305,8 @@ color:#2563EB;
 margin-top:4px;
 ">
 S/${parseFloat(c.montoDesembolsado || 0).toLocaleString()}
+</div>
+
 </div>
 
 </div>

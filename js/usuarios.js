@@ -327,10 +327,13 @@ S/${parseFloat(c.montoDesembolsado || 0).toLocaleString()}
 
 </div>
 
-<div style="font-size:13px;color:#555;">
+<div style="
+margin-top:8px;
+">
 
 <div style="
 display:grid;
+
 grid-template-columns:repeat(3,1fr);
 gap:10px;
 margin-top:16px;

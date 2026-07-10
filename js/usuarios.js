@@ -231,6 +231,7 @@ if(c.retraso>60) color="black";
 
 html+=`
 <div class="item" style="border-left:4px solid ${color}">
+
 <div style="
 padding-bottom:12px;
 margin-bottom:16px;
@@ -252,57 +253,72 @@ onclick="verHistorialCliente(
 
 <div
 style="
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:24px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:18px;
 margin-top:14px;
 margin-bottom:18px;
 ">
 
-<div>
+<div
+style="
+flex:1;
+background:#F8FAFC;
+border:1px solid #E5EAF1;
+border-radius:14px;
+padding:12px;
+">
 
 <div
 style="
-font-size:13px;
+font-size:11px;
+font-weight:700;
 color:#64748B;
 text-transform:uppercase;
 letter-spacing:.8px;
-font-weight:600;
 ">
 Saldo Capital
 </div>
 
 <div
 style="
-font-size:17px;
-font-weight:700;
+font-size:20px;
+font-weight:800;
 color:#16A34A;
-margin-top:4px;
+margin-top:6px;
 ">
 S/${parseFloat(c.monto || 0).toLocaleString()}
 </div>
 
 </div>
 
-<div>
+<div
+style="
+flex:1;
+background:#F8FAFC;
+border:1px solid #E5EAF1;
+border-radius:14px;
+padding:12px;
+">
 
 <div
 style="
-font-size:13px;
+font-size:11px;
+font-weight:700;
 color:#64748B;
 text-transform:uppercase;
 letter-spacing:.8px;
-font-weight:600;
 ">
 Monto Desembolsado
 </div>
 
 <div
 style="
-font-size:17px;
-font-weight:700;
+font-size:20px;
+font-weight:800;
 color:#2563EB;
-margin-top:4px;
+margin-top:6px;
 ">
 S/${parseFloat(c.montoDesembolsado || 0).toLocaleString()}
 </div>

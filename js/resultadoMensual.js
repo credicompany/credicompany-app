@@ -437,11 +437,22 @@ const datosGuardar = {
 
     utilidadNeta:
     Number((
-        (Number(localStorage.getItem("rmInteres") || 0) +
-        Number(localStorage.getItem("rmMoraReal") || 0))
-        -
-        Number(localStorage.getItem("rmGastos") || 0)
-    ).toFixed(2)),
+        margenUtilidad:
+Number((
+(
+(Number(localStorage.getItem("rmInteres") || 0) +
+Number(localStorage.getItem("rmMoraReal") || 0))
+-
+Number(localStorage.getItem("rmGastos") || 0)
+)
+/
+(
+Number(localStorage.getItem("rmInteres") || 0) +
+Number(localStorage.getItem("rmMoraReal") || 0)
+||1
+)
+*100
+).toFixed(2)),
 
     nombreResultadoIngresos:
     localStorage.getItem("nombreResultadoIngresos") || "",

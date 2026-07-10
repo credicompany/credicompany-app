@@ -230,11 +230,21 @@ if(c.retraso>30) color="#e74c3c";
 if(c.retraso>60) color="black";
 
 html+=`
-<div class="item" style="border-left:4px solid ${color}">
+<div class="item"
+style="
+border-left:4px solid ${color};
+background:#fff;
+border-radius:18px;
+padding:18px;
+margin-bottom:20px;
+box-sizing:border-box;
+overflow:hidden;
+">
 
 <div style="
-padding-bottom:12px;
-margin-bottom:16px;
+display:flex;
+flex-direction:column;
+gap:16px;
 ">
 <div
 style="
@@ -423,9 +433,7 @@ P/PAGAR
 </div>
 </div>
 <div style="
-color:#e74c3c;
-font-weight:bold;
-margin-top:4px;
+margin-top:16px;
 ">
 <div style="
 margin-top:16px;
@@ -597,7 +605,16 @@ ${c.telefonoAval}
 
 ` : ""}
 
-<div class="fila" style="margin-top:8px;">
+<div style="clear:both;"></div>
+
+</div>
+
+<div
+style="
+margin-top:20px;
+padding-top:18px;
+border-top:1px solid #E5EAF1;
+">
 ${parseInt(c.retraso || 0) > 0 ? `
 <div style="margin-top:18px;">
 

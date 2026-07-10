@@ -33,6 +33,7 @@ let obj={
 nombre:"",
 asesor:"",
 monto:"",
+montoDesembolsado:0,
 retraso:0,
 cuotasVencidas:0,
 celular:"",
@@ -89,6 +90,12 @@ if(key.includes("asesor")){
     obj.asesor = nombre;
 }
 if(key.includes("cuota_mora")) obj.monto=val;
+ if(
+    key.includes("montodesembolsado") ||
+    (key.includes("monto") && key.includes("desemb"))
+){
+    obj.montoDesembolsado = parseFloat(val) || 0;
+}
 if(key.includes("saldo") && key.includes("capital") && key.includes("vencido")){
     obj.saldoCapital = parseFloat(val) || 0;
 }

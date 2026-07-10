@@ -437,17 +437,6 @@ Number((
     Number(localStorage.getItem("rmGastos") || 0)
 ).toFixed(2)),
 
-nombreResultadoIngresos:
-localStorage.getItem("nombreResultadoIngresos") || "",
-
-nombreResultadoGastos:
-localStorage.getItem("nombreResultadoGastos") || "",
-
-rankingRentabilidadAsesor:
-JSON.parse(localStorage.getItem("rankingRentabilidadAsesor")) || {},
-
-fecha:
-new Date().toLocaleString("es-PE")
     nombreResultadoIngresos:
     localStorage.getItem("nombreResultadoIngresos") || "",
 

@@ -93,18 +93,22 @@ if(key.includes("asesor")){
     obj.asesor = nombre;
 }
 if(key.includes("cuota_mora")) obj.monto=val;
- if(
+ if (
     key.includes("montodesembolsado") ||
     (key.includes("monto") && key.includes("desemb"))
-){
+) {
 
     console.log("VALOR ORIGINAL:", val);
     console.log("TIPO:", typeof val);
 
-    obj.montoDesembolsado = Number(val);
+    let monto = String(val)
+        .replace(/S\//gi, "")
+        .replace(/,/g, "")
+        .replace(/\s/g, "");
+
+    obj.montoDesembolsado = parseFloat(monto) || 0;
 
     console.log("CONVERTIDO:", obj.montoDesembolsado);
-}
 }
 if(key.includes("saldo") && key.includes("capital") && key.includes("vencido")){
     obj.saldoCapital = parseFloat(val) || 0;
@@ -139,8 +143,6 @@ if(
    obj.direccionAval = val;
 }
 if(key.includes("distrito")) obj.distrito=val;
-if(key.includes("nombreaval"))
-obj.nombreAval = val;
 
 if(
 key.includes("apellidop.") ||
@@ -153,9 +155,6 @@ key.includes("apellidom.") ||
 key.includes("apellidom")
 )
 obj.apellidoMAval = val;
-
-if(key.includes("direccionaval"))
-obj.direccionAval = val;
 
 if(
     key.includes("aval") &&
@@ -175,6 +174,7 @@ console.log(
     "DNI:",
     obj.dni
 );
+ console.table(obj);
 return obj;
 }); // 🔥 GUARDADO REAL
 db.ref("cartera")

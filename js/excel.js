@@ -97,7 +97,12 @@ if(key.includes("cuota_mora")) obj.monto=val;
     key.includes("montodesembolsado") ||
     (key.includes("monto") && key.includes("desemb"))
 ){
-    obj.montoDesembolsado = parseFloat(val) || 0;
+   obj.montoDesembolsado =
+Number(
+    String(val)
+        .replace(/,/g,"")
+        .trim()
+) || 0;
 }
 if(key.includes("saldo") && key.includes("capital") && key.includes("vencido")){
     obj.saldoCapital = parseFloat(val) || 0;

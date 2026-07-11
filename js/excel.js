@@ -174,7 +174,11 @@ console.log(
     "DNI:",
     obj.dni
 );
- console.table(obj);
+console.log(
+    obj.nombre,
+    "Monto:",
+    obj.montoDesembolsado
+);
 return obj;
 }); // 🔥 GUARDADO REAL
 db.ref("cartera")

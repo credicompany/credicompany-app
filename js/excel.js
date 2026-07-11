@@ -97,12 +97,14 @@ if(key.includes("cuota_mora")) obj.monto=val;
     key.includes("montodesembolsado") ||
     (key.includes("monto") && key.includes("desemb"))
 ){
-   obj.montoDesembolsado =
-Number(
-    String(val)
-        .replace(/,/g,"")
-        .trim()
-) || 0;
+
+    console.log("VALOR ORIGINAL:", val);
+    console.log("TIPO:", typeof val);
+
+    obj.montoDesembolsado = Number(val);
+
+    console.log("CONVERTIDO:", obj.montoDesembolsado);
+}
 }
 if(key.includes("saldo") && key.includes("capital") && key.includes("vencido")){
     obj.saldoCapital = parseFloat(val) || 0;

@@ -115,7 +115,22 @@ if(key.includes("cuota_mora")) obj.monto=val;
     key.includes("fechadesembolso") ||
     (key.includes("fecha") && key.includes("desembolso"))
 ){
-    obj.fechaDesembolso = val;
+
+    if(typeof val === "number"){
+
+        const fecha = XLSX.SSF.parse_date_code(val);
+
+        obj.fechaDesembolso =
+            String(fecha.d).padStart(2,"0") + "/" +
+            String(fecha.m).padStart(2,"0") + "/" +
+            fecha.y;
+
+    }else{
+
+        obj.fechaDesembolso = val;
+
+    }
+
 }
 if(key.includes("saldo") && key.includes("capital") && key.includes("vencido")){
     obj.saldoCapital = parseFloat(val) || 0;

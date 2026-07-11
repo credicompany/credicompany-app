@@ -187,10 +187,10 @@ console.log(
     obj.montoDesembolsado
 );
 
- console.log(
-    obj.nombre,
-    obj.fechaDesembolso
-);
+ console.log("================================");
+console.log("CLIENTE:", obj.nombre);
+console.log("FECHA DESEMBOLSO:", obj.fechaDesembolso);
+console.log("================================");
 return obj;
 }); // 🔥 GUARDADO REAL
 db.ref("cartera")

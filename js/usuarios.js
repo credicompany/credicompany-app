@@ -281,7 +281,9 @@ padding:12px;
 
 <div
 style="
-font-size:11px;
+font-size:12px;
+line-height:1.3;
+white-space:normal;
 font-weight:700;
 color:#64748B;
 text-transform:uppercase;
@@ -313,11 +315,13 @@ padding:12px;
 
 <div
 style="
-font-size:11px;
+font-size:12px;
 font-weight:700;
 color:#64748B;
 text-transform:uppercase;
 letter-spacing:.8px;
+line-height:1.3;
+white-space:normal;
 ">
 Monto Desembolsado
 </div>

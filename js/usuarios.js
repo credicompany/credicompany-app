@@ -288,7 +288,7 @@ color:#64748B;
 text-transform:uppercase;
 letter-spacing:.8px;
 ">
-Saldo Capital
+Cuota_Mora
 </div>
 
 <div

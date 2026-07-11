@@ -111,6 +111,12 @@ if(key.includes("cuota_mora")) obj.monto=val;
 
     console.log("CONVERTIDO:", obj.montoDesembolsado);
 }
+ if(
+    key.includes("fechadesembolso") ||
+    (key.includes("fecha") && key.includes("desembolso"))
+){
+    obj.fechaDesembolso = val;
+}
 if(key.includes("saldo") && key.includes("capital") && key.includes("vencido")){
     obj.saldoCapital = parseFloat(val) || 0;
 }
@@ -179,6 +185,11 @@ console.log(
     obj.nombre,
     "Monto:",
     obj.montoDesembolsado
+);
+
+ console.log(
+    obj.nombre,
+    obj.fechaDesembolso
 );
 return obj;
 }); // 🔥 GUARDADO REAL

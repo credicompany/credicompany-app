@@ -273,10 +273,10 @@ onclick="verHistorialCliente(
 <div
 style="
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-gap:18px;
-margin-top:14px;
-margin-bottom:18px;
+grid-template-columns:1fr 1fr;
+gap:8px;
+margin-top:8px;
+margin-bottom:8px;
 ">
 
 <div
@@ -284,8 +284,12 @@ style="
 width:100%;
 background:#F8FAFC;
 border:1px solid #E5EAF1;
-border-radius:14px;
-padding:12px;
+border-radius:12px;
+padding:8px 10px;
+min-height:58px;
+display:flex;
+flex-direction:column;
+justify-content:center;
 ">
 
 <div
@@ -303,10 +307,10 @@ Cuota_Mora
 
 <div
 style="
-font-size:20px;
+font-size:16px;
 font-weight:800;
-color:#16A34A;
-margin-top:6px;
+margin-top:2px;
+line-height:1.1;
 ">
 S/${parseFloat(c.monto || 0).toLocaleString()}
 </div>
@@ -324,7 +328,7 @@ padding:12px;
 
 <div
 style="
-font-size:12px;
+font-size:10px;
 font-weight:700;
 color:#64748B;
 text-transform:uppercase;
@@ -354,12 +358,12 @@ width:100%;
 background:#F8FAFC;
 border:1px solid #E5EAF1;
 border-radius:14px;
-padding:12px;
+padding:8px 10px;
 ">
 
 <div
 style="
-font-size:12px;
+font-size:10px;
 font-weight:700;
 color:#64748B;
 text-transform:uppercase;
@@ -370,10 +374,10 @@ Fecha Desembolso
 
 <div
 style="
-font-size:18px;
+font-size:16px;
 font-weight:700;
 color:#0F766E;
-margin-top:6px;
+margin-top:2px;
 ">
 ${c.fechaDesembolso || "-"}
 </div>
@@ -387,9 +391,9 @@ margin-top:8px;
 display:grid;
 
 grid-template-columns:repeat(3,1fr);
-gap:10px;
-margin-top:16px;
-margin-bottom:16px;
+gap:6px;
+margin-top:8px;
+margin-bottom:8px;
 ">
 
 <div style="

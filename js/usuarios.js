@@ -263,9 +263,8 @@ onclick="verHistorialCliente(
 
 <div
 style="
-display:flex;
-align-items:center;
-justify-content:space-between;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
 gap:18px;
 margin-top:14px;
 margin-bottom:18px;
@@ -273,7 +272,7 @@ margin-bottom:18px;
 
 <div
 style="
-flex:1;
+width:100%;
 background:#F8FAFC;
 border:1px solid #E5EAF1;
 border-radius:14px;
@@ -305,7 +304,7 @@ S/${parseFloat(c.monto || 0).toLocaleString()}
 
 <div
 style="
-flex:1;
+width:100%;
 background:#F8FAFC;
 border:1px solid #E5EAF1;
 border-radius:14px;

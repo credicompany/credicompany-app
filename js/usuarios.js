@@ -348,7 +348,37 @@ S/${parseFloat(c.montoDesembolsado || 0).toLocaleString()}
 </div>
 
 </div>
+<div
+style="
+width:100%;
+background:#F8FAFC;
+border:1px solid #E5EAF1;
+border-radius:14px;
+padding:12px;
+">
 
+<div
+style="
+font-size:12px;
+font-weight:700;
+color:#64748B;
+text-transform:uppercase;
+letter-spacing:.8px;
+">
+Fecha Desembolso
+</div>
+
+<div
+style="
+font-size:18px;
+font-weight:700;
+color:#0F766E;
+margin-top:6px;
+">
+${c.fechaDesembolso || "-"}
+</div>
+
+</div>
 <div style="
 margin-top:8px;
 ">

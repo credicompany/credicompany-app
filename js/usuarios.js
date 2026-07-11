@@ -222,7 +222,16 @@ html+=`
 filtrados.sort((a,b)=>{
     return (b.retraso||0)-(a.retraso||0);
 });
+console.log("=== VERIFICANDO CARTERA ===");
 
+data.forEach(c=>{
+    if(
+        c.nombre &&
+        c.nombre.toUpperCase().includes("CARRASCAL")
+    ){
+        console.log(c);
+    }
+});
 filtrados.forEach((c,index)=>{
 let color="#2ecc71";
 if(c.retraso>8) color="#f1c40f";

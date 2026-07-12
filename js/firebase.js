@@ -39,6 +39,40 @@ function pushFirebase(ruta, datos){
     return db.ref(ruta).push(datos);
 
 }
+
+
+// =====================================
+// ACTUALIZAR LOCALSTORAGE
+// =====================================
+
+function actualizarLocalStorage(cartera){
+
+    localStorage.setItem(
+        "cartera",
+        JSON.stringify(cartera)
+    );
+
+}
+
+// =====================================
+// ACTUALIZAR INTERFAZ
+// =====================================
+
+function actualizarInterfaz(){
+
+    setTimeout(()=>{
+
+        if(typeof actualizarResumen === "function"){
+            actualizarResumen();
+        }
+
+        if(typeof filtrarMora === "function"){
+            filtrarMora(0,1000);
+        }
+
+    },500);
+
+}
 // =====================================
 // SINCRONIZAR CARTERA
 // =====================================
@@ -53,24 +87,11 @@ function sincronizarCartera(){
 
         let cartera = Object.values(datos);
 
-        localStorage.setItem(
-            "cartera",
-            JSON.stringify(cartera)
-        );
+actualizarLocalStorage(cartera);
 
-       console.log("✅ Cartera sincronizada Firebase");
+console.log("✅ Cartera sincronizada Firebase");
 
-setTimeout(()=>{
-
-    if(typeof actualizarResumen==="function"){
-        actualizarResumen();
-    }
-
-    if(typeof filtrarMora==="function"){
-        filtrarMora(0,1000);
-    }
-
-},500);
+actualizarInterfaz();
 
     });
 

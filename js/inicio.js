@@ -1,4 +1,4 @@
-window.onload = function(){
+function iniciarModuloInicio(){
 
     let hoy = new Date().toLocaleDateString('en-CA');
     let ultimo = localStorage.getItem("fechaSistema");

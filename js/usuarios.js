@@ -239,13 +239,12 @@ if(c.retraso>30) color="#e74c3c";
 if(c.retraso>60) color="black";
 
 html+=`
-<div class="item"
 style="
 border-left:4px solid ${color};
 background:#fff;
-border-radius:18px;
-padding:18px;
-margin-bottom:20px;
+border-radius:14px;
+padding:10px;
+margin-bottom:12px;
 box-sizing:border-box;
 overflow:hidden;
 ">
@@ -253,11 +252,11 @@ overflow:hidden;
 <div style="
 display:flex;
 flex-direction:column;
-gap:16px;
+gap:8px;
 ">
 <div
 style="
-font-size:16px;
+font-size:13px;
 font-weight:700;
 color:#123B63;
 line-height:1.2;
@@ -285,7 +284,7 @@ width:100%;
 background:#F8FAFC;
 border:1px solid #E5EAF1;
 border-radius:12px;
-padding:8px 10px;
+padding:6px 8px;
 min-height:58px;
 display:flex;
 flex-direction:column;
@@ -307,7 +306,7 @@ Cuota_Mora
 
 <div
 style="
-font-size:16px;
+font-size:13px;
 font-weight:800;
 margin-top:2px;
 line-height:1.1;
@@ -341,7 +340,7 @@ Monto Desembolsado
 
 <div
 style="
-font-size:20px;
+font-size:13px;
 font-weight:800;
 color:#2563EB;
 margin-top:6px;
@@ -358,7 +357,7 @@ width:100%;
 background:#F8FAFC;
 border:1px solid #E5EAF1;
 border-radius:14px;
-padding:8px 10px;
+padding:6px 8px;
 ">
 
 <div
@@ -374,7 +373,7 @@ Fecha Desembolso
 
 <div
 style="
-font-size:16px;
+font-size:13px;
 font-weight:700;
 color:#0F766E;
 margin-top:2px;
@@ -405,7 +404,7 @@ text-align:center;
 ">
 
 <div style="
-font-size:20px;
+font-size:13px;
 font-weight:800;
 color:${color};
 ">
@@ -427,12 +426,12 @@ DÍAS
 background:#F8FAFC;
 border:1px solid #E5EAF1;
 border-radius:14px;
-padding:8px;
+padding:6px;
 text-align:center;
 ">
 
 <div style="
-font-size:20px;
+font-size:13px;
 font-weight:800;
 color:#EF4444;
 ">
@@ -440,7 +439,7 @@ ${c.cuotasVencidas || 0}
 </div>
 
 <div style="
-font-size:11px;
+font-size:10px;
 font-weight:700;
 color:#64748B;
 margin-top:4px;
@@ -454,12 +453,12 @@ VENCIDAS
 background:#F8FAFC;
 border:1px solid #E5EAF1;
 border-radius:14px;
-padding:8px;
+padding:6px;
 text-align:center;
 ">
 
 <div style="
-font-size:20px;
+font-size:13px;
 font-weight:800;
 color:#2563EB;
 ">
@@ -479,13 +478,13 @@ P/PAGAR
 </div>
 </div>
 <div style="
-margin-top:16px;
+margin-top:8px;
 ">
 <div style="
 margin-top:16px;
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:14px;
+gap:8px;
 align-items:start;
 ">
 <div>
@@ -499,7 +498,7 @@ text-transform:uppercase;
 </div>
 
 <div style="
-font-size:14px;
+font-size:13px;
 font-weight:700;
 color:#123B63;
 ">
@@ -518,7 +517,7 @@ text-transform:uppercase;
 </div>
 
 <div style="
-font-size:14px;
+font-size:13px;
 font-weight:700;
 ">
 <a href="#"
@@ -548,7 +547,7 @@ text-transform:uppercase;
 </div>
 
 <div style="
-font-size:14px;
+font-size:13px;
 font-weight:700;
 color:#334155;
 ">
@@ -587,7 +586,7 @@ text-transform:uppercase;
 </div>
 
 <div style="
-font-size:14px;
+font-size:13px;
 line-height:1.4;
 color:#334155;
 ">
@@ -606,7 +605,7 @@ text-transform:uppercase;
 </div>
 
 <div style="
-font-size:14px;
+font-size:13px;
 font-weight:700;
 color:#334155;
 ">
@@ -622,7 +621,7 @@ ${c.nombreAval ? `
 
 <div style="
 background:#F8FAFC;
-padding:12px;
+padding:8px;
 border-radius:14px;
 margin-top:16px;
 ">

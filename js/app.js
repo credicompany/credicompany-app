@@ -8,6 +8,9 @@ function iniciarSistema(){
 
     iniciarResetDiario();
 
+if(typeof iniciarModuloInicio === "function"){
+    iniciarModuloInicio();
+}
     setTimeout(()=>{
 
         sincronizarCartera();

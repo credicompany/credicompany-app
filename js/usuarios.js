@@ -239,6 +239,7 @@ if(c.retraso>30) color="#e74c3c";
 if(c.retraso>60) color="black";
 
 html+=`
+<div class="item"
 style="
 border-left:4px solid ${color};
 background:#fff;

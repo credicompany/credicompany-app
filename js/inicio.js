@@ -84,9 +84,9 @@ db.ref("cartera").on("value", (snapshot)=>{
             "cartera",
             JSON.stringify(dataFirebase)
         );
-
+document.querySelector(".resumen").style.display = "none";
         actualizarResumen();
-
+document.querySelector(".resumen").style.display = "none";
         if(document.getElementById("listaClientes")){
             filtrarMora(filtroMin, filtroMax);
         }

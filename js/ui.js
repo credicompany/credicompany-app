@@ -44,6 +44,21 @@ function prepararInterfaz(){
 }
 
 // =====================================
+// MOSTRAR INICIO
+// =====================================
+
+function mostrarInicio(){
+
+    dashboard.style.display = "block";
+
+    document.querySelector(".headerNuevo").style.display = "block";
+
+    document.querySelector(".resumen").style.display = "none";
+
+    document.getElementById("rankingContainer").style.display = "flex";
+
+}
+// =====================================
 // UI
 // =====================================
 function mostrar(p){
@@ -113,12 +128,7 @@ document.querySelector(".resumen").style.display = "none";
 
 document.getElementById("historialDiv").style.display="none";
 
-document.getElementById("rankingContainer").style.display="flex";
-
-
-dashboard.style.display="block";
-document.querySelector(".headerNuevo").style.display="block";
-document.getElementById("rankingContainer").style.display="flex";
+mostrarInicio();
 if(asesor === "slopez"){
 document.getElementById("panelAsesores").style.display="grid";
 }

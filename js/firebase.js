@@ -9,10 +9,6 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-window.db = firebase.database();
-  console.log(db);
-
-alert("Firebase conectado");
 
 // ========================================
 // FIREBASE

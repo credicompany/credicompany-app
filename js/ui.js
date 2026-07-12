@@ -43,6 +43,7 @@ function prepararInterfaz(){
 
 }
 
+
 // =====================================
 // MOSTRAR INICIO
 // =====================================
@@ -57,6 +58,16 @@ function mostrarInicio(){
 
     document.getElementById("rankingContainer").style.display = "flex";
 
+}
+
+// =====================================
+// CONFIGURAR PANEL KPI
+// =====================================
+
+function configurarPanelKPI(){
+
+   if(p==="kpi"){
+    configurarPanelKPI();
 }
 // =====================================
 // UI
@@ -77,27 +88,6 @@ ocultarPantallas();
 
 document.getElementById(p).style.display="block";
   
-if(p==="kpi"){
-
-    if(
-        asesor !== "admin" &&
-        asesor !== "operaciones"
-    ){
-
-        document.getElementById(
-            "panelCargaKPI"
-        ).style.display="none";
-
-    }else{
-
-        document.getElementById(
-            "panelCargaKPI"
-        ).style.display="block";
-
-    }
-
-}
-
 if(p==="clientes"){
 
     document.getElementById("rankingContainer").style.display="none";

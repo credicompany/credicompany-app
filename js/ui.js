@@ -66,8 +66,25 @@ function mostrarInicio(){
 
 function configurarPanelKPI(){
 
-   if(p==="kpi"){
-    configurarPanelKPI();
+ if(p==="kpi"){
+
+    if(
+        asesor !== "admin" &&
+        asesor !== "operaciones"
+    ){
+
+        document.getElementById(
+            "panelCargaKPI"
+        ).style.display="none";
+
+    }else{
+
+        document.getElementById(
+            "panelCargaKPI"
+        ).style.display="block";
+
+    }
+
 }
 // =====================================
 // UI

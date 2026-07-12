@@ -22,8 +22,30 @@ const el = document.getElementById(id);
 if(el) el.style.display = "none";
 
 });
+  
+}
+  
+// =====================================
+// PREPARAR INTERFAZ
+// =====================================
 
-}// UI
+function prepararInterfaz(){
+
+    dashboard.style.display = "none";
+
+    document.querySelector(".headerNuevo").style.display = "none";
+
+    document.getElementById("rankingContainer").style.display = "none";
+
+    document.querySelector(".resumen").style.display = "none";
+
+    app.style.display = "block";
+
+}
+
+// =====================================
+// UI
+// =====================================
 function mostrar(p){
 
 if(
@@ -35,13 +57,7 @@ alert("Acceso restringido");
 return;
 }
 
-dashboard.style.display="none";
-document.querySelector(".headerNuevo").style.display="none";
-document.getElementById("rankingContainer").style.display="none";
-document.querySelector(".resumen").style.display = "none";
-
-app.style.display="block";
-
+prepararInterfaz();
 ocultarPantallas();
 
 document.getElementById(p).style.display="block";

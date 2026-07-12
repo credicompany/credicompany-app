@@ -1,5 +1,29 @@
+// =====================================
+// OCULTAR TODAS LAS PANTALLAS
+// =====================================
 
-// UI
+function ocultarPantallas(){
+
+[
+"simulador",
+"clientes",
+"pagos",
+"admin",
+"kpi",
+"kpiFinanciero",
+"resultadoMensual",
+"historialDiv",
+"historialGestionesDiv",
+"historialClienteDiv"
+].forEach(id=>{
+
+const el = document.getElementById(id);
+
+if(el) el.style.display = "none";
+
+});
+
+}// UI
 function mostrar(p){
 
 if(
@@ -18,21 +42,7 @@ document.querySelector(".resumen").style.display = "none";
 
 app.style.display="block";
 
-[
-"simulador",
-"clientes",
-"pagos",
-"admin",
-"kpi",
-"kpiFinanciero",
-"resultadoMensual",
-"historialDiv",
-"historialGestionesDiv",
-"historialClienteDiv"
-].forEach(id=>{
-let el = document.getElementById(id);
-if(el) el.style.display="none";
-});
+ocultarPantallas();
 
 document.getElementById(p).style.display="block";
   

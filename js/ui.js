@@ -91,21 +91,7 @@ function volver(){
 
 app.style.display="none";
 
-[
-"simulador",
-"clientes",
-"pagos",
-"admin",
-"kpi",
-"kpiFinanciero",
-"resultadoMensual",
-"historialDiv",
-"historialGestionesDiv",
-"historialClienteDiv"
-].forEach(id=>{
-let el=document.getElementById(id);
-if(el) el.style.display="none";
-});
+ocultarPantallas();
 
 document.querySelector(".resumen").style.display = "none";
 

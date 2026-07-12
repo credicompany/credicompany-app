@@ -97,7 +97,7 @@ let el=document.getElementById(id);
 if(el) el.style.display="none";
 });
 
-document.querySelector(".resumen").style.display = "grid";
+document.querySelector(".resumen").style.display = "none";
 
 document.getElementById("historialDiv").style.display="none";
 

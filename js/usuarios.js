@@ -269,7 +269,62 @@ onclick="verHistorialCliente(
 )">
 👤 ${c.nombre}
 </div>
+<div style="
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:6px;
+margin-top:8px;
+margin-bottom:10px;
+">
 
+<button
+style="
+background:#25D366;
+color:white;
+border:none;
+border-radius:10px;
+padding:8px;
+font-size:12px;
+font-weight:700;
+"
+onclick='enviarCobranzaDesdeLista(
+"${encodeURIComponent(c.nombre)}",
+"${c.celular}",
+"${c.retraso}",
+"${c.monto}"
+);return false;'>
+💬 WhatsApp
+</button>
+
+<button
+style="
+background:#2563EB;
+color:white;
+border:none;
+border-radius:10px;
+padding:8px;
+font-size:12px;
+font-weight:700;
+"
+onclick="window.location.href='tel:${c.celular}'">
+📞 Llamar
+</button>
+
+<button
+style="
+background:#F59E0B;
+color:white;
+border:none;
+border-radius:10px;
+padding:8px;
+font-size:12px;
+font-weight:700;
+"
+onclick="abrirGestion('${c.nombre}','${c.celular}')">
+📝 Gestión
+</button>
+
+</div>
 <div
 style="
 display:grid;
@@ -661,28 +716,7 @@ margin-top:20px;
 padding-top:18px;
 border-top:1px solid #E5EAF1;
 ">
-${parseInt(c.retraso || 0) > 0 ? `
-<div style="margin-top:18px;">
 
-<button
-style="
-width:100%;
-background:linear-gradient(135deg,#2D9CDB,#1E88E5);
-color:#fff;
-padding:14px;
-border:none;
-border-radius:14px;
-font-size:16px;
-font-weight:700;
-box-shadow:0 6px 14px rgba(45,156,219,.30);
-margin-top:6px;
-"
-onclick="abrirGestion('${c.nombre}','${c.celular}')">
-📝 Registrar Gestión
-</button>
-
-</div>
-` : ""}
 </div>
 
 </div>

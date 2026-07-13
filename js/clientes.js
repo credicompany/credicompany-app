@@ -49,96 +49,57 @@
 // UTILIDADES
 // =====================================
 function verHistorialGestiones(){
-document.getElementById("historialDiv").style.display="none";
-document.getElementById("historialClienteDiv").style.display="none";
-document.getElementById("dashboard").style.display="none";
 
-document.querySelector(".resumen").style.display="none";
+    document.getElementById("historialDiv").style.display = "none";
+    document.getElementById("historialClienteDiv").style.display = "none";
+    document.getElementById("dashboard").style.display = "none";
 
-app.style.display="block";
-[
-"simulador",
-"clientes",
-"pagos",
-"admin"
-].forEach(id=>{
+    document.querySelector(".resumen").style.display = "none";
 
-document.getElementById(id).style.display="none";
+    app.style.display = "block";
 
-});
+    [
+        "simulador",
+        "clientes",
+        "pagos",
+        "admin"
+    ].forEach(id=>{
 
-document.getElementById("historialGestionesDiv").style.display="block";
+        document.getElementById(id).style.display = "none";
 
-let lista =
-document.getElementById(
-"listaGestiones"
-);
+    });
 
-lista.innerHTML="";
+    document.getElementById("historialGestionesDiv").style.display = "block";
 
-db.ref("gestiones").once("value", snap => {
-let historial = obtenerGestionesVigentes(snap);
-eliminarGestionesAntiguas(snap);
+    let lista = document.getElementById("listaGestiones");
 
-lista.innerHTML = "";
+    lista.innerHTML = "";
 
-let agrupado = {};
+    db.ref("gestiones").once("value", snap=>{
 
-historial.reverse().forEach(g=>{
+        let historial = obtenerGestionesVigentes(snap);
 
-let usuario = g.asesor || "Sin Usuario";
+        eliminarGestionesAntiguas(snap);
 
-if(!agrupado[usuario]){
-agrupado[usuario] = [];
-}
+        if(historial.length === 0){
 
-agrupado[usuario].push(g);
+            lista.innerHTML =
+            "<p>No existen gestiones registradas</p>";
 
-});
+            return;
 
-Object.keys(agrupado).forEach(usuario=>{
+        }
 
-lista.innerHTML += `
-<div style="
-background:#123B63;
-color:white;
-padding:10px;
-border-radius:10px;
-margin-top:15px;
-font-weight:bold;
-font-size:16px;
-">
-👤 ${usuario.toUpperCase()}
-(${agrupado[usuario].length} gestiones)
-</div>
-`;
+        let agrupado =
+        agruparGestionesPorUsuario(historial);
 
-agrupado[usuario].forEach(g=>{
+        renderHistorialGestiones(
+            lista,
+            agrupado
+        );
 
-lista.innerHTML += `
-<div class="item">
-<b>${g.cliente}</b><br>
-📞 ${g.celular}<br>
-📝 ${g.comentario}<br>
-🕒 ${g.fecha}
-</div>
-`;
+    });
 
-});
-
-});
-
-if(historial.length===0){
-
-lista.innerHTML =
-"<p>No existen gestiones registradas</p>";
-
-return;
-
-}
-  
-});
-  
 }
   function verHistorialCliente(nombre, celular){
 
@@ -301,5 +262,46 @@ function agruparGestionesPorUsuario(historial){
     });
 
     return agrupado;
+
+}
+// =====================================
+// RENDER HISTORIAL
+// =====================================
+
+function renderHistorialGestiones(lista, agrupado){
+
+    lista.innerHTML = "";
+
+    Object.keys(agrupado).forEach(usuario=>{
+
+        lista.innerHTML += `
+        <div style="
+        background:#123B63;
+        color:white;
+        padding:10px;
+        border-radius:10px;
+        margin-top:15px;
+        font-weight:bold;
+        font-size:16px;
+        ">
+        👤 ${usuario.toUpperCase()}
+        (${agrupado[usuario].length} gestiones)
+        </div>
+        `;
+
+        agrupado[usuario].forEach(g=>{
+
+            lista.innerHTML += `
+            <div class="item">
+                <b>${g.cliente}</b><br>
+                📞 ${g.celular}<br>
+                📝 ${g.comentario}<br>
+                🕒 ${g.fecha}
+            </div>
+            `;
+
+        });
+
+    });
 
 }

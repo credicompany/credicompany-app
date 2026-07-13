@@ -1,4 +1,53 @@
+// =====================================
+// CLIENTES.JS
+// CREDICOMPANY V3
+// =====================================
 
+// =====================================
+// VARIABLES GLOBALES
+// =====================================
+
+
+
+// =====================================
+// CARGA DE CLIENTES
+// =====================================
+
+
+
+// =====================================
+// FILTROS
+// =====================================
+
+
+
+// =====================================
+// COBRANZA
+// =====================================
+
+
+
+// =====================================
+// GESTIONES
+// =====================================
+
+
+
+// =====================================
+// HISTORIAL
+// =====================================
+
+
+
+// =====================================
+// RENDER
+// =====================================
+
+
+
+// =====================================
+// UTILIDADES
+// =====================================
 function verHistorialGestiones(){
 document.getElementById("historialDiv").style.display="none";
 document.getElementById("historialClienteDiv").style.display="none";
@@ -28,44 +77,8 @@ document.getElementById(
 lista.innerHTML="";
 
 db.ref("gestiones").once("value", snap => {
-
-let historial = [];
-
-let ahora = Date.now();
-let quinceDias = 15 * 24 * 60 * 60 * 1000;
-
-snap.forEach(item=>{
-
-let g = item.val();
-
-if(!g.timestamp){
-    historial.push(g);
-    return;
-}
-
-if((ahora - g.timestamp) <= quinceDias){
-    historial.push(g);
-}
-
-});
-snap.forEach(item=>{
-
-let g = item.val();
-if(!g.timestamp){
-
-    item.ref.remove();
-
-    return;
-
-}
-if(
-    g.timestamp &&
-    (ahora - g.timestamp) > quinceDias
-){
-    item.ref.remove();
-}
-
-});
+let historial = obtenerGestionesVigentes(snap);
+eliminarGestionesAntiguas(snap);
 
 lista.innerHTML = "";
 
@@ -199,5 +212,94 @@ document.getElementById(
 document.getElementById(
 "clientes"
 ).style.display="block";
+
+}
+// =====================================
+// UTILIDADES HISTORIAL
+// =====================================
+
+function obtenerGestionesVigentes(snapshot){
+
+    let historial = [];
+
+    let ahora = Date.now();
+
+    let quinceDias = 15 * 24 * 60 * 60 * 1000;
+
+    snapshot.forEach(item=>{
+
+        let g = item.val();
+
+        if(!g.timestamp){
+
+            historial.push(g);
+
+            return;
+
+        }
+
+        if((ahora - g.timestamp) <= quinceDias){
+
+            historial.push(g);
+
+        }
+
+    });
+
+    return historial;
+
+}
+
+function eliminarGestionesAntiguas(snapshot){
+
+    let ahora = Date.now();
+
+    let quinceDias = 15 * 24 * 60 * 60 * 1000;
+
+    snapshot.forEach(item=>{
+
+        let g = item.val();
+
+        if(!g.timestamp){
+
+            item.ref.remove();
+
+            return;
+
+        }
+
+        if(
+            g.timestamp &&
+            (ahora - g.timestamp) > quinceDias
+        ){
+
+            item.ref.remove();
+
+        }
+
+    });
+
+}
+// =====================================
+// AGRUPAR GESTIONES
+// =====================================
+
+function agruparGestionesPorUsuario(historial){
+
+    let agrupado = {};
+
+    historial.reverse().forEach(g=>{
+
+        let usuario = g.asesor || "Sin Usuario";
+
+        if(!agrupado[usuario]){
+            agrupado[usuario] = [];
+        }
+
+        agrupado[usuario].push(g);
+
+    });
+
+    return agrupado;
 
 }

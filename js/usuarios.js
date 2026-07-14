@@ -670,7 +670,96 @@ ${c.distrito}
 </div>
 
 </div>
+<div style="
+margin-top:14px;
+background:#F8FAFC;
+border:1px solid #E5EAF1;
+border-radius:14px;
+padding:12px;
+">
 
+<div style="
+font-size:13px;
+font-weight:700;
+color:#123B63;
+margin-bottom:10px;
+">
+🏠 EVIDENCIAS
+</div>
+
+<div style="
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+">
+
+<div style="
+border:1px dashed #CBD5E1;
+border-radius:12px;
+padding:10px;
+text-align:center;
+">
+
+<div style="font-size:22px;">🏡</div>
+
+<div style="
+font-size:12px;
+font-weight:700;
+margin-top:6px;
+">
+CASA
+</div>
+
+<button
+style="
+margin-top:8px;
+background:#16A34A;
+color:white;
+border:none;
+border-radius:10px;
+padding:8px;
+font-size:12px;
+">
+📷 Agregar
+</button>
+
+</div>
+
+<div style="
+border:1px dashed #CBD5E1;
+border-radius:12px;
+padding:10px;
+text-align:center;
+">
+
+<div style="font-size:22px;">🏪</div>
+
+<div style="
+font-size:12px;
+font-weight:700;
+margin-top:6px;
+">
+NEGOCIO
+</div>
+
+<button
+style="
+margin-top:8px;
+background:#2563EB;
+color:white;
+border:none;
+border-radius:10px;
+padding:8px;
+font-size:12px;
+">
+📷 Agregar
+</button>
+
+</div>
+
+</div>
+
+</div>
 ${c.nombreAval ? `
 
 <div style="height:12px;"></div>

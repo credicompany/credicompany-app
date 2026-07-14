@@ -719,7 +719,8 @@ border:none;
 border-radius:10px;
 padding:8px;
 font-size:12px;
-">
+"
+onclick="subirFoto('casa','${c.dni}')">
 📷 Agregar
 </button>
 
@@ -751,7 +752,8 @@ border:none;
 border-radius:10px;
 padding:8px;
 font-size:12px;
-">
+"
+onclick="subirFoto('negocio','${c.dni}')">
 📷 Agregar
 </button>
 
@@ -887,5 +889,13 @@ function verTodosClientes(){
 filtrarMora(0,1000);
 cargarResumen();
 console.log("Vista general activada");
+
+}
+function subirFoto(tipo,dni){
+
+    alert("Próximamente podrás subir la foto de " + tipo);
+
+    console.log("Tipo:", tipo);
+    console.log("DNI:", dni);
 
 }

@@ -1,3 +1,5 @@
+const CLOUD_NAME = "ohmeklhe";
+const UPLOAD_PRESET = "credicompany_upload";
 
 // LOGIN
 function login(){
@@ -891,11 +893,62 @@ cargarResumen();
 console.log("Vista general activada");
 
 }
-function subirFoto(tipo,dni){
+async function subirFoto(tipo,dni){
 
-    alert("Próximamente podrás subir la foto de " + tipo);
+try{
 
-    console.log("Tipo:", tipo);
-    console.log("DNI:", dni);
+const input=document.createElement("input");
+input.type="file";
+input.accept="image/*";
+input.capture="environment";
+
+input.onchange=async()=>{
+
+const archivo=input.files[0];
+
+if(!archivo) return;
+
+const formData=new FormData();
+
+formData.append("file",archivo);
+formData.append("upload_preset",UPLOAD_PRESET);
+
+const respuesta=await fetch(
+`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+{
+method:"POST",
+body:formData
+});
+
+const datos=await respuesta.json();
+
+if(!datos.secure_url){
+
+alert("Error al subir la imagen");
+return;
+
+}
+
+await db.ref("evidencias/"+dni+"/"+tipo).set({
+
+url:datos.secure_url,
+fecha:new Date().toLocaleString()
+
+});
+
+alert("✅ Foto de "+tipo+" guardada correctamente");
+
+console.log(datos.secure_url);
+
+};
+
+input.click();
+
+}catch(error){
+
+console.error(error);
+alert("Error al subir la imagen");
+
+}
 
 }

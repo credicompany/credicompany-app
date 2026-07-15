@@ -824,7 +824,8 @@ border-top:1px solid #E5EAF1;
 const fragment = document.createRange().createContextualFragment(html);
 
 lista.replaceChildren(fragment);
-  filtrados.forEach(c=>{
+
+filtrados.forEach(c=>{
     cargarFotosCliente(c.dni);
 });
   
@@ -900,52 +901,69 @@ cargarResumen();
 console.log("Vista general activada");
 
 }
-async function subirFoto(tipo,dni){
+async function subirFoto(tipo, dni){
 
 try{
 
-const input=document.createElement("input");
-input.type="file";
-input.accept="image/*";
-input.capture="environment";
+const input = document.createElement("input");
+input.type = "file";
+input.accept = "image/*";
+input.capture = "environment";
 
-input.onchange=async()=>{
+input.onchange = async ()=>{
 
-const archivo=input.files[0];
+const archivo = input.files[0];
 
 if(!archivo) return;
 
-const formData=new FormData();
+const formData = new FormData();
 
-formData.append("file",archivo);
-formData.append("upload_preset",UPLOAD_PRESET);
+formData.append("file", archivo);
+formData.append("upload_preset", UPLOAD_PRESET);
 
-const respuesta=await fetch(
+const respuesta = await fetch(
 `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
 {
 method:"POST",
 body:formData
-});
+}
+);
 
-const datos=await respuesta.json();
+const datos = await respuesta.json();
 
 if(!datos.secure_url){
-
-alert("Error al subir la imagen");
+alert("Error al subir imagen");
 return;
-
 }
 
+// Guardar en Firebase
 await db.ref("evidencias/"+dni+"/"+tipo).set({
-
-url:datos.secure_url,
-fecha:new Date().toLocaleString()
-
+url: datos.secure_url,
+fecha: new Date().toLocaleString()
 });
 
-alert("✅ Foto de "+tipo+" guardada correctamente");
+// Mostrar inmediatamente la miniatura
+const contenedor =
+document.getElementById(
+tipo==="casa"
+? "fotoCasa_"+dni
+: "fotoNegocio_"+dni
+);
 
-console.log(datos.secure_url);
+contenedor.innerHTML = `
+<img
+src="${datos.secure_url}"
+style="
+width:100%;
+height:120px;
+object-fit:cover;
+border-radius:10px;
+cursor:pointer;
+"
+onclick="window.open('${datos.secure_url}','_blank')">
+`;
+
+alert("✅ Foto guardada correctamente");
 
 };
 
@@ -954,11 +972,14 @@ input.click();
 }catch(error){
 
 console.error(error);
-alert("Error al subir la imagen");
+alert("Error al subir imagen");
 
 }
 
+}
   async function cargarFotosCliente(dni){
+
+try{
 
 const snap = await db.ref("evidencias/"+dni).once("value");
 
@@ -999,6 +1020,10 @@ onclick="window.open('${datos.negocio.url}','_blank')">
 `;
 
 }
+
+}catch(e){
+
+console.error("Error cargando fotos", e);
 
 }
 

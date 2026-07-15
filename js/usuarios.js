@@ -235,6 +235,21 @@ data.forEach(c=>{
     }
 });
 filtrados.forEach((c,index)=>{
+  console.log(
+"Cliente:",
+c.nombre,
+"DNI:",
+c.dni
+);
+  console.log(
+"idCasa:",
+"fotoCasa_"+c.dni
+);
+
+console.log(
+"idNegocio:",
+"fotoNegocio_"+c.dni
+);
 let color="#2ecc71";
 if(c.retraso>8) color="#f1c40f";
 if(c.retraso>30) color="#e74c3c";

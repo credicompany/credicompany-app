@@ -959,8 +959,15 @@ height:120px;
 object-fit:cover;
 border-radius:10px;
 cursor:pointer;
+margin-bottom:8px;
 "
 onclick="window.open('${datos.secure_url}','_blank')">
+
+<button
+class="btnCambiarFoto"
+onclick="subirFoto('${tipo}','${dni}')">
+📷 Cambiar foto
+</button>
 `;
 
 alert("✅ Foto guardada correctamente");
@@ -998,10 +1005,17 @@ height:120px;
 object-fit:cover;
 border-radius:10px;
 cursor:pointer;
+margin-bottom:8px;
 "
 onclick="window.open('${datos.casa.url}','_blank')">
-`;
 
+<button
+class="btnCambiarFoto"
+onclick="subirFoto('casa','${dni}')">
+📷 Cambiar foto
+</button>
+`;
+  
 }
 
 if(datos.negocio){
@@ -1015,10 +1029,17 @@ height:120px;
 object-fit:cover;
 border-radius:10px;
 cursor:pointer;
+margin-bottom:8px;
 "
 onclick="window.open('${datos.negocio.url}','_blank')">
-`;
 
+<button
+class="btnCambiarFoto"
+onclick="subirFoto('negocio','${dni}')">
+📷 Cambiar foto
+</button>
+`;
+  
 }
 
 }catch(e){

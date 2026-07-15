@@ -712,6 +712,7 @@ margin-top:6px;
 CASA
 </div>
 
+<div id="fotoCasa_${c.dni}">
 <button
 style="
 margin-top:8px;
@@ -725,6 +726,7 @@ font-size:12px;
 onclick="subirFoto('casa','${c.dni}')">
 📷 Agregar
 </button>
+</div>
 
 </div>
 
@@ -745,6 +747,7 @@ margin-top:6px;
 NEGOCIO
 </div>
 
+<div id="fotoNegocio_${c.dni}">
 <button
 style="
 margin-top:8px;
@@ -758,6 +761,7 @@ font-size:12px;
 onclick="subirFoto('negocio','${c.dni}')">
 📷 Agregar
 </button>
+</div>
 
 </div>
 
@@ -820,6 +824,9 @@ border-top:1px solid #E5EAF1;
 const fragment = document.createRange().createContextualFragment(html);
 
 lista.replaceChildren(fragment);
+  filtrados.forEach(c=>{
+    cargarFotosCliente(c.dni);
+});
   
 }
 function filtrarPorAsesor(nombreAsesor){
@@ -948,6 +955,50 @@ input.click();
 
 console.error(error);
 alert("Error al subir la imagen");
+
+}
+
+  async function cargarFotosCliente(dni){
+
+const snap = await db.ref("evidencias/"+dni).once("value");
+
+if(!snap.exists()) return;
+
+const datos = snap.val();
+
+if(datos.casa){
+
+document.getElementById("fotoCasa_"+dni).innerHTML = `
+<img
+src="${datos.casa.url}"
+style="
+width:100%;
+height:120px;
+object-fit:cover;
+border-radius:10px;
+cursor:pointer;
+"
+onclick="window.open('${datos.casa.url}','_blank')">
+`;
+
+}
+
+if(datos.negocio){
+
+document.getElementById("fotoNegocio_"+dni).innerHTML = `
+<img
+src="${datos.negocio.url}"
+style="
+width:100%;
+height:120px;
+object-fit:cover;
+border-radius:10px;
+cursor:pointer;
+"
+onclick="window.open('${datos.negocio.url}','_blank')">
+`;
+
+}
 
 }
 

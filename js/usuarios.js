@@ -235,6 +235,7 @@ data.forEach(c=>{
     }
 });
 filtrados.forEach((c,index)=>{
+  const idTarjeta = c.dni + "_" + index;
   console.log(
 "Cliente:",
 c.nombre,
@@ -727,7 +728,8 @@ margin-top:6px;
 CASA
 </div>
 
-<div id="fotoCasa_${c.dni}">
+<div 
+id="fotoCasa_${idTarjeta}">
 <button
 style="
 margin-top:8px;
@@ -738,7 +740,7 @@ border-radius:10px;
 padding:8px;
 font-size:12px;
 "
-onclick="subirFoto('casa','${c.dni}')">
+onclick="subirFoto('casa','${c.dni}','${idTarjeta}')">
 📷 Agregar
 </button>
 </div>
@@ -762,7 +764,8 @@ margin-top:6px;
 NEGOCIO
 </div>
 
-<div id="fotoNegocio_${c.dni}">
+<div
+id="fotoNegocio_${idTarjeta}">
 <button
 style="
 margin-top:8px;
@@ -773,7 +776,7 @@ border-radius:10px;
 padding:8px;
 font-size:12px;
 "
-onclick="subirFoto('negocio','${c.dni}')">
+onclick="subirFoto('negocio','${c.dni}','${idTarjeta}')">
 📷 Agregar
 </button>
 </div>
@@ -840,8 +843,15 @@ const fragment = document.createRange().createContextualFragment(html);
 
 lista.replaceChildren(fragment);
 
-filtrados.forEach(c=>{
-    cargarFotosCliente(c.dni);
+filtrados.forEach((c,index)=>{
+
+const idTarjeta = c.dni + "_" + index;
+
+cargarFotosCliente(
+    c.dni,
+    idTarjeta
+);
+
 });
   
 }
@@ -916,7 +926,7 @@ cargarResumen();
 console.log("Vista general activada");
 
 }
-async function subirFoto(tipo, dni){
+async function subirFoto(tipo,dni,idTarjeta){
 
 try{
 
@@ -961,8 +971,8 @@ fecha: new Date().toLocaleString()
 const contenedor =
 document.getElementById(
 tipo==="casa"
-? "fotoCasa_"+dni
-: "fotoNegocio_"+dni
+? "fotoCasa_"+idTarjeta
+: "fotoNegocio_"+idTarjeta
 );
 
 contenedor.innerHTML = `
@@ -999,7 +1009,10 @@ alert("Error al subir imagen");
 }
 
 }
- async function cargarFotosCliente(dni){
+ async function cargarFotosCliente(
+dni,
+idTarjeta
+){
 
 try{
 
@@ -1011,7 +1024,10 @@ const datos = snap.val();
 
 // ===== CASA =====
 
-const fotoCasa = document.getElementById("fotoCasa_"+dni);
+const fotoCasa =
+document.getElementById(
+"fotoCasa_"+idTarjeta
+);
 
 if(fotoCasa && datos.casa){
 
@@ -1030,7 +1046,7 @@ onclick="window.open('${datos.casa.url}','_blank')">
 
 <button
 class="btnCambiarFoto"
-onclick="subirFoto('casa','${dni}')">
+onclick="subirFoto('casa','${dni}','${idTarjeta}')">
 📷 Cambiar foto
 </button>
 `;
@@ -1039,7 +1055,10 @@ onclick="subirFoto('casa','${dni}')">
 
 // ===== NEGOCIO =====
 
-const fotoNegocio = document.getElementById("fotoNegocio_"+dni);
+const fotoNegocio =
+document.getElementById(
+"fotoNegocio_"+idTarjeta
+);
 
 if(fotoNegocio && datos.negocio){
 
@@ -1058,7 +1077,7 @@ onclick="window.open('${datos.negocio.url}','_blank')">
 
 <button
 class="btnCambiarFoto"
-onclick="subirFoto('negocio','${dni}')">
+onclick="subirFoto('negocio','${dni}','${idTarjeta}')">
 📷 Cambiar foto
 </button>
 `;

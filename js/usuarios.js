@@ -984,7 +984,7 @@ alert("Error al subir imagen");
 }
 
 }
-  async function cargarFotosCliente(dni){
+ async function cargarFotosCliente(dni){
 
 try{
 
@@ -994,9 +994,13 @@ if(!snap.exists()) return;
 
 const datos = snap.val();
 
-if(datos.casa){
+// ===== CASA =====
 
-document.getElementById("fotoCasa_"+dni).innerHTML = `
+const fotoCasa = document.getElementById("fotoCasa_"+dni);
+
+if(fotoCasa && datos.casa){
+
+fotoCasa.innerHTML = `
 <img
 src="${datos.casa.url}"
 style="
@@ -1015,12 +1019,16 @@ onclick="subirFoto('casa','${dni}')">
 📷 Cambiar foto
 </button>
 `;
-  
+
 }
 
-if(datos.negocio){
+// ===== NEGOCIO =====
 
-document.getElementById("fotoNegocio_"+dni).innerHTML = `
+const fotoNegocio = document.getElementById("fotoNegocio_"+dni);
+
+if(fotoNegocio && datos.negocio){
+
+fotoNegocio.innerHTML = `
 <img
 src="${datos.negocio.url}"
 style="
@@ -1039,7 +1047,7 @@ onclick="subirFoto('negocio','${dni}')">
 📷 Cambiar foto
 </button>
 `;
-  
+
 }
 
 }catch(e){

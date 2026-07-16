@@ -930,23 +930,23 @@ async function subirFoto(tipo,dni,idTarjeta){
 
 try{
 
-const input = document.createElement("input");
-input.type = "file";
-input.accept = "image/*";
-input.capture = "environment";
+const input=document.createElement("input");
+input.type="file";
+input.accept="image/*";
+input.capture="environment";
 
-input.onchange = async ()=>{
+input.onchange=async()=>{
 
-const archivo = input.files[0];
+const archivo=input.files[0];
 
-if(!archivo) return;
+if(!archivo)return;
 
-const formData = new FormData();
+const formData=new FormData();
 
-formData.append("file", archivo);
-formData.append("upload_preset", UPLOAD_PRESET);
+formData.append("file",archivo);
+formData.append("upload_preset",UPLOAD_PRESET);
 
-const respuesta = await fetch(
+const respuesta=await fetch(
 `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
 {
 method:"POST",
@@ -954,28 +954,35 @@ body:formData
 }
 );
 
-const datos = await respuesta.json();
+const datos=await respuesta.json();
 
 if(!datos.secure_url){
 alert("Error al subir imagen");
 return;
 }
 
-// Guardar en Firebase
+// Guardar Firebase
 await db.ref("evidencias/"+dni+"/"+tipo).set({
-url: datos.secure_url,
-fecha: new Date().toLocaleString()
+url:datos.secure_url,
+fecha:new Date().toLocaleString()
 });
 
-// Mostrar inmediatamente la miniatura
-const contenedor =
-document.getElementById(
+// ACTUALIZAR TODAS LAS TARJETAS DEL MISMO DNI
+const selector =
 tipo==="casa"
-? "fotoCasa_"+idTarjeta
-: "fotoNegocio_"+idTarjeta
-);
+? `[id^="fotoCasa_${dni}_"]`
+: `[id^="fotoNegocio_${dni}_"]`;
 
-contenedor.innerHTML = `
+const contenedores=document.querySelectorAll(selector);
+
+contenedores.forEach(contenedor=>{
+
+const idActual=contenedor.id
+.replace("fotoCasa_","")
+.replace("fotoNegocio_","");
+
+contenedor.innerHTML=`
+
 <img
 src="${datos.secure_url}"
 style="
@@ -990,10 +997,13 @@ onclick="window.open('${datos.secure_url}','_blank')">
 
 <button
 class="btnCambiarFoto"
-onclick="subirFoto('${tipo}','${dni}')">
+onclick="subirFoto('${tipo}','${dni}','${idActual}')">
 📷 Cambiar foto
 </button>
+
 `;
+
+});
 
 alert("✅ Foto guardada correctamente");
 
@@ -1005,88 +1015,6 @@ input.click();
 
 console.error(error);
 alert("Error al subir imagen");
-
-}
-
-}
- async function cargarFotosCliente(
-dni,
-idTarjeta
-){
-
-try{
-
-const snap = await db.ref("evidencias/"+dni).once("value");
-
-if(!snap.exists()) return;
-
-const datos = snap.val();
-
-// ===== CASA =====
-
-const fotoCasa =
-document.getElementById(
-"fotoCasa_"+idTarjeta
-);
-
-if(fotoCasa && datos.casa){
-
-fotoCasa.innerHTML = `
-<img
-src="${datos.casa.url}"
-style="
-width:100%;
-height:120px;
-object-fit:cover;
-border-radius:10px;
-cursor:pointer;
-margin-bottom:8px;
-"
-onclick="window.open('${datos.casa.url}','_blank')">
-
-<button
-class="btnCambiarFoto"
-onclick="subirFoto('casa','${dni}','${idTarjeta}')">
-📷 Cambiar foto
-</button>
-`;
-
-}
-
-// ===== NEGOCIO =====
-
-const fotoNegocio =
-document.getElementById(
-"fotoNegocio_"+idTarjeta
-);
-
-if(fotoNegocio && datos.negocio){
-
-fotoNegocio.innerHTML = `
-<img
-src="${datos.negocio.url}"
-style="
-width:100%;
-height:120px;
-object-fit:cover;
-border-radius:10px;
-cursor:pointer;
-margin-bottom:8px;
-"
-onclick="window.open('${datos.negocio.url}','_blank')">
-
-<button
-class="btnCambiarFoto"
-onclick="subirFoto('negocio','${dni}','${idTarjeta}')">
-📷 Cambiar foto
-</button>
-`;
-
-}
-
-}catch(e){
-
-console.error("Error cargando fotos", e);
 
 }
 

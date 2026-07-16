@@ -62,12 +62,37 @@ let key = h
  console.log("HEADER:", h);
 console.log("KEY:", key);
  let val = r[i] || "";
-/* DNI */
+/* ================= DNI ================= */
+
 if (
     key === "dni" ||
     key.includes("dni")
 ){
-    obj.dni = String(val).trim();
+
+    obj.dni = String(val)
+        .replace(/\.0$/,"")
+        .trim();
+
+}
+
+/* Si el DNI vino vacío, intentar obtenerlo de cualquier columna que tenga 8 dígitos */
+
+if(!obj.dni){
+
+    headers.forEach((hh,j)=>{
+
+        let valor = String(r[j] || "")
+            .replace(/\.0$/,"")
+            .trim();
+
+        if(/^\d{8}$/.test(valor)){
+
+            obj.dni = valor;
+
+        }
+
+    });
+
 }
 // NOMBRE TITULAR
 if(
@@ -206,6 +231,16 @@ console.log(
 console.log("CLIENTE:", obj.nombre);
 console.log("FECHA DESEMBOLSO:", obj.fechaDesembolso);
 console.log("================================");
+
+ if(!obj.dni){
+
+    console.warn(
+        "Cliente sin DNI:",
+        obj.nombre,
+        obj
+    );
+
+}
 return obj;
 }); // 🔥 GUARDADO REAL
 db.ref("cartera")

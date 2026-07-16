@@ -968,39 +968,14 @@ fecha: new Date().toLocaleString()
 });
 
 // Mostrar inmediatamente la miniatura
-const selector =
-
+const contenedor =
+document.getElementById(
 tipo==="casa"
-
-? '[id^="fotoCasa_'+dni+'_"]'
-
-: '[id^="fotoNegocio_'+dni+'_"]';
-
-const contenedores = document.querySelectorAll(selector);
-
-contenedores.forEach(contenedor=>{
+? "fotoCasa_"+idTarjeta
+: "fotoNegocio_"+idTarjeta
+);
 
 contenedor.innerHTML = `
-<img
-src="${datos.secure_url}"
-style="
-width:100%;
-height:120px;
-object-fit:cover;
-border-radius:10px;
-cursor:pointer;
-margin-bottom:8px;
-"
-onclick="window.open('${datos.secure_url}','_blank')">
-
-<button
-class="btnCambiarFoto"
-onclick="subirFoto('${tipo}','${dni}','${contenedor.id.replace('fotoCasa_','').replace('fotoNegocio_','')}')">
-📷 Cambiar foto
-</button>
-`;
-
-});
 <img
 src="${datos.secure_url}"
 style="

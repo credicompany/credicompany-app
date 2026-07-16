@@ -1019,3 +1019,60 @@ alert("Error al subir imagen");
 }
 
 }
+
+async function cargarFotosCliente(dni,idTarjeta){
+
+try{
+
+const snap = await db.ref("evidencias/"+dni).once("value");
+
+if(!snap.exists()) return;
+
+const evidencias = snap.val();
+
+["casa","negocio"].forEach(tipo=>{
+
+if(!evidencias[tipo]) return;
+
+const contenedor =
+document.getElementById(
+(tipo==="casa" ? "fotoCasa_" : "fotoNegocio_") + idTarjeta
+);
+
+if(!contenedor) return;
+
+contenedor.innerHTML = `
+
+<img
+src="${evidencias[tipo].url}"
+style="
+width:100%;
+height:120px;
+object-fit:cover;
+border-radius:10px;
+cursor:pointer;
+margin-bottom:8px;
+"
+onclick="window.open('${evidencias[tipo].url}','_blank')">
+
+<button
+class="btnCambiarFoto"
+onclick="subirFoto('${tipo}','${dni}','${idTarjeta}')">
+📷 Cambiar foto
+</button>
+
+`;
+
+});
+
+}catch(error){
+
+console.error(
+"Error cargando evidencias:",
+error
+);
+
+}
+
+}
+

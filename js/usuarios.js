@@ -941,9 +941,11 @@ const archivo=input.files[0];
 
 if(!archivo)return;
 
+const archivoComprimido = await comprimirImagen(archivo);
+
 const formData=new FormData();
 
-formData.append("file",archivo);
+formData.append("file", archivoComprimido, "evidencia.jpg");
 formData.append("upload_preset",UPLOAD_PRESET);
 
 const respuesta=await fetch(
@@ -1076,3 +1078,56 @@ error
 
 }
 
+// =========================================
+// COMPRIMIR IMAGEN ANTES DE SUBIR
+// =========================================
+function comprimirImagen(file){
+
+return new Promise((resolve)=>{
+
+const reader = new FileReader();
+
+reader.onload = function(e){
+
+const img = new Image();
+
+img.onload = function(){
+
+const canvas = document.createElement("canvas");
+
+const MAX_WIDTH = 1280;
+
+let width = img.width;
+let height = img.height;
+
+if(width > MAX_WIDTH){
+
+height = height * (MAX_WIDTH / width);
+width = MAX_WIDTH;
+
+}
+
+canvas.width = width;
+canvas.height = height;
+
+const ctx = canvas.getContext("2d");
+
+ctx.drawImage(img,0,0,width,height);
+
+canvas.toBlob(function(blob){
+
+resolve(blob);
+
+},"image/jpeg",0.75);
+
+};
+
+img.src = e.target.result;
+
+};
+
+reader.readAsDataURL(file);
+
+});
+
+}

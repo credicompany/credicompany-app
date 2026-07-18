@@ -1132,6 +1132,9 @@ localStorage.setItem(
 "financiero",
 JSON.stringify(json)
 );
+
+guardarDatosFinancieros(json);
+    
 localStorage.setItem(
 "nombreFinanciero",
 archivo.name
@@ -1191,6 +1194,32 @@ error
 });
 
 }
+
+// ======================================
+// GUARDA DATOS DEL EXCEL EN FIREBASE
+// ======================================
+function guardarDatosFinancieros(datos){
+
+db.ref("kpiFinanciero/datos")
+.set(datos)
+
+.then(()=>{
+
+console.log("✅ Datos financieros guardados");
+
+})
+
+.catch(error=>{
+
+console.error(
+"Error guardando datos financieros",
+error
+);
+
+});
+
+}
+
 function mostrarResumenFinanciero(){
 let data =
 JSON.parse(

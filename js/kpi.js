@@ -1174,6 +1174,9 @@ archivo
 
 function guardarProductosFirebase(data){
 
+    console.log("=== guardarProductosFirebase ===");
+    console.log("Registros:", data.length);
+
     const productos = {};
 
     data.forEach(cliente=>{
@@ -1190,6 +1193,8 @@ function guardarProductosFirebase(data){
 
     });
 
+    console.log("Productos encontrados:", Object.keys(productos));
+
     db.ref("kpiFinanciero/productos")
     .set(productos)
     .then(()=>{
@@ -1199,7 +1204,7 @@ function guardarProductosFirebase(data){
     })
     .catch(error=>{
 
-        console.error("❌ Error:", error);
+        console.error("❌ Error Firebase:", error);
 
     });
 

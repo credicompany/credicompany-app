@@ -1146,7 +1146,8 @@ JSON.stringify(json)
 );
 
 guardarDatosFinancieros(json);
-    
+guardarProductosFirebase(json); 
+
 localStorage.setItem(
 "nombreFinanciero",
 archivo.name
@@ -1168,6 +1169,39 @@ setTimeout(()=>{
 lector.readAsArrayBuffer(
 archivo
 );
+
+}
+
+function guardarProductosFirebase(data){
+
+    const productos = {};
+
+    data.forEach(cliente=>{
+
+        const producto = String(
+            cliente["Producto"] || "SIN PRODUCTO"
+        ).trim().toUpperCase();
+
+        if(!productos[producto]){
+            productos[producto] = [];
+        }
+
+        productos[producto].push(cliente);
+
+    });
+
+    db.ref("kpiFinanciero/productos")
+    .set(productos)
+    .then(()=>{
+
+        console.log("✅ Productos guardados en Firebase");
+
+    })
+    .catch(error=>{
+
+        console.error("❌ Error:", error);
+
+    });
 
 }
 function guardarFinancieroFirebase(){

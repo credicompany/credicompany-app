@@ -934,18 +934,32 @@ function cargarFinancieroFirebase(){
 
             console.log("✅ KPI FINANCIERO DESDE FIREBASE");
 
-        }else{
+       }else{
 
-            let financieroGuardado =
-            localStorage.getItem("financiero");
+    let financieroGuardado =
+    localStorage.getItem("financiero");
 
-            if(financieroGuardado){
+    if(financieroGuardado){
 
-                mostrarResumenFinanciero();
+        mostrarResumenFinanciero();
 
-            }
+    }
+    else if(datos && datos.datos){
 
-        }
+        localStorage.setItem(
+            "financiero",
+            JSON.stringify(datos.datos)
+        );
+
+        console.log(
+            "✅ Datos financieros restaurados desde Firebase"
+        );
+
+        mostrarResumenFinanciero();
+
+    }
+
+}
 
     })
     .catch(error=>{

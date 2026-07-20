@@ -921,60 +921,44 @@ function cargarFinancieroFirebase(){
     .once("value")
     .then(snapshot=>{
 
-        let datos = snapshot.val();
+        const datos = snapshot.val();
+        const divFinanciero = document.getElementById("resumenFinanciero");
 
-        console.log(datos);
+        if(datos){
 
-        const divFinanciero =
-        document.getElementById("resumenFinanciero");
+            // Restaurar datos del Excel
+            if(datos.datos){
 
-       if(datos && divFinanciero){
+                localStorage.setItem(
+                    "financiero",
+                    JSON.stringify(datos.datos)
+                );
 
-    if(datos.datos){
+                mostrarResumenFinanciero();
 
-        localStorage.setItem(
-            "financiero",
-            JSON.stringify(datos.datos)
-        );
+            }
+            // Si no existen datos, mostrar el HTML guardado
+            else if(divFinanciero){
 
-        mostrarResumenFinanciero();
+                divFinanciero.innerHTML = datos.html || "";
 
-    }else{
+            }
 
-        divFinanciero.innerHTML = datos.html || "";
+            console.log("✅ KPI FINANCIERO DESDE FIREBASE");
 
-    }
+        }
+        else{
 
-    console.log("✅ KPI FINANCIERO DESDE FIREBASE");
+            let financieroGuardado =
+            localStorage.getItem("financiero");
 
-}
+            if(financieroGuardado){
 
-       }else{
+                mostrarResumenFinanciero();
 
-    let financieroGuardado =
-    localStorage.getItem("financiero");
+            }
 
-    if(financieroGuardado){
-
-        mostrarResumenFinanciero();
-
-    }
-    else if(datos && datos.datos){
-
-        localStorage.setItem(
-            "financiero",
-            JSON.stringify(datos.datos)
-        );
-
-        console.log(
-            "✅ Datos financieros restaurados desde Firebase"
-        );
-
-        mostrarResumenFinanciero();
-
-    }
-
-}
+        }
 
     })
     .catch(error=>{
@@ -987,7 +971,6 @@ function cargarFinancieroFirebase(){
     });
 
 }
-
 // ======================================================
 // FUNCIONES GENERALES
 // ======================================================

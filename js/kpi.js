@@ -1174,38 +1174,50 @@ archivo
 
 function guardarProductosFirebase(data){
 
-    alert("ENTRÓ A guardarProductosFirebase");
-
-    console.log("ENTRÓ A guardarProductosFirebase");
-
     const productos = {};
 
     data.forEach(cliente=>{
 
-        const producto = String(
-            cliente["Producto"] || "SIN PRODUCTO"
-        ).trim().toUpperCase();
+        // Limpiar nombres de columnas
+        const limpio = {};
+
+        Object.keys(cliente).forEach(key=>{
+
+            const nuevaClave = key
+                .replace(/\./g,"")
+                .replace(/\#/g,"")
+                .replace(/\$/g,"")
+                .replace(/\//g,"")
+                .replace(/\[/g,"")
+                .replace(/\]/g,"");
+
+            limpio[nuevaClave] = cliente[key];
+
+        });
+
+        const producto =
+        String(limpio["Producto"] || "SIN PRODUCTO")
+        .trim()
+        .toUpperCase();
 
         if(!productos[producto]){
             productos[producto] = [];
         }
 
-        productos[producto].push(cliente);
+        productos[producto].push(limpio);
 
     });
-
-    alert("Productos: " + Object.keys(productos).length);
 
     db.ref("kpiFinanciero/productos")
     .set(productos)
     .then(()=>{
 
-        alert("GUARDADO OK");
+        console.log("✅ Productos guardados");
 
     })
     .catch(error=>{
 
-        alert(error.message);
+        console.error(error);
 
     });
 

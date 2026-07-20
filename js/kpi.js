@@ -1174,8 +1174,9 @@ archivo
 
 function guardarProductosFirebase(data){
 
-    console.log("=== guardarProductosFirebase ===");
-    console.log("Registros:", data.length);
+    alert("ENTRÓ A guardarProductosFirebase");
+
+    console.log("ENTRÓ A guardarProductosFirebase");
 
     const productos = {};
 
@@ -1193,18 +1194,18 @@ function guardarProductosFirebase(data){
 
     });
 
-    console.log("Productos encontrados:", Object.keys(productos));
+    alert("Productos: " + Object.keys(productos).length);
 
     db.ref("kpiFinanciero/productos")
     .set(productos)
     .then(()=>{
 
-        console.log("✅ Productos guardados en Firebase");
+        alert("GUARDADO OK");
 
     })
     .catch(error=>{
 
-        console.error("❌ Error Firebase:", error);
+        alert(error.message);
 
     });
 

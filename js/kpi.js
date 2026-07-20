@@ -928,11 +928,26 @@ function cargarFinancieroFirebase(){
         const divFinanciero =
         document.getElementById("resumenFinanciero");
 
-        if(datos && divFinanciero){
+       if(datos && divFinanciero){
 
-            divFinanciero.innerHTML = datos.html || "";
+    if(datos.datos){
 
-            console.log("✅ KPI FINANCIERO DESDE FIREBASE");
+        localStorage.setItem(
+            "financiero",
+            JSON.stringify(datos.datos)
+        );
+
+        mostrarResumenFinanciero();
+
+    }else{
+
+        divFinanciero.innerHTML = datos.html || "";
+
+    }
+
+    console.log("✅ KPI FINANCIERO DESDE FIREBASE");
+
+}
 
        }else{
 
@@ -1174,7 +1189,7 @@ archivo
 }
 function guardarFinancieroFirebase(){
 
-db.ref("kpiFinanciero").set({
+db.ref("kpiFinanciero").update({
 
 archivo:
 localStorage.getItem("nombreFinanciero") || "",

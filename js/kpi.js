@@ -524,26 +524,23 @@ temPromedio[asesor].length
         let cli =
         clientes[asesor].size;
 
-        let meta =
-        metas.find(m =>
+       const normalizar = texto =>
+String(texto || "")
+.normalize("NFD")
+.replace(/[\u0300-\u036f]/g,"")
+.replace(/\s+/g,"")
+.trim()
+.toUpperCase();
 
-            String(
-                m["Asesor (A)"] ||
-                m["ASESOR"] ||
-                ""
-            )
-            .trim()
-            .toUpperCase()
-            .replace(/\s+/g,"")
-
-            ===
-
-            asesor
-            .trim()
-            .toUpperCase()
-            .replace(/\s+/g,"")
-
-        );
+let meta = metas.find(m =>
+    normalizar(m["Asesor (A)"]) === normalizar(asesor)
+);
+    console.log(
+    "ASESOR PRODUCCION:",
+    asesor,
+    "META ENCONTRADA:",
+    meta
+);
 //==================================
 // HISTÓRICO AUTOMÁTICO
 //==================================

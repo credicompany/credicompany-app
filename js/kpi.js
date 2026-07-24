@@ -1291,6 +1291,7 @@ localStorage.getItem(
 
 let carteraTotal = 0;
 let capitalVencido = 0;
+let moraTotal = 0;
 let carteraSana = 0;
 let moraPorcentaje = 0;
 let clientesCriticos = 0;
@@ -1372,6 +1373,12 @@ parseFloat(c["Saldo Capital"]) || 0;
 
 let atraso =
 parseFloat(c["Dias de retraso"]) || 0;
+
+if(atraso >= 1){
+
+    moraTotal += saldo;
+
+}
 let asesor =
 (c["Asesor(a)"] || "SIN ASESOR")
 .toString()
@@ -2058,6 +2065,33 @@ min-height:80px;
 ${clientesCriticos}
 </div>
 </div>
+
+<div style="
+background:#FFF5F5;
+color:#991B1B;
+border:1px solid #FECACA;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
+padding:10px;
+border-radius:12px;
+text-align:center;
+min-height:80px;
+">
+
+<div style="font-size:22px;">🔴</div>
+
+<div>Mora Total (+1)</div>
+
+<div style="
+font-size:20px;
+font-weight:bold;
+">
+
+S/${moraTotal.toLocaleString()}
+
+</div>
+
+</div>
+
 <div style="
 background:#FFFFFF;
 color:#1F2937;

@@ -1289,6 +1289,8 @@ localStorage.getItem(
 )
 ) || [];
 
+const esMovil = window.innerWidth <= 768;
+    
 let carteraTotal = 0;
 let capitalVencido = 0;
 let moraTotal = 0;
@@ -1981,7 +1983,7 @@ style="display:block;">
 
 <div style="
 display:grid;
-grid-template-columns:repeat(2,1fr);
+grid-template-columns:${esMovil ? "1fr" : "repeat(2,1fr)"};
 gap:10px;
 ">
 

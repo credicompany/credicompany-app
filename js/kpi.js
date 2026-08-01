@@ -1337,21 +1337,7 @@ if(!isNaN(fecha.getTime())){
     }
 
 }
-console.log(
-"EXCEL:",
-fechaExcel,
-"FECHA:",
-fecha.toISOString()
-);if(
-!ultimaFecha ||
-fecha > ultimaFecha
-){
 
-ultimaFecha = fecha;
-
-}
-
-}
 
 });
 if(!ultimaFecha){

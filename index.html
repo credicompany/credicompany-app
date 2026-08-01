@@ -1847,6 +1847,24 @@ BOTÓN CAMBIAR FOTO
 .btnCambiarFoto:hover{
     background:#0D47A1;
 }
+
+  /*=========================================
+KPI FINANCIERO - CELULAR
+=========================================*/
+
+@media (max-width:768px){
+
+.kpiFinancieroResponsive{
+    width:100%;
+    overflow-x:hidden;
+}
+
+.kpiFinancieroResponsive *{
+    max-width:100% !important;
+    box-sizing:border-box;
+}
+
+}
 </style>
  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -2425,7 +2443,7 @@ style="display:none">
 
 <h3>🏦 KPI FINANCIERO</h3>
 
-<div id="kpiFinancieroResumen">
+<div id="kpiFinancieroResumen" class="kpiFinancieroResponsive">
 
 <input
 type="file"

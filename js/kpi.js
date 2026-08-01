@@ -1312,16 +1312,31 @@ let vencidoAsesor = {};
     let ultimaFecha = null;
 
 data.forEach(c=>{
+let fechaValor = c["Fecha Desembolso"];
 
-let fechaExcel =
-parseFloat(c["Fecha Desembolso"]);
+let fecha = null;
 
-if(!isNaN(fechaExcel)){
+if(typeof fechaValor === "number"){
 
-let fecha =
-new Date(
-(fechaExcel - 25569) * 86400 * 1000
-);
+    fecha = new Date(
+        (fechaValor - 25569) * 86400 * 1000
+    );
+
+}else{
+
+    fecha = new Date(fechaValor);
+
+}
+
+if(!isNaN(fecha.getTime())){
+
+    if(!ultimaFecha || fecha > ultimaFecha){
+
+        ultimaFecha = fecha;
+
+    }
+
+}
 console.log(
 "EXCEL:",
 fechaExcel,

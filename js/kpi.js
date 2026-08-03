@@ -541,338 +541,287 @@ jsonGeneral.forEach(c=>{
         moraActualAsesor[asesor] += saldo;
     }
 
-});    Object.keys(ranking).forEach(asesor=>{
+});   
+    
+  Object.keys(ranking).forEach(asesor=>{
 
-        let colocacion =
-        ranking[asesor];
+    //=========================================
+    // FUNCIONES AUXILIARES
+    //=========================================
 
-        let oper =
-        operaciones[asesor];
-       // TEM DEL MES ACTUAL (Excel General)
-
-let tem =
-temPromedio[asesor].length
-?
-(
-    temPromedio[asesor]
-    .reduce((a,b)=>a+b,0)
-    /
-    temPromedio[asesor].length
-).toFixed(2)
-:
-0;
-   let meta = metas.find(m =>
-    normalizar(m["Asesor (A)"]) === normalizar(asesor)
-);
-
-console.log("META:", meta);
-if(meta){
-    console.log("META:", meta);
-    console.log("COLUMNAS:", Object.keys(meta));
-}else{
-    console.log("No se encontró meta para:", asesor);
-}
-    console.log(
-    "ASESOR PRODUCCION:",
-    asesor,
-    "META ENCONTRADA:",
-    meta
-);     
-        // CLIENTES ACTIVOS DEL ASESOR
-let clientesAgosto =
-clientesHistorico[asesor]
-?
-clientesHistorico[asesor].size
-:
-0;
-
-// Buscar automáticamente la columna de clientes del mes anterior
-let columnaClientesAnterior =
-buscarColumna("CLIENTES", mesAnterior);
-
-let clientesMesAnterior =
-columnaClientesAnterior
-?
-Number(meta[columnaClientesAnterior] || 0)
-:
-0;
-
-// VARIACIÓN
-let variacionClientes =
-clientesAgosto - clientesMesAnterior;
-let colorVariacion = "#64748B";
-
-if (variacionClientes > 0) {
-
-    colorVariacion = "#16A34A";
-
-} else if (variacionClientes < 0) {
-
-    colorVariacion = "#DC2626";
-
-}
-
-       const normalizar = texto =>
-String(texto || "")
-.normalize("NFD")
-.replace(/[\u0300-\u036f]/g,"")
-.replace(/\s+/g,"")
-.trim()
-.toUpperCase();
-
-    function buscarColumna(prefijo, mes){
-
-    if(!meta) return null;
-
-    const buscado =
-    `${prefijo} ${mes}`
-    .toUpperCase();
-
-    return Object.keys(meta).find(col =>
-        col.toUpperCase().trim() === buscado
-    );
-
-}
-
-
-//==================================
-// HISTÓRICO AUTOMÁTICO
-//==================================
-
-let temAnterior = 0;
-let moraAnterior = 0;
-
-if(meta){
-
-    const columnas =
-    Object.keys(meta);
-
-    const buscarColumna = (tipo,mes)=>{
-
-        const buscado =
-        (tipo+" "+mes)
+    const normalizar = texto =>
+        String(texto || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g,"")
+        .replace(/\s+/g," ")
+        .trim()
         .toUpperCase();
 
-        let encontrada =
-        columnas.find(col=>{
+    //=========================================
+    // META DEL ASESOR
+    //=========================================
+
+    let meta = metas.find(m =>
+        normalizar(m["Asesor (A)"]) === normalizar(asesor)
+    );
+
+    function buscarColumna(tipo,mes){
+
+        if(!meta) return null;
+
+        return Object.keys(meta).find(col=>{
 
             let nombre =
             col
             .toUpperCase()
-            .trim()
-            .replace(/\s+/g," ");
+            .replace(/\s+/g," ")
+            .trim();
 
             return(
-                nombre.includes(tipo)
+                nombre.includes(tipo.toUpperCase())
                 &&
-                nombre.includes(
-                    mes.toUpperCase()
-                )
+                nombre.includes(mes.toUpperCase())
             );
 
         });
 
-        return encontrada;
+    }
 
-    };
+    //=========================================
+    // VARIABLES
+    //=========================================
 
-    let colTEM =
+    let colocacion = ranking[asesor];
+    let oper = operaciones[asesor];
+
+    let tem =
+    temPromedio[asesor].length
+    ?
+    (
+        temPromedio[asesor]
+        .reduce((a,b)=>a+b,0)
+        /
+        temPromedio[asesor].length
+    ).toFixed(2)
+    :
+    0;
+
+    //=========================================
+    // CLIENTES
+    //=========================================
+
+    let clientesActual =
+    clientesHistorico[asesor]
+    ?
+    clientesHistorico[asesor].size
+    :
+    0;
+
+    let colClientes =
+    buscarColumna(
+        "CLIENTES",
+        mesAnterior
+    );
+
+    let clientesAnterior =
+    colClientes
+    ?
+    Number(meta[colClientes] || 0)
+    :
+    0;
+
+    let variacionClientes =
+    clientesActual - clientesAnterior;
+
+    let colorVariacion = "#64748B";
+
+    if(variacionClientes>0){
+
+        colorVariacion="#16A34A";
+
+    }else if(variacionClientes<0){
+
+        colorVariacion="#DC2626";
+
+    }
+
+    //=========================================
+    // TEM HISTÓRICO
+    //=========================================
+
+    let temAnterior=0;
+
+    let colTEM=
     buscarColumna(
         "TEM",
         mesAnterior
     );
 
-    let colMORA =
+    if(colTEM){
+
+        temAnterior=
+        parseFloat(
+            String(meta[colTEM])
+            .replace(/,/g,"")
+        )||0;
+
+    }
+
+    //=========================================
+    // MORA HISTÓRICA
+    //=========================================
+
+    let moraAnterior=0;
+
+    let colMora=
     buscarColumna(
         "MORA",
         mesAnterior
     );
 
-    if(colTEM){
+    if(colMora){
 
-        temAnterior =
+        moraAnterior=
         parseFloat(
-            String(
-                meta[colTEM]
-            ).replace(/,/g,"")
-        ) || 0;
+            String(meta[colMora])
+            .replace(/,/g,"")
+        )||0;
 
     }
 
-    if(colMORA){
+    let moraActual =
+    moraActualAsesor[asesor] || 0;
 
-        moraAnterior =
-        parseFloat(
-            String(
-                meta[colMORA]
-            ).replace(/,/g,"")
-        ) || 0;
+    //=========================================
+    // METAS
+    //=========================================
+
+    let metaDesembolso =
+    meta
+    ?
+    Number(
+        String(
+            meta["COLOCACION"] ||
+            meta["COLOC."] ||
+            0
+        ).replace(/,/g,"")
+    )
+    :
+    0;
+
+    let metaOperaciones =
+    meta
+    ?
+    Number(
+        String(
+            meta["OPERACIONES"] || 0
+        ).replace(/,/g,"")
+    )
+    :
+    0;
+
+    //=========================================
+    // PORCENTAJES
+    //=========================================
+
+    let porcentajeDesembolso =
+    metaDesembolso>0
+    ?
+    ((colocacion/metaDesembolso)*100).toFixed(1)
+    :
+    0;
+
+    let porcentajeOperaciones =
+    metaOperaciones>0
+    ?
+    ((oper/metaOperaciones)*100).toFixed(1)
+    :
+    0;
+
+    let colorEstado="🔴";
+
+    if(Number(porcentajeDesembolso)>=100){
+
+        colorEstado="🟢";
+
+    }else if(Number(porcentajeDesembolso)>=80){
+
+        colorEstado="🟡";
 
     }
 
-}       
-       let moraActual =
-moraActualAsesor[asesor] || 0;
-    
-        let metaDesembolso =
-        meta
-        ?
-        parseFloat(
-            String(
-                meta["COLOCACION"] ||
-                meta["COLOC."] ||
-                0
-            ).replace(/,/g,"")
-        )
-        :
-        0;
+    //=========================================
+    // TABLA
+    //=========================================
 
-        let metaOperaciones =
-        meta
-        ?
-        parseFloat(
-            String(
-                meta["OPERACIONES"] || 0
-            ).replace(/,/g,"")
-        )
-        :
-        0;
-
-   let metaClientes =
-meta
-?
-parseFloat(
-    String(
-        meta["CLIENTES JULIO"] ||
-        meta["CLIENTES"] ||
-        0
-    ).replace(/,/g,"")
-)
-:
-0;
-console.log("META COMPLETA:",meta);
-console.log("CLIENTES JULIO:",meta["CLIENTES JULIO"]);
-let porcentajeClientes =
-metaClientes > 0
-?
-((cli / metaClientes) * 100).toFixed(1)
-:
-0;
-
-let colorClientes = "#ef4444";
-
-if(Number(porcentajeClientes) >= 100){
-
-    colorClientes = "#22c55e";
-
-}else if(Number(porcentajeClientes) >= 80){
-
-    colorClientes = "#facc15";
-
-}
-        let porcentajeOperaciones =
-metaOperaciones > 0
-?
-((oper / metaOperaciones) * 100).toFixed(1)
-:
-0;
-let porcentajeDesembolso =
-metaDesembolso > 0
-?
-((colocacion / metaDesembolso) * 100).toFixed(1)
-:
-0;
-
-let colorEstado = "🔴";
-
-if(Number(porcentajeDesembolso) >= 100){
-
-   colorEstado = "🟢";
-
-}
-else if(Number(porcentajeDesembolso) >= 80){
-
-   colorEstado = "🟡";
-
-}
-resumen += `
+    resumen +=`
 
 <tr>
 
-<td>
-<b>${asesor}</b>
-</td>
+<td><b>${asesor}</b></td>
 
-<td>
-S/${metaDesembolso.toLocaleString()}
-</td>
+<td>S/${metaDesembolso.toLocaleString()}</td>
 
-<td>
-S/${Math.round(colocacion).toLocaleString()}
-</td>
+<td>S/${Math.round(colocacion).toLocaleString()}</td>
 
 <td style="
-background:${Number(porcentajeDesembolso) >= 100 ? '#22c55e' : '#ffffff'};
-color:${Number(porcentajeDesembolso) >= 100 ? 'white' : '#000'};
+background:${
+Number(porcentajeDesembolso)>=100
+?
+'#22c55e'
+:
+'#ffffff'
+};
+color:${
+Number(porcentajeDesembolso)>=100
+?
+'white'
+:
+'#000'
+};
 font-weight:bold;
-border-radius:4px;
 ">
 ${porcentajeDesembolso}%
 </td>
-<td>
-${metaOperaciones}
-</td>
 
-<td>
-${oper}
-</td>
+<td>${metaOperaciones}</td>
+
+<td>${oper}</td>
 
 <td style="
-background:
-${Number(porcentajeOperaciones) >= 100
-? '#22c55e'
-: Number(porcentajeOperaciones) >= 80
-? '#facc15'
-: '#ef4444'};
+background:${
+Number(porcentajeOperaciones)>=100
+?
+'#22c55e'
+:
+Number(porcentajeOperaciones)>=80
+?
+'#facc15'
+:
+'#ef4444'
+};
 color:white;
 font-weight:bold;
 ">
 ${porcentajeOperaciones}%
 </td>
-<td style="
-font-weight:bold;
-text-align:center;
-">
-${clientesMesAnterior}
-</td>
+
+<td><b>${clientesAnterior}</b></td>
+
+<td><b>${clientesActual}</b></td>
 
 <td style="
 font-weight:bold;
-text-align:center;
-color:#123B63;
-">
-${clientesAgosto}
-</td>
-
-<td style="
-font-weight:bold;
-text-align:center;
 color:${colorVariacion};
 ">
-${variacionClientes > 0 ? "+" : ""}${variacionClientes}
+${variacionClientes>0?"+":""}${variacionClientes}
 </td>
 
-<td>
-${Number(temAnterior).toFixed(1)}%
-</td>
+<td>${Number(temAnterior).toFixed(1)}%</td>
 
-<td>
-${tem}%
-</td>
+<td>${tem}%</td>
 
-<td>
-S/${Number(moraAnterior).toLocaleString()}
-</td>
+<td>S/${Number(moraAnterior).toLocaleString()}</td>
 
 <td style="
 font-weight:bold;
@@ -881,19 +830,19 @@ color:#c62828;
 S/${Math.round(moraActual).toLocaleString()}
 </td>
 
-<td>
-${colorEstado}
-</td>
+<td>${colorEstado}</td>
 
 </tr>
 
 `;
-    });
+
+}); 
 
     resumen += `
 </table>
 </div>
 `;
+    
 let rankingKPIHTML = "";
 
 top

@@ -464,6 +464,9 @@ color:white;
 <th>META OPERACIONES</th>
 <th>AVANCE</th>
 <th>% AVANCE OPER</th>
+<th>META CLIENTES</th>
+<th>DESEMBOLSADOS</th>
+<th>% CUMPLIMIENTO</th>
 <th>TEM ${mesAnterior.toUpperCase()}</th>
 <th>TEM ${mesActual.toUpperCase()}</th>
 <th>MORA ${mesAnterior.toUpperCase()}</th>
@@ -643,6 +646,43 @@ moraActualAsesor[asesor] || 0;
         )
         :
         0;
+
+    let metaClientes =
+meta
+?
+parseFloat(
+    String(
+        meta["CLIENTES JULIO"] ||
+        meta["CLIENTES"] ||
+        0
+    ).replace(/,/g,"")
+)
+:
+0;
+let porcentajeClientes =
+metaClientes > 0
+?
+((cli / metaClientes) * 100).toFixed(1)
+:
+0;
+
+let colorClientes = "#ef4444";
+
+if(Number(porcentajeClientes) >= 100){
+
+    colorClientes = "#22c55e";
+
+}else if(Number(porcentajeClientes) >= 80){
+
+    colorClientes = "#facc15";
+
+}
+let porcentajeClientes =
+metaClientes > 0
+?
+((cli / metaClientes) * 100).toFixed(1)
+:
+0;
         let porcentajeOperaciones =
 metaOperaciones > 0
 ?
@@ -711,6 +751,23 @@ color:white;
 font-weight:bold;
 ">
 ${porcentajeOperaciones}%
+</td>
+
+<td>
+${metaClientes}
+</td>
+
+<td>
+${cli}
+</td>
+
+<td style="
+background:${colorClientes};
+color:white;
+font-weight:bold;
+border-radius:4px;
+">
+${porcentajeClientes}%
 </td>
 
 <td>

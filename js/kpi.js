@@ -543,7 +543,12 @@ jsonGeneral.forEach(c=>{
 
 });   
     
-  Object.keys(ranking).forEach(asesor=>{
+ metas.forEach(meta=>{
+
+    let asesor =
+    String(meta["Asesor (A)"] || "")
+    .trim()
+    .toUpperCase();
 
     //=========================================
     // FUNCIONES AUXILIARES
@@ -560,11 +565,6 @@ jsonGeneral.forEach(c=>{
     //=========================================
     // META DEL ASESOR
     //=========================================
-
-    let meta = metas.find(m =>
-        normalizar(m["Asesor (A)"]) === normalizar(asesor)
-    );
-
     function buscarColumna(tipo,mes){
 
         if(!meta) return null;
@@ -591,20 +591,20 @@ jsonGeneral.forEach(c=>{
     // VARIABLES
     //=========================================
 
-    let colocacion = ranking[asesor];
-    let oper = operaciones[asesor];
-
+   let colocacion = ranking[asesor] || 0;
+let oper = operaciones[asesor] || 0;
+     
     let tem =
-    temPromedio[asesor].length
-    ?
-    (
-        temPromedio[asesor]
-        .reduce((a,b)=>a+b,0)
-        /
-        temPromedio[asesor].length
-    ).toFixed(2)
-    :
-    0;
+temPromedio[asesor] && temPromedio[asesor].length
+?
+(
+temPromedio[asesor]
+.reduce((a,b)=>a+b,0)
+/
+temPromedio[asesor].length
+).toFixed(2)
+:
+0;
 
     //=========================================
     // CLIENTES

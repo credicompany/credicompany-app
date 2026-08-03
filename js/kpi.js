@@ -311,6 +311,7 @@ ${avanceEmpresa}%
 let operaciones = {};
 let temPromedio = {};
 let clientes = {};
+let clientesHistorico = {};
 let moraAsesor = {};
 
     json.forEach(c => {
@@ -372,6 +373,39 @@ moraAsesor[asesor] += saldoCapitalVencido;
 }
 
     });
+
+    // ========================================
+// CLIENTES HISTÓRICOS (TODA LA CARTERA)
+// ========================================
+
+jsonGeneral.forEach(c=>{
+
+    let asesor =
+    (c["Asesor(a)"] || "")
+    .toString()
+    .trim()
+    .toUpperCase();
+
+    if(!clientesHistorico[asesor]){
+        clientesHistorico[asesor] = new Set();
+    }
+
+    let nombre = (
+        (c["Apellido Paterno"] || "") + " " +
+        (c["Apellido Materno"] || "") + " " +
+        (c["Nombre"] || "")
+    )
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/\s+/g," ")
+    .trim()
+    .toUpperCase();
+
+    if(nombre){
+        clientesHistorico[asesor].add(nombre);
+    }
+
+});
 let top =
 Object.entries(ranking)
 
@@ -527,20 +561,45 @@ temPromedio[asesor].length
 ).toFixed(2)
 :
 0;
-        
-        // CLIENTES ACTIVOS DEL ASESOR
-let clientesAgosto = clientes[asesor]
-    ? clientes[asesor].size
-    : 0;
+   let meta = metas.find(m =>
+    normalizar(m["Asesor (A)"]) === normalizar(asesor)
+);
 
-// CLIENTES HISTÓRICOS (CIERRE DEL MES ANTERIOR)
-let clientesJulio = meta
-    ? Number(meta["CLIENTES JULIO"] || 0)
-    : 0;
+console.log("META:", meta);
+if(meta){
+    console.log("META:", meta);
+    console.log("COLUMNAS:", Object.keys(meta));
+}else{
+    console.log("No se encontró meta para:", asesor);
+}
+    console.log(
+    "ASESOR PRODUCCION:",
+    asesor,
+    "META ENCONTRADA:",
+    meta
+);     
+        // CLIENTES ACTIVOS DEL ASESOR
+let clientesAgosto =
+clientesHistorico[asesor]
+?
+clientesHistorico[asesor].size
+:
+0;
+
+// Buscar automáticamente la columna de clientes del mes anterior
+let columnaClientesAnterior =
+buscarColumna("CLIENTES", mesAnterior);
+
+let clientesMesAnterior =
+columnaClientesAnterior
+?
+Number(meta[columnaClientesAnterior] || 0)
+:
+0;
 
 // VARIACIÓN
-let variacionClientes = clientesAgosto - clientesJulio;
-
+let variacionClientes =
+clientesAgosto - clientesMesAnterior;
 let colorVariacion = "#64748B";
 
 if (variacionClientes > 0) {
@@ -561,23 +620,21 @@ String(texto || "")
 .trim()
 .toUpperCase();
 
-let meta = metas.find(m =>
-    normalizar(m["Asesor (A)"]) === normalizar(asesor)
-);
+    function buscarColumna(prefijo, mes){
 
-console.log("META:", meta);
-if(meta){
-    console.log("META:", meta);
-    console.log("COLUMNAS:", Object.keys(meta));
-}else{
-    console.log("No se encontró meta para:", asesor);
+    if(!meta) return null;
+
+    const buscado =
+    `${prefijo} ${mes}`
+    .toUpperCase();
+
+    return Object.keys(meta).find(col =>
+        col.toUpperCase().trim() === buscado
+    );
+
 }
-    console.log(
-    "ASESOR PRODUCCION:",
-    asesor,
-    "META ENCONTRADA:",
-    meta
-);
+
+
 //==================================
 // HISTÓRICO AUTOMÁTICO
 //==================================
@@ -785,7 +842,7 @@ ${porcentajeOperaciones}%
 font-weight:bold;
 text-align:center;
 ">
-${clientesJulio}
+${clientesMesAnterior}
 </td>
 
 <td style="

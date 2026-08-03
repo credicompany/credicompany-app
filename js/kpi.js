@@ -655,7 +655,7 @@ moraActualAsesor[asesor] || 0;
         :
         0;
 
-    let metaClientes =
+   let metaClientes =
 meta
 ?
 parseFloat(
@@ -665,6 +665,13 @@ parseFloat(
         0
     ).replace(/,/g,"")
 )
+:
+0;
+
+let porcentajeClientes =
+metaClientes > 0
+?
+((cli / metaClientes) * 100).toFixed(1)
 :
 0;
 
@@ -679,12 +686,6 @@ if(Number(porcentajeClientes) >= 100){
     colorClientes = "#facc15";
 
 }
-let porcentajeClientes =
-metaClientes > 0
-?
-((cli / metaClientes) * 100).toFixed(1)
-:
-0;
         let porcentajeOperaciones =
 metaOperaciones > 0
 ?
@@ -790,6 +791,8 @@ color:#c62828;
 ">
 S/${Math.round(moraActual).toLocaleString()}
 </td>
+
+<td>
 ${colorEstado}
 </td>
 

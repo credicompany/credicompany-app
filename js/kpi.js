@@ -336,8 +336,10 @@ parseFloat(
     .replace(",",".")
 ) || 0;
 
-        let dni =
-        (c["DNI"] || "").toString();
+        let codigoCliente =
+String(c["Cod Cliente"] || "")
+.trim()
+.toUpperCase();
 let saldoCapitalVencido =
 parseFloat(
     c["Saldo capital vencido"] ??
@@ -363,9 +365,11 @@ parseFloat(
         
 moraAsesor[asesor] += saldoCapitalVencido;
        
-        if(dni){
-            clientes[asesor].add(dni);
-        }
+      if(codigoCliente){
+
+    clientes[asesor].add(codigoCliente);
+
+}
 
     });
 let top =
@@ -464,9 +468,9 @@ color:white;
 <th>META OPERACIONES</th>
 <th>AVANCE</th>
 <th>% AVANCE OPER</th>
-<th>META CLIENTES</th>
-<th>DESEMBOLSADOS</th>
-<th>% CUMPLIMIENTO</th>
+<th>CLIENTES ${mesAnterior.toUpperCase()}</th>
+<th>CLIENTES ${mesActual.toUpperCase()}</th>
+<th>VARIACIÓN</th>
 <th>TEM ${mesAnterior.toUpperCase()}</th>
 <th>TEM ${mesActual.toUpperCase()}</th>
 <th>MORA ${mesAnterior.toUpperCase()}</th>
@@ -524,8 +528,30 @@ temPromedio[asesor].length
 :
 0;
         
-        let cli =
-        clientes[asesor].size;
+        // CLIENTES ACTIVOS DEL ASESOR
+let clientesAgosto = clientes[asesor]
+    ? clientes[asesor].size
+    : 0;
+
+// CLIENTES HISTÓRICOS (CIERRE DEL MES ANTERIOR)
+let clientesJulio = meta
+    ? Number(meta["CLIENTES JULIO"] || 0)
+    : 0;
+
+// VARIACIÓN
+let variacionClientes = clientesAgosto - clientesJulio;
+
+let colorVariacion = "#64748B";
+
+if (variacionClientes > 0) {
+
+    colorVariacion = "#16A34A";
+
+} else if (variacionClientes < 0) {
+
+    colorVariacion = "#DC2626";
+
+}
 
        const normalizar = texto =>
 String(texto || "")
@@ -755,22 +781,27 @@ font-weight:bold;
 ">
 ${porcentajeOperaciones}%
 </td>
-
-<td>
-${metaClientes}
-</td>
-
-<td>
-${cli}
+<td style="
+font-weight:bold;
+text-align:center;
+">
+${clientesJulio}
 </td>
 
 <td style="
-background:${colorClientes};
-color:white;
 font-weight:bold;
-border-radius:4px;
+text-align:center;
+color:#123B63;
 ">
-${porcentajeClientes}%
+${clientesAgosto}
+</td>
+
+<td style="
+font-weight:bold;
+text-align:center;
+color:${colorVariacion};
+">
+${variacionClientes > 0 ? "+" : ""}${variacionClientes}
 </td>
 
 <td>

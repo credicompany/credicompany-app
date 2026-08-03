@@ -659,12 +659,6 @@ parseFloat(
 )
 :
 0;
-let porcentajeClientes =
-metaClientes > 0
-?
-((cli / metaClientes) * 100).toFixed(1)
-:
-0;
 
 let colorClientes = "#ef4444";
 

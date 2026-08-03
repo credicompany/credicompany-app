@@ -750,7 +750,8 @@ parseFloat(
 )
 :
 0;
-
+console.log("META COMPLETA:",meta);
+console.log("CLIENTES JULIO:",meta["CLIENTES JULIO"]);
 let porcentajeClientes =
 metaClientes > 0
 ?

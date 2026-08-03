@@ -536,10 +536,16 @@ String(texto || "")
 .toUpperCase();
 
 let meta = metas.find(m =>
-    console.log("META:", meta);
-console.log("COLUMNAS:", Object.keys(meta));
     normalizar(m["Asesor (A)"]) === normalizar(asesor)
 );
+
+console.log("META:", meta);
+if(meta){
+    console.log("META:", meta);
+    console.log("COLUMNAS:", Object.keys(meta));
+}else{
+    console.log("No se encontró meta para:", asesor);
+}
     console.log(
     "ASESOR PRODUCCION:",
     asesor,

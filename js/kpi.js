@@ -1307,12 +1307,6 @@ function cargarExcelFinanciero(){
             guardarDatosFinancieros(json);
 
             // =====================================
-            // GUARDAR PRODUCTOS EN FIREBASE
-            // =====================================
-
-            guardarProductosFirebase(json);
-
-            // =====================================
             // GUARDAR RESUMEN EN FIREBASE
             // =====================================
 

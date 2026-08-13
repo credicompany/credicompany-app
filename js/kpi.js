@@ -1201,122 +1201,149 @@ cargarFinancieroFirebase();
 // KPI FINANCIERO
 // ======================================================
 function cargarExcelFinanciero(){
-let archivo =
-document.getElementById(
-"excelFinanciero"
-).files[0];
 
-if(!archivo){
+    let archivo =
+    document.getElementById(
+        "excelFinanciero"
+    ).files[0];
 
-return;
+    if(!archivo){
 
-}
+        alert("Seleccione el archivo financiero.");
 
-let lector =
-new FileReader();
+        return;
 
-lector.onload = function(e){
+    }
 
-let data =
-new Uint8Array(
-e.target.result
-);
+    let lector =
+    new FileReader();
 
-let wb =
-XLSX.read(
-data,
-{type:"array"}
-);
+    lector.onload = function(e){
 
-let hoja =
-wb.Sheets[
-wb.SheetNames[0]
-];
+        try{
 
-let json =
-XLSX.utils
-.sheet_to_json(hoja);
-console.log(json[0]);
-localStorage.setItem(
-"financiero",
-JSON.stringify(json)
-);
+            const data =
+            new Uint8Array(
+                e.target.result
+            );
 
-guardarDatosFinancieros(json);
-guardarProductosFirebase(json); 
+            const wb =
+            XLSX.read(
+                data,
+                {type:"array"}
+            );
 
-localStorage.setItem(
-"nombreFinanciero",
-archivo.name
-);
-    localStorage.setItem(
-"fechaFinanciero",
-new Date().toLocaleString()
-);
-alert(
-"✅ Excel financiero cargado"
-);
+            const hoja =
+            wb.Sheets[
+                wb.SheetNames[0]
+            ];
 
-mostrarResumenFinanciero();
+            const json =
+            XLSX.utils.sheet_to_json(
+                hoja
+            );
 
-setTimeout(()=>{
-    guardarFinancieroFirebase();
-},500);
-};
-lector.readAsArrayBuffer(
-archivo
-);
+            console.log(
+                "📊 REGISTROS FINANCIEROS:",
+                json.length
+            );
 
-}
+            if(!json.length){
 
-function guardarProductosFirebase(data){
+                alert(
+                    "❌ El Excel no contiene datos."
+                );
 
-    const productos = {};
+                return;
 
-    data.forEach(cliente=>{
+            }
 
-        // Limpiar nombres de columnas
-        const limpio = {};
+            // =====================================
+            // GUARDAR DATOS LOCALMENTE
+            // =====================================
 
-        Object.keys(cliente).forEach(key=>{
+            localStorage.setItem(
+                "financiero",
+                JSON.stringify(json)
+            );
 
-            const nuevaClave = key
-                .replace(/\./g,"")
-                .replace(/\#/g,"")
-                .replace(/\$/g,"")
-                .replace(/\//g,"")
-                .replace(/\[/g,"")
-                .replace(/\]/g,"");
+            localStorage.setItem(
+                "nombreFinanciero",
+                archivo.name
+            );
 
-            limpio[nuevaClave] = cliente[key];
+            localStorage.setItem(
+                "fechaFinanciero",
+                new Date().toLocaleString()
+            );
 
-        });
+            // =====================================
+            // ACTUALIZAR NOMBRE DEL ARCHIVO
+            // =====================================
 
-        const producto =
-        String(limpio["Producto"] || "SIN PRODUCTO")
-        .trim()
-        .toUpperCase();
+            const archivoActivo =
+            document.getElementById(
+                "archivoFinancieroActivo"
+            );
 
-        if(!productos[producto]){
-            productos[producto] = [];
+            if(archivoActivo){
+
+                archivoActivo.innerHTML =
+                    "📂 Archivo vigente: " +
+                    archivo.name;
+
+            }
+
+            // =====================================
+            // MOSTRAR KPI NUEVO
+            // =====================================
+
+            mostrarResumenFinanciero();
+
+            // =====================================
+            // GUARDAR DATOS COMPLETOS EN FIREBASE
+            // =====================================
+
+            guardarDatosFinancieros(json);
+
+            // =====================================
+            // GUARDAR PRODUCTOS EN FIREBASE
+            // =====================================
+
+            guardarProductosFirebase(json);
+
+            // =====================================
+            // GUARDAR RESUMEN EN FIREBASE
+            // =====================================
+
+            setTimeout(() => {
+
+                guardarFinancieroFirebase();
+
+            },1000);
+
+            alert(
+                "✅ Excel financiero cargado y actualizado correctamente."
+            );
+
+        }catch(error){
+
+            console.error(
+                "❌ ERROR CARGANDO EXCEL FINANCIERO:",
+                error
+            );
+
+            alert(
+                "❌ Error al cargar el Excel financiero. Revise la consola."
+            );
+
         }
 
-        productos[producto].push(limpio);
+    };
 
-    });
-
-    db.ref("kpiFinanciero/productos")
-    .set(productos)
-    .then(()=>{
-
-        console.log("✅ Productos guardados");
-
-    })
-    .catch(error=>{
-
-        console.error(error);
-
-    });
+    lector.readAsArrayBuffer(
+        archivo
+    );
 
 }
 function guardarFinancieroFirebase(){
@@ -1356,31 +1383,58 @@ error
 
 }
 
-// ======================================
-// GUARDA DATOS DEL EXCEL EN FIREBASE
-// ======================================
 function guardarDatosFinancieros(datos){
 
-db.ref("kpiFinanciero/datos")
-.set(datos)
+    // ==========================================
+    // LIMPIAR COLUMNAS PARA FIREBASE
+    // ==========================================
 
-.then(()=>{
+    const datosLimpios = datos.map(fila => {
 
-console.log("✅ Datos financieros guardados");
+        const nuevaFila = {};
 
-})
+        Object.keys(fila).forEach(clave => {
 
-.catch(error=>{
+            const claveLimpia =
+                String(clave)
+                .replace(/\./g, "")
+                .replace(/#/g, "")
+                .replace(/\$/g, "")
+                .replace(/\//g, "")
+                .replace(/\[/g, "")
+                .replace(/\]/g, "")
+                .trim();
 
-console.error(
-"Error guardando datos financieros",
-error
-);
+            nuevaFila[claveLimpia] = fila[clave];
 
-});
+        });
+
+        return nuevaFila;
+
+    });
+
+    db.ref("kpiFinanciero/datos")
+    .set(datosLimpios)
+
+    .then(() => {
+
+        console.log(
+            "✅ Datos financieros guardados:",
+            datosLimpios.length
+        );
+
+    })
+
+    .catch(error => {
+
+        console.error(
+            "❌ Error guardando datos financieros:",
+            error
+        );
+
+    });
 
 }
-
 function mostrarResumenFinanciero(){
 let data =
 JSON.parse(

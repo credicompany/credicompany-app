@@ -419,6 +419,13 @@ if (usuarios.some(u =>
     }
 }
 
+// ==========================================
+// RANKING COLOCACIÓN
+// ==========================================
+
+// SLOPEZ debe aparecer aunque tenga S/0
+ranking["SLOPEZ"] = Number(ranking["SLOPEZ"] || 0);
+
 let top =
 Object.entries(ranking)
 
@@ -426,7 +433,7 @@ Object.entries(ranking)
     asesor.toUpperCase() !== "ADMIN"
 )
 
-.sort((a,b)=>b[1]-a[1]);
+.sort((a,b) => b[1] - a[1]);
 let mejorAsesor =
 top.length > 0
 ?

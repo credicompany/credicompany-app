@@ -406,12 +406,24 @@ jsonGeneral.forEach(c=>{
     }
 
 });
+// ==========================================
+// RANKING COLOCACIÓN
+// ==========================================
+
+// Asegurar asesores activos aunque tengan S/0
+if (usuarios.some(u =>
+    String(u.user || "").trim().toUpperCase() === "SLOPEZ"
+)) {
+    if (!ranking["SLOPEZ"]) {
+        ranking["SLOPEZ"] = 0;
+    }
+}
+
 let top =
 Object.entries(ranking)
 
 .filter(([asesor]) =>
     asesor.toUpperCase() !== "ADMIN"
-)
 )
 
 .sort((a,b)=>b[1]-a[1]);

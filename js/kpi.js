@@ -847,9 +847,7 @@ let rankingKPIHTML = "";
 top
 
 .filter(([asesor]) =>
-!["SLOPEZ","ADMIN"].includes(
-asesor.toUpperCase()
-)
+    asesor.toUpperCase() !== "ADMIN"
 )
 
 .slice(0,10)

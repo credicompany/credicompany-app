@@ -410,8 +410,7 @@ let top =
 Object.entries(ranking)
 
 .filter(([asesor]) =>
-!["SLOPEZ","ADMIN"].includes(
-asesor.toUpperCase()
+    asesor.toUpperCase() !== "ADMIN"
 )
 )
 
@@ -1671,15 +1670,8 @@ Object.keys(rankingAsesores)
 let rankingHTML = "";
 
 Object.entries(rankingAsesores)
-
 .filter(([asesor]) =>
-!asesor.toLowerCase().includes("slopez")
-)
-
-.filter(([asesor]) =>
-!["slopez","admin"].includes(
-asesor.toLowerCase()
-)
+    asesor.toLowerCase() !== "admin"
 )
 
 .sort((a,b)=>b[1]-a[1])

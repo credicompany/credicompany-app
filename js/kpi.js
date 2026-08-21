@@ -18,6 +18,10 @@
 // KPI GERENCIAL
 // ======================================================
 function generarKPI(json){
+    const usuarios =
+JSON.parse(
+    localStorage.getItem("usuarios")
+) || [];
 
 // ======================================
 // KPI GERENCIAL

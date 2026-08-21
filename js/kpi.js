@@ -869,7 +869,6 @@ top
     asesor.toUpperCase() !== "ADMIN"
 )
 .slice(0,10)
-
 .forEach((r,index)=>{
 
 let medalla="🥉";

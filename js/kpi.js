@@ -864,7 +864,6 @@ S/${Math.round(moraActual).toLocaleString()}
 let rankingKPIHTML = "";
 
 top
-
 .filter(([asesor]) =>
     asesor.toUpperCase() !== "ADMIN"
 )

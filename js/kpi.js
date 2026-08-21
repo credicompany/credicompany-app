@@ -864,18 +864,15 @@ S/${Math.round(moraActual).toLocaleString()}
 `;
     
 let rankingKPIHTML = "";
-
 top
 .filter(([asesor]) =>
     asesor.toUpperCase() !== "ADMIN"
 )
-
 .slice(0,10)
 
 .forEach((r,index)=>{
 
 let medalla="🥉";
-
 if(index===0) medalla="🥇";
 if(index===1) medalla="🥈";
 
@@ -891,7 +888,7 @@ text-overflow:ellipsis;
 
 ${medalla}
 ${r[0].substring(0,8)}
-→ S/${Math.round(r[1]/1000)}K
+→ S/${Number(r[1]).toLocaleString("es-PE")}
 
 </div>
 `;

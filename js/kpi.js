@@ -434,6 +434,8 @@ Object.entries(ranking)
 )
 
 .sort((a,b) => b[1] - a[1]);
+console.log("RANKING COLOCACION REAL:", ranking);
+console.log("TOP COLOCACION REAL:", top);
 let mejorAsesor =
 top.length > 0
 ?

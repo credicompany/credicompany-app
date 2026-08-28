@@ -562,11 +562,30 @@ jsonGeneral.forEach(c=>{
     }
 
     if(atraso >= 9){
-        moraActualAsesor[asesor] += saldo;
-    }
+    moraActualAsesor[asesor] += saldo;
+}
 
 });   
-    
+ // =========================================
+// TOTALES EMPRESA
+// =========================================
+
+let totalMetaColocacion = 0;
+let totalAvanceColocacion = 0;
+
+let totalMetaOperaciones = 0;
+let totalAvanceOperaciones = 0;
+
+let totalClientesJulio = 0;
+let totalClientesAgosto = 0;
+
+let totalMoraJulio = 0;
+let totalMoraAgosto = 0;
+
+let sumaTemJulio = 0;
+let sumaTemAgosto = 0;
+let cantidadTemJulio = 0;
+let cantidadTemAgosto = 0;   
  metas.forEach(meta=>{
 
     let asesor =
@@ -860,8 +879,171 @@ S/${Math.round(moraActual).toLocaleString()}
 
 `;
 
-}); 
+// =========================================
+// ACUMULAR TOTALES EMPRESA
+// =========================================
 
+totalMetaColocacion += Number(metaDesembolso) || 0;
+totalAvanceColocacion += Number(colocacion) || 0;
+
+totalMetaOperaciones += Number(metaOperaciones) || 0;
+totalAvanceOperaciones += Number(oper) || 0;
+
+totalClientesJulio += Number(clientesAnterior) || 0;
+totalClientesAgosto += Number(clientesActual) || 0;
+
+totalMoraJulio += Number(moraAnterior) || 0;
+totalMoraAgosto += Number(moraActual) || 0;
+
+if(Number(temAnterior) > 0){
+
+    sumaTemJulio += Number(temAnterior);
+    cantidadTemJulio++;
+
+}
+
+if(Number(tem) > 0){
+
+    sumaTemAgosto += Number(tem);
+    cantidadTemAgosto++;
+
+}
+     }); 
+
+    // =========================================
+// TOTAL EMPRESA
+// =========================================
+
+let totalVariacionClientes =
+totalClientesAgosto - totalClientesJulio;
+
+let porcentajeTotalColocacion =
+totalMetaColocacion > 0
+?
+(
+    totalAvanceColocacion /
+    totalMetaColocacion *
+    100
+).toFixed(1)
+:
+0;
+
+let porcentajeTotalOperaciones =
+totalMetaOperaciones > 0
+?
+(
+    totalAvanceOperaciones /
+    totalMetaOperaciones *
+    100
+).toFixed(1)
+:
+0;
+
+let temTotalJulio =
+cantidadTemJulio > 0
+?
+(
+    sumaTemJulio /
+    cantidadTemJulio
+).toFixed(1)
+:
+0;
+
+let temTotalAgosto =
+cantidadTemAgosto > 0
+?
+(
+    sumaTemAgosto /
+    cantidadTemAgosto
+).toFixed(1)
+:
+0;
+
+let colorTotalVariacion =
+totalVariacionClientes > 0
+?
+"#16A34A"
+:
+totalVariacionClientes < 0
+?
+"#DC2626"
+:
+"#64748B";
+
+resumen += `
+
+<tr style="
+background:#EAF2F8;
+font-weight:bold;
+border-top:3px solid #0A3A63;
+">
+
+<td>
+TOTAL EMPRESA
+</td>
+
+<td>
+S/${totalMetaColocacion.toLocaleString("es-PE")}
+</td>
+
+<td>
+S/${Math.round(totalAvanceColocacion).toLocaleString("es-PE")}
+</td>
+
+<td>
+${porcentajeTotalColocacion}%
+</td>
+
+<td>
+${totalMetaOperaciones}
+</td>
+
+<td>
+${totalAvanceOperaciones}
+</td>
+
+<td>
+${porcentajeTotalOperaciones}%
+</td>
+
+<td>
+${totalClientesJulio}
+</td>
+
+<td>
+${totalClientesAgosto}
+</td>
+
+<td style="
+color:${colorTotalVariacion};
+">
+${totalVariacionClientes > 0 ? "+" : ""}
+${totalVariacionClientes}
+</td>
+
+<td>
+${temTotalJulio}%
+</td>
+
+<td>
+${temTotalAgosto}%
+</td>
+
+<td>
+S/${Math.round(totalMoraJulio).toLocaleString("es-PE")}
+</td>
+
+<td>
+S/${Math.round(totalMoraAgosto).toLocaleString("es-PE")}
+</td>
+
+<td>
+🏢
+</td>
+
+</tr>
+
+`;
     resumen += `
 </table>
 </div>

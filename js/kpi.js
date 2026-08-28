@@ -561,7 +561,7 @@ jsonGeneral.forEach(c=>{
         moraActualAsesor[asesor] = 0;
     }
 
-    if(atraso >= 1){
+    if(atraso >= 9){
         moraActualAsesor[asesor] += saldo;
     }
 

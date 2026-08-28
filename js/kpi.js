@@ -532,7 +532,8 @@ color:white;
 <th>TEM ${mesAnterior.toUpperCase()}</th>
 <th>TEM ${mesActual.toUpperCase()}</th>
 <th>MORA ${mesAnterior.toUpperCase()}</th>
-<th>MORA ${mesActual.toUpperCase()}</th>
+<th>MORA ${mesActual.toUpperCase()} 9+</th>
+<th>MORA ${mesActual.toUpperCase()} 1+</th>
 <th>🚦</th>
 
 </tr>
@@ -542,6 +543,7 @@ color:white;
 // ==========================
 
 let moraActualAsesor = {};
+let mora1MasAsesor = {};
 
 jsonGeneral.forEach(c=>{
 
@@ -564,7 +566,11 @@ jsonGeneral.forEach(c=>{
     if(atraso >= 9){
     moraActualAsesor[asesor] += saldo;
 }
-
+    
+if(atraso >= 1){
+    mora1MasAsesor[asesor] =
+        (mora1MasAsesor[asesor] || 0) + saldo;
+}
 });   
  // =========================================
 // TOTALES EMPRESA
@@ -581,6 +587,7 @@ let totalClientesAgosto = 0;
 
 let totalMoraJulio = 0;
 let totalMoraAgosto = 0;
+let totalMoraAgosto1Mas = 0;
 
 let sumaTemJulio = 0;
 let sumaTemAgosto = 0;
@@ -735,6 +742,9 @@ temPromedio[asesor].length
     let moraActual =
     moraActualAsesor[asesor] || 0;
 
+     let mora1Mas =
+mora1MasAsesor[asesor] || 0;
+
     //=========================================
     // METAS
     //=========================================
@@ -873,6 +883,12 @@ color:#c62828;
 S/${Math.round(moraActual).toLocaleString()}
 </td>
 
+<td style="
+font-weight:bold;
+color:#c62828;
+">
+S/${Math.round(mora1Mas).toLocaleString()}
+</td>
 <td>${colorEstado}</td>
 
 </tr>
@@ -894,6 +910,7 @@ totalClientesAgosto += Number(clientesActual) || 0;
 
 totalMoraJulio += Number(moraAnterior) || 0;
 totalMoraAgosto += Number(moraActual) || 0;
+totalMoraAgosto1Mas += Number(mora1Mas) || 0;
 
 if(Number(temAnterior) > 0){
 
@@ -1035,6 +1052,10 @@ S/${Math.round(totalMoraJulio).toLocaleString("es-PE")}
 
 <td>
 S/${Math.round(totalMoraAgosto).toLocaleString("es-PE")}
+</td>
+
+<td>
+S/${Math.round(totalMoraAgosto1Mas).toLocaleString("es-PE")}
 </td>
 
 <td>

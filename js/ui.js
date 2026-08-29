@@ -80,45 +80,68 @@ function configurarPanelKPI(){
     }
 
 }
-// =====================================
-// UI
-// =====================================
 function mostrar(p){
 
-if(
-p === "admin" &&
-asesor !== "admin" &&
-asesor !== "operaciones"
-){
-alert("Acceso restringido");
-return;
-}
+    // =====================================
+    // RESTRICCIONES POR PERFIL
+    // =====================================
 
-prepararInterfaz();
-ocultarPantallas();
+    // USUARIOS → SOLO ADMIN
+    if(
+        p === "admin" &&
+        asesor !== "admin"
+    ){
+        alert("Acceso restringido");
+        return;
+    }
 
-document.getElementById(p).style.display="block";
-  
-  if(p==="kpi"){
-    configurarPanelKPI();
-}
-if(p==="clientes"){
+    // KPI FINANCIERO → SOLO ADMIN
+    if(
+        p === "kpiFinanciero" &&
+        asesor !== "admin"
+    ){
+        alert("Acceso restringido");
+        return;
+    }
 
-    document.getElementById("rankingContainer").style.display="none";
+    // RESULTADO MENSUAL → SOLO ADMIN
+    if(
+        p === "resultadoMensual" &&
+        asesor !== "admin"
+    ){
+        alert("Acceso restringido");
+        return;
+    }
 
-    setTimeout(function(){
+    prepararInterfaz();
+    ocultarPantallas();
 
-        actualizarResumen();
-        filtrarMora(0,1000);
+    document.getElementById(p).style.display="block";
 
-    },50);
+    if(p==="kpi"){
+        configurarPanelKPI();
+    }
 
-}
-  if(p==="kpiFinanciero"){
-    mostrarResumenFinanciero();
-}
+    if(p==="clientes"){
 
-if(p==="admin") renderUsuarios();
+        document.getElementById("rankingContainer").style.display="none";
+
+        setTimeout(function(){
+
+            actualizarResumen();
+            filtrarMora(0,1000);
+
+        },50);
+
+    }
+
+    if(p==="kpiFinanciero"){
+        mostrarResumenFinanciero();
+    }
+
+    if(p==="admin"){
+        renderUsuarios();
+    }
 
 }
 

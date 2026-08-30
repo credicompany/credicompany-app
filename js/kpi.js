@@ -275,14 +275,15 @@ let resumen = `
                 CLIENTES
             </div>
 
-            <div style="
-                font-size:25px;
-                font-weight:800;
-                color:#0F172A;
-                margin-top:3px;
-            ">
-              ${totalClientesActual}
-            </div>
+           <div style="
+    font-size:25px;
+    font-weight:800;
+    color:#0F172A;
+    margin-top:3px;
+">
+  ${Object.values(clientesHistorico)
+      .reduce((total, clientes) => total + clientes.size, 0)}
+</div>
 
         </div>
 
@@ -1120,13 +1121,8 @@ if(Number(tem) > 0){
 
 }
      }); 
+    
 // =========================================
-// CLIENTES ACTUALES DE LA EMPRESA
-// =========================================
-
-let totalClientesActual =
-    totalClientesAgosto;
-    // =========================================
 // TOTAL EMPRESA
 // =========================================
 

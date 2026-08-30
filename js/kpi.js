@@ -272,7 +272,7 @@ let resumen = `
                 color:#64748B;
                 margin-top:3px;
             ">
-                CLIENTES
+                CLIENTES EN CARTERA
             </div>
 
            <div style="

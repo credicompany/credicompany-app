@@ -19,7 +19,7 @@
 // ======================================================
 function generarKPI(json){
 
-    let totalClientesActual = 0;
+   let totalClientesAgosto = 0;
 
     const usuarios =
     JSON.parse(
@@ -799,7 +799,6 @@ let totalMetaOperaciones = 0;
 let totalAvanceOperaciones = 0;
 
 let totalClientesJulio = 0;
-let totalClientesAgosto = 0;
 
 let totalMoraJulio = 0;
 let totalMoraAgosto = 0;

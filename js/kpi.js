@@ -506,12 +506,13 @@ let resumen = `
 
 `;
 
-    let ranking = {};
+   let ranking = {};
 let operaciones = {};
 let temPromedio = {};
 let clientes = {};
 let clientesHistorico = {};
 let moraAsesor = {};
+let totalClientesActual = 0;
 
     json.forEach(c => {
 console.log(Object.keys(c));
@@ -605,6 +606,23 @@ jsonGeneral.forEach(c=>{
     }
 
 });
+
+// =========================================
+// CLIENTES EN CARTERA
+// =========================================
+
+totalClientesActual =
+Object.values(clientesHistorico)
+.reduce(
+    (total, clientes) => total + clientes.size,
+    0
+);
+
+console.log(
+    "CLIENTES EN CARTERA:",
+    totalClientesActual
+);
+    
 // ==========================================
 // RANKING COLOCACIÓN
 // ==========================================

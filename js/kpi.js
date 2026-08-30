@@ -1452,10 +1452,13 @@ console.log("================================");
 
       if(datos.fechaProduccion){
 
-    localStorage.setItem(
-        "fechaProduccionKPI",
-        datos.fechaProduccion
-    );
+    const fechaCargaProduccion =
+    new Date().toLocaleString("es-PE");
+
+localStorage.setItem(
+    "fechaProduccionKPI",
+    fechaCargaProduccion
+);
 
 }
 

@@ -191,124 +191,318 @@ totalClientes > 0
 :
 0;
 
+// ==========================================
+// TABLERO GERENCIAL - RESUMEN EJECUTIVO
+// ==========================================
+
+let estadoMeta =
+    Number(avanceEmpresa) >= 100
+    ? "CUMPLIDO"
+    : Number(avanceEmpresa) >= 80
+    ? "EN RIESGO"
+    : "CRÍTICO";
+
+let colorMeta =
+    Number(avanceEmpresa) >= 100
+    ? "#16A34A"
+    : Number(avanceEmpresa) >= 80
+    ? "#F59E0B"
+    : "#DC2626";
+
 let resumen = `
 
-<h3 style="
-text-align:center;
-margin-bottom:20px;
-color:#0A3A63;
-font-size:24px;
-font-weight:700;
-">
-KPI GERENCIAL
-</h3>
 <div style="
-background:#f8f9fa;
-padding:10px;
-border-radius:10px;
-margin-bottom:10px;
-text-align:center;
-font-size:14px;
-font-weight:bold;
+    margin-bottom:18px;
 ">
 
-📊 KPI FINANCIERO
+    <div style="
+        text-align:center;
+        margin-bottom:18px;
+    ">
 
-<br>
+        <div style="
+            font-size:26px;
+            font-weight:800;
+            color:#0A3A63;
+            letter-spacing:.3px;
+        ">
+            📊 TABLERO GERENCIAL
+        </div>
 
-🕒 Actualizado:
-${new Date().toLocaleString()}
+        <div style="
+            font-size:13px;
+            color:#64748B;
+            margin-top:4px;
+        ">
+            ${mesActual.toUpperCase()} ${anioActual}
+            &nbsp;•&nbsp;
+            Actualizado: ${new Date().toLocaleString()}
+        </div>
 
-</div><div style="
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:5px;
-margin-bottom:10px;
-">
-<div style="
-background:#FFFFFF;
-color:#1F2937;
-border:1px solid #E5E7EB;
-padding:6px;
-border-radius:8px;
-text-align:center;
-min-height:55px;
-">
-<div style="font-size:16px;">👥</div>
-<div style="font-size:11px;">Clientes</div>
-<div style="font-size:15px;font-weight:bold;">
-${totalClientes}
-</div>
+    </div>
+
+
+    <!-- ================================= -->
+    <!-- INDICADORES PRINCIPALES -->
+    <!-- ================================= -->
+
+    <div style="
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+        gap:10px;
+    ">
+
+
+        <!-- CLIENTES -->
+
+        <div style="
+            background:#FFFFFF;
+            border:1px solid #E2E8F0;
+            border-top:4px solid #0A3A63;
+            border-radius:12px;
+            padding:14px;
+            text-align:center;
+            box-shadow:0 2px 8px rgba(0,0,0,.05);
+        ">
+
+            <div style="font-size:23px;">👥</div>
+
+            <div style="
+                font-size:12px;
+                color:#64748B;
+                margin-top:3px;
+            ">
+                CLIENTES
+            </div>
+
+            <div style="
+                font-size:25px;
+                font-weight:800;
+                color:#0F172A;
+                margin-top:3px;
+            ">
+                ${totalClientes}
+            </div>
+
+        </div>
+
+
+        <!-- COLOCACIÓN -->
+
+        <div style="
+            background:#FFFFFF;
+            border:1px solid #E2E8F0;
+            border-top:4px solid #16A34A;
+            border-radius:12px;
+            padding:14px;
+            text-align:center;
+            box-shadow:0 2px 8px rgba(0,0,0,.05);
+        ">
+
+            <div style="font-size:23px;">💰</div>
+
+            <div style="
+                font-size:12px;
+                color:#64748B;
+            ">
+                COLOCACIÓN
+            </div>
+
+            <div style="
+                font-size:24px;
+                font-weight:800;
+                color:#0F172A;
+            ">
+                S/${Math.round(montoOtorgadoTotal).toLocaleString("es-PE")}
+            </div>
+
+            <div style="
+                font-size:11px;
+                color:#64748B;
+                margin-top:3px;
+            ">
+                Meta: S/${Math.round(metaEmpresa).toLocaleString("es-PE")}
+            </div>
+
+        </div>
+
+
+        <!-- OPERACIONES -->
+
+        <div style="
+            background:#FFFFFF;
+            border:1px solid #E2E8F0;
+            border-top:4px solid #2563EB;
+            border-radius:12px;
+            padding:14px;
+            text-align:center;
+            box-shadow:0 2px 8px rgba(0,0,0,.05);
+        ">
+
+            <div style="font-size:23px;">📋</div>
+
+            <div style="
+                font-size:12px;
+                color:#64748B;
+            ">
+                OPERACIONES
+            </div>
+
+            <div style="
+                font-size:25px;
+                font-weight:800;
+                color:#0F172A;
+            ">
+                ${totalOperaciones}
+            </div>
+
+        </div>
+
+
+        <!-- TEM -->
+
+        <div style="
+            background:#FFFFFF;
+            border:1px solid #E2E8F0;
+            border-top:4px solid #7C3AED;
+            border-radius:12px;
+            padding:14px;
+            text-align:center;
+            box-shadow:0 2px 8px rgba(0,0,0,.05);
+        ">
+
+            <div style="font-size:23px;">📈</div>
+
+            <div style="
+                font-size:12px;
+                color:#64748B;
+            ">
+                TEM PROMEDIO
+            </div>
+
+            <div style="
+                font-size:25px;
+                font-weight:800;
+                color:#0F172A;
+            ">
+                ${temGeneral}%
+            </div>
+
+        </div>
+
+
+        <!-- CUMPLIMIENTO -->
+
+        <div style="
+            background:#FFFFFF;
+            border:1px solid #E2E8F0;
+            border-top:4px solid ${colorMeta};
+            border-radius:12px;
+            padding:14px;
+            text-align:center;
+            box-shadow:0 2px 8px rgba(0,0,0,.05);
+        ">
+
+            <div style="font-size:23px;">🎯</div>
+
+            <div style="
+                font-size:12px;
+                color:#64748B;
+            ">
+                CUMPLIMIENTO
+            </div>
+
+            <div style="
+                font-size:25px;
+                font-weight:800;
+                color:${colorMeta};
+            ">
+                ${avanceEmpresa}%
+            </div>
+
+            <div style="
+                font-size:11px;
+                font-weight:700;
+                color:${colorMeta};
+                margin-top:3px;
+            ">
+                ${estadoMeta}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================= -->
+    <!-- BARRA DE CUMPLIMIENTO -->
+    <!-- ================================= -->
+
+    <div style="
+        background:#F8FAFC;
+        border:1px solid #E2E8F0;
+        border-radius:12px;
+        padding:13px;
+        margin-top:12px;
+    ">
+
+        <div style="
+            display:flex;
+            justify-content:space-between;
+            font-size:12px;
+            font-weight:700;
+            margin-bottom:7px;
+        ">
+
+            <span>
+                🎯 Avance de colocación
+            </span>
+
+            <span style="color:${colorMeta};">
+                ${avanceEmpresa}%
+            </span>
+
+        </div>
+
+        <div style="
+            width:100%;
+            height:10px;
+            background:#E2E8F0;
+            border-radius:20px;
+            overflow:hidden;
+        ">
+
+            <div style="
+                width:${Math.min(Number(avanceEmpresa),100)}%;
+                height:100%;
+                background:${colorMeta};
+                border-radius:20px;
+            "></div>
+
+        </div>
+
+        <div style="
+            display:flex;
+            justify-content:space-between;
+            margin-top:6px;
+            font-size:11px;
+            color:#64748B;
+        ">
+
+            <span>
+                Real: S/${Math.round(montoOtorgadoTotal).toLocaleString("es-PE")}
+            </span>
+
+            <span>
+                Meta: S/${Math.round(metaEmpresa).toLocaleString("es-PE")}
+            </span>
+
+        </div>
+
+    </div>
+
 </div>
 
-<div style="
-background:#FFFFFF;
-color:#1F2937;
-border:1px solid #E5E7EB;
-padding:6px;
-border-radius:8px;
-text-align:center;
-min-height:55px;
-">
-<div style="font-size:16px;">💰</div>
-<div style="font-size:11px;">Colocación</div>
-<div style="font-size:15px;font-weight:bold;">
-S/ ${(montoOtorgadoTotal/1000).toFixed(0)}K
-</div>
-</div>
-
-<div style="
-background:#FFFFFF;
-color:#1F2937;
-border:1px solid #E5E7EB;
-padding:6px;
-border-radius:8px;
-text-align:center;
-min-height:55px;
-">
-<div style="font-size:16px;">📋</div>
-<div style="font-size:11px;">Operaciones</div>
-<div style="font-size:15px;font-weight:bold;">
-${totalOperaciones}
-</div>
-</div>
-
-<div style="
-background:#FFFFFF;
-color:#1F2937;
-border:1px solid #E5E7EB;
-padding:6px;
-border-radius:8px;
-text-align:center;
-min-height:55px;
-">
-<div style="font-size:16px;">📈</div>
-<div style="font-size:11px;">TEM</div>
-<div style="font-size:15px;font-weight:bold;">
-${temGeneral}%
-</div>
-</div>
-<div style="
-background:#FFFFFF;
-color:#1F2937;
-border:1px solid #E5E7EB;
-padding:6px;
-border-radius:8px;
-text-align:center;
-min-height:55px;
-">
-<div style="font-size:16px;">🎯</div>
-<div style="font-size:11px;">
-Meta Empresa
-</div>
-<div style="
-font-size:15px;
-font-weight:bold;
-">
-${avanceEmpresa}%
-</div>
-</div>
-</div>
 `;
 
     let ranking = {};

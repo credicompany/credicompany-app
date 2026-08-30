@@ -295,7 +295,7 @@ let resumen = `
         ">
             ${mesActual.toUpperCase()} ${anioActual}
             &nbsp;•&nbsp;
-            Actualizado: ${new Date().toLocaleString()}
+          Actualizado: ${localStorage.getItem("fechaProduccionKPI") || new Date().toLocaleString("es-PE")}
         </div>
 
     </div>
@@ -1444,6 +1444,15 @@ console.log("GERENCIAL FIREBASE");
 console.log(datos);
 console.log("================================");
         if(!datos) return;
+
+      if(datos.fechaProduccion){
+
+    localStorage.setItem(
+        "fechaProduccionKPI",
+        datos.fechaProduccion
+    );
+
+}
 
        console.log("RESUMEN GERENCIAL:", datos.resumen);
 

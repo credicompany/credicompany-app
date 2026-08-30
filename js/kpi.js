@@ -19,7 +19,8 @@
 // ======================================================
 function generarKPI(json){
 
-  let totalClientesActual = 0;
+    let totalClientesActual = 0;
+    let totalClientesAgosto = 0;
 
     const usuarios =
     JSON.parse(

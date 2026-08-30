@@ -2834,9 +2834,6 @@ ${topClientesHTML}
 `;
 
 }
-// ======================================================
-// CARGA DE ARCHIVOS KPI
-// ======================================================
 function cargarMetasKPI(){
 
     const archivo =
@@ -2851,34 +2848,102 @@ function cargarMetasKPI(){
 
     lector.onload = function(e){
 
-        const data =
-        new Uint8Array(e.target.result);
+        try{
 
-        const wb =
-        XLSX.read(data,{type:"array"});
+            const data =
+            new Uint8Array(e.target.result);
 
-        const hoja =
-        wb.Sheets[wb.SheetNames[0]];
+            const wb =
+            XLSX.read(data,{type:"array"});
 
-        const json =
-        XLSX.utils.sheet_to_json(hoja);
+            const hoja =
+            wb.Sheets[wb.SheetNames[0]];
 
-        localStorage.setItem(
-            "metasKPI",
-            JSON.stringify(json)
-        );
+            const json =
+            XLSX.utils.sheet_to_json(hoja);
 
-        localStorage.setItem(
-            "nombreMetaKPI",
-            archivo.name
-        );
+            if(!json.length){
+                alert("❌ El archivo de metas no contiene datos.");
+                return;
+            }
 
-        localStorage.setItem(
-            "fechaMetaKPI",
-            new Date().toLocaleString()
-        );
+            // =====================================
+            // GUARDAR METAS
+            // =====================================
 
-        alert("✅ Metas cargadas correctamente.");
+            localStorage.setItem(
+                "metasKPI",
+                JSON.stringify(json)
+            );
+
+            localStorage.setItem(
+                "nombreMetaKPI",
+                archivo.name
+            );
+
+            localStorage.setItem(
+                "fechaMetaKPI",
+                new Date().toLocaleString()
+            );
+
+            console.log(
+                "✅ METAS CARGADAS:",
+                json
+            );
+
+            // =====================================
+            // RECUPERAR PRODUCCIÓN ACTUAL
+            // =====================================
+
+            const produccionGuardada =
+            JSON.parse(
+                localStorage.getItem("produccionKPI")
+            ) || [];
+
+            // =====================================
+            // SI YA EXISTE PRODUCCIÓN,
+            // REGENERAR KPI AUTOMÁTICAMENTE
+            // =====================================
+
+            if(produccionGuardada.length){
+
+                console.log(
+                    "🔄 Regenerando KPI con nuevas metas..."
+                );
+
+                generarKPI(produccionGuardada);
+
+            }else{
+
+                console.log(
+                    "ℹ️ No existe producción guardada todavía."
+                );
+
+                alert(
+                    "✅ Metas cargadas correctamente.\n\n" +
+                    "Ahora cargue el archivo de Producción."
+                );
+
+                return;
+
+            }
+
+            alert(
+                "✅ Metas cargadas y KPI actualizado correctamente."
+            );
+
+        }catch(error){
+
+            console.error(
+                "❌ ERROR CARGANDO METAS:",
+                error
+            );
+
+            alert(
+                "❌ Error al cargar el archivo de metas."
+            );
+
+        }
 
     };
 

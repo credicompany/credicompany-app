@@ -26,10 +26,6 @@ function generarKPI(json){
         localStorage.getItem("usuarios")
     ) || [];
 
-    // ========================================
-    // CLIENTES HISTÓRICOS
-    // ========================================
-
     const clientesHistorico = {};
 
 // ======================================

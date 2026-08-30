@@ -62,39 +62,51 @@ jsonGeneral.forEach(c=>{
 });
 
 // ========================================
-// CLIENTES HISTÓRICOS - TODA LA CARTERA
-// ========================================
-// IMPORTANTE:
-// Se utiliza COD CLIENTE para evitar duplicar
-// clientes que tienen varios créditos.
+// CLIENTES ACTUALES - TODA LA CARTERA
 // ========================================
 
-jsonGeneral.forEach(c => {
+const carteraCompleta =
+    JSON.parse(
+        localStorage.getItem("cartera")
+    ) || [];
 
-    let asesor =
-        String(c["Asesor(a)"] || "")
+carteraCompleta.forEach(c => {
+
+    let asesorCartera =
+        String(c.asesor || "")
         .trim()
         .toUpperCase();
 
-    let codigoCliente =
-        String(c["Cod Cliente"] || "")
-        .trim()
-        .toUpperCase();
-
-    if(!asesor || !codigoCliente){
+    if(!asesorCartera){
         return;
     }
 
-    if(!clientesHistorico[asesor]){
-        clientesHistorico[asesor] = new Set();
+    if(!clientesHistorico[asesorCartera]){
+        clientesHistorico[asesorCartera] = new Set();
     }
 
-    clientesHistorico[asesor].add(codigoCliente);
+    let identificador =
+        String(
+            c.DNI ||
+            c.dni ||
+            c["Cod Cliente"] ||
+            c.codCliente ||
+            c.nombre ||
+            ""
+        )
+        .trim()
+        .toUpperCase();
+
+    if(identificador){
+        clientesHistorico[asesorCartera].add(
+            identificador
+        );
+    }
 
 });
 
 console.log(
-    "CLIENTES HISTÓRICOS POR ASESOR:",
+    "CLIENTES EN CARTERA POR ASESOR:",
     Object.fromEntries(
         Object.entries(clientesHistorico)
         .map(([asesor,set]) => [

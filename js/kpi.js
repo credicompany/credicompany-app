@@ -19,6 +19,9 @@
 // ======================================================
 function generarKPI(json){
 
+        const clientesHistorico =
+        JSON.parse(localStorage.getItem("clientesHistorico") || "{}");
+    
     let totalClientesActual = 0;
 
     const usuarios =
@@ -513,7 +516,6 @@ let resumen = `
 let operaciones = {};
 let temPromedio = {};
 let clientes = {};
-let clientesHistorico = {};
 let moraAsesor = {};
 
     json.forEach(c => {

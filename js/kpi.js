@@ -2862,8 +2862,11 @@ function cargarMetasKPI(){
     document.getElementById("excelMetas").files[0];
 
     if(!archivo){
+
         alert("Seleccione el archivo de metas.");
+
         return;
+
     }
 
     const lector = new FileReader();
@@ -2876,7 +2879,10 @@ function cargarMetasKPI(){
             new Uint8Array(e.target.result);
 
             const wb =
-            XLSX.read(data,{type:"array"});
+            XLSX.read(
+                data,
+                {type:"array"}
+            );
 
             const hoja =
             wb.Sheets[wb.SheetNames[0]];
@@ -2885,8 +2891,13 @@ function cargarMetasKPI(){
             XLSX.utils.sheet_to_json(hoja);
 
             if(!json.length){
-                alert("❌ El archivo de metas no contiene datos.");
+
+                alert(
+                    "❌ El archivo de metas no contiene datos."
+                );
+
                 return;
+
             }
 
             // =====================================
@@ -2908,50 +2919,29 @@ function cargarMetasKPI(){
                 new Date().toLocaleString()
             );
 
+            // =====================================
+            // MOSTRAR META ACTIVA
+            // =====================================
+
+            const metaActiva =
+            document.getElementById("metaActivaKPI");
+
+            if(metaActiva){
+
+                metaActiva.style.display = "block";
+
+                metaActiva.innerHTML =
+                "🎯 Metas activas: " + archivo.name;
+
+            }
+
             console.log(
                 "✅ METAS CARGADAS:",
                 json
             );
 
-            // =====================================
-            // RECUPERAR PRODUCCIÓN ACTUAL
-            // =====================================
-
-            const produccionGuardada =
-            JSON.parse(
-                localStorage.getItem("produccionKPI")
-            ) || [];
-
-            // =====================================
-            // SI YA EXISTE PRODUCCIÓN,
-            // REGENERAR KPI AUTOMÁTICAMENTE
-            // =====================================
-
-            if(produccionGuardada.length){
-
-                console.log(
-                    "🔄 Regenerando KPI con nuevas metas..."
-                );
-
-                generarKPI(produccionGuardada);
-
-            }else{
-
-                console.log(
-                    "ℹ️ No existe producción guardada todavía."
-                );
-
-                alert(
-                    "✅ Metas cargadas correctamente.\n\n" +
-                    "Ahora cargue el archivo de Producción."
-                );
-
-                return;
-
-            }
-
             alert(
-                "✅ Metas cargadas y KPI actualizado correctamente."
+                "✅ Metas cargadas correctamente."
             );
 
         }catch(error){
@@ -2962,7 +2952,7 @@ function cargarMetasKPI(){
             );
 
             alert(
-                "❌ Error al cargar el archivo de metas."
+                "❌ Error al leer el archivo de metas."
             );
 
         }

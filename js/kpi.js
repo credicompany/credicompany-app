@@ -105,13 +105,25 @@ carteraCompleta.forEach(c => {
 
 });
   
-let totalClientesAgosto =
-    Object.values(clientesHistorico)
-    .reduce(
-        (total, clientes) =>
-            total + clientes.size,
-        0
-    );
+// ================================================
+// CLIENTES ACTUALES DE CARTERA - AGOSTO
+// ================================================
+
+let totalClientesAgosto = 0;
+
+Object.entries(clientesHistorico).forEach(
+    ([asesor, clientes]) => {
+
+        totalClientesAgosto += clientes.size;
+
+    }
+);
+
+console.log(
+    "TOTAL CLIENTES CARTERA AGOSTO:",
+    totalClientesAgosto
+);
+  
 console.log(
     "CLIENTES EN CARTERA POR ASESOR:",
     Object.fromEntries(

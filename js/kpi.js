@@ -18,6 +18,9 @@
 // KPI GERENCIAL
 // ======================================================
 function generarKPI(json){
+
+    let totalClientesActual = 0;
+
     const usuarios =
 JSON.parse(
     localStorage.getItem("usuarios")
@@ -512,7 +515,6 @@ let temPromedio = {};
 let clientes = {};
 let clientesHistorico = {};
 let moraAsesor = {};
-let totalClientesActual = 0;
 
     json.forEach(c => {
 console.log(Object.keys(c));

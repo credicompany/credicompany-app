@@ -62,73 +62,47 @@ jsonGeneral.forEach(c=>{
 });
 
 // ========================================
-// CLIENTES ACTUALES - TODA LA CARTERA
+// CLIENTES ACUMULADOS HASTA EL MES ACTUAL
+// ========================================
+// Cuenta clientes únicos por asesor.
+// Incluye todos los desembolsos hasta agosto.
+// Un cliente con varios créditos cuenta UNA sola vez.
 // ========================================
 
-const carteraCompleta =
-    JSON.parse(
-        localStorage.getItem("cartera")
-    ) || [];
+jsonGeneral.forEach(c => {
 
-carteraCompleta.forEach(c => {
-
-    let asesorCartera =
-        String(c.asesor || "")
+    let asesor =
+        String(c["Asesor(a)"] || "")
         .trim()
         .toUpperCase();
 
-    if(!asesorCartera){
-        return;
-    }
-
-    if(!clientesHistorico[asesorCartera]){
-        clientesHistorico[asesorCartera] = new Set();
-    }
-
-    let identificador =
+    let codigoCliente =
         String(
-            c.DNI ||
-            c.dni ||
             c["Cod Cliente"] ||
-            c.codCliente ||
-            c.nombre ||
+            c["DNI"] ||
+            c["dni"] ||
             ""
         )
         .trim()
         .toUpperCase();
 
-    if(identificador){
-        clientesHistorico[asesorCartera].add(
-            identificador
-        );
+    if(!asesor || !codigoCliente){
+        return;
     }
+
+    if(!clientesHistorico[asesor]){
+        clientesHistorico[asesor] = new Set();
+    }
+
+    clientesHistorico[asesor].add(codigoCliente);
 
 });
-  
-// ================================================
-// CLIENTES ACTUALES DE CARTERA - AGOSTO
-// ================================================
-
-let totalClientesAgosto = 0;
-
-Object.entries(clientesHistorico).forEach(
-    ([asesor, clientes]) => {
-
-        totalClientesAgosto += clientes.size;
-
-    }
-);
 
 console.log(
-    "TOTAL CLIENTES CARTERA AGOSTO:",
-    totalClientesAgosto
-);
-  
-console.log(
-    "CLIENTES EN CARTERA POR ASESOR:",
+    "CLIENTES ACUMULADOS POR ASESOR:",
     Object.fromEntries(
         Object.entries(clientesHistorico)
-        .map(([asesor,set]) => [
+        .map(([asesor, set]) => [
             asesor,
             set.size
         ])
@@ -136,7 +110,7 @@ console.log(
 );
 
 console.log(
-    "TOTAL CLIENTES EN CARTERA:",
+    "TOTAL CLIENTES ACUMULADOS:",
     Object.values(clientesHistorico)
     .reduce(
         (total, clientes) =>

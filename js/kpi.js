@@ -811,10 +811,32 @@ let cantidadTemJulio = 0;
 let cantidadTemAgosto = 0;   
  metas.forEach(meta=>{
 
-    let asesor =
-    String(meta["Asesor (A)"] || "")
+   let asesor =
+String(meta["Asesor (A)"] || "")
+.trim()
+.toUpperCase();
+
+let metaAsesor = metas.find(m => {
+
+    let nombreMeta =
+    String(
+        m["Asesor (A)"] ||
+        m["ASESOR"] ||
+        ""
+    )
     .trim()
-    .toUpperCase();
+    .toUpperCase()
+    .replace(/\s+/g,"");
+
+    let nombreAsesor =
+    asesor
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g,"");
+
+    return nombreMeta === nombreAsesor;
+
+});
 
     //=========================================
     // FUNCIONES AUXILIARES

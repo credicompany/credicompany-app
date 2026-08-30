@@ -19,7 +19,7 @@
 // ======================================================
 function generarKPI(json){
 
-   let totalClientesAgosto = 0;
+  let totalClientesActual = 0;
 
     const usuarios =
     JSON.parse(
@@ -62,37 +62,57 @@ jsonGeneral.forEach(c=>{
 });
 
 // ========================================
-// CLIENTES HISTÓRICOS (TODA LA CARTERA)
+// CLIENTES HISTÓRICOS - TODA LA CARTERA
+// ========================================
+// IMPORTANTE:
+// Se utiliza COD CLIENTE para evitar duplicar
+// clientes que tienen varios créditos.
 // ========================================
 
-jsonGeneral.forEach(c=>{
+jsonGeneral.forEach(c => {
 
     let asesor =
-    (c["Asesor(a)"] || "")
-    .toString()
-    .trim()
-    .toUpperCase();
+        String(c["Asesor(a)"] || "")
+        .trim()
+        .toUpperCase();
+
+    let codigoCliente =
+        String(c["Cod Cliente"] || "")
+        .trim()
+        .toUpperCase();
+
+    if(!asesor || !codigoCliente){
+        return;
+    }
 
     if(!clientesHistorico[asesor]){
         clientesHistorico[asesor] = new Set();
     }
 
-    let nombre = (
-        (c["Apellido Paterno"] || "") + " " +
-        (c["Apellido Materno"] || "") + " " +
-        (c["Nombre"] || "")
-    )
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")
-    .replace(/\s+/g," ")
-    .trim()
-    .toUpperCase();
-
-    if(nombre){
-        clientesHistorico[asesor].add(nombre);
-    }
+    clientesHistorico[asesor].add(codigoCliente);
 
 });
+
+console.log(
+    "CLIENTES HISTÓRICOS POR ASESOR:",
+    Object.fromEntries(
+        Object.entries(clientesHistorico)
+        .map(([asesor,set]) => [
+            asesor,
+            set.size
+        ])
+    )
+);
+
+console.log(
+    "TOTAL CLIENTES EN CARTERA:",
+    Object.values(clientesHistorico)
+    .reduce(
+        (total, clientes) =>
+            total + clientes.size,
+        0
+    )
+);
     
 
 if(!ultimaFecha){
@@ -897,12 +917,12 @@ temPromedio[asesor].length
     // CLIENTES
     //=========================================
 
-   let clientesActual =
-clientes[asesor]
-?
-clientes[asesor].size
-:
-0;
+  let clientesActual =
+    clientesHistorico[asesor]
+    ?
+    clientesHistorico[asesor].size
+    :
+    0;
 
     let colClientes =
     buscarColumna(

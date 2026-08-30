@@ -19,11 +19,6 @@
 // ======================================================
 function generarKPI(json){
 
-        const clientesHistorico =
-        JSON.parse(localStorage.getItem("clientesHistorico") || "{}");
-    
-    let totalClientesActual = 0;
-
     const usuarios =
 JSON.parse(
     localStorage.getItem("usuarios")
@@ -287,8 +282,7 @@ let resumen = `
     color:#0F172A;
     margin-top:3px;
 ">
-  ${Object.values(clientesHistorico)
-      .reduce((total, clientes) => total + clientes.size, 0)}
+ ${totalClientesAgosto}
 </div>
 
         </div>
@@ -578,39 +572,6 @@ moraAsesor[asesor] += saldoCapitalVencido;
 
     });
 
-    // ========================================
-// CLIENTES HISTÓRICOS (TODA LA CARTERA)
-// ========================================
-
-jsonGeneral.forEach(c=>{
-
-    let asesor =
-    (c["Asesor(a)"] || "")
-    .toString()
-    .trim()
-    .toUpperCase();
-
-    if(!clientesHistorico[asesor]){
-        clientesHistorico[asesor] = new Set();
-    }
-
-    let nombre = (
-        (c["Apellido Paterno"] || "") + " " +
-        (c["Apellido Materno"] || "") + " " +
-        (c["Nombre"] || "")
-    )
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")
-    .replace(/\s+/g," ")
-    .trim()
-    .toUpperCase();
-
-    if(nombre){
-        clientesHistorico[asesor].add(nombre);
-    }
-
-});
-
 // =========================================
 // CLIENTES EN CARTERA
 // =========================================
@@ -877,12 +838,12 @@ temPromedio[asesor].length
     // CLIENTES
     //=========================================
 
-    let clientesActual =
-    clientesHistorico[asesor]
-    ?
-    clientesHistorico[asesor].size
-    :
-    0;
+   let clientesActual =
+clientes[asesor]
+?
+clientes[asesor].size
+:
+0;
 
     let colClientes =
     buscarColumna(

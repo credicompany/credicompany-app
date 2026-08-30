@@ -2998,9 +2998,9 @@ function cargarExcelKPI(){
             new Date().toLocaleString()
         );
 
-        generarKPI(json);
-
         alert("✅ Producción cargada correctamente.");
+
+generarKPI(json);
 
     };
 

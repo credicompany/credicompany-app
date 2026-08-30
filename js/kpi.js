@@ -281,7 +281,7 @@ let resumen = `
                 color:#0F172A;
                 margin-top:3px;
             ">
-                ${totalClientes}
+              ${totalClientesActual}
             </div>
 
         </div>
@@ -1120,7 +1120,12 @@ if(Number(tem) > 0){
 
 }
      }); 
+// =========================================
+// CLIENTES ACTUALES DE LA EMPRESA
+// =========================================
 
+let totalClientesActual =
+    totalClientesAgosto;
     // =========================================
 // TOTAL EMPRESA
 // =========================================

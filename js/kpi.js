@@ -18,8 +18,7 @@
 // KPI GERENCIAL
 // ======================================================
 function generarKPI(json){
-
-    let totalClientesActual = 0;
+totalClientesActual = 0;
 
     const usuarios =
 JSON.parse(

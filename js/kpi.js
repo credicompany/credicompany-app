@@ -19,10 +19,18 @@
 // ======================================================
 function generarKPI(json){
 
+    let totalClientesActual = 0;
+
     const usuarios =
-JSON.parse(
-    localStorage.getItem("usuarios")
-) || [];
+    JSON.parse(
+        localStorage.getItem("usuarios")
+    ) || [];
+
+    // ========================================
+    // CLIENTES HISTÓRICOS
+    // ========================================
+
+    const clientesHistorico = {};
 
 // ======================================
 // KPI GERENCIAL
@@ -56,6 +64,40 @@ jsonGeneral.forEach(c=>{
     }
 
 });
+
+// ========================================
+// CLIENTES HISTÓRICOS (TODA LA CARTERA)
+// ========================================
+
+jsonGeneral.forEach(c=>{
+
+    let asesor =
+    (c["Asesor(a)"] || "")
+    .toString()
+    .trim()
+    .toUpperCase();
+
+    if(!clientesHistorico[asesor]){
+        clientesHistorico[asesor] = new Set();
+    }
+
+    let nombre = (
+        (c["Apellido Paterno"] || "") + " " +
+        (c["Apellido Materno"] || "") + " " +
+        (c["Nombre"] || "")
+    )
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/\s+/g," ")
+    .trim()
+    .toUpperCase();
+
+    if(nombre){
+        clientesHistorico[asesor].add(nombre);
+    }
+
+});
+    
 
 if(!ultimaFecha){
 

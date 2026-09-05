@@ -878,49 +878,80 @@ function resetFiltros(){
     filtroMax = 1000;
     filtrarMora(0,1000);
 }
-// USUARIOS
-function crearUsuario(){
-let user=nuevoUser.value.trim();
-let pass=nuevoPass.value.trim();
+async function subirFotoUsuario(){
 
-if(!user || !pass) return alert("Completar");
+  const input = document.getElementById("archivoFotoUsuario");
+  const archivo = input.files[0];
 
-let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];
+  if(!archivo) return;
 
-if(usuarios.find(u=>u.user===user)) return alert("Existe");
+  try{
 
-usuarios.push({
-user:user.toLowerCase().trim(),
-pass:pass,
-nombre:nuevoNombre.value.trim(),
-foto:nuevoFoto.value.trim()
-});
-localStorage.setItem("usuarios",JSON.stringify(usuarios));
-db.ref("usuarios")
-.set(usuarios)
-.then(()=>{
+    console.log("📷 Subiendo foto del usuario...");
 
-   console.log(
-   "✅ Usuarios sincronizados"
-   );
+    const archivoComprimido = await comprimirImagen(archivo);
 
-})
-.catch(err=>{
+    const formData = new FormData();
 
-   console.error(
-   "❌ Error usuarios:",
-   err
-   );
+    formData.append(
+      "file",
+      archivoComprimido,
+      "foto_usuario.jpg"
+    );
 
-});
-nuevoUser.value="";
-nuevoPass.value="";
-nuevoNombre.value="";
-nuevoFoto.value="";
+    formData.append(
+      "upload_preset",
+      UPLOAD_PRESET
+    );
 
-renderUsuarios();
+    const respuesta = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+      {
+        method:"POST",
+        body:formData
+      }
+    );
+
+    const datos = await respuesta.json();
+
+    if(!datos.secure_url){
+      console.error(datos);
+      alert("❌ No se pudo subir la foto");
+      return;
+    }
+
+    // Guardar URL de Cloudinary
+    document.getElementById("nuevoFoto").value =
+      datos.secure_url;
+
+    // Mostrar vista previa
+    const preview =
+      document.getElementById("previewFotoUsuario");
+
+    preview.innerHTML = `
+      <img
+        src="${datos.secure_url}"
+        style="
+          width:90px;
+          height:90px;
+          object-fit:cover;
+          border-radius:50%;
+          border:3px solid #198754;
+        "
+      >
+    `;
+
+    preview.style.display = "block";
+
+    console.log("✅ Foto subida:", datos.secure_url);
+
+  }catch(error){
+
+    console.error("❌ Error subiendo foto:",error);
+
+    alert("❌ Error al subir la foto");
+  }
 }
-
 function renderUsuarios(){
 let lista=listaUsuarios;
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[];

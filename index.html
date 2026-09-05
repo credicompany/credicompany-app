@@ -2331,7 +2331,32 @@ onkeyup="filtrarMora(filtroMin,filtroMax)">
 
 <input id="nuevoNombre" placeholder="Nombre completo">
 
-<input id="nuevoFoto" placeholder="Foto (ej: jperez.png)">
+<input
+    type="file"
+    id="archivoFotoUsuario"
+    accept="image/*"
+    style="display:none"
+    onchange="subirFotoUsuario()">
+
+<button
+    type="button"
+    class="btn-azul"
+    onclick="document.getElementById('archivoFotoUsuario').click()">
+    📷 Seleccionar foto
+</button>
+
+<input
+    id="nuevoFoto"
+    type="hidden">
+
+<div
+    id="previewFotoUsuario"
+    style="
+        display:none;
+        text-align:center;
+        margin:10px 0;
+    ">
+</div>
 
 <button class="btn-verde" onclick="crearUsuario()">Crear Usuario</button>
 <button class="btn-naranja" onclick="eliminarUsuarioManual()">

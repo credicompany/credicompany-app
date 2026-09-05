@@ -656,21 +656,25 @@ console.log(
 // RANKING COLOCACIÓN
 // ==========================================
 
-// Asegurar asesores activos aunque tengan S/0
-if (usuarios.some(u =>
-    String(u.user || "").trim().toUpperCase() === "SLOPEZ"
-)) {
-    if (!ranking["SLOPEZ"]) {
-        ranking["SLOPEZ"] = 0;
-    }
-}
-
 // ==========================================
-// RANKING COLOCACIÓN
+// INCLUIR TODOS LOS ASESORES ACTIVOS
 // ==========================================
+usuarios.forEach(u => {
 
-// SLOPEZ debe aparecer aunque tenga S/0
-ranking["SLOPEZ"] = Number(ranking["SLOPEZ"] || 0);
+    const asesor = String(
+        u.user || u.usuario || u.nombre || ""
+    ).trim().toUpperCase();
+
+    if (!asesor || asesor === "ADMIN") return;
+
+    ranking[asesor] = Number(ranking[asesor] || 0);
+    operaciones[asesor] = Number(operaciones[asesor] || 0);
+
+    if (!temPromedio[asesor]) temPromedio[asesor] = [];
+    if (!clientes[asesor]) clientes[asesor] = new Set();
+    if (!moraAsesor[asesor]) moraAsesor[asesor] = 0;
+
+});
 
 let top =
 Object.entries(ranking)

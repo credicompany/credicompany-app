@@ -878,6 +878,82 @@ function resetFiltros(){
     filtroMax = 1000;
     filtrarMora(0,1000);
 }
+
+function crearUsuario(){
+
+  let user = nuevoUser.value.trim();
+  let pass = nuevoPass.value.trim();
+  let nombre = nuevoNombre.value.trim();
+  let foto = nuevoFoto.value.trim();
+
+  if(!user || !pass){
+    return alert("Completar usuario y clave");
+  }
+
+  let usuarios =
+    JSON.parse(localStorage.getItem("usuarios")) || [];
+
+  if(usuarios.find(
+    u => (u.user || "").toLowerCase().trim() ===
+         user.toLowerCase().trim()
+  )){
+    return alert("El usuario ya existe");
+  }
+
+  usuarios.push({
+    user: user.toLowerCase().trim(),
+    pass: pass,
+    nombre: nombre,
+    foto: foto
+  });
+
+  localStorage.setItem(
+    "usuarios",
+    JSON.stringify(usuarios)
+  );
+
+  db.ref("usuarios")
+    .set(usuarios)
+    .then(()=>{
+
+      console.log("✅ Usuarios sincronizados");
+
+      nuevoUser.value = "";
+      nuevoPass.value = "";
+      nuevoNombre.value = "";
+      nuevoFoto.value = "";
+
+      const archivo =
+        document.getElementById("archivoFotoUsuario");
+
+      if(archivo){
+        archivo.value = "";
+      }
+
+      const preview =
+        document.getElementById("previewFotoUsuario");
+
+      if(preview){
+        preview.innerHTML = "";
+        preview.style.display = "none";
+      }
+
+      renderUsuarios();
+
+      alert("✅ Usuario creado correctamente");
+
+    })
+    .catch(err=>{
+
+      console.error(
+        "❌ Error usuarios:",
+        err
+      );
+
+      alert("❌ Error al guardar usuario");
+
+    });
+}
 async function subirFotoUsuario(){
 
   const input = document.getElementById("archivoFotoUsuario");

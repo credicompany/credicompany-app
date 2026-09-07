@@ -372,7 +372,6 @@ function generarKPI(json){
     let totalClientes =
         json.length;
 
-
 json=jsonGeneral.filter(c=>{
 
     let fechaExcel=
@@ -3286,6 +3285,8 @@ ${topClientesHTML}
 `;
 
 }
+
+window.cargarMetasKPI = function(){
 function cargarMetasKPI(){
 
     const archivo =
@@ -3297,7 +3298,7 @@ function cargarMetasKPI(){
 
         return;
 
-    }
+ };
 
     const lector = new FileReader();
 

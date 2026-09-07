@@ -14,141 +14,363 @@
 //
 // ======================================================
 
-// ======================================================
-// KPI GERENCIAL
-// ======================================================
 function generarKPI(json){
 
-    let totalClientesActual = 0;
-    let totalClientesAgosto = 0;
-
     const usuarios =
-    JSON.parse(
-        localStorage.getItem("usuarios")
-    ) || [];
+        JSON.parse(
+            localStorage.getItem("usuarios")
+        ) || [];
 
-    const clientesHistorico = {};
+    // ======================================
+    // DATOS GENERALES
+    // ======================================
 
-// ======================================
-// KPI GERENCIAL
-// DETECCIÓN AUTOMÁTICA DEL MES
-// ======================================
+    const jsonGeneral = [...json];
 
-const jsonGeneral = [...json];
+    if(!jsonGeneral.length){
 
-let ultimaFecha = null;
+        alert("No existen registros de producción.");
 
-jsonGeneral.forEach(c=>{
+        return;
 
-    let fechaExcel =
-    Number(c["Fecha Desembolso"]);
+    }
 
-    if(!isNaN(fechaExcel)){
+    // ======================================
+    // DETECTAR ÚLTIMA FECHA REAL DEL EXCEL
+    // ======================================
 
-        let fecha =
-        new Date(
-            (fechaExcel-25569)*
-            86400*1000
-        );
+    let ultimaFecha = null;
 
-        if(
-            !ultimaFecha ||
-            fecha>ultimaFecha
-        ){
-            ultimaFecha=fecha;
+    jsonGeneral.forEach(c => {
+
+        const fechaExcel =
+            Number(c["Fecha Desembolso"]);
+
+        if(!isNaN(fechaExcel)){
+
+            const fecha =
+                new Date(
+                    (fechaExcel - 25569) *
+                    86400 *
+                    1000
+                );
+
+            if(
+                !ultimaFecha ||
+                fecha > ultimaFecha
+            ){
+
+                ultimaFecha = fecha;
+
+            }
+
         }
 
-    }
+    });
 
-});
+    if(!ultimaFecha){
 
-// ========================================
-// CLIENTES ACUMULADOS HASTA EL MES ACTUAL
-// ========================================
-// Cuenta clientes únicos por asesor.
-// Incluye todos los desembolsos hasta agosto.
-// Un cliente con varios créditos cuenta UNA sola vez.
-// ========================================
+        alert(
+            "No existe ninguna fecha válida en Fecha Desembolso."
+        );
 
-jsonGeneral.forEach(c => {
-
-    let asesor =
-        String(c["Asesor(a)"] || "")
-        .trim()
-        .toUpperCase();
-
-    let codigoCliente =
-        String(
-            c["Cod Cliente"] ||
-            c["DNI"] ||
-            c["dni"] ||
-            ""
-        )
-        .trim()
-        .toUpperCase();
-
-    if(!asesor || !codigoCliente){
         return;
+
     }
 
-    if(!clientesHistorico[asesor]){
-        clientesHistorico[asesor] = new Set();
-    }
+    // ======================================
+    // MES Y AÑO ACTUAL
+    // ======================================
 
-    clientesHistorico[asesor].add(codigoCliente);
+    const meses = [
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+        "Mayo",
+        "Junio",
+        "Julio",
+        "Agosto",
+        "Septiembre",
+        "Octubre",
+        "Noviembre",
+        "Diciembre"
+    ];
 
-});
+    const indiceMes =
+        ultimaFecha.getUTCMonth();
 
-console.log(
-    "CLIENTES ACUMULADOS POR ASESOR:",
-    Object.fromEntries(
-        Object.entries(clientesHistorico)
-        .map(([asesor, set]) => [
-            asesor,
-            set.size
-        ])
-    )
-);
+    const anioActual =
+        ultimaFecha.getUTCFullYear();
 
-console.log(
-    "TOTAL CLIENTES ACUMULADOS:",
-    Object.values(clientesHistorico)
-    .reduce(
-        (total, clientes) =>
-            total + clientes.size,
-        0
-    )
-);
-    
+    const mesActual =
+        meses[indiceMes];
 
-if(!ultimaFecha){
+    const indiceMesAnterior =
+        indiceMes === 0
+        ? 11
+        : indiceMes - 1;
 
-    alert(
-    "No existe ninguna fecha válida."
+    const anioMesAnterior =
+        indiceMes === 0
+        ? anioActual - 1
+        : anioActual;
+
+    const mesAnterior =
+        meses[indiceMesAnterior];
+
+    console.log(
+        "================================"
     );
 
-    return;
+    console.log(
+        "ÚLTIMA FECHA:",
+        ultimaFecha
+    );
 
-}
+    console.log(
+        "MES ACTUAL:",
+        mesActual
+    );
 
-const meses=[
-"Enero","Febrero","Marzo","Abril",
-"Mayo","Junio","Julio","Agosto",
-"Septiembre","Octubre",
-"Noviembre","Diciembre"
-];
+    console.log(
+        "AÑO ACTUAL:",
+        anioActual
+    );
 
-const indiceMes =
-ultimaFecha.getUTCMonth();
+    console.log(
+        "MES ANTERIOR:",
+        mesAnterior
+    );
 
-const anioActual =
-ultimaFecha.getUTCFullYear();
+    console.log(
+        "================================"
+    );
 
-const mesActual =
-meses[indiceMes];
 
-const mesAnterior =
-meses[(indiceMes+11)%12];
+    // ======================================
+    // CLIENTES HISTÓRICOS
+    // ======================================
+
+    const clientesHistoricoAnterior = {};
+    const clientesHistoricoActual = {};
+
+
+    // ======================================
+    // RECORRER TODA LA PRODUCCIÓN
+    // ======================================
+
+    jsonGeneral.forEach(c => {
+
+        const asesor =
+            String(
+                c["Asesor(a)"] ||
+                c["ASESOR"] ||
+                ""
+            )
+            .trim()
+            .toUpperCase();
+
+        /*
+         * IMPORTANTE:
+         * Usamos DNI como identificador principal
+         * y Cod Cliente como alternativa.
+         */
+
+        const codigoCliente =
+            String(
+                c["DNI"] ||
+                c["Cod Cliente"] ||
+                c["dni"] ||
+                ""
+            )
+            .trim()
+            .toUpperCase();
+
+        if(
+            !asesor ||
+            !codigoCliente
+        ){
+
+            return;
+
+        }
+
+        const fechaExcel =
+            Number(c["Fecha Desembolso"]);
+
+        if(isNaN(fechaExcel)){
+
+            return;
+
+        }
+
+        const fecha =
+            new Date(
+                (fechaExcel - 25569) *
+                86400 *
+                1000
+            );
+
+        const mes =
+            fecha.getUTCMonth();
+
+        const anio =
+            fecha.getUTCFullYear();
+
+
+        // ==================================
+        // CLIENTES ACUMULADOS HASTA
+        // EL MES ACTUAL
+        // ==================================
+
+        if(
+            anio < anioActual ||
+            (
+                anio === anioActual &&
+                mes <= indiceMes
+            )
+        ){
+
+            if(
+                !clientesHistoricoActual[asesor]
+            ){
+
+                clientesHistoricoActual[asesor] =
+                    new Set();
+
+            }
+
+            clientesHistoricoActual[asesor]
+                .add(codigoCliente);
+
+        }
+
+
+        // ==================================
+        // CLIENTES ACUMULADOS HASTA
+        // EL MES ANTERIOR
+        // ==================================
+
+        if(
+            anio < anioMesAnterior ||
+            (
+                anio === anioMesAnterior &&
+                mes <= indiceMesAnterior
+            )
+        ){
+
+            if(
+                !clientesHistoricoAnterior[asesor]
+            ){
+
+                clientesHistoricoAnterior[asesor] =
+                    new Set();
+
+            }
+
+            clientesHistoricoAnterior[asesor]
+                .add(codigoCliente);
+
+        }
+
+    });
+
+
+    // ======================================
+    // MOSTRAR RESULTADOS EN CONSOLA
+    // ======================================
+
+    console.log(
+        "CLIENTES ACUMULADOS MES ANTERIOR:",
+        Object.fromEntries(
+            Object.entries(
+                clientesHistoricoAnterior
+            )
+            .map(
+                ([asesor,set]) => [
+                    asesor,
+                    set.size
+                ]
+            )
+        )
+    );
+
+
+    console.log(
+        "CLIENTES ACUMULADOS MES ACTUAL:",
+        Object.fromEntries(
+            Object.entries(
+                clientesHistoricoActual
+            )
+            .map(
+                ([asesor,set]) => [
+                    asesor,
+                    set.size
+                ]
+            )
+        )
+    );
+
+
+    // ======================================
+    // FILTRAR PRODUCCIÓN DEL MES ACTUAL
+    // ======================================
+
+    json = jsonGeneral.filter(c => {
+
+        const fechaExcel =
+            Number(c["Fecha Desembolso"]);
+
+        if(isNaN(fechaExcel)){
+
+            return false;
+
+        }
+
+        const fecha =
+            new Date(
+                (fechaExcel - 25569) *
+                86400 *
+                1000
+            );
+
+        return(
+            fecha.getUTCMonth()
+            === indiceMes
+            &&
+            fecha.getUTCFullYear()
+            === anioActual
+        );
+
+    });
+
+
+    console.log(
+        "KPI:",
+        mesActual,
+        json.length,
+        "REGISTROS"
+    );
+
+
+    // ======================================
+    // METAS
+    // ======================================
+
+    let metas =
+        JSON.parse(
+            localStorage.getItem("metasKPI")
+        ) || [];
+
+    console.log(
+        "REGISTROS MES ACTUAL:",
+        json.length
+    );
+
+
+    let totalClientes =
+        json.length;
 
 json=jsonGeneral.filter(c=>{
 
@@ -269,520 +491,204 @@ let estadoMeta =
 
 let colorMeta =
     Number(avanceEmpresa) >= 100
-    ? "#159447"
+    ? "#178A4B"
     : Number(avanceEmpresa) >= 80
-    ? "#D99A1A"
-    : "#D64545";
+    ? "#D79A24"
+    : "#D14A4A";
 
 let resumen = `
+<style id="credicompany-visual-v2">
+/* CREDICOMPANY — acabado visual V2 */
+#kpiResumen{
+    font-family: Arial, Helvetica, sans-serif;
+    color:#243746;
+}
+#kpiResumen table{
+    border:1px solid #DDE3E8 !important;
+    border-radius:12px;
+    box-shadow:0 5px 18px rgba(22,74,112,.08);
+}
+#kpiResumen thead tr{
+    background:#164A70 !important;
+}
+#kpiResumen th{
+    background:#164A70 !important;
+    color:#FFFFFF !important;
+    font-weight:700 !important;
+    letter-spacing:.15px;
+}
+#kpiResumen tbody tr:nth-child(even){
+    background:#F6F8FA;
+}
+#kpiResumen tbody tr:hover{
+    background:#EDF4F8 !important;
+}
+#kpiResumen td{
+    border-bottom:1px solid #E5EBEF !important;
+}
+#kpiResumen .kpi-card{
+    border:1px solid #DCE4EA !important;
+    box-shadow:0 4px 14px rgba(22,74,112,.07) !important;
+}
+</style>
+
 
 <div style="
+    width:100%;
     margin-bottom:18px;
 ">
 
-    <div style="
-        text-align:center;
-        margin-bottom:18px;
-    ">
+<!-- =========================================
+     CABECERA EJECUTIVA
+     ========================================= -->
+
+<div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    margin-bottom:16px;
+    padding:4px 4px 12px 4px;
+">
+
+    <div>
 
         <div style="
             font-size:26px;
             font-weight:800;
-            color:#123F63;
-            letter-spacing:.3px;
+            color:#164A70;
+            letter-spacing:.2px;
         ">
-            📊 TABLERO GERENCIAL
+            🎯 KPI POR ASESOR
         </div>
 
         <div style="
             font-size:13px;
-            color:#657789;
-            margin-top:4px;
+            color:#647987;
+            margin-top:3px;
         ">
-            ${mesActual.toUpperCase()} ${anioActual}
-            &nbsp;•&nbsp;
-          Actualizado: ${localStorage.getItem("fechaProduccionKPI") || new Date().toLocaleString("es-PE")}
+            Desempeño y evolución de la cartera
+            al mes de ${mesActual.toUpperCase()} ${anioActual}
         </div>
 
     </div>
 
-
-    <!-- ================================= -->
-    <!-- INDICADORES PRINCIPALES -->
-    <!-- ================================= -->
-
     <div style="
-        display:grid;
-        grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-        gap:10px;
-    ">
-
-
-        <!-- CLIENTES -->
-
-        <div style="
-            background:#FFFFFF;
-            border:1px solid #DCE4EC;
-            border-top:4px solid #123F63;
-            border-radius:12px;
-            padding:14px;
-            text-align:center;
-            box-shadow:0 3px 10px rgba(18,63,99,.07);
-        ">
-
-            <div style="font-size:23px;">👥</div>
-
-            <div style="
-                font-size:12px;
-                color:#657789;
-                margin-top:3px;
-            ">
-                CLIENTES EN CARTERA
-            </div>
-
-           <div style="
-    font-size:25px;
-    font-weight:800;
-    color:#172B3A;
-    margin-top:3px;
-">
- ${totalClientesAgosto}
-</div>
-
-        </div>
-
-
-        <!-- COLOCACIÓN -->
-
-        <div style="
-            background:#FFFFFF;
-            border:1px solid #DCE4EC;
-            border-top:4px solid #159447;
-            border-radius:12px;
-            padding:14px;
-            text-align:center;
-            box-shadow:0 3px 10px rgba(18,63,99,.07);
-        ">
-
-            <div style="font-size:23px;">💰</div>
-
-            <div style="
-                font-size:12px;
-                color:#657789;
-            ">
-                COLOCACIÓN
-            </div>
-
-            <div style="
-                font-size:24px;
-                font-weight:800;
-                color:#172B3A;
-            ">
-                S/${Math.round(montoOtorgadoTotal).toLocaleString("es-PE")}
-            </div>
-
-            <div style="
-                font-size:11px;
-                color:#657789;
-                margin-top:3px;
-            ">
-                Meta: S/${Math.round(metaEmpresa).toLocaleString("es-PE")}
-            </div>
-
-        </div>
-
-
-        <!-- OPERACIONES -->
-
-        <div style="
-            background:#FFFFFF;
-            border:1px solid #DCE4EC;
-            border-top:4px solid #2F6FDB;
-            border-radius:12px;
-            padding:14px;
-            text-align:center;
-            box-shadow:0 3px 10px rgba(18,63,99,.07);
-        ">
-
-            <div style="font-size:23px;">📋</div>
-
-            <div style="
-                font-size:12px;
-                color:#657789;
-            ">
-                OPERACIONES
-            </div>
-
-            <div style="
-                font-size:25px;
-                font-weight:800;
-                color:#172B3A;
-            ">
-                ${totalOperaciones}
-            </div>
-
-        </div>
-
-
-        <!-- TEM -->
-
-        <div style="
-            background:#FFFFFF;
-            border:1px solid #DCE4EC;
-            border-top:4px solid #6653B8;
-            border-radius:12px;
-            padding:14px;
-            text-align:center;
-            box-shadow:0 3px 10px rgba(18,63,99,.07);
-        ">
-
-            <div style="font-size:23px;">📈</div>
-
-            <div style="
-                font-size:12px;
-                color:#657789;
-            ">
-                TEM PROMEDIO
-            </div>
-
-            <div style="
-                font-size:25px;
-                font-weight:800;
-                color:#172B3A;
-            ">
-                ${temGeneral}%
-            </div>
-
-        </div>
-
-
-        <!-- CUMPLIMIENTO -->
-
-        <div style="
-            background:#FFFFFF;
-            border:1px solid #DCE4EC;
-            border-top:4px solid ${colorMeta};
-            border-radius:12px;
-            padding:14px;
-            text-align:center;
-            box-shadow:0 3px 10px rgba(18,63,99,.07);
-        ">
-
-            <div style="font-size:23px;">🎯</div>
-
-            <div style="
-                font-size:12px;
-                color:#657789;
-            ">
-                CUMPLIMIENTO
-            </div>
-
-            <div style="
-                font-size:25px;
-                font-weight:800;
-                color:${colorMeta};
-            ">
-                ${avanceEmpresa}%
-            </div>
-
-            <div style="
-                font-size:11px;
-                font-weight:700;
-                color:${colorMeta};
-                margin-top:3px;
-            ">
-                ${estadoMeta}
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- ================================= -->
-    <!-- BARRA DE CUMPLIMIENTO -->
-    <!-- ================================= -->
-
-    <div style="
-        background:#F6F8FA;
-        border:1px solid #DCE4EC;
+        background:#EFF5F8;
         border-radius:12px;
-        padding:13px;
-        margin-top:12px;
+        padding:10px 16px;
+        text-align:left;
+        min-width:190px;
     ">
 
         <div style="
-            display:flex;
-            justify-content:space-between;
-            font-size:12px;
-            font-weight:700;
-            margin-bottom:7px;
-        ">
-
-            <span>
-                🎯 Avance de colocación
-            </span>
-
-            <span style="color:${colorMeta};">
-                ${avanceEmpresa}%
-            </span>
-
-        </div>
-
-        <div style="
-            width:100%;
-            height:10px;
-            background:#DCE4EC;
-            border-radius:20px;
-            overflow:hidden;
-        ">
-
-            <div style="
-                width:${Math.min(Number(avanceEmpresa),100)}%;
-                height:100%;
-                background:${colorMeta};
-                border-radius:20px;
-            "></div>
-
-        </div>
-
-        <div style="
-            display:flex;
-            justify-content:space-between;
-            margin-top:6px;
             font-size:11px;
-            color:#657789;
+            color:#647987;
         ">
+            📅 Última actualización
+        </div>
 
-            <span>
-                Real: S/${Math.round(montoOtorgadoTotal).toLocaleString("es-PE")}
-            </span>
-
-            <span>
-                Meta: S/${Math.round(metaEmpresa).toLocaleString("es-PE")}
-            </span>
-
+        <div style="
+            font-size:13px;
+            font-weight:800;
+            color:#164A70;
+            margin-top:2px;
+        ">
+            ${localStorage.getItem("fechaProduccionKPI")
+              || new Date().toLocaleString("es-PE")}
         </div>
 
     </div>
 
 </div>
 
-`;
 
-   let ranking = {};
-let operaciones = {};
-let temPromedio = {};
-let clientes = {};
-let moraAsesor = {};
-
-    json.forEach(c => {
-console.log(Object.keys(c));
-        let asesor =
-        (c["Asesor(a)"] || "SIN ASESOR")
-        .trim()
-        .toUpperCase();
-console.log(
-    "ASESOR:",
-    JSON.stringify(c["Asesor(a)"]),
-    "| PRESTAMO:",
-    c["Prestamo"],
-    "| FECHA:",
-    c["Fecha Desembolso"]
-);
-        let monto =
-        parseFloat(c["Monto Otorgado"]) || 0;
-
-        let tem =
-parseFloat(
-    String(c["TEM"])
-    .replace(",",".")
-) || 0;
-
-        let codigoCliente =
-String(c["Cod Cliente"] || "")
-.trim()
-.toUpperCase();
-let saldoCapitalVencido =
-parseFloat(
-    c["Saldo capital vencido"] ??
-    c["Saldo Capital Vencido"] ??
-    c["SALDO CAPITAL VENCIDO"] ??
-    0
-) || 0;
-
-
-       if(!ranking[asesor]){
-
-    ranking[asesor] = 0;
-    operaciones[asesor] = 0;
-    temPromedio[asesor] = [];
-    clientes[asesor] = new Set();
-    moraAsesor[asesor] = 0;
-
-}
-
-        ranking[asesor] += monto;
-        operaciones[asesor]++;
-        temPromedio[asesor].push(tem);
-        
-moraAsesor[asesor] += saldoCapitalVencido;
-       
-      if(codigoCliente){
-
-    clientes[asesor].add(codigoCliente);
-
-}
-
-    });
-
-// =========================================
-// CLIENTES EN CARTERA
-// =========================================
-
-totalClientesActual =
-Object.values(clientesHistorico)
-.reduce(
-    (total, clientes) => total + clientes.size,
-    0
-);
-
-console.log(
-    "CLIENTES EN CARTERA:",
-    totalClientesActual
-);
-    
-// ==========================================
-// RANKING COLOCACIÓN
-// ==========================================
-
-// ==========================================
-// INCLUIR TODOS LOS ASESORES ACTIVOS
-// ==========================================
-usuarios.forEach(u => {
-
-    const asesor = String(
-        u.user || u.usuario || u.nombre || ""
-    ).trim().toUpperCase();
-
-    if (!asesor || asesor === "ADMIN") return;
-
-    ranking[asesor] = Number(ranking[asesor] || 0);
-    operaciones[asesor] = Number(operaciones[asesor] || 0);
-
-    if (!temPromedio[asesor]) temPromedio[asesor] = [];
-    if (!clientes[asesor]) clientes[asesor] = new Set();
-    if (!moraAsesor[asesor]) moraAsesor[asesor] = 0;
-
-});
-
-let top =
-Object.entries(ranking)
-
-.filter(([asesor]) =>
-    asesor.toUpperCase() !== "ADMIN"
-)
-
-.sort((a,b) => b[1] - a[1]);
-console.log("RANKING COLOCACION REAL:", ranking);
-console.log("TOP COLOCACION REAL:", top);
-let mejorAsesor =
-top.length > 0
-?
-top[0]
-:
-null;
-
-if(mejorAsesor){
-
-resumen += `
+<!-- =========================================
+     TABLA KPI
+     ========================================= -->
 
 <div style="
-background:#FFFFFF;
-border-left:5px solid #123F63;
-color:#243746;
-padding:12px;
-border-radius:12px;
-margin-bottom:12px;
-">
-
-<div style="
-font-size:14px;
-font-weight:600;
-color:#667783;
-">
-🏆 Líder del Mes
-</div>
-
-<div style="
-font-size:20px;
-font-weight:bold;
-margin-top:5px;
-">
-${mejorAsesor[0]}
-</div>
-
-<div style="
-font-size:18px;
-margin-top:4px;
-">
-💰 S/${mejorAsesor[1].toLocaleString()}
-</div>
-
-</div>
-`;
-
-}
-   resumen += `
-
-<div class="card">
-
-<h4 style="
-margin:5px 0;
-font-size:14px;
-">
-🎯 KPI POR ASESOR
-</h4>
-
-<div style="
-overflow-x:auto;
-overflow-y:hidden;
-width:100%;
--webkit-overflow-scrolling:touch;
-padding-bottom:8px;
+    overflow-x:auto;
+    width:100%;
+    border-radius:12px;
 ">
 
 <table style="
-width:100%;
-min-width:1100px;
-border-collapse:collapse;
-font-size:14px;
-text-align:center;
+    width:100%;
+    min-width:1450px;
+    border-collapse:separate;
+    border-spacing:0;
+    font-size:14px;
+    text-align:center;
+    overflow:hidden;
 ">
+
+<thead>
 
 <tr style="
-background:#123F63;
-color:white;
+    background:#164A70;
+    color:white;
 ">
 
-<th>ASESOR</th>
-<th>META COLOCACIÓN</th>
-<th>AVANCE</th>
-<th>% AVANCE</th>
-<th>META OPERACIONES</th>
-<th>AVANCE</th>
-<th>% AVANCE OPER</th>
-<th>CLIENTES ${mesAnterior.toUpperCase()}</th>
-<th>CLIENTES ${mesActual.toUpperCase()}</th>
-<th>VARIACIÓN</th>
-<th>TEM ${mesAnterior.toUpperCase()}</th>
-<th>TEM ${mesActual.toUpperCase()}</th>
-<th>MORA ${mesAnterior.toUpperCase()}</th>
-<th>MORA ${mesActual.toUpperCase()} 9+</th>
-<th>MORA ${mesActual.toUpperCase()} 1+</th>
-<th>🚦</th>
+<th style="padding:10px 8px;">ASESOR</th>
+
+<th style="padding:10px 8px;">META<br>COLOCACIÓN</th>
+
+<th style="padding:10px 8px;">AVANCE</th>
+
+<th style="padding:10px 8px;">%<br>AVANCE</th>
+
+<th style="padding:10px 8px;">META<br>OPERACIONES</th>
+
+<th style="padding:10px 8px;">AVANCE</th>
+
+<th style="padding:10px 8px;">% AVANCE<br>OPER</th>
+
+<th style="padding:10px 8px;">
+CLIENTES<br>${mesAnterior.toUpperCase()}
+</th>
+
+<th style="padding:10px 8px;">
+CLIENTES<br>${mesActual.toUpperCase()}
+</th>
+
+<th style="padding:10px 8px;">
+VARIACIÓN
+</th>
+
+<th style="padding:10px 8px;">
+TEM<br>${mesAnterior.toUpperCase()}
+</th>
+
+<th style="padding:10px 8px;">
+TEM<br>${mesActual.toUpperCase()}
+</th>
+
+<th style="padding:10px 8px;">
+MORA<br>${mesAnterior.toUpperCase()}
+</th>
+
+<th style="padding:10px 8px;">
+MORA<br>${mesActual.toUpperCase()}
+</th>
+
+<th style="padding:10px 8px;">
+MORA<br>${mesActual.toUpperCase()} 9+
+</th>
+
+<th style="padding:10px 8px;">
+MORA<br>${mesActual.toUpperCase()} 1+
+</th>
+
+<th style="padding:10px 8px;">
+ESTADO
+</th>
 
 </tr>
+
+</thead>
+
+<tbody>
 `;
 // ==========================
 // MORA ACTUAL (TODA LA CARTERA)
@@ -923,44 +829,38 @@ temPromedio[asesor].length
 :
 0;
 
-    //=========================================
-    // CLIENTES
-    //=========================================
+// =========================================
+// CLIENTES ACUMULADOS
+// =========================================
 
-  let clientesActual =
-    clientesHistorico[asesor]
+let clientesAnterior =
+    clientesHistoricoAnterior[asesor]
     ?
-    clientesHistorico[asesor].size
+    clientesHistoricoAnterior[asesor].size
     :
     0;
 
-    let colClientes =
-    buscarColumna(
-        "CLIENTES",
-        mesAnterior
-    );
-
-    let clientesAnterior =
-    colClientes
+let clientesActual =
+    clientesHistoricoActual[asesor]
     ?
-    Number(meta[colClientes] || 0)
+    clientesHistoricoActual[asesor].size
     :
     0;
 
-    let variacionClientes =
+
+// =========================================
+// VARIACIÓN
+// =========================================
+
+let variacionClientes =
     clientesActual - clientesAnterior;
 
-    let colorVariacion = "#657789";
-
-    if(variacionClientes>0){
-
-        colorVariacion="#159447";
-
-    }else if(variacionClientes<0){
-
-        colorVariacion="#D64545";
-
-    }
+let colorVariacion =
+    variacionClientes > 0
+    ? "#178A4B"
+    : variacionClientes < 0
+    ? "#D14A4A"
+    : "#647987";
 
     //=========================================
     // TEM HISTÓRICO
@@ -1074,89 +974,173 @@ mora1MasAsesor[asesor] || 0;
     // TABLA
     //=========================================
 
-    resumen +=`
+  //=========================================
+// FILA KPI DEL ASESOR
+//=========================================
 
-<tr>
+resumen += `
 
-<td><b>${asesor}</b></td>
-
-<td>S/${metaDesembolso.toLocaleString()}</td>
-
-<td>S/${Math.round(colocacion).toLocaleString()}</td>
+<tr style="
+    border-bottom:1px solid #DCE4EA;
+    background:#FFFFFF;
+">
 
 <td style="
-background:${
-Number(porcentajeDesembolso)>=100
-?
-'#22B55A'
-:
-'#ffffff'
-};
-color:${
-Number(porcentajeDesembolso)>=100
-?
-'white'
-:
-'#000'
-};
-font-weight:bold;
+    padding:8px;
+    font-weight:800;
+    color:#123B59;
 ">
-${porcentajeDesembolso}%
+    ${asesor}
 </td>
 
-<td>${metaOperaciones}</td>
 
-<td>${oper}</td>
+<td style="padding:8px;">
+    S/${Math.round(metaDesembolso).toLocaleString("es-PE")}
+</td>
+
 
 <td style="
-background:${
-Number(porcentajeOperaciones)>=100
-?
-'#22B55A'
-:
-Number(porcentajeOperaciones)>=80
-?
-'#E0AA24'
-:
-'#D64545'
-};
-color:white;
-font-weight:bold;
+    padding:8px;
+    font-weight:700;
 ">
-${porcentajeOperaciones}%
+    S/${Math.round(colocacion).toLocaleString("es-PE")}
 </td>
 
-<td><b>${clientesAnterior}</b></td>
-
-<td><b>${clientesActual}</b></td>
 
 <td style="
-font-weight:bold;
-color:${colorVariacion};
+    padding:8px;
+    font-weight:800;
+    background:${
+        Number(porcentajeDesembolso)>=100
+        ? "#27A85A"
+        : Number(porcentajeDesembolso)>=80
+        ? "#F4D88B"
+        : "#EFC4C4"
+    };
+    color:${
+        Number(porcentajeDesembolso)>=100
+        ? "#FFFFFF"
+        : Number(porcentajeDesembolso)>=80
+        ? "#8A5A18"
+        : "#B83E3E"
+    };
 ">
-${variacionClientes>0?"+":""}${variacionClientes}
+    ${porcentajeDesembolso}%
 </td>
 
-<td>${Number(temAnterior).toFixed(1)}%</td>
 
-<td>${tem}%</td>
+<td style="padding:8px;">
+    ${metaOperaciones}
+</td>
 
-<td>S/${Number(moraAnterior).toLocaleString()}</td>
 
 <td style="
-font-weight:bold;
-color:#C43D3D;
+    padding:8px;
+    font-weight:700;
 ">
-S/${Math.round(moraActual).toLocaleString()}
+    ${oper}
 </td>
 
+
 <td style="
-font-weight:bold;
-color:#C43D3D;
+    padding:8px;
+    font-weight:800;
+    background:${
+        Number(porcentajeOperaciones)>=100
+        ? "#27A85A"
+        : Number(porcentajeOperaciones)>=80
+        ? "#E0AD32"
+        : "#D14A4A"
+    };
+    color:white;
 ">
-S/${Math.round(mora1Mas).toLocaleString()}
+    ${porcentajeOperaciones}%
 </td>
-<td>${colorEstado}</td>
+
+
+<td style="
+    padding:8px;
+    font-weight:700;
+    color:#3B5262;
+">
+    ${clientesAnterior}
+</td>
+
+
+<td style="
+    padding:8px;
+    font-weight:800;
+    background:#F2F7FA;
+    color:#164A70;
+    border-left:1px solid #D8E5EF;
+    border-right:1px solid #D8E5EF;
+">
+    ${clientesActual}
+</td>
+
+
+<td style="
+    padding:8px;
+    font-size:15px;
+    font-weight:900;
+    color:${colorVariacion};
+">
+    ${variacionClientes > 0 ? "+" : ""}
+    ${variacionClientes}
+</td>
+
+
+<td style="padding:8px;">
+    ${Number(temAnterior).toFixed(1)}%
+</td>
+
+
+<td style="
+    padding:8px;
+    font-weight:700;
+">
+    ${Number(tem).toFixed(1)}%
+</td>
+
+
+<td style="padding:8px;">
+    S/${Math.round(Number(moraAnterior)).toLocaleString("es-PE")}
+</td>
+
+
+<td style="
+    padding:8px;
+    font-weight:700;
+    color:#D14A4A;
+">
+    S/${Math.round(Number(moraActual)).toLocaleString("es-PE")}
+</td>
+
+
+<td style="
+    padding:8px;
+    font-weight:800;
+    color:#D14A4A;
+">
+    S/${Math.round(Number(moraActual)).toLocaleString("es-PE")}
+</td>
+
+
+<td style="
+    padding:8px;
+    font-weight:800;
+    color:#D14A4A;
+">
+    S/${Math.round(Number(mora1Mas)).toLocaleString("es-PE")}
+</td>
+
+
+<td style="
+    padding:8px;
+    font-size:18px;
+">
+    ${colorEstado}
+</td>
 
 </tr>
 
@@ -1246,97 +1230,449 @@ cantidadTemAgosto > 0
 let colorTotalVariacion =
 totalVariacionClientes > 0
 ?
-"#159447"
+"#178A4B"
 :
 totalVariacionClientes < 0
 ?
-"#D64545"
+"#D14A4A"
 :
-"#657789";
+"#647987";
 
 resumen += `
 
 <tr style="
-background:#EDF4F8;
-font-weight:bold;
-border-top:3px solid #123F63;
+    background:#EAF2F6;
+    font-weight:800;
+    border-top:3px solid #164A70;
 ">
 
-<td>
-TOTAL EMPRESA
+<td style="
+    padding:10px;
+    color:#164A70;
+">
+    TOTAL<br>EMPRESA
 </td>
 
 <td>
-S/${totalMetaColocacion.toLocaleString("es-PE")}
+    S/${Math.round(totalMetaColocacion)
+        .toLocaleString("es-PE")}
 </td>
 
 <td>
-S/${Math.round(totalAvanceColocacion).toLocaleString("es-PE")}
+    S/${Math.round(totalAvanceColocacion)
+        .toLocaleString("es-PE")}
 </td>
 
 <td>
-${porcentajeTotalColocacion}%
+    ${porcentajeTotalColocacion}%
 </td>
 
 <td>
-${totalMetaOperaciones}
+    ${totalMetaOperaciones}
 </td>
 
 <td>
-${totalAvanceOperaciones}
+    ${totalAvanceOperaciones}
 </td>
 
 <td>
-${porcentajeTotalOperaciones}%
+    ${porcentajeTotalOperaciones}%
 </td>
 
 <td>
-${totalClientesJulio}
-</td>
-
-<td>
-${totalClientesAgosto}
+    ${totalClientesJulio}
 </td>
 
 <td style="
-color:${colorTotalVariacion};
+    color:#164A70;
+    font-size:15px;
 ">
-${totalVariacionClientes > 0 ? "+" : ""}
-${totalVariacionClientes}
+    ${totalClientesAgosto}
+</td>
+
+<td style="
+    color:${colorTotalVariacion};
+    font-size:15px;
+">
+    ${totalVariacionClientes > 0 ? "+" : ""}
+    ${totalVariacionClientes}
 </td>
 
 <td>
-${temTotalJulio}%
+    ${temTotalJulio}%
 </td>
 
 <td>
-${temTotalAgosto}%
+    ${temTotalAgosto}%
 </td>
 
 <td>
-S/${Math.round(totalMoraJulio).toLocaleString("es-PE")}
+    S/${Math.round(totalMoraJulio)
+        .toLocaleString("es-PE")}
 </td>
 
 <td>
-S/${Math.round(totalMoraAgosto).toLocaleString("es-PE")}
+    S/${Math.round(totalMoraAgosto)
+        .toLocaleString("es-PE")}
 </td>
 
 <td>
-S/${Math.round(totalMoraAgosto1Mas).toLocaleString("es-PE")}
+    S/${Math.round(totalMoraAgosto)
+        .toLocaleString("es-PE")}
 </td>
 
 <td>
-🏢
+    S/${Math.round(totalMoraAgosto1Mas)
+        .toLocaleString("es-PE")}
+</td>
+
+<td>
+    🏢
 </td>
 
 </tr>
 
-`;
-    resumen += `
+</tbody>
+
 </table>
+
 </div>
 `;
     
+resumen += `
+
+<!-- =========================================
+     RESUMEN EJECUTIVO
+     ========================================= -->
+
+<div style="
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(220px,1fr));
+    gap:14px;
+    margin-top:18px;
+">
+
+
+<!-- CLIENTES -->
+
+<div style="
+    background:#F3F8FB;
+    border:1px solid #DCEAF4;
+    border-radius:14px;
+    padding:16px 18px;
+">
+
+<div style="
+    font-size:12px;
+    font-weight:700;
+    color:#164A70;
+">
+    👥 CLIENTES ${mesActual.toUpperCase()}
+</div>
+
+<div style="
+    font-size:30px;
+    font-weight:900;
+    color:#164A70;
+    margin-top:4px;
+">
+    ${totalClientesAgosto}
+</div>
+
+<div style="
+    margin-top:5px;
+    font-size:12px;
+    color:${colorTotalVariacion};
+    font-weight:800;
+">
+    ${totalVariacionClientes > 0 ? "↑ +" : "↓ "}
+    ${Math.abs(totalVariacionClientes)}
+    vs ${mesAnterior}
+</div>
+
+</div>
+
+
+<!-- COLOCACIÓN -->
+
+<div style="
+    background:#F3FAF6;
+    border:1px solid #D7EBDD;
+    border-radius:14px;
+    padding:16px 18px;
+">
+
+<div style="
+    font-size:12px;
+    font-weight:700;
+    color:#178A4B;
+">
+    💰 COLOCACIÓN
+</div>
+
+<div style="
+    font-size:30px;
+    font-weight:900;
+    color:#164A70;
+    margin-top:4px;
+">
+    S/${Math.round(montoOtorgadoTotal)
+        .toLocaleString("es-PE")}
+</div>
+
+<div style="
+    margin-top:7px;
+    height:7px;
+    background:#DCE8E0;
+    border-radius:10px;
+    overflow:hidden;
+">
+
+<div style="
+    width:${Math.min(Number(avanceEmpresa),100)}%;
+    height:100%;
+    background:#178A4B;
+">
+</div>
+
+</div>
+
+<div style="
+    margin-top:6px;
+    font-size:12px;
+    color:#536A79;
+">
+    ${avanceEmpresa}% de la meta
+</div>
+
+</div>
+
+
+<!-- OPERACIONES -->
+
+<div style="
+    background:#F7F5FA;
+    border:1px solid #EAE7F2;
+    border-radius:14px;
+    padding:16px 18px;
+">
+
+<div style="
+    font-size:12px;
+    font-weight:700;
+    color:#5367B8;
+">
+    📋 OPERACIONES
+</div>
+
+<div style="
+    font-size:30px;
+    font-weight:900;
+    color:#164A70;
+    margin-top:4px;
+">
+    ${totalOperaciones}
+</div>
+
+<div style="
+    margin-top:7px;
+    height:7px;
+    background:#E7E4F0;
+    border-radius:10px;
+    overflow:hidden;
+">
+
+<div style="
+    width:${Math.min(
+        Number(porcentajeTotalOperaciones),
+        100
+    )}%;
+    height:100%;
+    background:#6658A8;
+">
+</div>
+
+</div>
+
+<div style="
+    margin-top:6px;
+    font-size:12px;
+    color:#536A79;
+">
+    ${porcentajeTotalOperaciones}% de la meta
+</div>
+
+</div>
+
+
+<!-- MORA -->
+
+<div style="
+    background:#FFF7F7;
+    border:1px solid #F0D0D0;
+    border-radius:14px;
+    padding:16px 18px;
+">
+
+<div style="
+    font-size:12px;
+    font-weight:700;
+    color:#D14A4A;
+">
+    ⚠️ MORA TOTAL 1+
+</div>
+
+<div style="
+    font-size:30px;
+    font-weight:900;
+    color:#D14A4A;
+    margin-top:4px;
+">
+    S/${Math.round(totalMoraAgosto1Mas)
+        .toLocaleString("es-PE")}
+</div>
+
+<div style="
+    margin-top:5px;
+    font-size:12px;
+    color:#D14A4A;
+    font-weight:800;
+">
+    Comparativo contra ${mesAnterior}
+</div>
+
+</div>
+
+</div>
+`;    
+
+    resumen += `
+
+<!-- =========================================
+     INSIGHTS + PRÓXIMOS PASOS
+     ========================================= -->
+
+<div style="
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(320px,1fr));
+    gap:14px;
+    margin-top:14px;
+">
+
+
+<!-- INSIGHTS -->
+
+<div style="
+    background:#F6F8FA;
+    border:1px solid #DCE4EA;
+    border-radius:14px;
+    padding:16px 20px;
+">
+
+<div style="
+    font-size:16px;
+    font-weight:800;
+    color:#164A70;
+    margin-bottom:8px;
+">
+    💡 INSIGHTS
+</div>
+
+<div style="
+    font-size:13px;
+    line-height:1.8;
+    color:#536A79;
+">
+
+<div>
+• 🏆 Mejor desempeño:
+<strong>${top[0] ? top[0][0] : "-"}</strong>
+</div>
+
+<div>
+• 👥 Variación de clientes:
+<strong style="color:${colorTotalVariacion};">
+${totalVariacionClientes > 0 ? "+" : ""}
+${totalVariacionClientes}
+</strong>
+</div>
+
+<div>
+• 💰 Cumplimiento de colocación:
+<strong>${avanceEmpresa}%</strong>
+</div>
+
+<div>
+• 📋 Cumplimiento de operaciones:
+<strong>${porcentajeTotalOperaciones}%</strong>
+</div>
+
+<div>
+• ⚠️ Mora 1+:
+<strong>
+S/${Math.round(totalMoraAgosto1Mas)
+    .toLocaleString("es-PE")}
+</strong>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PRÓXIMOS PASOS -->
+
+<div style="
+    background:#F6F8FA;
+    border:1px solid #DCE4EA;
+    border-radius:14px;
+    padding:16px 20px;
+">
+
+<div style="
+    font-size:16px;
+    font-weight:800;
+    color:#164A70;
+    margin-bottom:8px;
+">
+    🎯 PRÓXIMOS PASOS
+</div>
+
+<div style="
+    font-size:13px;
+    line-height:1.8;
+    color:#536A79;
+">
+
+<div>
+• Reforzar gestión de asesores con avance
+<strong>&lt; 80%</strong>.
+</div>
+
+<div>
+• Revisar asesores con variación negativa
+de clientes.
+</div>
+
+<div>
+• Priorizar recuperación de cartera con
+mora 1+.
+</div>
+
+<div>
+• Dar seguimiento diario a colocación y operaciones.
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+`;
 let rankingKPIHTML = "";
 top
 .filter(([asesor]) =>
@@ -1446,38 +1782,102 @@ function cargarGerencialFirebase(){
 
     db.ref("kpiGerencial")
     .once("value")
-    .then(snapshot=>{
+    .then(snapshot => {
 
         const datos = snapshot.val();
-console.log("================================");
-console.log("GERENCIAL FIREBASE");
-console.log(datos);
-console.log("================================");
-        if(!datos) return;
 
-      if(datos.fechaProduccion){
+        console.log(
+            "================================"
+        );
 
-    const fechaCargaProduccion =
-    new Date().toLocaleString("es-PE");
+        console.log(
+            "GERENCIAL FIREBASE"
+        );
 
-localStorage.setItem(
-    "fechaProduccionKPI",
-    fechaCargaProduccion
-);
+        console.log(
+            datos
+        );
 
-}
+        console.log(
+            "================================"
+        );
 
-       console.log("RESUMEN GERENCIAL:", datos.resumen);
 
-const divResumen = document.getElementById("kpiResumen");
+        if(!datos){
 
-console.log("DIV KPI:", divResumen);
+            return;
 
-if(divResumen){
+        }
 
-    divResumen.innerHTML = datos.resumen || "";
 
-}
+        // ==================================
+        // RESTAURAR INFORMACIÓN REAL
+        // ==================================
+
+        if(datos.nombreMeta !== undefined){
+
+            localStorage.setItem(
+                "nombreMetaKPI",
+                datos.nombreMeta || ""
+            );
+
+        }
+
+
+        if(datos.fechaMeta !== undefined){
+
+            localStorage.setItem(
+                "fechaMetaKPI",
+                datos.fechaMeta || ""
+            );
+
+        }
+
+
+        if(datos.nombreProduccion !== undefined){
+
+            localStorage.setItem(
+                "nombreProduccionKPI",
+                datos.nombreProduccion || ""
+            );
+
+        }
+
+
+        // ==================================
+        // NO MODIFICAR LA FECHA
+        // ==================================
+
+        if(datos.fechaProduccion){
+
+            localStorage.setItem(
+                "fechaProduccionKPI",
+                datos.fechaProduccion
+            );
+
+        }
+
+
+        // ==================================
+        // RESTAURAR RESUMEN
+        // ==================================
+
+        const divResumen =
+            document.getElementById(
+                "kpiResumen"
+            );
+
+        if(divResumen){
+
+            divResumen.innerHTML =
+                datos.resumen || "";
+
+        }
+
+
+        // ==================================
+        // RESTAURAR RANKING
+        // ==================================
 
         if(
             datos.rankingKPIHTML &&
@@ -1487,9 +1887,10 @@ if(divResumen){
             document.getElementById(
                 "rankingKPI"
             ).innerHTML =
-            datos.rankingKPIHTML;
+                datos.rankingKPIHTML;
 
         }
+
 
         console.log(
             "✅ KPI GERENCIAL DESDE FIREBASE"
@@ -1497,7 +1898,7 @@ if(divResumen){
 
     })
 
-    .catch(error=>{
+    .catch(error => {
 
         console.error(
             "❌ ERROR CARGANDO KPI GERENCIAL",
@@ -2206,10 +2607,10 @@ background:white;
 padding:12px;
 margin:6px 0;
 border-radius:12px;
-border:1px solid #DEE4EA;
+border:1px solid #DDE3E8;
 font-size:14px;
 font-weight:500;
-box-shadow:0 2px 7px rgba(18,63,99,.06);
+box-shadow:0 1px 4px rgba(0,0,0,.04);
 display:flex;
 justify-content:space-between;
 align-items:center;
@@ -2284,7 +2685,7 @@ rankingProductoHTML += `
 background:white;
 padding:12px;
 border-radius:12px;
-border:1px solid #E8EEF3;
+border:1px solid #E9EEF2;
 margin:6px 0;
 display:flex;
 justify-content:space-between;
@@ -2338,24 +2739,24 @@ cartera > 0
 
 let color =
 mora <= 5
-? "#159447"
+? "#178A4B"
 : mora <= 10
-? "#D99A1A"
-: "#D64545";
+? "#D79A24"
+: "#D14A4A";
 
 let fondo =
 mora <= 5
-? "#F2FAF4"
+? "#F2FAF5"
 : mora <= 10
-? "#FFF9EF"
-: "#FFF3F3";
+? "#FFF9EE"
+: "#FFF4F4";
 
 let borde =
 mora <= 5
-? "#22C55E"
+? "#27A85A"
 : mora <= 10
-? "#D99A1A"
-: "#EF4444";
+? "#D79A24"
+: "#D14A4A";
 moraProductoHTML += `
 <div
 onclick="mostrarDetalleProducto('${r[0]}')"
@@ -2366,7 +2767,7 @@ border-left:5px solid ${borde};
 padding:14px;
 margin:10px 0;
 border-radius:12px;
-box-shadow:0 3px 10px rgba(18,63,99,.07);
+box-shadow:0 2px 8px rgba(0,0,0,.05);
 cursor:pointer;
 transition:.25s;
 ">
@@ -2415,7 +2816,7 @@ background:white;
 padding:10px;
 margin:5px 0;
 border-radius:10px;
-border:1px solid #DEE4EA;
+border:1px solid #DDE3E8;
 display:flex;
 justify-content:space-between;
 font-size:13px;
@@ -2440,14 +2841,14 @@ ${index+1}. ${
 
 <span style="
 font-size:11px;
-color:#667783;
+color:#6C7C87;
 ">
 👤 ${c["Asesor(a)"] || "SIN ASESOR"}
 </span>
 
 <span style="
 font-size:11px;
-color:#667783;
+color:#6C7C87;
 ">
 📦 ${c["Producto"] || ""}
 </span>
@@ -2457,7 +2858,7 @@ color:#667783;
 <div style="
 text-align:right;
 font-weight:bold;
-color:#159447;
+color:#178A4B;
 ">
 💰 S/${(parseFloat(c["Saldo Capital"]) || 0).toLocaleString()}
 </div>
@@ -2494,7 +2895,7 @@ background:white;
 padding:12px;
 margin:6px 0;
 border-radius:10px;
-border:1px solid #DEE4EA;
+border:1px solid #DDE3E8;
 display:flex;
 justify-content:space-between;
 font-size:14px;
@@ -2534,7 +2935,7 @@ background:white;
 padding:12px;
 margin:6px 0;
 border-radius:10px;
-border:1px solid #DEE4EA;
+border:1px solid #DDE3E8;
 display:flex;
 justify-content:space-between;
 font-size:14px;
@@ -2631,8 +3032,8 @@ gap:10px;
 <div style="
 background:#FFFFFF;
 color:#243746;
-border:1px solid #DEE4EA;
-box-shadow:0 3px 10px rgba(18,63,99,.07);
+border:1px solid #DDE3E8;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
 text-align:center;
 min-height:80px;
 ">
@@ -2651,8 +3052,8 @@ S/${carteraTotal.toLocaleString()}
 <div style="
 background:#FFFFFF;
 color:#243746;
-border:1px solid #DEE4EA;
-box-shadow:0 3px 10px rgba(18,63,99,.07);
+border:1px solid #DDE3E8;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
 text-align:center;
 min-height:80px;
 ">
@@ -2665,8 +3066,8 @@ S/${capitalVencido.toLocaleString()}
 <div style="
 background:#FFFFFF;
 color:#243746;
-border:1px solid #DEE4EA;
-box-shadow:0 3px 10px rgba(18,63,99,.07);
+border:1px solid #DDE3E8;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
 text-align:center;
 min-height:80px;
 ">
@@ -2679,8 +3080,8 @@ S/${costoDesembolsoTotal.toLocaleString()}
 <div style="
 background:#FFFFFF;
 color:#243746;
-border:1px solid #DEE4EA;
-box-shadow:0 3px 10px rgba(18,63,99,.07);
+border:1px solid #DDE3E8;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
 padding:10px;
 border-radius:12px;
 text-align:center;
@@ -2695,8 +3096,8 @@ ${moraPorcentaje}%
 <div style="
 background:#FFFFFF;
 color:#243746;
-border:1px solid #DEE4EA;
-box-shadow:0 3px 10px rgba(18,63,99,.07);
+border:1px solid #DDE3E8;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
 padding:10px;
 border-radius:12px;
 text-align:center;
@@ -2711,9 +3112,9 @@ ${clientesCriticos}
 
 <div style="
 background:#FFF7F7;
-color:#991B1B;
-border:1px solid #F1C1C1;
-box-shadow:0 3px 10px rgba(18,63,99,.07);
+color:#A33A3A;
+border:1px solid #EFC4C4;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
 padding:10px;
 border-radius:12px;
 text-align:center;
@@ -2738,8 +3139,8 @@ S/${moraTotal.toLocaleString()}
 <div style="
 background:#FFFFFF;
 color:#243746;
-border:1px solid #DEE4EA;
-box-shadow:0 3px 10px rgba(18,63,99,.07);
+border:1px solid #DDE3E8;
+box-shadow:0 2px 8px rgba(0,0,0,.05);
 text-align:center;
 min-height:80px;
 ">
@@ -2758,7 +3159,7 @@ margin-top:15px;
 ">
 
 <div style="
-background:#159447;
+background:#178A4B;
 color:white;
 padding:15px;
 border-radius:12px;
@@ -2783,7 +3184,7 @@ S/${carteraSana.toLocaleString()}
 </div>
 
 <div style="
-background:#D64545;
+background:#D14A4A;
 color:white;
 padding:15px;
 border-radius:12px;
@@ -2811,7 +3212,7 @@ S/${capitalVencido.toLocaleString()}
 
 <div style="
 background:#FFFFFF;
-border:1px solid #DEE4EA;
+border:1px solid #DDE3E8;
 padding:15px;
 border-radius:12px;
 margin-top:10px;
@@ -2830,7 +3231,7 @@ font-weight:bold;
 background:#FFFFFF;
 padding:20px;
 border-radius:16px;
-box-shadow:0 3px 12px rgba(18,63,99,.07);
+box-shadow:0 2px 10px rgba(0,0,0,.06);
 margin-top:15px;
 ">
 </div>
@@ -2919,6 +3320,8 @@ ${topClientesHTML}
 `;
 
 }
+
+window.cargarMetasKPI = function(){
 function cargarMetasKPI(){
 
     const archivo =
@@ -2930,7 +3333,7 @@ function cargarMetasKPI(){
 
         return;
 
-    }
+ };
 
     const lector = new FileReader();
 
@@ -2981,7 +3384,14 @@ function cargarMetasKPI(){
                 "fechaMetaKPI",
                 new Date().toLocaleString()
             );
+const produccionGuardada =
+    JSON.parse(
+        localStorage.getItem("produccionKPI")
+    ) || [];
 
+if(produccionGuardada.length){
+    generarKPI(produccionGuardada);
+}
             // =====================================
             // MOSTRAR META ACTIVA
             // =====================================
@@ -3093,13 +3503,13 @@ String(c["Producto"]||"").trim().toUpperCase()===producto.toUpperCase()
 
 let html=`
 <div style="margin-bottom:15px">
-<button onclick="volverProductos()" style="width:100%;padding:14px;border:none;border-radius:12px;background:#123F63;color:#fff;font-weight:bold;cursor:pointer">
+<button onclick="volverProductos()" style="width:100%;padding:14px;border:none;border-radius:12px;background:#164A70;color:#fff;font-weight:bold;cursor:pointer">
 ← Volver a Productos
 </button>
 </div>
 
-<div style="background:#fff;border-radius:16px;padding:16px;border:1px solid #DEE4EA">
-<h2 style="margin:0;text-align:center;color:#123F63">${producto}</h2>
+<div style="background:#fff;border-radius:16px;padding:16px;border:1px solid #DDE3E8">
+<h2 style="margin:0;text-align:center;color:#164A70">${producto}</h2>
 <p style="text-align:center">👥 ${clientes.length} Clientes</p>
 
 <div class="detallePC">

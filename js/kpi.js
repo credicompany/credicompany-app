@@ -277,512 +277,161 @@ let colorMeta =
 let resumen = `
 
 <div style="
+    width:100%;
     margin-bottom:18px;
 ">
 
-    <div style="
-        text-align:center;
-        margin-bottom:18px;
-    ">
+<!-- =========================================
+     CABECERA EJECUTIVA
+     ========================================= -->
+
+<div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    margin-bottom:16px;
+    padding:4px 4px 12px 4px;
+">
+
+    <div>
 
         <div style="
             font-size:26px;
             font-weight:800;
             color:#0A3A63;
-            letter-spacing:.3px;
+            letter-spacing:.2px;
         ">
-            📊 TABLERO GERENCIAL
+            🎯 KPI POR ASESOR
         </div>
 
         <div style="
             font-size:13px;
             color:#64748B;
-            margin-top:4px;
+            margin-top:3px;
         ">
-            ${mesActual.toUpperCase()} ${anioActual}
-            &nbsp;•&nbsp;
-          Actualizado: ${localStorage.getItem("fechaProduccionKPI") || new Date().toLocaleString("es-PE")}
+            Desempeño y evolución de la cartera
+            al mes de ${mesActual.toUpperCase()} ${anioActual}
         </div>
 
     </div>
 
-
-    <!-- ================================= -->
-    <!-- INDICADORES PRINCIPALES -->
-    <!-- ================================= -->
-
     <div style="
-        display:grid;
-        grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-        gap:10px;
-    ">
-
-
-        <!-- CLIENTES -->
-
-        <div style="
-            background:#FFFFFF;
-            border:1px solid #E2E8F0;
-            border-top:4px solid #0A3A63;
-            border-radius:12px;
-            padding:14px;
-            text-align:center;
-            box-shadow:0 2px 8px rgba(0,0,0,.05);
-        ">
-
-            <div style="font-size:23px;">👥</div>
-
-            <div style="
-                font-size:12px;
-                color:#64748B;
-                margin-top:3px;
-            ">
-                CLIENTES EN CARTERA
-            </div>
-
-           <div style="
-    font-size:25px;
-    font-weight:800;
-    color:#0F172A;
-    margin-top:3px;
-">
- ${totalClientesAgosto}
-</div>
-
-        </div>
-
-
-        <!-- COLOCACIÓN -->
-
-        <div style="
-            background:#FFFFFF;
-            border:1px solid #E2E8F0;
-            border-top:4px solid #16A34A;
-            border-radius:12px;
-            padding:14px;
-            text-align:center;
-            box-shadow:0 2px 8px rgba(0,0,0,.05);
-        ">
-
-            <div style="font-size:23px;">💰</div>
-
-            <div style="
-                font-size:12px;
-                color:#64748B;
-            ">
-                COLOCACIÓN
-            </div>
-
-            <div style="
-                font-size:24px;
-                font-weight:800;
-                color:#0F172A;
-            ">
-                S/${Math.round(montoOtorgadoTotal).toLocaleString("es-PE")}
-            </div>
-
-            <div style="
-                font-size:11px;
-                color:#64748B;
-                margin-top:3px;
-            ">
-                Meta: S/${Math.round(metaEmpresa).toLocaleString("es-PE")}
-            </div>
-
-        </div>
-
-
-        <!-- OPERACIONES -->
-
-        <div style="
-            background:#FFFFFF;
-            border:1px solid #E2E8F0;
-            border-top:4px solid #2563EB;
-            border-radius:12px;
-            padding:14px;
-            text-align:center;
-            box-shadow:0 2px 8px rgba(0,0,0,.05);
-        ">
-
-            <div style="font-size:23px;">📋</div>
-
-            <div style="
-                font-size:12px;
-                color:#64748B;
-            ">
-                OPERACIONES
-            </div>
-
-            <div style="
-                font-size:25px;
-                font-weight:800;
-                color:#0F172A;
-            ">
-                ${totalOperaciones}
-            </div>
-
-        </div>
-
-
-        <!-- TEM -->
-
-        <div style="
-            background:#FFFFFF;
-            border:1px solid #E2E8F0;
-            border-top:4px solid #7C3AED;
-            border-radius:12px;
-            padding:14px;
-            text-align:center;
-            box-shadow:0 2px 8px rgba(0,0,0,.05);
-        ">
-
-            <div style="font-size:23px;">📈</div>
-
-            <div style="
-                font-size:12px;
-                color:#64748B;
-            ">
-                TEM PROMEDIO
-            </div>
-
-            <div style="
-                font-size:25px;
-                font-weight:800;
-                color:#0F172A;
-            ">
-                ${temGeneral}%
-            </div>
-
-        </div>
-
-
-        <!-- CUMPLIMIENTO -->
-
-        <div style="
-            background:#FFFFFF;
-            border:1px solid #E2E8F0;
-            border-top:4px solid ${colorMeta};
-            border-radius:12px;
-            padding:14px;
-            text-align:center;
-            box-shadow:0 2px 8px rgba(0,0,0,.05);
-        ">
-
-            <div style="font-size:23px;">🎯</div>
-
-            <div style="
-                font-size:12px;
-                color:#64748B;
-            ">
-                CUMPLIMIENTO
-            </div>
-
-            <div style="
-                font-size:25px;
-                font-weight:800;
-                color:${colorMeta};
-            ">
-                ${avanceEmpresa}%
-            </div>
-
-            <div style="
-                font-size:11px;
-                font-weight:700;
-                color:${colorMeta};
-                margin-top:3px;
-            ">
-                ${estadoMeta}
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- ================================= -->
-    <!-- BARRA DE CUMPLIMIENTO -->
-    <!-- ================================= -->
-
-    <div style="
-        background:#F8FAFC;
-        border:1px solid #E2E8F0;
+        background:#F1F7FC;
         border-radius:12px;
-        padding:13px;
-        margin-top:12px;
+        padding:10px 16px;
+        text-align:left;
+        min-width:190px;
     ">
 
         <div style="
-            display:flex;
-            justify-content:space-between;
-            font-size:12px;
-            font-weight:700;
-            margin-bottom:7px;
-        ">
-
-            <span>
-                🎯 Avance de colocación
-            </span>
-
-            <span style="color:${colorMeta};">
-                ${avanceEmpresa}%
-            </span>
-
-        </div>
-
-        <div style="
-            width:100%;
-            height:10px;
-            background:#E2E8F0;
-            border-radius:20px;
-            overflow:hidden;
-        ">
-
-            <div style="
-                width:${Math.min(Number(avanceEmpresa),100)}%;
-                height:100%;
-                background:${colorMeta};
-                border-radius:20px;
-            "></div>
-
-        </div>
-
-        <div style="
-            display:flex;
-            justify-content:space-between;
-            margin-top:6px;
             font-size:11px;
             color:#64748B;
         ">
+            📅 Última actualización
+        </div>
 
-            <span>
-                Real: S/${Math.round(montoOtorgadoTotal).toLocaleString("es-PE")}
-            </span>
-
-            <span>
-                Meta: S/${Math.round(metaEmpresa).toLocaleString("es-PE")}
-            </span>
-
+        <div style="
+            font-size:13px;
+            font-weight:800;
+            color:#0A3A63;
+            margin-top:2px;
+        ">
+            ${localStorage.getItem("fechaProduccionKPI")
+              || new Date().toLocaleString("es-PE")}
         </div>
 
     </div>
 
 </div>
 
-`;
 
-   let ranking = {};
-let operaciones = {};
-let temPromedio = {};
-let clientes = {};
-let moraAsesor = {};
-
-    json.forEach(c => {
-console.log(Object.keys(c));
-        let asesor =
-        (c["Asesor(a)"] || "SIN ASESOR")
-        .trim()
-        .toUpperCase();
-console.log(
-    "ASESOR:",
-    JSON.stringify(c["Asesor(a)"]),
-    "| PRESTAMO:",
-    c["Prestamo"],
-    "| FECHA:",
-    c["Fecha Desembolso"]
-);
-        let monto =
-        parseFloat(c["Monto Otorgado"]) || 0;
-
-        let tem =
-parseFloat(
-    String(c["TEM"])
-    .replace(",",".")
-) || 0;
-
-        let codigoCliente =
-String(c["Cod Cliente"] || "")
-.trim()
-.toUpperCase();
-let saldoCapitalVencido =
-parseFloat(
-    c["Saldo capital vencido"] ??
-    c["Saldo Capital Vencido"] ??
-    c["SALDO CAPITAL VENCIDO"] ??
-    0
-) || 0;
-
-
-       if(!ranking[asesor]){
-
-    ranking[asesor] = 0;
-    operaciones[asesor] = 0;
-    temPromedio[asesor] = [];
-    clientes[asesor] = new Set();
-    moraAsesor[asesor] = 0;
-
-}
-
-        ranking[asesor] += monto;
-        operaciones[asesor]++;
-        temPromedio[asesor].push(tem);
-        
-moraAsesor[asesor] += saldoCapitalVencido;
-       
-      if(codigoCliente){
-
-    clientes[asesor].add(codigoCliente);
-
-}
-
-    });
-
-// =========================================
-// CLIENTES EN CARTERA
-// =========================================
-
-totalClientesActual =
-Object.values(clientesHistorico)
-.reduce(
-    (total, clientes) => total + clientes.size,
-    0
-);
-
-console.log(
-    "CLIENTES EN CARTERA:",
-    totalClientesActual
-);
-    
-// ==========================================
-// RANKING COLOCACIÓN
-// ==========================================
-
-// ==========================================
-// INCLUIR TODOS LOS ASESORES ACTIVOS
-// ==========================================
-usuarios.forEach(u => {
-
-    const asesor = String(
-        u.user || u.usuario || u.nombre || ""
-    ).trim().toUpperCase();
-
-    if (!asesor || asesor === "ADMIN") return;
-
-    ranking[asesor] = Number(ranking[asesor] || 0);
-    operaciones[asesor] = Number(operaciones[asesor] || 0);
-
-    if (!temPromedio[asesor]) temPromedio[asesor] = [];
-    if (!clientes[asesor]) clientes[asesor] = new Set();
-    if (!moraAsesor[asesor]) moraAsesor[asesor] = 0;
-
-});
-
-let top =
-Object.entries(ranking)
-
-.filter(([asesor]) =>
-    asesor.toUpperCase() !== "ADMIN"
-)
-
-.sort((a,b) => b[1] - a[1]);
-console.log("RANKING COLOCACION REAL:", ranking);
-console.log("TOP COLOCACION REAL:", top);
-let mejorAsesor =
-top.length > 0
-?
-top[0]
-:
-null;
-
-if(mejorAsesor){
-
-resumen += `
+<!-- =========================================
+     TABLA KPI
+     ========================================= -->
 
 <div style="
-background:#FFFFFF;
-border-left:5px solid #0A3A63;
-color:#1F2937;
-padding:12px;
-border-radius:12px;
-margin-bottom:12px;
-">
-
-<div style="
-font-size:14px;
-font-weight:600;
-color:#6B7280;
-">
-🏆 Líder del Mes
-</div>
-
-<div style="
-font-size:20px;
-font-weight:bold;
-margin-top:5px;
-">
-${mejorAsesor[0]}
-</div>
-
-<div style="
-font-size:18px;
-margin-top:4px;
-">
-💰 S/${mejorAsesor[1].toLocaleString()}
-</div>
-
-</div>
-`;
-
-}
-   resumen += `
-
-<div class="card">
-
-<h4 style="
-margin:5px 0;
-font-size:14px;
-">
-🎯 KPI POR ASESOR
-</h4>
-
-<div style="
-overflow-x:auto;
-overflow-y:hidden;
-width:100%;
--webkit-overflow-scrolling:touch;
-padding-bottom:8px;
+    overflow-x:auto;
+    width:100%;
+    border-radius:12px;
 ">
 
 <table style="
-width:100%;
-min-width:1100px;
-border-collapse:collapse;
-font-size:14px;
-text-align:center;
+    width:100%;
+    min-width:1450px;
+    border-collapse:separate;
+    border-spacing:0;
+    font-size:14px;
+    text-align:center;
+    overflow:hidden;
 ">
+
+<thead>
 
 <tr style="
-background:#0A3A63;
-color:white;
+    background:#0A3A63;
+    color:white;
 ">
 
-<th>ASESOR</th>
-<th>META COLOCACIÓN</th>
-<th>AVANCE</th>
-<th>% AVANCE</th>
-<th>META OPERACIONES</th>
-<th>AVANCE</th>
-<th>% AVANCE OPER</th>
-<th>CLIENTES ${mesAnterior.toUpperCase()}</th>
-<th>CLIENTES ${mesActual.toUpperCase()}</th>
-<th>VARIACIÓN</th>
-<th>TEM ${mesAnterior.toUpperCase()}</th>
-<th>TEM ${mesActual.toUpperCase()}</th>
-<th>MORA ${mesAnterior.toUpperCase()}</th>
-<th>MORA ${mesActual.toUpperCase()} 9+</th>
-<th>MORA ${mesActual.toUpperCase()} 1+</th>
-<th>🚦</th>
+<th style="padding:10px 8px;">ASESOR</th>
+
+<th style="padding:10px 8px;">META<br>COLOCACIÓN</th>
+
+<th style="padding:10px 8px;">AVANCE</th>
+
+<th style="padding:10px 8px;">%<br>AVANCE</th>
+
+<th style="padding:10px 8px;">META<br>OPERACIONES</th>
+
+<th style="padding:10px 8px;">AVANCE</th>
+
+<th style="padding:10px 8px;">% AVANCE<br>OPER</th>
+
+<th style="padding:10px 8px;">
+CLIENTES<br>${mesAnterior.toUpperCase()}
+</th>
+
+<th style="padding:10px 8px;">
+CLIENTES<br>${mesActual.toUpperCase()}
+</th>
+
+<th style="padding:10px 8px;">
+VARIACIÓN
+</th>
+
+<th style="padding:10px 8px;">
+TEM<br>${mesAnterior.toUpperCase()}
+</th>
+
+<th style="padding:10px 8px;">
+TEM<br>${mesActual.toUpperCase()}
+</th>
+
+<th style="padding:10px 8px;">
+MORA<br>${mesAnterior.toUpperCase()}
+</th>
+
+<th style="padding:10px 8px;">
+MORA<br>${mesActual.toUpperCase()}
+</th>
+
+<th style="padding:10px 8px;">
+MORA<br>${mesActual.toUpperCase()} 9+
+</th>
+
+<th style="padding:10px 8px;">
+MORA<br>${mesActual.toUpperCase()} 1+
+</th>
+
+<th style="padding:10px 8px;">
+ESTADO
+</th>
 
 </tr>
+
+</thead>
+
+<tbody>
 `;
 // ==========================
 // MORA ACTUAL (TODA LA CARTERA)
@@ -1074,89 +723,173 @@ mora1MasAsesor[asesor] || 0;
     // TABLA
     //=========================================
 
-    resumen +=`
+  //=========================================
+// FILA KPI DEL ASESOR
+//=========================================
 
-<tr>
+resumen += `
 
-<td><b>${asesor}</b></td>
-
-<td>S/${metaDesembolso.toLocaleString()}</td>
-
-<td>S/${Math.round(colocacion).toLocaleString()}</td>
+<tr style="
+    border-bottom:1px solid #E2E8F0;
+    background:#FFFFFF;
+">
 
 <td style="
-background:${
-Number(porcentajeDesembolso)>=100
-?
-'#22c55e'
-:
-'#ffffff'
-};
-color:${
-Number(porcentajeDesembolso)>=100
-?
-'white'
-:
-'#000'
-};
-font-weight:bold;
+    padding:8px;
+    font-weight:800;
+    color:#0F2742;
 ">
-${porcentajeDesembolso}%
+    ${asesor}
 </td>
 
-<td>${metaOperaciones}</td>
 
-<td>${oper}</td>
+<td style="padding:8px;">
+    S/${Math.round(metaDesembolso).toLocaleString("es-PE")}
+</td>
+
 
 <td style="
-background:${
-Number(porcentajeOperaciones)>=100
-?
-'#22c55e'
-:
-Number(porcentajeOperaciones)>=80
-?
-'#facc15'
-:
-'#ef4444'
-};
-color:white;
-font-weight:bold;
+    padding:8px;
+    font-weight:700;
 ">
-${porcentajeOperaciones}%
+    S/${Math.round(colocacion).toLocaleString("es-PE")}
 </td>
 
-<td><b>${clientesAnterior}</b></td>
-
-<td><b>${clientesActual}</b></td>
 
 <td style="
-font-weight:bold;
-color:${colorVariacion};
+    padding:8px;
+    font-weight:800;
+    background:${
+        Number(porcentajeDesembolso)>=100
+        ? "#22C55E"
+        : Number(porcentajeDesembolso)>=80
+        ? "#FDE68A"
+        : "#FECACA"
+    };
+    color:${
+        Number(porcentajeDesembolso)>=100
+        ? "#FFFFFF"
+        : Number(porcentajeDesembolso)>=80
+        ? "#92400E"
+        : "#B91C1C"
+    };
 ">
-${variacionClientes>0?"+":""}${variacionClientes}
+    ${porcentajeDesembolso}%
 </td>
 
-<td>${Number(temAnterior).toFixed(1)}%</td>
 
-<td>${tem}%</td>
+<td style="padding:8px;">
+    ${metaOperaciones}
+</td>
 
-<td>S/${Number(moraAnterior).toLocaleString()}</td>
 
 <td style="
-font-weight:bold;
-color:#c62828;
+    padding:8px;
+    font-weight:700;
 ">
-S/${Math.round(moraActual).toLocaleString()}
+    ${oper}
 </td>
 
+
 <td style="
-font-weight:bold;
-color:#c62828;
+    padding:8px;
+    font-weight:800;
+    background:${
+        Number(porcentajeOperaciones)>=100
+        ? "#22C55E"
+        : Number(porcentajeOperaciones)>=80
+        ? "#FACC15"
+        : "#EF4444"
+    };
+    color:white;
 ">
-S/${Math.round(mora1Mas).toLocaleString()}
+    ${porcentajeOperaciones}%
 </td>
-<td>${colorEstado}</td>
+
+
+<td style="
+    padding:8px;
+    font-weight:700;
+    color:#334155;
+">
+    ${clientesAnterior}
+</td>
+
+
+<td style="
+    padding:8px;
+    font-weight:800;
+    background:#F0F7FF;
+    color:#0A3A63;
+    border-left:1px solid #D8E6F2;
+    border-right:1px solid #D8E6F2;
+">
+    ${clientesActual}
+</td>
+
+
+<td style="
+    padding:8px;
+    font-size:15px;
+    font-weight:900;
+    color:${colorVariacion};
+">
+    ${variacionClientes > 0 ? "+" : ""}
+    ${variacionClientes}
+</td>
+
+
+<td style="padding:8px;">
+    ${Number(temAnterior).toFixed(1)}%
+</td>
+
+
+<td style="
+    padding:8px;
+    font-weight:700;
+">
+    ${Number(tem).toFixed(1)}%
+</td>
+
+
+<td style="padding:8px;">
+    S/${Math.round(Number(moraAnterior)).toLocaleString("es-PE")}
+</td>
+
+
+<td style="
+    padding:8px;
+    font-weight:700;
+    color:#DC2626;
+">
+    S/${Math.round(Number(moraActual)).toLocaleString("es-PE")}
+</td>
+
+
+<td style="
+    padding:8px;
+    font-weight:800;
+    color:#DC2626;
+">
+    S/${Math.round(Number(moraActual)).toLocaleString("es-PE")}
+</td>
+
+
+<td style="
+    padding:8px;
+    font-weight:800;
+    color:#DC2626;
+">
+    S/${Math.round(Number(mora1Mas)).toLocaleString("es-PE")}
+</td>
+
+
+<td style="
+    padding:8px;
+    font-size:18px;
+">
+    ${colorEstado}
+</td>
 
 </tr>
 
@@ -1257,86 +990,441 @@ totalVariacionClientes < 0
 resumen += `
 
 <tr style="
-background:#EAF2F8;
-font-weight:bold;
-border-top:3px solid #0A3A63;
+    background:#E8F2FA;
+    font-weight:800;
+    border-top:3px solid #0A3A63;
 ">
 
-<td>
-TOTAL EMPRESA
+<td style="
+    padding:10px;
+    color:#0A3A63;
+">
+    TOTAL<br>EMPRESA
 </td>
 
 <td>
-S/${totalMetaColocacion.toLocaleString("es-PE")}
+    S/${Math.round(totalMetaColocacion)
+        .toLocaleString("es-PE")}
 </td>
 
 <td>
-S/${Math.round(totalAvanceColocacion).toLocaleString("es-PE")}
+    S/${Math.round(totalAvanceColocacion)
+        .toLocaleString("es-PE")}
 </td>
 
 <td>
-${porcentajeTotalColocacion}%
+    ${porcentajeTotalColocacion}%
 </td>
 
 <td>
-${totalMetaOperaciones}
+    ${totalMetaOperaciones}
 </td>
 
 <td>
-${totalAvanceOperaciones}
+    ${totalAvanceOperaciones}
 </td>
 
 <td>
-${porcentajeTotalOperaciones}%
+    ${porcentajeTotalOperaciones}%
 </td>
 
 <td>
-${totalClientesJulio}
-</td>
-
-<td>
-${totalClientesAgosto}
+    ${totalClientesJulio}
 </td>
 
 <td style="
-color:${colorTotalVariacion};
+    color:#0A3A63;
+    font-size:15px;
 ">
-${totalVariacionClientes > 0 ? "+" : ""}
-${totalVariacionClientes}
+    ${totalClientesAgosto}
+</td>
+
+<td style="
+    color:${colorTotalVariacion};
+    font-size:15px;
+">
+    ${totalVariacionClientes > 0 ? "+" : ""}
+    ${totalVariacionClientes}
 </td>
 
 <td>
-${temTotalJulio}%
+    ${temTotalJulio}%
 </td>
 
 <td>
-${temTotalAgosto}%
+    ${temTotalAgosto}%
 </td>
 
 <td>
-S/${Math.round(totalMoraJulio).toLocaleString("es-PE")}
+    S/${Math.round(totalMoraJulio)
+        .toLocaleString("es-PE")}
 </td>
 
 <td>
-S/${Math.round(totalMoraAgosto).toLocaleString("es-PE")}
+    S/${Math.round(totalMoraAgosto)
+        .toLocaleString("es-PE")}
 </td>
 
 <td>
-S/${Math.round(totalMoraAgosto1Mas).toLocaleString("es-PE")}
+    S/${Math.round(totalMoraAgosto)
+        .toLocaleString("es-PE")}
 </td>
 
 <td>
-🏢
+    S/${Math.round(totalMoraAgosto1Mas)
+        .toLocaleString("es-PE")}
+</td>
+
+<td>
+    🏢
 </td>
 
 </tr>
 
+</tbody>
+
+</table>
+
+</div>
 `;
     resumen += `
 </table>
 </div>
 `;
-    
+resumen += `
+
+<!-- =========================================
+     RESUMEN EJECUTIVO
+     ========================================= -->
+
+<div style="
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(220px,1fr));
+    gap:14px;
+    margin-top:18px;
+">
+
+
+<!-- CLIENTES -->
+
+<div style="
+    background:#F2F8FF;
+    border:1px solid #D9EAF7;
+    border-radius:14px;
+    padding:16px 18px;
+">
+
+<div style="
+    font-size:12px;
+    font-weight:700;
+    color:#0A3A63;
+">
+    👥 CLIENTES ${mesActual.toUpperCase()}
+</div>
+
+<div style="
+    font-size:30px;
+    font-weight:900;
+    color:#0A3A63;
+    margin-top:4px;
+">
+    ${totalClientesAgosto}
+</div>
+
+<div style="
+    margin-top:5px;
+    font-size:12px;
+    color:${colorTotalVariacion};
+    font-weight:800;
+">
+    ${totalVariacionClientes > 0 ? "↑ +" : "↓ "}
+    ${Math.abs(totalVariacionClientes)}
+    vs ${mesAnterior}
+</div>
+
+</div>
+
+
+<!-- COLOCACIÓN -->
+
+<div style="
+    background:#F1FBF5;
+    border:1px solid #D8F0E0;
+    border-radius:14px;
+    padding:16px 18px;
+">
+
+<div style="
+    font-size:12px;
+    font-weight:700;
+    color:#16A34A;
+">
+    💰 COLOCACIÓN
+</div>
+
+<div style="
+    font-size:30px;
+    font-weight:900;
+    color:#0A3A63;
+    margin-top:4px;
+">
+    S/${Math.round(montoOtorgadoTotal)
+        .toLocaleString("es-PE")}
+</div>
+
+<div style="
+    margin-top:7px;
+    height:7px;
+    background:#DDE8E1;
+    border-radius:10px;
+    overflow:hidden;
+">
+
+<div style="
+    width:${Math.min(Number(avanceEmpresa),100)}%;
+    height:100%;
+    background:#16A34A;
+">
+</div>
+
+</div>
+
+<div style="
+    margin-top:6px;
+    font-size:12px;
+    color:#475569;
+">
+    ${avanceEmpresa}% de la meta
+</div>
+
+</div>
+
+
+<!-- OPERACIONES -->
+
+<div style="
+    background:#F7F4FF;
+    border:1px solid #E7DFFF;
+    border-radius:14px;
+    padding:16px 18px;
+">
+
+<div style="
+    font-size:12px;
+    font-weight:700;
+    color:#4F46E5;
+">
+    📋 OPERACIONES
+</div>
+
+<div style="
+    font-size:30px;
+    font-weight:900;
+    color:#0A3A63;
+    margin-top:4px;
+">
+    ${totalOperaciones}
+</div>
+
+<div style="
+    margin-top:7px;
+    height:7px;
+    background:#E5E0F3;
+    border-radius:10px;
+    overflow:hidden;
+">
+
+<div style="
+    width:${Math.min(
+        Number(porcentajeTotalOperaciones),
+        100
+    )}%;
+    height:100%;
+    background:#7C3AED;
+">
+</div>
+
+</div>
+
+<div style="
+    margin-top:6px;
+    font-size:12px;
+    color:#475569;
+">
+    ${porcentajeTotalOperaciones}% de la meta
+</div>
+
+</div>
+
+
+<!-- MORA -->
+
+<div style="
+    background:#FFF5F5;
+    border:1px solid #F8DADA;
+    border-radius:14px;
+    padding:16px 18px;
+">
+
+<div style="
+    font-size:12px;
+    font-weight:700;
+    color:#DC2626;
+">
+    ⚠️ MORA TOTAL 1+
+</div>
+
+<div style="
+    font-size:30px;
+    font-weight:900;
+    color:#DC2626;
+    margin-top:4px;
+">
+    S/${Math.round(totalMoraAgosto1Mas)
+        .toLocaleString("es-PE")}
+</div>
+
+<div style="
+    margin-top:5px;
+    font-size:12px;
+    color:#DC2626;
+    font-weight:800;
+">
+    Comparativo contra ${mesAnterior}
+</div>
+
+</div>
+
+</div>
+`;    
+
+    resumen += `
+
+<!-- =========================================
+     INSIGHTS + PRÓXIMOS PASOS
+     ========================================= -->
+
+<div style="
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(320px,1fr));
+    gap:14px;
+    margin-top:14px;
+">
+
+
+<!-- INSIGHTS -->
+
+<div style="
+    background:#F8FAFC;
+    border:1px solid #E2E8F0;
+    border-radius:14px;
+    padding:16px 20px;
+">
+
+<div style="
+    font-size:16px;
+    font-weight:800;
+    color:#0A3A63;
+    margin-bottom:8px;
+">
+    💡 INSIGHTS
+</div>
+
+<div style="
+    font-size:13px;
+    line-height:1.8;
+    color:#475569;
+">
+
+<div>
+• 🏆 Mejor desempeño:
+<strong>${top[0] ? top[0][0] : "-"}</strong>
+</div>
+
+<div>
+• 👥 Variación de clientes:
+<strong style="color:${colorTotalVariacion};">
+${totalVariacionClientes > 0 ? "+" : ""}
+${totalVariacionClientes}
+</strong>
+</div>
+
+<div>
+• 💰 Cumplimiento de colocación:
+<strong>${avanceEmpresa}%</strong>
+</div>
+
+<div>
+• 📋 Cumplimiento de operaciones:
+<strong>${porcentajeTotalOperaciones}%</strong>
+</div>
+
+<div>
+• ⚠️ Mora 1+:
+<strong>
+S/${Math.round(totalMoraAgosto1Mas)
+    .toLocaleString("es-PE")}
+</strong>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PRÓXIMOS PASOS -->
+
+<div style="
+    background:#F8FAFC;
+    border:1px solid #E2E8F0;
+    border-radius:14px;
+    padding:16px 20px;
+">
+
+<div style="
+    font-size:16px;
+    font-weight:800;
+    color:#0A3A63;
+    margin-bottom:8px;
+">
+    🎯 PRÓXIMOS PASOS
+</div>
+
+<div style="
+    font-size:13px;
+    line-height:1.8;
+    color:#475569;
+">
+
+<div>
+• Reforzar gestión de asesores con avance
+<strong>&lt; 80%</strong>.
+</div>
+
+<div>
+• Revisar asesores con variación negativa
+de clientes.
+</div>
+
+<div>
+• Priorizar recuperación de cartera con
+mora 1+.
+</div>
+
+<div>
+• Dar seguimiento diario a colocación y operaciones.
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+`;
 let rankingKPIHTML = "";
 top
 .filter(([asesor]) =>

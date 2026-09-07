@@ -269,10 +269,10 @@ let estadoMeta =
 
 let colorMeta =
     Number(avanceEmpresa) >= 100
-    ? "#16A34A"
+    ? "#159447"
     : Number(avanceEmpresa) >= 80
-    ? "#F59E0B"
-    : "#DC2626";
+    ? "#D99A1A"
+    : "#D64545";
 
 let resumen = `
 
@@ -288,7 +288,7 @@ let resumen = `
         <div style="
             font-size:26px;
             font-weight:800;
-            color:#0A3A63;
+            color:#123F63;
             letter-spacing:.3px;
         ">
             📊 TABLERO GERENCIAL
@@ -296,7 +296,7 @@ let resumen = `
 
         <div style="
             font-size:13px;
-            color:#64748B;
+            color:#657789;
             margin-top:4px;
         ">
             ${mesActual.toUpperCase()} ${anioActual}
@@ -322,19 +322,19 @@ let resumen = `
 
         <div style="
             background:#FFFFFF;
-            border:1px solid #E2E8F0;
-            border-top:4px solid #0A3A63;
+            border:1px solid #DCE4EC;
+            border-top:4px solid #123F63;
             border-radius:12px;
             padding:14px;
             text-align:center;
-            box-shadow:0 2px 8px rgba(0,0,0,.05);
+            box-shadow:0 3px 10px rgba(18,63,99,.07);
         ">
 
             <div style="font-size:23px;">👥</div>
 
             <div style="
                 font-size:12px;
-                color:#64748B;
+                color:#657789;
                 margin-top:3px;
             ">
                 CLIENTES EN CARTERA
@@ -343,7 +343,7 @@ let resumen = `
            <div style="
     font-size:25px;
     font-weight:800;
-    color:#0F172A;
+    color:#172B3A;
     margin-top:3px;
 ">
  ${totalClientesAgosto}
@@ -356,19 +356,19 @@ let resumen = `
 
         <div style="
             background:#FFFFFF;
-            border:1px solid #E2E8F0;
-            border-top:4px solid #16A34A;
+            border:1px solid #DCE4EC;
+            border-top:4px solid #159447;
             border-radius:12px;
             padding:14px;
             text-align:center;
-            box-shadow:0 2px 8px rgba(0,0,0,.05);
+            box-shadow:0 3px 10px rgba(18,63,99,.07);
         ">
 
             <div style="font-size:23px;">💰</div>
 
             <div style="
                 font-size:12px;
-                color:#64748B;
+                color:#657789;
             ">
                 COLOCACIÓN
             </div>
@@ -376,14 +376,14 @@ let resumen = `
             <div style="
                 font-size:24px;
                 font-weight:800;
-                color:#0F172A;
+                color:#172B3A;
             ">
                 S/${Math.round(montoOtorgadoTotal).toLocaleString("es-PE")}
             </div>
 
             <div style="
                 font-size:11px;
-                color:#64748B;
+                color:#657789;
                 margin-top:3px;
             ">
                 Meta: S/${Math.round(metaEmpresa).toLocaleString("es-PE")}
@@ -396,19 +396,19 @@ let resumen = `
 
         <div style="
             background:#FFFFFF;
-            border:1px solid #E2E8F0;
-            border-top:4px solid #2563EB;
+            border:1px solid #DCE4EC;
+            border-top:4px solid #2F6FDB;
             border-radius:12px;
             padding:14px;
             text-align:center;
-            box-shadow:0 2px 8px rgba(0,0,0,.05);
+            box-shadow:0 3px 10px rgba(18,63,99,.07);
         ">
 
             <div style="font-size:23px;">📋</div>
 
             <div style="
                 font-size:12px;
-                color:#64748B;
+                color:#657789;
             ">
                 OPERACIONES
             </div>
@@ -416,7 +416,7 @@ let resumen = `
             <div style="
                 font-size:25px;
                 font-weight:800;
-                color:#0F172A;
+                color:#172B3A;
             ">
                 ${totalOperaciones}
             </div>
@@ -428,19 +428,19 @@ let resumen = `
 
         <div style="
             background:#FFFFFF;
-            border:1px solid #E2E8F0;
-            border-top:4px solid #7C3AED;
+            border:1px solid #DCE4EC;
+            border-top:4px solid #6653B8;
             border-radius:12px;
             padding:14px;
             text-align:center;
-            box-shadow:0 2px 8px rgba(0,0,0,.05);
+            box-shadow:0 3px 10px rgba(18,63,99,.07);
         ">
 
             <div style="font-size:23px;">📈</div>
 
             <div style="
                 font-size:12px;
-                color:#64748B;
+                color:#657789;
             ">
                 TEM PROMEDIO
             </div>
@@ -448,7 +448,7 @@ let resumen = `
             <div style="
                 font-size:25px;
                 font-weight:800;
-                color:#0F172A;
+                color:#172B3A;
             ">
                 ${temGeneral}%
             </div>
@@ -460,19 +460,19 @@ let resumen = `
 
         <div style="
             background:#FFFFFF;
-            border:1px solid #E2E8F0;
+            border:1px solid #DCE4EC;
             border-top:4px solid ${colorMeta};
             border-radius:12px;
             padding:14px;
             text-align:center;
-            box-shadow:0 2px 8px rgba(0,0,0,.05);
+            box-shadow:0 3px 10px rgba(18,63,99,.07);
         ">
 
             <div style="font-size:23px;">🎯</div>
 
             <div style="
                 font-size:12px;
-                color:#64748B;
+                color:#657789;
             ">
                 CUMPLIMIENTO
             </div>
@@ -504,8 +504,8 @@ let resumen = `
     <!-- ================================= -->
 
     <div style="
-        background:#F8FAFC;
-        border:1px solid #E2E8F0;
+        background:#F6F8FA;
+        border:1px solid #DCE4EC;
         border-radius:12px;
         padding:13px;
         margin-top:12px;
@@ -532,7 +532,7 @@ let resumen = `
         <div style="
             width:100%;
             height:10px;
-            background:#E2E8F0;
+            background:#DCE4EC;
             border-radius:20px;
             overflow:hidden;
         ">
@@ -551,7 +551,7 @@ let resumen = `
             justify-content:space-between;
             margin-top:6px;
             font-size:11px;
-            color:#64748B;
+            color:#657789;
         ">
 
             <span>
@@ -699,8 +699,8 @@ resumen += `
 
 <div style="
 background:#FFFFFF;
-border-left:5px solid #0A3A63;
-color:#1F2937;
+border-left:5px solid #123F63;
+color:#243746;
 padding:12px;
 border-radius:12px;
 margin-bottom:12px;
@@ -709,7 +709,7 @@ margin-bottom:12px;
 <div style="
 font-size:14px;
 font-weight:600;
-color:#6B7280;
+color:#667783;
 ">
 🏆 Líder del Mes
 </div>
@@ -761,7 +761,7 @@ text-align:center;
 ">
 
 <tr style="
-background:#0A3A63;
+background:#123F63;
 color:white;
 ">
 
@@ -950,15 +950,15 @@ temPromedio[asesor].length
     let variacionClientes =
     clientesActual - clientesAnterior;
 
-    let colorVariacion = "#64748B";
+    let colorVariacion = "#657789";
 
     if(variacionClientes>0){
 
-        colorVariacion="#16A34A";
+        colorVariacion="#159447";
 
     }else if(variacionClientes<0){
 
-        colorVariacion="#DC2626";
+        colorVariacion="#D64545";
 
     }
 
@@ -1088,7 +1088,7 @@ mora1MasAsesor[asesor] || 0;
 background:${
 Number(porcentajeDesembolso)>=100
 ?
-'#22c55e'
+'#22B55A'
 :
 '#ffffff'
 };
@@ -1112,13 +1112,13 @@ ${porcentajeDesembolso}%
 background:${
 Number(porcentajeOperaciones)>=100
 ?
-'#22c55e'
+'#22B55A'
 :
 Number(porcentajeOperaciones)>=80
 ?
-'#facc15'
+'#E0AA24'
 :
-'#ef4444'
+'#D64545'
 };
 color:white;
 font-weight:bold;
@@ -1145,14 +1145,14 @@ ${variacionClientes>0?"+":""}${variacionClientes}
 
 <td style="
 font-weight:bold;
-color:#c62828;
+color:#C43D3D;
 ">
 S/${Math.round(moraActual).toLocaleString()}
 </td>
 
 <td style="
 font-weight:bold;
-color:#c62828;
+color:#C43D3D;
 ">
 S/${Math.round(mora1Mas).toLocaleString()}
 </td>
@@ -1246,20 +1246,20 @@ cantidadTemAgosto > 0
 let colorTotalVariacion =
 totalVariacionClientes > 0
 ?
-"#16A34A"
+"#159447"
 :
 totalVariacionClientes < 0
 ?
-"#DC2626"
+"#D64545"
 :
-"#64748B";
+"#657789";
 
 resumen += `
 
 <tr style="
-background:#EAF2F8;
+background:#EDF4F8;
 font-weight:bold;
-border-top:3px solid #0A3A63;
+border-top:3px solid #123F63;
 ">
 
 <td>
@@ -2206,10 +2206,10 @@ background:white;
 padding:12px;
 margin:6px 0;
 border-radius:12px;
-border:1px solid #E5E7EB;
+border:1px solid #DEE4EA;
 font-size:14px;
 font-weight:500;
-box-shadow:0 1px 4px rgba(0,0,0,.04);
+box-shadow:0 2px 7px rgba(18,63,99,.06);
 display:flex;
 justify-content:space-between;
 align-items:center;
@@ -2284,7 +2284,7 @@ rankingProductoHTML += `
 background:white;
 padding:12px;
 border-radius:12px;
-border:1px solid #F1F5F9;
+border:1px solid #E8EEF3;
 margin:6px 0;
 display:flex;
 justify-content:space-between;
@@ -2338,35 +2338,35 @@ cartera > 0
 
 let color =
 mora <= 5
-? "#198754"
+? "#159447"
 : mora <= 10
-? "#ffc107"
-: "#dc3545";
+? "#D99A1A"
+: "#D64545";
 
 let fondo =
 mora <= 5
-? "#F0FDF4"
+? "#F2FAF4"
 : mora <= 10
-? "#FFFBEB"
-: "#FEF2F2";
+? "#FFF9EF"
+: "#FFF3F3";
 
 let borde =
 mora <= 5
 ? "#22C55E"
 : mora <= 10
-? "#F59E0B"
+? "#D99A1A"
 : "#EF4444";
 moraProductoHTML += `
 <div
 onclick="mostrarDetalleProducto('${r[0]}')"
 style="
 background:${fondo};
-color:#1F2937;
+color:#243746;
 border-left:5px solid ${borde};
 padding:14px;
 margin:10px 0;
 border-radius:12px;
-box-shadow:0 2px 8px rgba(0,0,0,.05);
+box-shadow:0 3px 10px rgba(18,63,99,.07);
 cursor:pointer;
 transition:.25s;
 ">
@@ -2415,7 +2415,7 @@ background:white;
 padding:10px;
 margin:5px 0;
 border-radius:10px;
-border:1px solid #E5E7EB;
+border:1px solid #DEE4EA;
 display:flex;
 justify-content:space-between;
 font-size:13px;
@@ -2440,14 +2440,14 @@ ${index+1}. ${
 
 <span style="
 font-size:11px;
-color:#6B7280;
+color:#667783;
 ">
 👤 ${c["Asesor(a)"] || "SIN ASESOR"}
 </span>
 
 <span style="
 font-size:11px;
-color:#6B7280;
+color:#667783;
 ">
 📦 ${c["Producto"] || ""}
 </span>
@@ -2457,7 +2457,7 @@ color:#6B7280;
 <div style="
 text-align:right;
 font-weight:bold;
-color:#198754;
+color:#159447;
 ">
 💰 S/${(parseFloat(c["Saldo Capital"]) || 0).toLocaleString()}
 </div>
@@ -2494,7 +2494,7 @@ background:white;
 padding:12px;
 margin:6px 0;
 border-radius:10px;
-border:1px solid #E5E7EB;
+border:1px solid #DEE4EA;
 display:flex;
 justify-content:space-between;
 font-size:14px;
@@ -2534,7 +2534,7 @@ background:white;
 padding:12px;
 margin:6px 0;
 border-radius:10px;
-border:1px solid #E5E7EB;
+border:1px solid #DEE4EA;
 display:flex;
 justify-content:space-between;
 font-size:14px;
@@ -2630,9 +2630,9 @@ gap:10px;
 
 <div style="
 background:#FFFFFF;
-color:#1F2937;
-border:1px solid #E5E7EB;
-box-shadow:0 2px 8px rgba(0,0,0,.05);
+color:#243746;
+border:1px solid #DEE4EA;
+box-shadow:0 3px 10px rgba(18,63,99,.07);
 text-align:center;
 min-height:80px;
 ">
@@ -2650,9 +2650,9 @@ S/${carteraTotal.toLocaleString()}
 
 <div style="
 background:#FFFFFF;
-color:#1F2937;
-border:1px solid #E5E7EB;
-box-shadow:0 2px 8px rgba(0,0,0,.05);
+color:#243746;
+border:1px solid #DEE4EA;
+box-shadow:0 3px 10px rgba(18,63,99,.07);
 text-align:center;
 min-height:80px;
 ">
@@ -2664,9 +2664,9 @@ S/${capitalVencido.toLocaleString()}
 </div>
 <div style="
 background:#FFFFFF;
-color:#1F2937;
-border:1px solid #E5E7EB;
-box-shadow:0 2px 8px rgba(0,0,0,.05);
+color:#243746;
+border:1px solid #DEE4EA;
+box-shadow:0 3px 10px rgba(18,63,99,.07);
 text-align:center;
 min-height:80px;
 ">
@@ -2678,9 +2678,9 @@ S/${costoDesembolsoTotal.toLocaleString()}
 </div>
 <div style="
 background:#FFFFFF;
-color:#1F2937;
-border:1px solid #E5E7EB;
-box-shadow:0 2px 8px rgba(0,0,0,.05);
+color:#243746;
+border:1px solid #DEE4EA;
+box-shadow:0 3px 10px rgba(18,63,99,.07);
 padding:10px;
 border-radius:12px;
 text-align:center;
@@ -2694,9 +2694,9 @@ ${moraPorcentaje}%
 </div>
 <div style="
 background:#FFFFFF;
-color:#1F2937;
-border:1px solid #E5E7EB;
-box-shadow:0 2px 8px rgba(0,0,0,.05);
+color:#243746;
+border:1px solid #DEE4EA;
+box-shadow:0 3px 10px rgba(18,63,99,.07);
 padding:10px;
 border-radius:12px;
 text-align:center;
@@ -2710,10 +2710,10 @@ ${clientesCriticos}
 </div>
 
 <div style="
-background:#FFF5F5;
+background:#FFF7F7;
 color:#991B1B;
-border:1px solid #FECACA;
-box-shadow:0 2px 8px rgba(0,0,0,.05);
+border:1px solid #F1C1C1;
+box-shadow:0 3px 10px rgba(18,63,99,.07);
 padding:10px;
 border-radius:12px;
 text-align:center;
@@ -2737,9 +2737,9 @@ S/${moraTotal.toLocaleString()}
 
 <div style="
 background:#FFFFFF;
-color:#1F2937;
-border:1px solid #E5E7EB;
-box-shadow:0 2px 8px rgba(0,0,0,.05);
+color:#243746;
+border:1px solid #DEE4EA;
+box-shadow:0 3px 10px rgba(18,63,99,.07);
 text-align:center;
 min-height:80px;
 ">
@@ -2758,7 +2758,7 @@ margin-top:15px;
 ">
 
 <div style="
-background:#198754;
+background:#159447;
 color:white;
 padding:15px;
 border-radius:12px;
@@ -2783,7 +2783,7 @@ S/${carteraSana.toLocaleString()}
 </div>
 
 <div style="
-background:#dc3545;
+background:#D64545;
 color:white;
 padding:15px;
 border-radius:12px;
@@ -2811,7 +2811,7 @@ S/${capitalVencido.toLocaleString()}
 
 <div style="
 background:#FFFFFF;
-border:1px solid #E5E7EB;
+border:1px solid #DEE4EA;
 padding:15px;
 border-radius:12px;
 margin-top:10px;
@@ -2830,7 +2830,7 @@ font-weight:bold;
 background:#FFFFFF;
 padding:20px;
 border-radius:16px;
-box-shadow:0 2px 10px rgba(0,0,0,.06);
+box-shadow:0 3px 12px rgba(18,63,99,.07);
 margin-top:15px;
 ">
 </div>
@@ -3093,13 +3093,13 @@ String(c["Producto"]||"").trim().toUpperCase()===producto.toUpperCase()
 
 let html=`
 <div style="margin-bottom:15px">
-<button onclick="volverProductos()" style="width:100%;padding:14px;border:none;border-radius:12px;background:#0A3A63;color:#fff;font-weight:bold;cursor:pointer">
+<button onclick="volverProductos()" style="width:100%;padding:14px;border:none;border-radius:12px;background:#123F63;color:#fff;font-weight:bold;cursor:pointer">
 ← Volver a Productos
 </button>
 </div>
 
-<div style="background:#fff;border-radius:16px;padding:16px;border:1px solid #E5E7EB">
-<h2 style="margin:0;text-align:center;color:#0A3A63">${producto}</h2>
+<div style="background:#fff;border-radius:16px;padding:16px;border:1px solid #DEE4EA">
+<h2 style="margin:0;text-align:center;color:#123F63">${producto}</h2>
 <p style="text-align:center">👥 ${clientes.length} Clientes</p>
 
 <div class="detallePC">

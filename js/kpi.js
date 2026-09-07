@@ -845,28 +845,20 @@ String(meta["Asesor (A)"] || "")
 .trim()
 .toUpperCase();
 
-let metaAsesor = metas.find(m => {
+let asesor =
+String(
+    meta["Asesor (A)"] ||
+    meta["ASESOR"] ||
+    ""
+)
+.trim()
+.toUpperCase();
 
-    let nombreMeta =
-    String(
-        m["Asesor (A)"] ||
-        m["ASESOR"] ||
-        ""
-    )
-    .trim()
-    .toUpperCase()
-    .replace(/\s+/g,"");
-
-    let nombreAsesor =
-    asesor
-    .trim()
-    .toUpperCase()
-    .replace(/\s+/g,"");
-
-    return nombreMeta === nombreAsesor;
-
-});
-
+let asesorNormalizado =
+asesor
+.normalize("NFD")
+.replace(/[\u0300-\u036f]/g,"")
+.replace(/[^A-Z0-9]/g,"");
     //=========================================
     // FUNCIONES AUXILIARES
     //=========================================
@@ -908,8 +900,54 @@ let metaAsesor = metas.find(m => {
     // VARIABLES
     //=========================================
 
-   let colocacion = ranking[asesor] || 0;
-let oper = operaciones[asesor] || 0;
+  // =========================================
+// IDENTIFICAR ASESOR EN PRODUCCIÓN
+// =========================================
+
+let registrosAsesor = json.filter(c => {
+
+    let nombreProduccion =
+        String(
+            c["Asesor(a)"] ||
+            c["Asesor"] ||
+            c["ASESOR"] ||
+            ""
+        )
+        .trim()
+        .toUpperCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g,"")
+        .replace(/[^A-Z0-9]/g,"");
+
+    return nombreProduccion === asesorNormalizado;
+
+});
+
+// =========================================
+// AVANCE REAL DEL ASESOR
+// =========================================
+
+let colocacion =
+    registrosAsesor.reduce(
+        (total,c) =>
+            total +
+            (parseFloat(c["Monto Otorgado"]) || 0),
+        0
+    );
+
+let oper =
+    registrosAsesor.length;
+
+console.log(
+    "ASESOR KPI:",
+    asesor,
+    "| REGISTROS:",
+    registrosAsesor.length,
+    "| COLOCACION:",
+    colocacion,
+    "| OPERACIONES:",
+    oper
+);
      
     let tem =
 temPromedio[asesor] && temPromedio[asesor].length

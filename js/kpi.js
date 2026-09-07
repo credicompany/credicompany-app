@@ -14,141 +14,364 @@
 //
 // ======================================================
 
-// ======================================================
-// KPI GERENCIAL
-// ======================================================
 function generarKPI(json){
 
-    let totalClientesActual = 0;
-    let totalClientesAgosto = 0;
-
     const usuarios =
-    JSON.parse(
-        localStorage.getItem("usuarios")
-    ) || [];
+        JSON.parse(
+            localStorage.getItem("usuarios")
+        ) || [];
 
-    const clientesHistorico = {};
+    // ======================================
+    // DATOS GENERALES
+    // ======================================
 
-// ======================================
-// KPI GERENCIAL
-// DETECCIÓN AUTOMÁTICA DEL MES
-// ======================================
+    const jsonGeneral = [...json];
 
-const jsonGeneral = [...json];
+    if(!jsonGeneral.length){
 
-let ultimaFecha = null;
+        alert("No existen registros de producción.");
 
-jsonGeneral.forEach(c=>{
+        return;
 
-    let fechaExcel =
-    Number(c["Fecha Desembolso"]);
+    }
 
-    if(!isNaN(fechaExcel)){
+    // ======================================
+    // DETECTAR ÚLTIMA FECHA REAL DEL EXCEL
+    // ======================================
 
-        let fecha =
-        new Date(
-            (fechaExcel-25569)*
-            86400*1000
-        );
+    let ultimaFecha = null;
 
-        if(
-            !ultimaFecha ||
-            fecha>ultimaFecha
-        ){
-            ultimaFecha=fecha;
+    jsonGeneral.forEach(c => {
+
+        const fechaExcel =
+            Number(c["Fecha Desembolso"]);
+
+        if(!isNaN(fechaExcel)){
+
+            const fecha =
+                new Date(
+                    (fechaExcel - 25569) *
+                    86400 *
+                    1000
+                );
+
+            if(
+                !ultimaFecha ||
+                fecha > ultimaFecha
+            ){
+
+                ultimaFecha = fecha;
+
+            }
+
         }
 
-    }
+    });
 
-});
+    if(!ultimaFecha){
 
-// ========================================
-// CLIENTES ACUMULADOS HASTA EL MES ACTUAL
-// ========================================
-// Cuenta clientes únicos por asesor.
-// Incluye todos los desembolsos hasta agosto.
-// Un cliente con varios créditos cuenta UNA sola vez.
-// ========================================
+        alert(
+            "No existe ninguna fecha válida en Fecha Desembolso."
+        );
 
-jsonGeneral.forEach(c => {
-
-    let asesor =
-        String(c["Asesor(a)"] || "")
-        .trim()
-        .toUpperCase();
-
-    let codigoCliente =
-        String(
-            c["Cod Cliente"] ||
-            c["DNI"] ||
-            c["dni"] ||
-            ""
-        )
-        .trim()
-        .toUpperCase();
-
-    if(!asesor || !codigoCliente){
         return;
+
     }
 
-    if(!clientesHistorico[asesor]){
-        clientesHistorico[asesor] = new Set();
-    }
+    // ======================================
+    // MES Y AÑO ACTUAL
+    // ======================================
 
-    clientesHistorico[asesor].add(codigoCliente);
+    const meses = [
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+        "Mayo",
+        "Junio",
+        "Julio",
+        "Agosto",
+        "Septiembre",
+        "Octubre",
+        "Noviembre",
+        "Diciembre"
+    ];
 
-});
+    const indiceMes =
+        ultimaFecha.getUTCMonth();
 
-console.log(
-    "CLIENTES ACUMULADOS POR ASESOR:",
-    Object.fromEntries(
-        Object.entries(clientesHistorico)
-        .map(([asesor, set]) => [
-            asesor,
-            set.size
-        ])
-    )
-);
+    const anioActual =
+        ultimaFecha.getUTCFullYear();
 
-console.log(
-    "TOTAL CLIENTES ACUMULADOS:",
-    Object.values(clientesHistorico)
-    .reduce(
-        (total, clientes) =>
-            total + clientes.size,
-        0
-    )
-);
-    
+    const mesActual =
+        meses[indiceMes];
 
-if(!ultimaFecha){
+    const indiceMesAnterior =
+        indiceMes === 0
+        ? 11
+        : indiceMes - 1;
 
-    alert(
-    "No existe ninguna fecha válida."
+    const anioMesAnterior =
+        indiceMes === 0
+        ? anioActual - 1
+        : anioActual;
+
+    const mesAnterior =
+        meses[indiceMesAnterior];
+
+    console.log(
+        "================================"
     );
 
-    return;
+    console.log(
+        "ÚLTIMA FECHA:",
+        ultimaFecha
+    );
 
-}
+    console.log(
+        "MES ACTUAL:",
+        mesActual
+    );
 
-const meses=[
-"Enero","Febrero","Marzo","Abril",
-"Mayo","Junio","Julio","Agosto",
-"Septiembre","Octubre",
-"Noviembre","Diciembre"
-];
+    console.log(
+        "AÑO ACTUAL:",
+        anioActual
+    );
 
-const indiceMes =
-ultimaFecha.getUTCMonth();
+    console.log(
+        "MES ANTERIOR:",
+        mesAnterior
+    );
 
-const anioActual =
-ultimaFecha.getUTCFullYear();
+    console.log(
+        "================================"
+    );
 
-const mesActual =
-meses[indiceMes];
 
-const mesAnterior =
-meses[(indiceMes+11)%12];
+    // ======================================
+    // CLIENTES HISTÓRICOS
+    // ======================================
+
+    const clientesHistoricoAnterior = {};
+    const clientesHistoricoActual = {};
+
+
+    // ======================================
+    // RECORRER TODA LA PRODUCCIÓN
+    // ======================================
+
+    jsonGeneral.forEach(c => {
+
+        const asesor =
+            String(
+                c["Asesor(a)"] ||
+                c["ASESOR"] ||
+                ""
+            )
+            .trim()
+            .toUpperCase();
+
+        /*
+         * IMPORTANTE:
+         * Usamos DNI como identificador principal
+         * y Cod Cliente como alternativa.
+         */
+
+        const codigoCliente =
+            String(
+                c["DNI"] ||
+                c["Cod Cliente"] ||
+                c["dni"] ||
+                ""
+            )
+            .trim()
+            .toUpperCase();
+
+        if(
+            !asesor ||
+            !codigoCliente
+        ){
+
+            return;
+
+        }
+
+        const fechaExcel =
+            Number(c["Fecha Desembolso"]);
+
+        if(isNaN(fechaExcel)){
+
+            return;
+
+        }
+
+        const fecha =
+            new Date(
+                (fechaExcel - 25569) *
+                86400 *
+                1000
+            );
+
+        const mes =
+            fecha.getUTCMonth();
+
+        const anio =
+            fecha.getUTCFullYear();
+
+
+        // ==================================
+        // CLIENTES ACUMULADOS HASTA
+        // EL MES ACTUAL
+        // ==================================
+
+        if(
+            anio < anioActual ||
+            (
+                anio === anioActual &&
+                mes <= indiceMes
+            )
+        ){
+
+            if(
+                !clientesHistoricoActual[asesor]
+            ){
+
+                clientesHistoricoActual[asesor] =
+                    new Set();
+
+            }
+
+            clientesHistoricoActual[asesor]
+                .add(codigoCliente);
+
+        }
+
+
+        // ==================================
+        // CLIENTES ACUMULADOS HASTA
+        // EL MES ANTERIOR
+        // ==================================
+
+        if(
+            anio < anioMesAnterior ||
+            (
+                anio === anioMesAnterior &&
+                mes <= indiceMesAnterior
+            )
+        ){
+
+            if(
+                !clientesHistoricoAnterior[asesor]
+            ){
+
+                clientesHistoricoAnterior[asesor] =
+                    new Set();
+
+            }
+
+            clientesHistoricoAnterior[asesor]
+                .add(codigoCliente);
+
+        }
+
+    });
+
+
+    // ======================================
+    // MOSTRAR RESULTADOS EN CONSOLA
+    // ======================================
+
+    console.log(
+        "CLIENTES ACUMULADOS MES ANTERIOR:",
+        Object.fromEntries(
+            Object.entries(
+                clientesHistoricoAnterior
+            )
+            .map(
+                ([asesor,set]) => [
+                    asesor,
+                    set.size
+                ]
+            )
+        )
+    );
+
+
+    console.log(
+        "CLIENTES ACUMULADOS MES ACTUAL:",
+        Object.fromEntries(
+            Object.entries(
+                clientesHistoricoActual
+            )
+            .map(
+                ([asesor,set]) => [
+                    asesor,
+                    set.size
+                ]
+            )
+        )
+    );
+
+
+    // ======================================
+    // FILTRAR PRODUCCIÓN DEL MES ACTUAL
+    // ======================================
+
+    json = jsonGeneral.filter(c => {
+
+        const fechaExcel =
+            Number(c["Fecha Desembolso"]);
+
+        if(isNaN(fechaExcel)){
+
+            return false;
+
+        }
+
+        const fecha =
+            new Date(
+                (fechaExcel - 25569) *
+                86400 *
+                1000
+            );
+
+        return(
+            fecha.getUTCMonth()
+            === indiceMes
+            &&
+            fecha.getUTCFullYear()
+            === anioActual
+        );
+
+    });
+
+
+    console.log(
+        "KPI:",
+        mesActual,
+        json.length,
+        "REGISTROS"
+    );
+
+
+    // ======================================
+    // METAS
+    // ======================================
+
+    let metas =
+        JSON.parse(
+            localStorage.getItem("metasKPI")
+        ) || [];
+
+    console.log(
+        "REGISTROS MES ACTUAL:",
+        json.length
+    );
+
+
+    let totalClientes =
+        json.length;
+
 
 json=jsonGeneral.filter(c=>{
 
@@ -572,44 +795,38 @@ temPromedio[asesor].length
 :
 0;
 
-    //=========================================
-    // CLIENTES
-    //=========================================
+// =========================================
+// CLIENTES ACUMULADOS
+// =========================================
 
-  let clientesActual =
-    clientesHistorico[asesor]
+let clientesAnterior =
+    clientesHistoricoAnterior[asesor]
     ?
-    clientesHistorico[asesor].size
+    clientesHistoricoAnterior[asesor].size
     :
     0;
 
-    let colClientes =
-    buscarColumna(
-        "CLIENTES",
-        mesAnterior
-    );
-
-    let clientesAnterior =
-    colClientes
+let clientesActual =
+    clientesHistoricoActual[asesor]
     ?
-    Number(meta[colClientes] || 0)
+    clientesHistoricoActual[asesor].size
     :
     0;
 
-    let variacionClientes =
+
+// =========================================
+// VARIACIÓN
+// =========================================
+
+let variacionClientes =
     clientesActual - clientesAnterior;
 
-    let colorVariacion = "#64748B";
-
-    if(variacionClientes>0){
-
-        colorVariacion="#16A34A";
-
-    }else if(variacionClientes<0){
-
-        colorVariacion="#DC2626";
-
-    }
+let colorVariacion =
+    variacionClientes > 0
+    ? "#16A34A"
+    : variacionClientes < 0
+    ? "#DC2626"
+    : "#64748B";
 
     //=========================================
     // TEM HISTÓRICO
@@ -1087,10 +1304,7 @@ resumen += `
 
 </div>
 `;
-    resumen += `
-</table>
-</div>
-`;
+    
 resumen += `
 
 <!-- =========================================
@@ -1534,38 +1748,102 @@ function cargarGerencialFirebase(){
 
     db.ref("kpiGerencial")
     .once("value")
-    .then(snapshot=>{
+    .then(snapshot => {
 
         const datos = snapshot.val();
-console.log("================================");
-console.log("GERENCIAL FIREBASE");
-console.log(datos);
-console.log("================================");
-        if(!datos) return;
 
-      if(datos.fechaProduccion){
+        console.log(
+            "================================"
+        );
 
-    const fechaCargaProduccion =
-    new Date().toLocaleString("es-PE");
+        console.log(
+            "GERENCIAL FIREBASE"
+        );
 
-localStorage.setItem(
-    "fechaProduccionKPI",
-    fechaCargaProduccion
-);
+        console.log(
+            datos
+        );
 
-}
+        console.log(
+            "================================"
+        );
 
-       console.log("RESUMEN GERENCIAL:", datos.resumen);
 
-const divResumen = document.getElementById("kpiResumen");
+        if(!datos){
 
-console.log("DIV KPI:", divResumen);
+            return;
 
-if(divResumen){
+        }
 
-    divResumen.innerHTML = datos.resumen || "";
 
-}
+        // ==================================
+        // RESTAURAR INFORMACIÓN REAL
+        // ==================================
+
+        if(datos.nombreMeta !== undefined){
+
+            localStorage.setItem(
+                "nombreMetaKPI",
+                datos.nombreMeta || ""
+            );
+
+        }
+
+
+        if(datos.fechaMeta !== undefined){
+
+            localStorage.setItem(
+                "fechaMetaKPI",
+                datos.fechaMeta || ""
+            );
+
+        }
+
+
+        if(datos.nombreProduccion !== undefined){
+
+            localStorage.setItem(
+                "nombreProduccionKPI",
+                datos.nombreProduccion || ""
+            );
+
+        }
+
+
+        // ==================================
+        // NO MODIFICAR LA FECHA
+        // ==================================
+
+        if(datos.fechaProduccion){
+
+            localStorage.setItem(
+                "fechaProduccionKPI",
+                datos.fechaProduccion
+            );
+
+        }
+
+
+        // ==================================
+        // RESTAURAR RESUMEN
+        // ==================================
+
+        const divResumen =
+            document.getElementById(
+                "kpiResumen"
+            );
+
+        if(divResumen){
+
+            divResumen.innerHTML =
+                datos.resumen || "";
+
+        }
+
+
+        // ==================================
+        // RESTAURAR RANKING
+        // ==================================
 
         if(
             datos.rankingKPIHTML &&
@@ -1575,9 +1853,10 @@ if(divResumen){
             document.getElementById(
                 "rankingKPI"
             ).innerHTML =
-            datos.rankingKPIHTML;
+                datos.rankingKPIHTML;
 
         }
+
 
         console.log(
             "✅ KPI GERENCIAL DESDE FIREBASE"
@@ -1585,7 +1864,7 @@ if(divResumen){
 
     })
 
-    .catch(error=>{
+    .catch(error => {
 
         console.error(
             "❌ ERROR CARGANDO KPI GERENCIAL",
@@ -3069,7 +3348,14 @@ function cargarMetasKPI(){
                 "fechaMetaKPI",
                 new Date().toLocaleString()
             );
+const produccionGuardada =
+    JSON.parse(
+        localStorage.getItem("produccionKPI")
+    ) || [];
 
+if(produccionGuardada.length){
+    generarKPI(produccionGuardada);
+}
             // =====================================
             // MOSTRAR META ACTIVA
             // =====================================

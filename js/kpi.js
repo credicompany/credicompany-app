@@ -1,3 +1,31 @@
+
+<style id="credicompany-visual-v3">
+#kpiResumen{
+  font-family:Arial,Helvetica,sans-serif;
+  color:#243746;
+}
+#kpiResumen table{
+  border:1px solid #DDE4E9 !important;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 5px 18px rgba(22,74,112,.08);
+}
+#kpiResumen thead th{
+  background:#164A70 !important;
+  color:#fff !important;
+  font-weight:700 !important;
+}
+#kpiResumen tbody tr:nth-child(even){
+  background:#F6F8FA;
+}
+#kpiResumen tbody tr:hover{
+  background:#EDF4F8 !important;
+}
+#kpiResumen td{
+  border-bottom:1px solid #E5EBEF !important;
+}
+</style>
+
 // =====================
 // KPI CREDICOMPANY
 // =====================
@@ -493,45 +521,10 @@ let colorMeta =
     Number(avanceEmpresa) >= 100
     ? "#178A4B"
     : Number(avanceEmpresa) >= 80
-    ? "#D79A24"
+    ? "#D59A24"
     : "#D14A4A";
 
 let resumen = `
-<style id="credicompany-visual-v2">
-/* CREDICOMPANY — acabado visual V2 */
-#kpiResumen{
-    font-family: Arial, Helvetica, sans-serif;
-    color:#243746;
-}
-#kpiResumen table{
-    border:1px solid #DDE3E8 !important;
-    border-radius:12px;
-    box-shadow:0 5px 18px rgba(22,74,112,.08);
-}
-#kpiResumen thead tr{
-    background:#164A70 !important;
-}
-#kpiResumen th{
-    background:#164A70 !important;
-    color:#FFFFFF !important;
-    font-weight:700 !important;
-    letter-spacing:.15px;
-}
-#kpiResumen tbody tr:nth-child(even){
-    background:#F6F8FA;
-}
-#kpiResumen tbody tr:hover{
-    background:#EDF4F8 !important;
-}
-#kpiResumen td{
-    border-bottom:1px solid #E5EBEF !important;
-}
-#kpiResumen .kpi-card{
-    border:1px solid #DCE4EA !important;
-    box-shadow:0 4px 14px rgba(22,74,112,.07) !important;
-}
-</style>
-
 
 <div style="
     width:100%;
@@ -564,7 +557,7 @@ let resumen = `
 
         <div style="
             font-size:13px;
-            color:#647987;
+            color:#657987;
             margin-top:3px;
         ">
             Desempeño y evolución de la cartera
@@ -574,7 +567,7 @@ let resumen = `
     </div>
 
     <div style="
-        background:#EFF5F8;
+        background:#F1F7FC;
         border-radius:12px;
         padding:10px 16px;
         text-align:left;
@@ -583,7 +576,7 @@ let resumen = `
 
         <div style="
             font-size:11px;
-            color:#647987;
+            color:#657987;
         ">
             📅 Última actualización
         </div>
@@ -860,7 +853,7 @@ let colorVariacion =
     ? "#178A4B"
     : variacionClientes < 0
     ? "#D14A4A"
-    : "#647987";
+    : "#657987";
 
     //=========================================
     // TEM HISTÓRICO
@@ -988,7 +981,7 @@ resumen += `
 <td style="
     padding:8px;
     font-weight:800;
-    color:#123B59;
+    color:#0F2742;
 ">
     ${asesor}
 </td>
@@ -1014,15 +1007,15 @@ resumen += `
         Number(porcentajeDesembolso)>=100
         ? "#27A85A"
         : Number(porcentajeDesembolso)>=80
-        ? "#F4D88B"
-        : "#EFC4C4"
+        ? "#FDE68A"
+        : "#FECACA"
     };
     color:${
         Number(porcentajeDesembolso)>=100
         ? "#FFFFFF"
         : Number(porcentajeDesembolso)>=80
-        ? "#8A5A18"
-        : "#B83E3E"
+        ? "#92400E"
+        : "#B91C1C"
     };
 ">
     ${porcentajeDesembolso}%
@@ -1049,7 +1042,7 @@ resumen += `
         Number(porcentajeOperaciones)>=100
         ? "#27A85A"
         : Number(porcentajeOperaciones)>=80
-        ? "#E0AD32"
+        ? "#FACC15"
         : "#D14A4A"
     };
     color:white;
@@ -1070,10 +1063,10 @@ resumen += `
 <td style="
     padding:8px;
     font-weight:800;
-    background:#F2F7FA;
+    background:#F0F7FF;
     color:#164A70;
-    border-left:1px solid #D8E5EF;
-    border-right:1px solid #D8E5EF;
+    border-left:1px solid #D8E6F2;
+    border-right:1px solid #D8E6F2;
 ">
     ${clientesActual}
 </td>
@@ -1236,12 +1229,12 @@ totalVariacionClientes < 0
 ?
 "#D14A4A"
 :
-"#647987";
+"#657987";
 
 resumen += `
 
 <tr style="
-    background:#EAF2F6;
+    background:#E8F2FA;
     font-weight:800;
     border-top:3px solid #164A70;
 ">
@@ -1357,8 +1350,8 @@ resumen += `
 <!-- CLIENTES -->
 
 <div style="
-    background:#F3F8FB;
-    border:1px solid #DCEAF4;
+    background:#F2F8FF;
+    border:1px solid #D9EAF7;
     border-radius:14px;
     padding:16px 18px;
 ">
@@ -1397,8 +1390,8 @@ resumen += `
 <!-- COLOCACIÓN -->
 
 <div style="
-    background:#F3FAF6;
-    border:1px solid #D7EBDD;
+    background:#F1FBF5;
+    border:1px solid #D8F0E0;
     border-radius:14px;
     padding:16px 18px;
 ">
@@ -1424,7 +1417,7 @@ resumen += `
 <div style="
     margin-top:7px;
     height:7px;
-    background:#DCE8E0;
+    background:#DDE8E1;
     border-radius:10px;
     overflow:hidden;
 ">
@@ -1452,8 +1445,8 @@ resumen += `
 <!-- OPERACIONES -->
 
 <div style="
-    background:#F7F5FA;
-    border:1px solid #EAE7F2;
+    background:#F7F4FF;
+    border:1px solid #E7DFFF;
     border-radius:14px;
     padding:16px 18px;
 ">
@@ -1461,7 +1454,7 @@ resumen += `
 <div style="
     font-size:12px;
     font-weight:700;
-    color:#5367B8;
+    color:#596CB3;
 ">
     📋 OPERACIONES
 </div>
@@ -1478,7 +1471,7 @@ resumen += `
 <div style="
     margin-top:7px;
     height:7px;
-    background:#E7E4F0;
+    background:#E5E0F3;
     border-radius:10px;
     overflow:hidden;
 ">
@@ -1489,7 +1482,7 @@ resumen += `
         100
     )}%;
     height:100%;
-    background:#6658A8;
+    background:#6D5BA8;
 ">
 </div>
 
@@ -1510,7 +1503,7 @@ resumen += `
 
 <div style="
     background:#FFF7F7;
-    border:1px solid #F0D0D0;
+    border:1px solid #F8DADA;
     border-radius:14px;
     padding:16px 18px;
 ">
@@ -2607,7 +2600,7 @@ background:white;
 padding:12px;
 margin:6px 0;
 border-radius:12px;
-border:1px solid #DDE3E8;
+border:1px solid #DDE4E9;
 font-size:14px;
 font-weight:500;
 box-shadow:0 1px 4px rgba(0,0,0,.04);
@@ -2741,12 +2734,12 @@ let color =
 mora <= 5
 ? "#178A4B"
 : mora <= 10
-? "#D79A24"
+? "#D59A24"
 : "#D14A4A";
 
 let fondo =
 mora <= 5
-? "#F2FAF5"
+? "#F3FAF5"
 : mora <= 10
 ? "#FFF9EE"
 : "#FFF4F4";
@@ -2755,7 +2748,7 @@ let borde =
 mora <= 5
 ? "#27A85A"
 : mora <= 10
-? "#D79A24"
+? "#D59A24"
 : "#D14A4A";
 moraProductoHTML += `
 <div
@@ -2816,7 +2809,7 @@ background:white;
 padding:10px;
 margin:5px 0;
 border-radius:10px;
-border:1px solid #DDE3E8;
+border:1px solid #DDE4E9;
 display:flex;
 justify-content:space-between;
 font-size:13px;
@@ -2895,7 +2888,7 @@ background:white;
 padding:12px;
 margin:6px 0;
 border-radius:10px;
-border:1px solid #DDE3E8;
+border:1px solid #DDE4E9;
 display:flex;
 justify-content:space-between;
 font-size:14px;
@@ -2935,7 +2928,7 @@ background:white;
 padding:12px;
 margin:6px 0;
 border-radius:10px;
-border:1px solid #DDE3E8;
+border:1px solid #DDE4E9;
 display:flex;
 justify-content:space-between;
 font-size:14px;
@@ -3032,7 +3025,7 @@ gap:10px;
 <div style="
 background:#FFFFFF;
 color:#243746;
-border:1px solid #DDE3E8;
+border:1px solid #DDE4E9;
 box-shadow:0 2px 8px rgba(0,0,0,.05);
 text-align:center;
 min-height:80px;
@@ -3052,7 +3045,7 @@ S/${carteraTotal.toLocaleString()}
 <div style="
 background:#FFFFFF;
 color:#243746;
-border:1px solid #DDE3E8;
+border:1px solid #DDE4E9;
 box-shadow:0 2px 8px rgba(0,0,0,.05);
 text-align:center;
 min-height:80px;
@@ -3066,7 +3059,7 @@ S/${capitalVencido.toLocaleString()}
 <div style="
 background:#FFFFFF;
 color:#243746;
-border:1px solid #DDE3E8;
+border:1px solid #DDE4E9;
 box-shadow:0 2px 8px rgba(0,0,0,.05);
 text-align:center;
 min-height:80px;
@@ -3080,7 +3073,7 @@ S/${costoDesembolsoTotal.toLocaleString()}
 <div style="
 background:#FFFFFF;
 color:#243746;
-border:1px solid #DDE3E8;
+border:1px solid #DDE4E9;
 box-shadow:0 2px 8px rgba(0,0,0,.05);
 padding:10px;
 border-radius:12px;
@@ -3096,7 +3089,7 @@ ${moraPorcentaje}%
 <div style="
 background:#FFFFFF;
 color:#243746;
-border:1px solid #DDE3E8;
+border:1px solid #DDE4E9;
 box-shadow:0 2px 8px rgba(0,0,0,.05);
 padding:10px;
 border-radius:12px;
@@ -3112,8 +3105,8 @@ ${clientesCriticos}
 
 <div style="
 background:#FFF7F7;
-color:#A33A3A;
-border:1px solid #EFC4C4;
+color:#991B1B;
+border:1px solid #FECACA;
 box-shadow:0 2px 8px rgba(0,0,0,.05);
 padding:10px;
 border-radius:12px;
@@ -3139,7 +3132,7 @@ S/${moraTotal.toLocaleString()}
 <div style="
 background:#FFFFFF;
 color:#243746;
-border:1px solid #DDE3E8;
+border:1px solid #DDE4E9;
 box-shadow:0 2px 8px rgba(0,0,0,.05);
 text-align:center;
 min-height:80px;
@@ -3212,7 +3205,7 @@ S/${capitalVencido.toLocaleString()}
 
 <div style="
 background:#FFFFFF;
-border:1px solid #DDE3E8;
+border:1px solid #DDE4E9;
 padding:15px;
 border-radius:12px;
 margin-top:10px;
@@ -3508,7 +3501,7 @@ let html=`
 </button>
 </div>
 
-<div style="background:#fff;border-radius:16px;padding:16px;border:1px solid #DDE3E8">
+<div style="background:#fff;border-radius:16px;padding:16px;border:1px solid #DDE4E9">
 <h2 style="margin:0;text-align:center;color:#164A70">${producto}</h2>
 <p style="text-align:center">👥 ${clientes.length} Clientes</p>
 

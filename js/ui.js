@@ -177,6 +177,8 @@ async function abrirQR(el){
 
 async function compartirMedioPagoWhatsApp(){
 
+    alert("PRUEBA NUEVA DE COMPARTIR");
+
     const urlImagen = window.imagenPagoSeleccionada;
 
     if(!urlImagen){
@@ -184,50 +186,20 @@ async function compartirMedioPagoWhatsApp(){
         return;
     }
 
-    try{
+    const respuesta = await fetch(urlImagen);
+    const blob = await respuesta.blob();
 
-        const respuesta = await fetch(urlImagen);
-        const blob = await respuesta.blob();
-
-        const archivo = new File(
-            [blob],
-            "Cuenta-Credicompany.jpg",
-            {
-                type: blob.type || "image/jpeg"
-            }
-        );
-
-        if(
-            navigator.share &&
-            navigator.canShare &&
-            navigator.canShare({
-                files:[archivo]
-            })
-        ){
-
-           await navigator.share({
-    files:[archivo]
-});
-
-        }else{
-
-            alert(
-                "Su dispositivo no permite compartir la imagen directamente."
-            );
-
+    const archivo = new File(
+        [blob],
+        "Cuenta-Credicompany.jpg",
+        {
+            type:"image/jpeg"
         }
+    );
 
-    }catch(error){
-
-        console.error(
-            "Error compartiendo medio de pago:",
-            error
-        );
-
-        alert("❌ No se pudo compartir la imagen.");
-
-    }
-
+    await navigator.share({
+        files:[archivo]
+    });
 }
 function cerrarQR(){modalQR.style.display="none";}
 function abrirTarifario(){

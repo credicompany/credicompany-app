@@ -197,14 +197,6 @@ async function compartirMedioPagoWhatsApp(){
             }
         );
 
-        const mensaje =
-`💳 *MEDIOS DE PAGO CREDICOMPANY*
-
-Estimado(a) cliente, puede realizar su pago mediante nuestras cuentas.
-
-🏦 *CREDICOMPANY*
-_Crecemos Juntos_`;
-
         if(
             navigator.share &&
             navigator.canShare &&
@@ -213,10 +205,9 @@ _Crecemos Juntos_`;
             })
         ){
 
-            await navigator.share({
-                files:[archivo],
-                text:mensaje
-            });
+           await navigator.share({
+    files:[archivo]
+});
 
         }else{
 

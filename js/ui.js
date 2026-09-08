@@ -174,6 +174,70 @@ async function abrirQR(el){
     window.imagenPagoSeleccionada = imagen.src;
 
 }
+
+async function compartirMedioPagoWhatsApp(){
+
+    const urlImagen = window.imagenPagoSeleccionada;
+
+    if(!urlImagen){
+        alert("No se ha seleccionado una imagen.");
+        return;
+    }
+
+    try{
+
+        const respuesta = await fetch(urlImagen);
+        const blob = await respuesta.blob();
+
+        const archivo = new File(
+            [blob],
+            "Cuenta-Credicompany.jpg",
+            {
+                type: blob.type || "image/jpeg"
+            }
+        );
+
+        const mensaje =
+`💳 *MEDIOS DE PAGO CREDICOMPANY*
+
+Estimado(a) cliente, puede realizar su pago mediante nuestras cuentas.
+
+🏦 *CREDICOMPANY*
+_Crecemos Juntos_`;
+
+        if(
+            navigator.share &&
+            navigator.canShare &&
+            navigator.canShare({
+                files:[archivo]
+            })
+        ){
+
+            await navigator.share({
+                files:[archivo],
+                text:mensaje
+            });
+
+        }else{
+
+            alert(
+                "Su dispositivo no permite compartir la imagen directamente."
+            );
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "Error compartiendo medio de pago:",
+            error
+        );
+
+        alert("❌ No se pudo compartir la imagen.");
+
+    }
+
+}
 function cerrarQR(){modalQR.style.display="none";}
 function abrirTarifario(){
 

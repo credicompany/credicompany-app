@@ -2950,8 +2950,14 @@ function cargarMetasKPI(){
             const hoja =
             wb.Sheets[wb.SheetNames[0]];
 
-            const json =
-            XLSX.utils.sheet_to_json(hoja);
+           const json =
+XLSX.utils.sheet_to_json(
+    hoja,
+    {
+        range: 6,
+        defval: ""
+    }
+);
 
             if(!json.length){
 

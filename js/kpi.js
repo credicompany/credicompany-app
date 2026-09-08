@@ -40,27 +40,36 @@ let ultimaFecha = null;
 
 jsonGeneral.forEach(c=>{
 
-    let fechaExcel =
-    Number(c["Fecha Desembolso"]);
+    let fechaExcel = c["Fecha Desembolso"];
 
-    if(!isNaN(fechaExcel)){
+let fecha;
 
-        let fecha =
-        new Date(
-            (fechaExcel-25569)*
-            86400*1000
-        );
+if(fechaExcel instanceof Date){
 
-        if(
-            !ultimaFecha ||
-            fecha>ultimaFecha
-        ){
-            ultimaFecha=fecha;
-        }
+    fecha = fechaExcel;
 
-    }
+}else if(typeof fechaExcel === "number"){
 
-});
+    fecha = new Date(
+        (fechaExcel - 25569) * 86400 * 1000
+    );
+
+}else{
+
+    fecha = new Date(fechaExcel);
+
+}
+
+if(!fecha || isNaN(fecha.getTime())){
+    return;
+}
+
+if(
+    !ultimaFecha ||
+    fecha > ultimaFecha
+){
+    ultimaFecha = fecha;
+}
 
 // ========================================
 // CLIENTES ACUMULADOS HASTA EL MES ACTUAL

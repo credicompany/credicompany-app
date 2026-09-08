@@ -162,9 +162,17 @@ document.getElementById("panelAsesores").style.display="grid";
 
 }
 // QR
-function abrirQR(el){
-imgQR.src=el.querySelector("img").src;
-modalQR.style.display="flex";
+async function abrirQR(el){
+
+    const imagen = el.querySelector("img");
+
+    imgQR.src = imagen.src;
+
+    modalQR.style.display = "flex";
+
+    // Guardar imagen seleccionada
+    window.imagenPagoSeleccionada = imagen.src;
+
 }
 function cerrarQR(){modalQR.style.display="none";}
 function abrirTarifario(){

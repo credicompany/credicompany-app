@@ -70,7 +70,7 @@ if(
 ){
     ultimaFecha = fecha;
 }
-
+});
 // ========================================
 // CLIENTES ACUMULADOS HASTA EL MES ACTUAL
 // ========================================
@@ -3066,7 +3066,13 @@ function cargarExcelKPI(){
         wb.Sheets[wb.SheetNames[0]];
 
         const json =
-        XLSX.utils.sheet_to_json(hoja);
+XLSX.utils.sheet_to_json(
+    hoja,
+    {
+        range: 6,
+        defval: ""
+    }
+);
 
         localStorage.setItem(
             "produccionKPI",

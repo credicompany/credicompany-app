@@ -1727,7 +1727,9 @@ function cargarExcelFinanciero(){
         document.getElementById("excelFinanciero");
 
     if(!input || !input.files.length){
+
         alert("Seleccione el archivo financiero.");
+
         return;
     }
 
@@ -1740,12 +1742,16 @@ function cargarExcelFinanciero(){
         try{
 
             const data =
-                new Uint8Array(e.target.result);
+                new Uint8Array(
+                    e.target.result
+                );
 
             const wb =
                 XLSX.read(
                     data,
-                    { type:"array" }
+                    {
+                        type:"array"
+                    }
                 );
 
             const hoja =
@@ -1755,8 +1761,92 @@ function cargarExcelFinanciero(){
 
             /*
             ==================================================
-            DATA GENERAL
-            LOS ENCABEZADOS REALES ESTÁN EN LA FILA 6
+            LEER TODO EL EXCEL COMO MATRIZ
+            ==================================================
+            */
+
+            const filas =
+                XLSX.utils.sheet_to_json(
+                    hoja,
+                    {
+                        header:1,
+                        defval:""
+                    }
+                );
+
+            console.log(
+                "📊 FILAS LEÍDAS:",
+                filas.length
+            );
+
+            /*
+            ==================================================
+            BUSCAR AUTOMÁTICAMENTE LA FILA DE ENCABEZADOS
+            ==================================================
+            */
+
+            let filaEncabezado = -1;
+
+            for(
+                let i = 0;
+                i < filas.length;
+                i++
+            ){
+
+                const fila =
+                    filas[i];
+
+                const existeFecha =
+                    fila.some(
+                        celda =>
+                        String(celda)
+                        .trim()
+                        .toLowerCase()
+                        ===
+                        "fecha desembolso"
+                    );
+
+                if(existeFecha){
+
+                    filaEncabezado = i;
+
+                    break;
+                }
+
+            }
+
+            console.log(
+                "📌 FILA ENCABEZADOS:",
+                filaEncabezado + 1
+            );
+
+            /*
+            ==================================================
+            SI NO ENCUENTRA FECHA DE DESEMBOLSO
+            ==================================================
+            */
+
+            if(filaEncabezado === -1){
+
+                console.error(
+                    "❌ No se encontró 'Fecha Desembolso'."
+                );
+
+                console.log(
+                    "Primeras filas del Excel:",
+                    filas.slice(0,10)
+                );
+
+                alert(
+                    "❌ No se encontró la columna 'Fecha Desembolso' en el Excel."
+                );
+
+                return;
+            }
+
+            /*
+            ==================================================
+            CONVERTIR DESDE LA FILA CORRECTA
             ==================================================
             */
 
@@ -1764,7 +1854,7 @@ function cargarExcelFinanciero(){
                 XLSX.utils.sheet_to_json(
                     hoja,
                     {
-                        range:5,
+                        range:filaEncabezado,
                         defval:""
                     }
                 );
@@ -1775,31 +1865,51 @@ function cargarExcelFinanciero(){
             );
 
             console.log(
-                "📋 ENCABEZADOS:",
-                Object.keys(json[0] || {})
+                "📋 ENCABEZADOS ENCONTRADOS:",
+                Object.keys(
+                    json[0] || {}
+                )
             );
 
             /*
             ==================================================
-            VALIDAR COLUMNA PRINCIPAL
+            VALIDAR ENCABEZADOS NECESARIOS
             ==================================================
             */
 
-            if(
-                !json.length ||
-                !Object.prototype.hasOwnProperty.call(
-                    json[0],
-                    "Fecha Desembolso"
-                )
-            ){
+            if(!json.length){
 
-                console.error(
-                    "❌ No se encontró Fecha Desembolso",
+                alert(
+                    "❌ El Excel no contiene registros."
+                );
+
+                return;
+            }
+
+            const encabezados =
+                Object.keys(
                     json[0]
                 );
 
+            const tieneFecha =
+                encabezados.some(
+                    x =>
+                    String(x)
+                    .trim()
+                    .toLowerCase()
+                    ===
+                    "fecha desembolso"
+                );
+
+            if(!tieneFecha){
+
+                console.error(
+                    "❌ ENCABEZADOS:",
+                    encabezados
+                );
+
                 alert(
-                    "❌ El Excel no tiene los encabezados esperados."
+                    "❌ No se encontró la columna Fecha Desembolso."
                 );
 
                 return;
@@ -1807,46 +1917,95 @@ function cargarExcelFinanciero(){
 
             /*
             ==================================================
+            NORMALIZAR NOMBRE DE COLUMNA
+            ==================================================
+            */
+
+            json.forEach(fila => {
+
+                const claveFecha =
+                    Object.keys(fila)
+                    .find(
+                        x =>
+                        String(x)
+                        .trim()
+                        .toLowerCase()
+                        ===
+                        "fecha desembolso"
+                    );
+
+                if(
+                    claveFecha &&
+                    claveFecha !== "Fecha Desembolso"
+                ){
+
+                    fila["Fecha Desembolso"] =
+                        fila[claveFecha];
+
+                    delete fila[claveFecha];
+
+                }
+
+            });
+
+            /*
+            ==================================================
             VALIDAR FECHAS
             ==================================================
             */
 
-            const registrosConFecha =
-                json.filter(c => {
+            let fechasValidas = 0;
 
-                    const valor =
-                        c["Fecha Desembolso"];
+            json.forEach(c => {
+
+                const valor =
+                    c["Fecha Desembolso"];
+
+                if(
+                    valor !== undefined &&
+                    valor !== null &&
+                    valor !== ""
+                ){
 
                     if(
-                        valor === undefined ||
-                        valor === null ||
-                        valor === ""
+                        typeof valor === "number"
                     ){
-                        return false;
+
+                        if(!isNaN(valor)){
+                            fechasValidas++;
+                        }
+
+                    }
+                    else{
+
+                        const fecha =
+                            new Date(valor);
+
+                        if(
+                            !isNaN(
+                                fecha.getTime()
+                            )
+                        ){
+
+                            fechasValidas++;
+
+                        }
+
                     }
 
-                    if(typeof valor === "number"){
-                        return !isNaN(valor);
-                    }
+                }
 
-                    const fecha =
-                        new Date(valor);
-
-                    return !isNaN(
-                        fecha.getTime()
-                    );
-
-                });
+            });
 
             console.log(
-                "📅 REGISTROS CON FECHA:",
-                registrosConFecha.length
+                "📅 FECHAS VÁLIDAS:",
+                fechasValidas
             );
 
-            if(!registrosConFecha.length){
+            if(!fechasValidas){
 
                 alert(
-                    "❌ No se encontraron fechas de desembolso válidas en el Excel."
+                    "❌ El Excel tiene la columna Fecha Desembolso, pero no contiene fechas válidas."
                 );
 
                 return;
@@ -1875,7 +2034,7 @@ function cargarExcelFinanciero(){
 
             /*
             ==================================================
-            MOSTRAR ARCHIVO ACTIVO
+            ACTUALIZAR ARCHIVO ACTIVO
             ==================================================
             */
 
@@ -1894,7 +2053,7 @@ function cargarExcelFinanciero(){
 
             /*
             ==================================================
-            MOSTRAR KPI
+            GENERAR KPI
             ==================================================
             */
 
@@ -1906,17 +2065,21 @@ function cargarExcelFinanciero(){
             ==================================================
             */
 
-            guardarDatosFinancieros(json);
+            guardarDatosFinancieros(
+                json
+            );
 
             /*
             ==================================================
-            GUARDAR RESUMEN
+            GUARDAR RESUMEN EN FIREBASE
             ==================================================
             */
 
             setTimeout(
                 () => {
+
                     guardarFinancieroFirebase();
+
                 },
                 1000
             );
@@ -1941,7 +2104,9 @@ function cargarExcelFinanciero(){
 
     };
 
-    lector.readAsArrayBuffer(archivo);
+    lector.readAsArrayBuffer(
+        archivo
+    );
 
 }
 function cargarFinancieroFirebase(){
@@ -1950,87 +2115,81 @@ function cargarFinancieroFirebase(){
     .once("value")
     .then(snapshot => {
 
-        const datos = snapshot.val();
+        const datos =
+            snapshot.val();
 
         const divFinanciero =
             document.getElementById(
                 "resumenFinanciero"
             );
 
+        if(!datos){
+            return;
+        }
+
         /*
-        ==================================================
-        SI EXISTEN DATOS EN FIREBASE
-        ==================================================
+        ============================================
+        VALIDAR DATOS DE FIREBASE
+        ============================================
         */
 
-        if(datos){
+        if(
+            Array.isArray(datos.datos) &&
+            datos.datos.length > 0
+        ){
+
+            const primeraFila =
+                datos.datos[0];
 
             /*
-            ----------------------------------------------
-            VALIDAR DATA FINANCIERA
-            ----------------------------------------------
+            Solo procesar si la data tiene
+            la estructura correcta.
             */
 
             if(
-                Array.isArray(datos.datos) &&
-                datos.datos.length > 0
+                primeraFila &&
+                Object.keys(
+                    primeraFila
+                ).some(
+                    clave =>
+                    String(clave)
+                    .trim()
+                    .toLowerCase()
+                    ===
+                    "fecha desembolso"
+                )
             ){
 
-                const primeraFila =
-                    datos.datos[0];
-
-                /*
-                Solo restaurar si realmente
-                existe Fecha Desembolso
-                */
-
-                if(
-                    primeraFila &&
-                    Object.prototype.hasOwnProperty.call(
-                        primeraFila,
-                        "Fecha Desembolso"
+                localStorage.setItem(
+                    "financiero",
+                    JSON.stringify(
+                        datos.datos
                     )
-                ){
+                );
 
-                    localStorage.setItem(
-                        "financiero",
-                        JSON.stringify(
-                            datos.datos
-                        )
-                    );
+                mostrarResumenFinanciero();
 
-                    mostrarResumenFinanciero();
+                console.log(
+                    "✅ KPI FINANCIERO RESTAURADO DESDE FIREBASE"
+                );
 
-                    console.log(
-                        "✅ KPI FINANCIERO DESDE FIREBASE"
-                    );
+            }
+            else{
 
-                }
-                else{
-
-                    console.warn(
-                        "⚠️ Los datos financieros de Firebase son antiguos o incompatibles."
-                    );
-
-                }
+                console.warn(
+                    "⚠️ Firebase contiene datos financieros antiguos. No se procesarán."
+                );
 
             }
 
-            /*
-            ----------------------------------------------
-            SI NO HAY DATA PERO HAY HTML GUARDADO
-            ----------------------------------------------
-            */
+        }
+        else if(
+            divFinanciero &&
+            datos.html
+        ){
 
-            else if(
-                divFinanciero &&
-                datos.html
-            ){
-
-                divFinanciero.innerHTML =
-                    datos.html;
-
-            }
+            divFinanciero.innerHTML =
+                datos.html;
 
         }
 

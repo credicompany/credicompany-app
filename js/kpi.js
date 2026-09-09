@@ -1723,58 +1723,51 @@ function iniciarKPI(){
 
 function cargarExcelFinanciero(){
 
-    let archivo =
-    document.getElementById(
-        "excelFinanciero"
-    ).files[0];
+    const input =
+        document.getElementById("excelFinanciero");
 
-    if(!archivo){
-
-        alert(
-            "Seleccione el archivo financiero."
-        );
-
+    if(!input || !input.files.length){
+        alert("Seleccione el archivo financiero.");
         return;
     }
 
-    let lector =
-    new FileReader();
+    const archivo = input.files[0];
+
+    const lector = new FileReader();
 
     lector.onload = function(e){
 
         try{
 
             const data =
-            new Uint8Array(
-                e.target.result
-            );
+                new Uint8Array(e.target.result);
 
             const wb =
-            XLSX.read(
-                data,
-                {
-                    type:"array"
-                }
-            );
+                XLSX.read(
+                    data,
+                    { type:"array" }
+                );
 
             const hoja =
-            wb.Sheets[
-                wb.SheetNames[0]
-            ];
+                wb.Sheets[
+                    wb.SheetNames[0]
+                ];
 
-            // =====================================
-            // ENCABEZADOS REALES DEL DATA GENERAL
-            // FILA 6 DEL EXCEL
-            // =====================================
+            /*
+            ==================================================
+            DATA GENERAL
+            LOS ENCABEZADOS REALES ESTÁN EN LA FILA 6
+            ==================================================
+            */
 
             const json =
-            XLSX.utils.sheet_to_json(
-                hoja,
-                {
-                    range:5,
-                    defval:""
-                }
-            );
+                XLSX.utils.sheet_to_json(
+                    hoja,
+                    {
+                        range:5,
+                        defval:""
+                    }
+                );
 
             console.log(
                 "📊 REGISTROS FINANCIEROS:",
@@ -1782,58 +1775,88 @@ function cargarExcelFinanciero(){
             );
 
             console.log(
-                "📋 ENCABEZADOS FINANCIEROS:",
+                "📋 ENCABEZADOS:",
                 Object.keys(json[0] || {})
             );
 
-            // =====================================
-            // VALIDAR DATA
-            // =====================================
+            /*
+            ==================================================
+            VALIDAR COLUMNA PRINCIPAL
+            ==================================================
+            */
 
-            if(!json.length){
+            if(
+                !json.length ||
+                !Object.prototype.hasOwnProperty.call(
+                    json[0],
+                    "Fecha Desembolso"
+                )
+            ){
+
+                console.error(
+                    "❌ No se encontró Fecha Desembolso",
+                    json[0]
+                );
 
                 alert(
-                    "❌ El Excel no contiene datos."
+                    "❌ El Excel no tiene los encabezados esperados."
                 );
 
                 return;
             }
 
-            // =====================================
-            // VALIDAR FECHA DE DESEMBOLSO
-            // =====================================
+            /*
+            ==================================================
+            VALIDAR FECHAS
+            ==================================================
+            */
 
-            const fechasValidas =
-            json.filter(c => {
+            const registrosConFecha =
+                json.filter(c => {
 
-                const valor =
-                c["Fecha Desembolso"];
+                    const valor =
+                        c["Fecha Desembolso"];
 
-                if(
-                    valor === undefined ||
-                    valor === null ||
-                    valor === ""
-                ){
-                    return false;
-                }
+                    if(
+                        valor === undefined ||
+                        valor === null ||
+                        valor === ""
+                    ){
+                        return false;
+                    }
 
-                return true;
+                    if(typeof valor === "number"){
+                        return !isNaN(valor);
+                    }
 
-            });
+                    const fecha =
+                        new Date(valor);
+
+                    return !isNaN(
+                        fecha.getTime()
+                    );
+
+                });
 
             console.log(
                 "📅 REGISTROS CON FECHA:",
-                fechasValidas.length
+                registrosConFecha.length
             );
 
-            console.log(
-                "📅 EJEMPLO FECHA:",
-                json[0]["Fecha Desembolso"]
-            );
+            if(!registrosConFecha.length){
 
-            // =====================================
-            // GUARDAR DATOS LOCALMENTE
-            // =====================================
+                alert(
+                    "❌ No se encontraron fechas de desembolso válidas en el Excel."
+                );
+
+                return;
+            }
+
+            /*
+            ==================================================
+            GUARDAR LOCALMENTE
+            ==================================================
+            */
 
             localStorage.setItem(
                 "financiero",
@@ -1850,14 +1873,16 @@ function cargarExcelFinanciero(){
                 new Date().toLocaleString()
             );
 
-            // =====================================
-            // ACTUALIZAR NOMBRE DEL ARCHIVO
-            // =====================================
+            /*
+            ==================================================
+            MOSTRAR ARCHIVO ACTIVO
+            ==================================================
+            */
 
             const archivoActivo =
-            document.getElementById(
-                "archivoFinancieroActivo"
-            );
+                document.getElementById(
+                    "archivoFinancieroActivo"
+                );
 
             if(archivoActivo){
 
@@ -1867,35 +1892,41 @@ function cargarExcelFinanciero(){
 
             }
 
-            // =====================================
-            // MOSTRAR KPI
-            // =====================================
+            /*
+            ==================================================
+            MOSTRAR KPI
+            ==================================================
+            */
 
             mostrarResumenFinanciero();
 
-            // =====================================
-            // GUARDAR DATA COMPLETA FIREBASE
-            // =====================================
+            /*
+            ==================================================
+            GUARDAR DATA COMPLETA EN FIREBASE
+            ==================================================
+            */
 
-            guardarDatosFinancieros(
-                json
+            guardarDatosFinancieros(json);
+
+            /*
+            ==================================================
+            GUARDAR RESUMEN
+            ==================================================
+            */
+
+            setTimeout(
+                () => {
+                    guardarFinancieroFirebase();
+                },
+                1000
             );
-
-            // =====================================
-            // GUARDAR RESUMEN FIREBASE
-            // =====================================
-
-            setTimeout(() => {
-
-                guardarFinancieroFirebase();
-
-            },1000);
 
             alert(
                 "✅ Excel financiero cargado y actualizado correctamente."
             );
 
-        }catch(error){
+        }
+        catch(error){
 
             console.error(
                 "❌ ERROR CARGANDO EXCEL FINANCIERO:",
@@ -1910,45 +1941,108 @@ function cargarExcelFinanciero(){
 
     };
 
-    lector.readAsArrayBuffer(
-        archivo
-    );
+    lector.readAsArrayBuffer(archivo);
 
 }
-function guardarFinancieroFirebase(){
+function cargarFinancieroFirebase(){
 
-db.ref("kpiFinanciero").update({
+    db.ref("kpiFinanciero")
+    .once("value")
+    .then(snapshot => {
 
-archivo:
-localStorage.getItem("nombreFinanciero") || "",
+        const datos = snapshot.val();
 
-fecha:
-localStorage.getItem("fechaFinanciero") || "",
+        const divFinanciero =
+            document.getElementById(
+                "resumenFinanciero"
+            );
 
-actualizacion:
-new Date().toLocaleString(),
+        /*
+        ==================================================
+        SI EXISTEN DATOS EN FIREBASE
+        ==================================================
+        */
 
-html:
-document.getElementById(
-"resumenFinanciero"
-).innerHTML
+        if(datos){
 
-})
-.then(()=>{
+            /*
+            ----------------------------------------------
+            VALIDAR DATA FINANCIERA
+            ----------------------------------------------
+            */
 
-console.log(
-"✅ KPI FINANCIERO FIREBASE"
-);
+            if(
+                Array.isArray(datos.datos) &&
+                datos.datos.length > 0
+            ){
 
-})
-.catch(error=>{
+                const primeraFila =
+                    datos.datos[0];
 
-console.error(
-"❌ FIREBASE ERROR",
-error
-);
+                /*
+                Solo restaurar si realmente
+                existe Fecha Desembolso
+                */
 
-});
+                if(
+                    primeraFila &&
+                    Object.prototype.hasOwnProperty.call(
+                        primeraFila,
+                        "Fecha Desembolso"
+                    )
+                ){
+
+                    localStorage.setItem(
+                        "financiero",
+                        JSON.stringify(
+                            datos.datos
+                        )
+                    );
+
+                    mostrarResumenFinanciero();
+
+                    console.log(
+                        "✅ KPI FINANCIERO DESDE FIREBASE"
+                    );
+
+                }
+                else{
+
+                    console.warn(
+                        "⚠️ Los datos financieros de Firebase son antiguos o incompatibles."
+                    );
+
+                }
+
+            }
+
+            /*
+            ----------------------------------------------
+            SI NO HAY DATA PERO HAY HTML GUARDADO
+            ----------------------------------------------
+            */
+
+            else if(
+                divFinanciero &&
+                datos.html
+            ){
+
+                divFinanciero.innerHTML =
+                    datos.html;
+
+            }
+
+        }
+
+    })
+    .catch(error => {
+
+        console.error(
+            "❌ ERROR CARGANDO KPI FINANCIERO:",
+            error
+        );
+
+    });
 
 }
 

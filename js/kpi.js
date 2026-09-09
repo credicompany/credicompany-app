@@ -1698,13 +1698,24 @@ function mostrarArchivosActivos(){
 window.addEventListener("load", iniciarKPI);
 
 function iniciarKPI(){
-mostrarArchivosActivos();
+
+    mostrarArchivosActivos();
+
     // KPI GERENCIAL
-cargarGerencialFirebase();
-// KPI FINANCIERO
-cargarFinancieroFirebase();
-    
-}  
+    cargarGerencialFirebase();
+
+    // KPI FINANCIERO
+    // Se carga únicamente cuando exista información válida
+    try{
+        cargarFinancieroFirebase();
+    }catch(error){
+        console.error(
+            "❌ ERROR INICIANDO KPI FINANCIERO:",
+            error
+        );
+    }
+
+}
 // ======================================================
 // KPI FINANCIERO
 // CARGAR DATA GENERAL

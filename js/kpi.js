@@ -1707,7 +1707,9 @@ cargarFinancieroFirebase();
 }  
 // ======================================================
 // KPI FINANCIERO
+// CARGAR DATA GENERAL
 // ======================================================
+
 function cargarExcelFinanciero(){
 
     let archivo =
@@ -1717,10 +1719,11 @@ function cargarExcelFinanciero(){
 
     if(!archivo){
 
-        alert("Seleccione el archivo financiero.");
+        alert(
+            "Seleccione el archivo financiero."
+        );
 
         return;
-
     }
 
     let lector =
@@ -1738,7 +1741,9 @@ function cargarExcelFinanciero(){
             const wb =
             XLSX.read(
                 data,
-                {type:"array"}
+                {
+                    type:"array"
+                }
             );
 
             const hoja =
@@ -1746,15 +1751,33 @@ function cargarExcelFinanciero(){
                 wb.SheetNames[0]
             ];
 
+            // =====================================
+            // ENCABEZADOS REALES DEL DATA GENERAL
+            // FILA 6 DEL EXCEL
+            // =====================================
+
             const json =
             XLSX.utils.sheet_to_json(
-                hoja
+                hoja,
+                {
+                    range:5,
+                    defval:""
+                }
             );
 
             console.log(
                 "📊 REGISTROS FINANCIEROS:",
                 json.length
             );
+
+            console.log(
+                "📋 ENCABEZADOS FINANCIEROS:",
+                Object.keys(json[0] || {})
+            );
+
+            // =====================================
+            // VALIDAR DATA
+            // =====================================
 
             if(!json.length){
 
@@ -1763,8 +1786,39 @@ function cargarExcelFinanciero(){
                 );
 
                 return;
-
             }
+
+            // =====================================
+            // VALIDAR FECHA DE DESEMBOLSO
+            // =====================================
+
+            const fechasValidas =
+            json.filter(c => {
+
+                const valor =
+                c["Fecha Desembolso"];
+
+                if(
+                    valor === undefined ||
+                    valor === null ||
+                    valor === ""
+                ){
+                    return false;
+                }
+
+                return true;
+
+            });
+
+            console.log(
+                "📅 REGISTROS CON FECHA:",
+                fechasValidas.length
+            );
+
+            console.log(
+                "📅 EJEMPLO FECHA:",
+                json[0]["Fecha Desembolso"]
+            );
 
             // =====================================
             // GUARDAR DATOS LOCALMENTE
@@ -1803,19 +1857,21 @@ function cargarExcelFinanciero(){
             }
 
             // =====================================
-            // MOSTRAR KPI NUEVO
+            // MOSTRAR KPI
             // =====================================
 
             mostrarResumenFinanciero();
 
             // =====================================
-            // GUARDAR DATOS COMPLETOS EN FIREBASE
+            // GUARDAR DATA COMPLETA FIREBASE
             // =====================================
 
-            guardarDatosFinancieros(json);
+            guardarDatosFinancieros(
+                json
+            );
 
             // =====================================
-            // GUARDAR RESUMEN EN FIREBASE
+            // GUARDAR RESUMEN FIREBASE
             // =====================================
 
             setTimeout(() => {
@@ -2963,7 +3019,7 @@ function cargarMetasKPI(){
 XLSX.utils.sheet_to_json(
     hoja,
     {
-        range: 6,
+        range: 5,
         defval: ""
     }
 );

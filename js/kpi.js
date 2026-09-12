@@ -300,7 +300,7 @@ let resumen = `
             color:#123F63;
             letter-spacing:.3px;
         ">
-            📊 TABLERO GERENCIAL
+        🎯 GESTIÓN Y CUMPLIMIENTO DE METAS
         </div>
 
         <div style="

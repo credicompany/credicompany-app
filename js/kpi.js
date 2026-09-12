@@ -787,6 +787,7 @@ color:white;
 <th>TEM ${mesAnterior.toUpperCase()}</th>
 <th>TEM ${mesActual.toUpperCase()}</th>
 <th>MORA ${mesAnterior.toUpperCase()}</th>
+<th>MORA ${mesActual.toUpperCase()} 31+</th>
 <th>MORA ${mesActual.toUpperCase()} 9+</th>
 <th>MORA ${mesActual.toUpperCase()} 1+</th>
 <th>🚦</th>
@@ -798,6 +799,7 @@ color:white;
 // ==========================
 
 let moraActualAsesor = {};
+let mora31MasAsesor = {};
 let mora1MasAsesor = {};
 
 jsonGeneral.forEach(c=>{
@@ -814,17 +816,31 @@ jsonGeneral.forEach(c=>{
     let saldo =
     parseFloat(c["Saldo Capital"] || 0) || 0;
 
-    if(!moraActualAsesor[asesor]){
-        moraActualAsesor[asesor] = 0;
-    }
+  if(!moraActualAsesor[asesor]){
+    moraActualAsesor[asesor] = 0;
+}
 
-    if(atraso >= 9){
+if(!mora31MasAsesor[asesor]){
+    mora31MasAsesor[asesor] = 0;
+}
+
+if(!mora1MasAsesor[asesor]){
+    mora1MasAsesor[asesor] = 0;
+}
+
+// Mora de 9 días o más
+if(atraso >= 9){
     moraActualAsesor[asesor] += saldo;
 }
-    
+
+// Mora de 31 días o más
+if(atraso > 30){
+    mora31MasAsesor[asesor] += saldo;
+}
+
+// Mora de 1 día o más
 if(atraso >= 1){
-    mora1MasAsesor[asesor] =
-        (mora1MasAsesor[asesor] || 0) + saldo;
+    mora1MasAsesor[asesor] += saldo;
 }
 });   
  // =========================================
@@ -841,6 +857,7 @@ let totalClientesJulio = 0;
 
 let totalMoraJulio = 0;
 let totalMoraAgosto = 0;
+let totalMoraAgosto31Mas = 0;
 let totalMoraAgosto1Mas = 0;
 
 let sumaTemJulio = 0;
@@ -1015,11 +1032,14 @@ temPromedio[asesor].length
 
     }
 
-    let moraActual =
+   let moraActual =
     moraActualAsesor[asesor] || 0;
 
-     let mora1Mas =
-mora1MasAsesor[asesor] || 0;
+let mora31Mas =
+    mora31MasAsesor[asesor] || 0;
+
+let mora1Mas =
+    mora1MasAsesor[asesor] || 0;
 
     //=========================================
     // METAS
@@ -1154,17 +1174,25 @@ ${variacionClientes>0?"+":""}${variacionClientes}
 
 <td style="
 font-weight:bold;
-color:#C43D3D;
+color:#991B1B;
 ">
-S/${Math.round(moraActual).toLocaleString()}
+S/${Math.round(mora31Mas).toLocaleString("es-PE")}
 </td>
 
 <td style="
 font-weight:bold;
 color:#C43D3D;
 ">
-S/${Math.round(mora1Mas).toLocaleString()}
+S/${Math.round(moraActual).toLocaleString("es-PE")}
 </td>
+
+<td style="
+font-weight:bold;
+color:#C43D3D;
+">
+S/${Math.round(mora1Mas).toLocaleString("es-PE")}
+</td>
+
 <td>${colorEstado}</td>
 
 </tr>
@@ -1186,6 +1214,7 @@ totalClientesAgosto += Number(clientesActual) || 0;
 
 totalMoraJulio += Number(moraAnterior) || 0;
 totalMoraAgosto += Number(moraActual) || 0;
+totalMoraAgosto31Mas += Number(mora31Mas) || 0;
 totalMoraAgosto1Mas += Number(mora1Mas) || 0;
 
 if(Number(temAnterior) > 0){
@@ -1324,6 +1353,10 @@ ${temTotalAgosto}%
 
 <td>
 S/${Math.round(totalMoraJulio).toLocaleString("es-PE")}
+</td>
+
+<td>
+S/${Math.round(totalMoraAgosto31Mas).toLocaleString("es-PE")}
 </td>
 
 <td>

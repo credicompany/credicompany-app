@@ -1987,7 +1987,67 @@ getDoc
 #panelCargaKPI br{
     display:none !important;
 }
-  
+  /* RESUMEN DEL ASESOR */
+.resumenAsesor {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin: 20px 0 24px;
+}
+
+.tarjetaResumen {
+    background: #ffffff;
+    border: 1px solid #d9e3ec;
+    border-radius: 14px;
+    padding: 18px;
+    min-height: 105px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 4px 12px rgba(18, 63, 99, 0.08);
+}
+
+.iconoResumen {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #eaf3fb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    flex-shrink: 0;
+}
+
+.tarjetaResumen span {
+    display: block;
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.tarjetaResumen strong {
+    display: block;
+    color: #123f63;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+@media (max-width: 900px) {
+    .resumenAsesor {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 520px) {
+    .resumenAsesor {
+        grid-template-columns: 1fr;
+    }
+
+    .tarjetaResumen {
+        padding: 14px;
+    }
+}
 </style>
   
 </head>

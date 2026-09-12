@@ -1296,12 +1296,19 @@ resumen += `
 
 <tr style="
 background:#EDF4F8;
-font-weight:bold;
+font-weight:800;
+font-size:15px;
+height:42px;
 border-top:3px solid #123F63;
+vertical-align:middle;
 ">
 
-<td>
-TOTAL EMPRESA
+<td style="
+font-size:16px;
+font-weight:900;
+line-height:1.1;
+">
+TOTAL<br>EMPRESA
 </td>
 
 <td>

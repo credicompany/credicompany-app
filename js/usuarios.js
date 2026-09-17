@@ -798,6 +798,49 @@ onclick="subirFoto('negocio','${c.dni}','${idTarjeta}')">
 </div>
 
 </div>
+<div style="
+    margin-top:10px;
+    border:1px dashed #CBD5E1;
+    border-radius:12px;
+    padding:10px;
+    text-align:center;
+">
+
+    <div style="
+        font-size:22px;
+    ">
+        🪪
+    </div>
+
+    <div style="
+        font-size:12px;
+        font-weight:700;
+        margin-top:6px;
+    ">
+        DOCUMENTO DNI
+    </div>
+
+    <div id="documentoDNI_${idTarjeta}">
+        <button
+            style="
+                margin-top:8px;
+                background:#123B63;
+                color:white;
+                border:none;
+                border-radius:10px;
+                padding:8px;
+                font-size:12px;
+                cursor:pointer;
+            "
+            onclick="subirDNI('${c.dni}','${idTarjeta}')"
+        >
+            📄 Agregar DNI
+        </button>
+    </div>
+
+</div>
+
+
 ${c.nombreAval ? `
 
 <div style="height:12px;"></div>
@@ -1194,6 +1237,119 @@ error
 );
 
 }
+
+}
+// ======================================
+// SUBIR DNI DEL CLIENTE
+// ======================================
+async function subirDNI(dni, idTarjeta){
+
+    try{
+
+        const input = document.createElement("input");
+
+        input.type = "file";
+        input.accept = "image/*";
+        input.capture = "environment";
+
+        input.onchange = async ()=>{
+
+            const archivo = input.files[0];
+
+            if(!archivo) return;
+
+            const archivoComprimido =
+                await comprimirImagen(archivo);
+
+            const formData = new FormData();
+
+            formData.append(
+                "file",
+                archivoComprimido,
+                "dni.jpg"
+            );
+
+            formData.append(
+                "upload_preset",
+                UPLOAD_PRESET
+            );
+
+            const respuesta = await fetch(
+                `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+                {
+                    method:"POST",
+                    body:formData
+                }
+            );
+
+            const datos = await respuesta.json();
+
+            if(!datos.secure_url){
+
+                alert("❌ Error al subir el DNI");
+                return;
+
+            }
+
+            // Guardar DNI en Firebase
+            await db.ref("documentos/"+dni+"/dni").set({
+
+                url: datos.secure_url,
+                fecha: new Date().toLocaleString()
+
+            });
+
+            // Mostrar DNI cargado
+            const contenedor =
+                document.getElementById(
+                    "documentoDNI_"+idTarjeta
+                );
+
+            if(contenedor){
+
+                contenedor.innerHTML = `
+
+                    <a
+                        href="${datos.secure_url}"
+                        target="_blank"
+                        style="
+                            display:block;
+                            margin-top:8px;
+                            color:#2563EB;
+                            font-weight:700;
+                            text-decoration:none;
+                        "
+                    >
+                        📄 Ver DNI cargado
+                    </a>
+
+                    <button
+                        class="btnCambiarFoto"
+                        onclick="subirDNI('${dni}','${idTarjeta}')"
+                    >
+                        🔄 Cambiar DNI
+                    </button>
+
+                `;
+
+            }
+
+            alert("✅ DNI guardado correctamente");
+
+        };
+
+        input.click();
+
+    }catch(error){
+
+        console.error(
+            "❌ Error subiendo DNI:",
+            error
+        );
+
+        alert("❌ No se pudo guardar el DNI");
+
+    }
 
 }
 

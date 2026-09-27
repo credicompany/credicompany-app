@@ -2951,9 +2951,9 @@ document.getElementById(
 
 <div style="
 display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:8px;
-margin-bottom:15px;
+grid-template-columns:${esMovil ? "repeat(2,1fr)" : "repeat(3,1fr)"};
+gap:${esMovil ? "6px" : "8px"};
+margin-bottom:${esMovil ? "10px" : "15px"};
 ">
 
 <div class="card-resumen"
@@ -2993,8 +2993,8 @@ style="display:block;">
 
 <div style="
 display:grid;
-grid-template-columns:${esMovil ? "1fr" : "repeat(2,1fr)"};
-gap:10px;
+grid-template-columns:${esMovil ? "repeat(2,1fr)" : "repeat(2,1fr)"};
+gap:${esMovil ? "6px" : "10px"};
 ">
 
 <div style="
@@ -3003,7 +3003,8 @@ color:#243746;
 border:1px solid #DEE4EA;
 box-shadow:0 3px 10px rgba(18,63,99,.07);
 text-align:center;
-min-height:80px;
+min-height:${esMovil ? "62px" : "80px"};
+padding:${esMovil ? "6px" : "10px"};
 ">
 <div style="
 font-size:28px;
@@ -3012,7 +3013,7 @@ margin-bottom:5px;
 💰
 </div>
 <div>Cartera Total</div>
-<div style="font-size:22px;font-weight:bold;">
+<div style="font-size:${esMovil ? "16px" : "22px"};;font-weight:bold;">
 S/${carteraTotal.toLocaleString()}
 </div>
 </div>
@@ -3023,11 +3024,12 @@ color:#243746;
 border:1px solid #DEE4EA;
 box-shadow:0 3px 10px rgba(18,63,99,.07);
 text-align:center;
-min-height:80px;
+min-height:${esMovil ? "62px" : "80px"};
+padding:${esMovil ? "6px" : "10px"};
 ">
-<div style="font-size:22px;">💵</div>
+<div style="font-size:${esMovil ? "16px" : "22px"};">💵</div>
 <div>Capital Vencido</div>
-<div style="font-size:22px;font-weight:bold;">
+<div style="font-size:${esMovil ? "16px" : "22px"};font-weight:bold;">
 S/${capitalVencido.toLocaleString()}
 </div>
 </div>
@@ -3037,11 +3039,12 @@ color:#243746;
 border:1px solid #DEE4EA;
 box-shadow:0 3px 10px rgba(18,63,99,.07);
 text-align:center;
-min-height:80px;
+min-height:${esMovil ? "62px" : "80px"};
+padding:${esMovil ? "6px" : "10px"};
 ">
-<div style="font-size:22px;">💸</div>
+<div style="font-size:${esMovil ? "16px" : "22px"};">💸</div>
 <div>Costo Desembolso</div>
-<div style="font-size:22px;font-weight:bold;">
+<div style="font-size:${esMovil ? "16px" : "22px"};font-weight:bold;">
 S/${costoDesembolsoTotal.toLocaleString()}
 </div>
 </div>
@@ -3053,11 +3056,12 @@ box-shadow:0 3px 10px rgba(18,63,99,.07);
 padding:10px;
 border-radius:12px;
 text-align:center;
-min-height:80px;
+min-height:${esMovil ? "62px" : "80px"};
+padding:${esMovil ? "6px" : "10px"};
 ">
-<div style="font-size:22px;">📉</div>
+<div style="font-size:${esMovil ? "16px" : "22px"};">📉</div>
 <div>% Mora</div>
-<div style="font-size:22px;font-weight:bold;">
+<div style="font-size:${esMovil ? "16px" : "22px"};font-weight:bold;">
 ${moraPorcentaje}%
 </div>
 </div>
@@ -3069,11 +3073,12 @@ box-shadow:0 3px 10px rgba(18,63,99,.07);
 padding:10px;
 border-radius:12px;
 text-align:center;
-min-height:80px;
+min-height:${esMovil ? "62px" : "80px"};
+padding:${esMovil ? "6px" : "10px"};
 ">
-<div style="font-size:22px;">🚨</div>
+<div style="font-size:${esMovil ? "16px" : "22px"};">🚨</div>
 <div>Clientes +30</div>
-<div style="font-size:22px;font-weight:bold;">
+<div style="font-size:${esMovil ? "16px" : "22px"};font-weight:bold;">
 ${clientesCriticos}
 </div>
 </div>
@@ -3086,10 +3091,10 @@ box-shadow:0 3px 10px rgba(18,63,99,.07);
 padding:10px;
 border-radius:12px;
 text-align:center;
-min-height:80px;
-">
+min-height:80px;min-height:${esMovil ? "62px" : "80px"};
+padding:${esMovil ? "6px" : "10px"};">
 
-<div style="font-size:22px;">🔴</div>
+<div style="font-size:${esMovil ? "16px" : "22px"};">🔴</div>
 
 <div>Mora Total (+1)</div>
 
@@ -3110,9 +3115,10 @@ color:#243746;
 border:1px solid #DEE4EA;
 box-shadow:0 3px 10px rgba(18,63,99,.07);
 text-align:center;
-min-height:80px;
+min-height:${esMovil ? "62px" : "80px"};
+padding:${esMovil ? "6px" : "10px"};
 ">
-<div style="font-size:22px;">📈</div>
+<div style="font-size:${esMovil ? "16px" : "22px"};;">📈</div>
 <div>Rentabilidad</div>
 <div style="font-size:18px;font-weight:bold;">
 S/${rentabilidad.toLocaleString()}
@@ -3143,7 +3149,7 @@ Cartera Sana
 </div>
 
 <div style="
-font-size:22px;
+font-size:${esMovil ? "16px" : "22px"};
 font-weight:bold;
 ">
 S/${carteraSana.toLocaleString()}
@@ -3168,7 +3174,7 @@ Cartera Vencida
 </div>
 
 <div style="
-font-size:22px;
+font-size:${esMovil ? "16px" : "22px"};
 font-weight:bold;
 ">
 S/${capitalVencido.toLocaleString()}

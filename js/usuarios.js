@@ -1080,7 +1080,58 @@ usuarios.forEach(u=>{
 lista.innerHTML+=`<div class="item">${u.user}</div>`;
 });
 }
-function verTodosClientes(){
+// ==========================================
+// GENERAR BOTONES DE ASESORES AUTOMÁTICAMENTE
+// ==========================================
+function renderBotonesAsesores(){
+
+    const contenedor =
+        document.getElementById("listaBotonesAsesores");
+
+    if(!contenedor) return;
+
+    const usuarios =
+        JSON.parse(
+            localStorage.getItem("usuarios")
+        ) || [];
+
+    contenedor.innerHTML = "";
+
+    usuarios.forEach(u => {
+
+        const user =
+            (u.user || "").toLowerCase().trim();
+
+        if(!user) return;
+
+        const boton =
+            document.createElement("button");
+
+        boton.className = "btn-verde";
+
+        boton.style.width = "100%";
+        boton.style.padding = "8px";
+        boton.style.fontSize = "12px";
+        boton.style.borderRadius = "12px";
+
+        boton.innerHTML =
+            "👤 " +
+            (
+                u.nombre ||
+                user
+            );
+
+        boton.onclick = function(){
+
+            filtrarPorAsesor(user);
+
+        };
+
+        contenedor.appendChild(boton);
+
+    });
+
+}function verTodosClientes(){
 
 // Mostrar toda la cartera
 filtrarMora(0,1000);

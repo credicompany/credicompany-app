@@ -27,6 +27,7 @@ if(asesor === "admin"){
     document.getElementById("boxAdmin").style.display="flex";
     document.getElementById("panelExcel").style.display="block";
     document.getElementById("panelAsesores").style.display="grid";
+  renderBotonesAsesores();
     document.getElementById("boxKpiFinanciero").style.display="flex";
     document.getElementById("boxResultadoMensual").style.display="flex";
 

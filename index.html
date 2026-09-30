@@ -1859,6 +1859,67 @@ KPI FINANCIERO - CELULAR
 }
 
 }
+
+  /* ==========================================
+   ASESORES - 3 POR FILA
+   CREDICOMPANY
+   ========================================== */
+
+#panelAsesores{
+    display:flex !important;
+    flex-wrap:wrap !important;
+    gap:8px !important;
+    width:100% !important;
+    max-width:100% !important;
+    margin-top:10px !important;
+    box-sizing:border-box !important;
+}
+
+#panelAsesores #listaBotonesAsesores{
+    display:contents !important;
+}
+
+#panelAsesores button{
+    width:calc((100% - 16px) / 3) !important;
+    min-width:0 !important;
+    max-width:none !important;
+    height:58px !important;
+    min-height:58px !important;
+    padding:6px 4px !important;
+    margin:0 !important;
+    box-sizing:border-box !important;
+    font-size:12px !important;
+    line-height:1.05 !important;
+    font-weight:700 !important;
+    border-radius:14px !important;
+    overflow:hidden !important;
+    white-space:normal !important;
+}
+
+#panelAsesores button:first-child{
+    width:calc((100% - 16px) / 3) !important;
+    min-width:0 !important;
+}
+
+@media(max-width:768px){
+
+    #panelAsesores{
+        display:flex !important;
+        flex-wrap:wrap !important;
+        gap:8px !important;
+        width:100% !important;
+    }
+
+    #panelAsesores button{
+        width:calc((100% - 16px) / 3) !important;
+        height:58px !important;
+        min-height:58px !important;
+        padding:5px 3px !important;
+        font-size:11px !important;
+        line-height:1.05 !important;
+    }
+
+}
 </style>
  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";

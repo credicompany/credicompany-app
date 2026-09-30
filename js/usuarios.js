@@ -1153,13 +1153,9 @@ function renderBotonesAsesores(){
 
         boton.className = "btn-verde";
 
-        boton.style.width = "100%";
         boton.style.height = "52px";
         boton.style.minWidth = "0";
-        boton.style.padding = "6px";
-        boton.style.fontSize = "12px";
         boton.style.lineHeight = "1.15";
-        boton.style.borderRadius = "12px";
         boton.style.boxSizing = "border-box";
         boton.style.whiteSpace = "normal";
         boton.style.overflow = "hidden";

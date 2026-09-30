@@ -1103,7 +1103,7 @@ function renderBotonesAsesores(){
     // ==========================================
     contenedor.style.display = "grid";
     contenedor.style.gridTemplateColumns =
-        "repeat(2, minmax(0, 1fr))";
+    "repeat(3, minmax(0, 1fr))";
     contenedor.style.gap = "8px";
     contenedor.style.width = "100%";
     contenedor.style.boxSizing = "border-box";

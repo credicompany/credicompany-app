@@ -1099,15 +1099,49 @@ function renderBotonesAsesores(){
     contenedor.innerHTML = "";
 
     // ==========================================
-    // DISEÑO RESPONSIVE PARA CELULAR
+    // CUADRÍCULA: 3 BOTONES POR FILA
     // ==========================================
     contenedor.style.display = "grid";
     contenedor.style.gridTemplateColumns =
-    "repeat(3, minmax(0, 1fr))";
+        "repeat(3, minmax(0, 1fr))";
     contenedor.style.gap = "8px";
     contenedor.style.width = "100%";
     contenedor.style.boxSizing = "border-box";
 
+    // ==========================================
+    // BOTÓN TEAM CREDICOMPANY
+    // ==========================================
+    const botonTeam =
+        document.createElement("button");
+
+    botonTeam.className = "btn-verde";
+
+    botonTeam.style.width = "100%";
+    botonTeam.style.height = "68px";
+    botonTeam.style.minWidth = "0";
+    botonTeam.style.padding = "6px";
+    botonTeam.style.fontSize = "12px";
+    botonTeam.style.lineHeight = "1.15";
+    botonTeam.style.borderRadius = "12px";
+    botonTeam.style.boxSizing = "border-box";
+    botonTeam.style.whiteSpace = "normal";
+    botonTeam.style.overflow = "hidden";
+
+    botonTeam.innerHTML =
+        "🏆 Team<br>Credicompany";
+
+    botonTeam.onclick = function(){
+
+        resetFiltros();
+
+    };
+
+    contenedor.appendChild(botonTeam);
+
+
+    // ==========================================
+    // BOTONES DE ASESORES
+    // ==========================================
     usuarios.forEach(u => {
 
         const user =
@@ -1120,13 +1154,11 @@ function renderBotonesAsesores(){
 
         boton.className = "btn-verde";
 
-        // ==========================================
-        // TAMAÑO COMPACTO PARA CELULAR
-        // ==========================================
         boton.style.width = "100%";
-        boton.style.minHeight = "58px";
-        boton.style.padding = "7px 6px";
-        boton.style.fontSize = "13px";
+        boton.style.height = "68px";
+        boton.style.minWidth = "0";
+        boton.style.padding = "6px";
+        boton.style.fontSize = "12px";
         boton.style.lineHeight = "1.15";
         boton.style.borderRadius = "12px";
         boton.style.boxSizing = "border-box";

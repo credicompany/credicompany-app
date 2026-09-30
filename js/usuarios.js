@@ -1082,7 +1082,7 @@ lista.innerHTML+=`<div class="item">${u.user}</div>`;
 });
 }
 // ==========================================
-// GENERAR BOTONES DE ASESORES AUTOMÁTICAMENTE
+// GENERAR BOTONES DE ASESORES
 // ==========================================
 function renderBotonesAsesores(){
 
@@ -1098,6 +1098,16 @@ function renderBotonesAsesores(){
 
     contenedor.innerHTML = "";
 
+    // ==========================================
+    // DISEÑO RESPONSIVE PARA CELULAR
+    // ==========================================
+    contenedor.style.display = "grid";
+    contenedor.style.gridTemplateColumns =
+        "repeat(2, minmax(0, 1fr))";
+    contenedor.style.gap = "8px";
+    contenedor.style.width = "100%";
+    contenedor.style.boxSizing = "border-box";
+
     usuarios.forEach(u => {
 
         const user =
@@ -1110,10 +1120,18 @@ function renderBotonesAsesores(){
 
         boton.className = "btn-verde";
 
+        // ==========================================
+        // TAMAÑO COMPACTO PARA CELULAR
+        // ==========================================
         boton.style.width = "100%";
-        boton.style.padding = "8px";
-        boton.style.fontSize = "12px";
+        boton.style.minHeight = "58px";
+        boton.style.padding = "7px 6px";
+        boton.style.fontSize = "13px";
+        boton.style.lineHeight = "1.15";
         boton.style.borderRadius = "12px";
+        boton.style.boxSizing = "border-box";
+        boton.style.whiteSpace = "normal";
+        boton.style.overflow = "hidden";
 
         boton.innerHTML =
             "👤 " +
@@ -1132,7 +1150,9 @@ function renderBotonesAsesores(){
 
     });
 
-}function verTodosClientes(){
+}
+
+function verTodosClientes(){
 
 // Mostrar toda la cartera
 filtrarMora(0,1000);

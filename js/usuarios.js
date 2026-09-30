@@ -1117,7 +1117,7 @@ function renderBotonesAsesores(){
     botonTeam.className = "btn-verde";
 
     botonTeam.style.width = "100%";
-    botonTeam.style.height = "68px";
+    botonTeam.style.height = "52px";
     botonTeam.style.minWidth = "0";
     botonTeam.style.padding = "6px";
     botonTeam.style.fontSize = "12px";
@@ -1127,9 +1127,8 @@ function renderBotonesAsesores(){
     botonTeam.style.whiteSpace = "normal";
     botonTeam.style.overflow = "hidden";
 
-    botonTeam.innerHTML =
-        "🏆 Team<br>Credicompany";
-
+   botonTeam.innerHTML =
+    "🏆 Team Credicompany";
     botonTeam.onclick = function(){
 
         resetFiltros();
@@ -1155,7 +1154,7 @@ function renderBotonesAsesores(){
         boton.className = "btn-verde";
 
         boton.style.width = "100%";
-        boton.style.height = "68px";
+        boton.style.height = "52px";
         boton.style.minWidth = "0";
         boton.style.padding = "6px";
         boton.style.fontSize = "12px";

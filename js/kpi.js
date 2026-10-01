@@ -20,7 +20,7 @@
 function generarKPI(json){
 
     let totalClientesActual = 0;
-    let totalClientesAgosto = 0;
+    let totalClientesSiguiente = 0;
 
     const usuarios =
     JSON.parse(
@@ -75,7 +75,7 @@ if(
 // CLIENTES ACUMULADOS HASTA EL MES ACTUAL
 // ========================================
 // Cuenta clientes únicos por asesor.
-// Incluye todos los desembolsos hasta agosto.
+// Incluye todos los desembolsos de la data cargada.
 // Un cliente con varios créditos cuenta UNA sola vez.
 // ========================================
 
@@ -363,7 +363,7 @@ let resumen = `
     color:#172B3A;
     margin-top:3px;
 ">
- ${totalClientesAgosto}
+ ${totalClientesActual}
 </div>
 
         </div>
@@ -928,7 +928,7 @@ let totalAvanceColocacion = 0;
 let totalMetaOperaciones = 0;
 let totalAvanceOperaciones = 0;
 
-let totalClientesJulio = 0;
+let totalClientesHistorico = 0;
 
 let totalMoraJulio = 0;
 let totalMoraAgosto = 0;
@@ -987,38 +987,70 @@ let cantidadTemAgosto = 0;
 
         };
 
-       // ==========================================
-// CLIENTES
+        // ==========================================
+        // DATOS REALES DEL ASESOR
+        // ==========================================
+
+        const colocacion =
+            Number(ranking[asesor] || 0);
+
+        const oper =
+            Number(operaciones[asesor] || 0);
+
+        const tem =
+            temPromedio[asesor] &&
+            temPromedio[asesor].length
+            ?
+            (
+                temPromedio[asesor]
+                .reduce((a,b)=>a+b,0)
+                /
+                temPromedio[asesor].length
+            ).toFixed(2)
+            :
+            "0.00";
+
+        // ==========================================
+// CLIENTES: HISTÓRICO VS MES SIGUIENTE
 // ==========================================
 
-// SEPTIEMBRE = HISTÓRICO
-let colClientesHistorico =
+// HISTÓRICO:
+// toma la columna CLIENTES del mes cerrado.
+// Ejemplo: si la última data disponible es
+// SEPTIEMBRE, toma CLIENTES SEPTIEMBRE del Excel.
+
+const colClientesHistorico =
     buscarColumna(
         "CLIENTES",
         mesActual
     );
 
-let clientesHistoricoMes =
+const clientesHistoricoMes =
     colClientesHistorico
     ?
     Number(
-        meta[colClientesHistorico] || 0
+        String(meta[colClientesHistorico] || 0)
+        .replace(/,/g,"")
     )
     :
     0;
 
+// MES SIGUIENTE:
+// toma clientes únicos de la producción
+// correspondiente al mes siguiente.
+// Ejemplo: SEPTIEMBRE → OCTUBRE.
 
-// OCTUBRE = PRODUCCIÓN DEL MES SIGUIENTE
-let clientesMesActual =
+const clientesMesActual =
     clientesMesSiguiente[asesor]
     ?
     clientesMesSiguiente[asesor].size
     :
     0;
 
+// VARIACIÓN:
+// MES SIGUIENTE - HISTÓRICO
 
-// VARIACIÓN
-let variacionClientes =
+const variacionClientes =
     clientesMesActual -
     clientesHistoricoMes;
 
@@ -1047,7 +1079,7 @@ if(variacionClientes > 0){
                 ) || 0;
         }
 
-        // Mora histórica: para septiembre se lee MORA AGOSTO.
+        // Mora histórica: se toma siempre el mes anterior.
         let moraAnterior = 0;
         const colMora = buscarColumna("MORA",mesAnterior);
 
@@ -1131,8 +1163,8 @@ if(variacionClientes > 0){
         totalAvanceColocacion += colocacion;
         totalMetaOperaciones += metaOperaciones;
         totalAvanceOperaciones += oper;
-        totalClientesJulio += clientesAnterior;
-        totalClientesAgosto += clientesActual;
+        totalClientesHistorico += clientesHistoricoMes;
+        totalClientesSiguiente += clientesMesActual;
         totalMoraJulio += moraAnterior;
         totalMoraAgosto += moraActual;
         totalMoraAgosto31Mas += mora31Mas;
@@ -1155,7 +1187,7 @@ if(variacionClientes > 0){
 // =========================================
 
 let totalVariacionClientes =
-totalClientesAgosto - totalClientesJulio;
+totalClientesSiguiente - totalClientesHistorico;
 
 let porcentajeTotalColocacion =
 totalMetaColocacion > 0
@@ -1254,11 +1286,11 @@ ${porcentajeTotalOperaciones}%
 </td>
 
 <td>
-${totalClientesJulio}
+${totalClientesHistorico}
 </td>
 
 <td>
-${totalClientesAgosto}
+${totalClientesSiguiente}
 </td>
 
 <td style="

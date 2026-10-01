@@ -1872,6 +1872,8 @@ getDoc
 
 <style>
 
+  
+
 @media (max-width: 600px){
 
     #kpi{
@@ -2207,6 +2209,59 @@ getDoc
         padding: 14px;
     }
 }
+
+
+  .tarjetaResumen {
+    padding:14px;
+}
+
+/* ==========================================
+   HISTÓRICO MENSUAL — TABLA COMPACTA
+========================================== */
+
+#resultadoMensual .tabla-historico{
+    width:100% !important;
+    table-layout:fixed !important;
+    border-collapse:collapse !important;
+}
+
+#resultadoMensual .tabla-historico th:nth-child(1),
+#resultadoMensual .tabla-historico td:nth-child(1){
+    width:18% !important;
+    text-align:center !important;
+}
+
+#resultadoMensual .tabla-historico th:nth-child(2),
+#resultadoMensual .tabla-historico td:nth-child(2),
+#resultadoMensual .tabla-historico th:nth-child(3),
+#resultadoMensual .tabla-historico td:nth-child(3),
+#resultadoMensual .tabla-historico th:nth-child(4),
+#resultadoMensual .tabla-historico td:nth-child(4){
+    width:27.33% !important;
+}
+
+#resultadoMensual .tabla-historico th{
+    padding:6px 10px !important;
+    font-size:12px !important;
+}
+
+#resultadoMensual .tabla-historico td{
+    padding:5px 10px !important;
+    font-size:11px !important;
+}
+
+#resultadoMensual .tabla-historico td:nth-child(2),
+#resultadoMensual .tabla-historico td:nth-child(3),
+#resultadoMensual .tabla-historico td:nth-child(4){
+    text-align:right !important;
+    padding-right:18px !important;
+}
+
+#resultadoMensual .tabla-historico td:first-child{
+    text-align:center !important;
+    font-weight:600;
+}
+  
 </style>
   
 </head>

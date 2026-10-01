@@ -147,31 +147,17 @@ const meses=[
 "Noviembre","Diciembre"
 ];
 
-// ========================================
-// MES REAL DEL REPORTE
-// ========================================
-// El KPI trabaja con el mes calendario actual.
-// En octubre:
-// mes anterior = SETIEMBRE
-// mes actual   = OCTUBRE
-// ========================================
-
-const fechaReferencia = new Date();
-
 const indiceMes =
-fechaReferencia.getMonth();
+ultimaFecha.getUTCMonth();
 
 const anioActual =
-fechaReferencia.getFullYear();
+ultimaFecha.getUTCFullYear();
 
 const mesActual =
 meses[indiceMes];
 
 const mesAnterior =
-meses[(indiceMes + 11) % 12];
-
-const mesSiguiente =
-meses[(indiceMes+1)%12];
+meses[(indiceMes+11)%12];
 
 json=jsonGeneral.filter(c=>{
 
@@ -222,6 +208,115 @@ console.log(
 "REGISTROS MES ACTUAL:",
 json.length
 );
+
+// ==========================================
+// CONFIGURACIÓN AUTOMÁTICA DE CLIENTES
+// ==========================================
+// La columna histórica se detecta directamente
+// desde el Excel de METAS. No se escriben meses
+// manualmente en el código.
+//
+// Ejemplo:
+// METAS -> CLIENTES SETIEMBRE
+// DATA  -> Octubre
+// KPI   -> CLIENTES SETIEMBRE | CLIENTES OCTUBRE
+// ==========================================
+
+const mesesKPIClientes = [
+    "ENERO","FEBRERO","MARZO","ABRIL",
+    "MAYO","JUNIO","JULIO","AGOSTO",
+    "SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"
+];
+
+const equivalenciasMesKPI = {
+    "ENERO":"ENERO",
+    "FEBRERO":"FEBRERO",
+    "MARZO":"MARZO",
+    "ABRIL":"ABRIL",
+    "MAYO":"MAYO",
+    "JUNIO":"JUNIO",
+    "JULIO":"JULIO",
+    "AGOSTO":"AGOSTO",
+    "SEPTIEMBRE":"SEPTIEMBRE",
+    "SETIEMBRE":"SEPTIEMBRE",
+    "OCTUBRE":"OCTUBRE",
+    "NOVIEMBRE":"NOVIEMBRE",
+    "DICIEMBRE":"DICIEMBRE"
+};
+
+const normalizarTextoClientes = texto =>
+    String(texto || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/\s+/g," ")
+    .trim()
+    .toUpperCase();
+
+const mesesClientesEncontrados = [];
+
+const metaReferenciaClientes = metas[0] || {};
+
+Object.keys(metaReferenciaClientes).forEach(col => {
+
+    const nombre = normalizarTextoClientes(col);
+
+    if(!nombre.includes("CLIENTES")) return;
+
+    for(const mesDetectado of mesesKPIClientes){
+
+        const variantes =
+            mesDetectado === "SEPTIEMBRE"
+            ? ["SEPTIEMBRE","SETIEMBRE"]
+            : [mesDetectado];
+
+        if(variantes.some(mes => nombre.includes(mes))){
+
+            mesesClientesEncontrados.push({
+                columna: col,
+                mes: mesDetectado,
+                indice: mesesKPIClientes.indexOf(mesDetectado)
+            });
+
+            break;
+        }
+    }
+});
+
+// Se toma el último mes disponible en la hoja de METAS.
+mesesClientesEncontrados.sort((a,b) => a.indice - b.indice);
+
+const configuracionClientes =
+    mesesClientesEncontrados.length
+    ? mesesClientesEncontrados[mesesClientesEncontrados.length - 1]
+    : null;
+
+const indiceMesClientesHistorico =
+    configuracionClientes
+    ? configuracionClientes.indice
+    : null;
+
+const mesClientesHistorico =
+    configuracionClientes
+    ? configuracionClientes.mes
+    : mesAnterior.toUpperCase();
+
+const mesClientesProduccion =
+    indiceMesClientesHistorico !== null
+    ? mesesKPIClientes[
+        (indiceMesClientesHistorico + 1) % 12
+      ]
+    : mesActual.toUpperCase();
+
+// Año de comparación. Si el histórico es diciembre,
+// el siguiente período corresponde al año siguiente.
+const anioClientesProduccion =
+    indiceMesClientesHistorico === 11
+    ? anioActual + 1
+    : anioActual;
+
+console.log("📊 CLIENTES - MES HISTÓRICO DESDE METAS:", mesClientesHistorico);
+console.log("📊 CLIENTES - MES DE PRODUCCIÓN ESPERADO:", mesClientesProduccion);
+
     let totalClientes = json.length;
 
   let montoOtorgadoTotal = 0;
@@ -800,8 +895,8 @@ color:white;
 <th>META OPERACIONES</th>
 <th>AVANCE</th>
 <th>% AVANCE OPER</th>
-<th>CLIENTES ${mesActual.toUpperCase()}</th>
-<th>CLIENTES ${mesSiguiente.toUpperCase()}</th>
+<th>CLIENTES ${mesClientesHistorico}</th>
+<th>CLIENTES ${mesClientesProduccion}</th>
 <th>VARIACIÓN</th>
 <th>TEM ${mesAnterior.toUpperCase()}</th>
 <th>TEM ${mesActual.toUpperCase()}</th>
@@ -821,51 +916,52 @@ let moraActualAsesor = {};
 let mora31MasAsesor = {};
 let mora1MasAsesor = {};
 // ==========================================
-// CLIENTES DEL MES SIGUIENTE
-// Ejemplo:
-// Septiembre = histórico
-// Octubre = producción actual del nuevo mes
+// CLIENTES: HISTÓRICO VS SIGUIENTE PERÍODO
+// ==========================================
+// 1) Histórico: sale EXCLUSIVAMENTE del Excel de METAS.
+// 2) Siguiente período: clientes únicos de la data
+//    correspondiente al mes siguiente al histórico.
+// 3) Variación: siguiente período - histórico.
+//
+// Los meses NO están escritos manualmente. Se detectan
+// automáticamente desde la columna CLIENTES del Excel.
 // ==========================================
 
-let clientesMesSiguiente = {};
+let clientesMesActual = {};
 
 jsonGeneral.forEach(c => {
 
-    let fechaExcel =
-        Number(c["Fecha Desembolso"]);
+    const fechaExcel = c["Fecha Desembolso"];
+    let fecha;
 
-    if(isNaN(fechaExcel)) return;
-
-    let fecha =
-        new Date(
-            (fechaExcel - 25569) *
-            86400 * 1000
+    if(fechaExcel instanceof Date){
+        fecha = fechaExcel;
+    }else if(typeof fechaExcel === "number"){
+        fecha = new Date(
+            (fechaExcel - 25569) * 86400 * 1000
         );
+    }else{
+        fecha = new Date(fechaExcel);
+    }
+
+    if(!fecha || isNaN(fecha.getTime())) return;
 
     if(
         fecha.getUTCMonth() !==
-        ((indiceMes + 1) % 12)
-    ){
-        return;
-    }
+        ((indiceMesClientesHistorico + 1) % 12)
+    ) return;
 
     if(
         fecha.getUTCFullYear() !==
-        (
-            indiceMes === 11
-            ? anioActual + 1
-            : anioActual
-        )
-    ){
-        return;
-    }
+        anioClientesProduccion
+    ) return;
 
-    let asesor =
+    const asesor =
         String(c["Asesor(a)"] || "")
         .trim()
         .toUpperCase();
 
-    let codigoCliente =
+    const codigoCliente =
         String(
             c["Cod Cliente"] ||
             c["DNI"] ||
@@ -875,19 +971,16 @@ jsonGeneral.forEach(c => {
         .trim()
         .toUpperCase();
 
-    if(!asesor || !codigoCliente){
-        return;
+    if(!asesor || !codigoCliente) return;
+
+    if(!clientesMesActual[asesor]){
+        clientesMesActual[asesor] = new Set();
     }
 
-    if(!clientesMesSiguiente[asesor]){
-        clientesMesSiguiente[asesor] =
-            new Set();
-    }
-
-    clientesMesSiguiente[asesor]
-        .add(codigoCliente);
+    clientesMesActual[asesor].add(codigoCliente);
 
 });
+
 jsonGeneral.forEach(c=>{
 
     let asesor =
@@ -975,6 +1068,8 @@ let cantidadTemAgosto = 0;
     console.log("📊 METAS VÁLIDAS PARA TABLA:",metasValidas);
     console.log("📊 CANTIDAD DE ASESORES EN TABLA:",metasValidas.length);
 
+
+
     metasValidas.forEach(meta=>{
 
         const asesor = normalizarAsesor(
@@ -1022,78 +1117,43 @@ let cantidadTemAgosto = 0;
             "0.00";
 
         // ==========================================
-// CLIENTES: HISTÓRICO VS MES SIGUIENTE
-// ==========================================
+        // CLIENTES: METAS VS PRODUCCIÓN
+        // ==========================================
 
-// ==========================================
-// CLIENTES HISTÓRICOS
-// ==========================================
-// La hoja de metas puede tener:
-// CLIENTES SEPTIEMBRE
-// o
-// CLIENTES SETIEMBRE
-// ==========================================
+        // HISTÓRICO: columna CLIENTES detectada automáticamente
+        // desde el Excel de METAS.
+        const colClientesHistorico =
+            configuracionClientes
+            ? configuracionClientes.columna
+            : null;
 
-let colClientesHistorico =
-    buscarColumna(
-        "CLIENTES",
-        mesAnterior
-    );
+        const clientesHistoricoMes =
+            colClientesHistorico
+            ? Number(
+                String(meta[colClientesHistorico] || 0)
+                .replace(/,/g,"")
+                .replace(",", ".")
+              ) || 0
+            : 0;
 
-// Compatibilidad con "SETIEMBRE"
-if(
-    !colClientesHistorico &&
-    mesAnterior.toUpperCase() === "SEPTIEMBRE"
-){
-    colClientesHistorico =
-        buscarColumna(
-            "CLIENTES",
-            "SETIEMBRE"
-        );
-}
+        // PRODUCCIÓN: clientes únicos del mes siguiente al histórico.
+        const clientesMesActualAsesor =
+            clientesMesActual[asesor]
+            ? clientesMesActual[asesor].size
+            : 0;
 
-const clientesHistoricoMes =
-    colClientesHistorico
-    ?
-    Number(
-        String(
-            meta[colClientesHistorico] || 0
-        )
-        .replace(/,/g,"")
-    )
-    :
-    0;
+        // VARIACIÓN.
+        const variacionClientes =
+            clientesMesActualAsesor -
+            clientesHistoricoMes;
 
-// MES SIGUIENTE:
-// toma clientes únicos de la producción
-// correspondiente al mes siguiente.
-// Ejemplo: SEPTIEMBRE → OCTUBRE.
+        let colorVariacion = "#657789";
 
-const clientesMesActual =
-    clientesMesSiguiente[asesor]
-    ?
-    clientesMesSiguiente[asesor].size
-    :
-    0;
-
-// VARIACIÓN:
-// MES SIGUIENTE - HISTÓRICO
-
-const variacionClientes =
-    clientesMesActual -
-    clientesHistoricoMes;
-
-let colorVariacion = "#657789";
-
-if(variacionClientes > 0){
-
-    colorVariacion = "#159447";
-
-}else if(variacionClientes < 0){
-
-    colorVariacion = "#D64545";
-
-}
+        if(variacionClientes > 0){
+            colorVariacion = "#159447";
+        }else if(variacionClientes < 0){
+            colorVariacion = "#D64545";
+        }
 
         // TEM histórico: se mantiene el mes anterior.
         let temAnterior = 0;
@@ -1174,7 +1234,7 @@ if(variacionClientes > 0){
 </td>
 
 <td>
-    <b>${clientesMesActual}</b>
+    <b>${clientesMesActualAsesor}</b>
 </td>
 <td style="font-weight:bold;color:${colorVariacion};">${variacionClientes>0?'+':''}${variacionClientes}</td>
 <td>${Number(temAnterior).toFixed(1)}%</td>
@@ -1193,7 +1253,7 @@ if(variacionClientes > 0){
         totalMetaOperaciones += metaOperaciones;
         totalAvanceOperaciones += oper;
         totalClientesHistorico += clientesHistoricoMes;
-        totalClientesSiguiente += clientesMesActual;
+        totalClientesSiguiente += clientesMesActualAsesor;
         totalMoraJulio += moraAnterior;
         totalMoraAgosto += moraActual;
         totalMoraAgosto31Mas += mora31Mas;

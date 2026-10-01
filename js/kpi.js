@@ -869,381 +869,196 @@ let sumaTemJulio = 0;
 let sumaTemAgosto = 0;
 let cantidadTemJulio = 0;
 let cantidadTemAgosto = 0;   
- metas.forEach(meta=>{
+    // ======================================================
+    // TOTALES Y DETALLE POR ASESOR
+    // Se recorren LAS METAS, no la producción.
+    // Por eso todos los asesores aparecen aunque tengan S/0.
+    // ======================================================
 
-     console.log(
-    "ASESOR DE METAS:",
-    meta["Asesor (A)"],
-    "| COLOCACION:",
-    meta["COLOCACION"],
-    "| OPERACIONES:",
-    meta["OPERACIONES"]
-);
-   let asesor =
-String(meta["Asesor (A)"] || "")
-.trim()
-.toUpperCase();
-
-let metaAsesor = metas.find(m => {
-
-    let nombreMeta =
-    String(
-        m["Asesor (A)"] ||
-        m["ASESOR"] ||
-        ""
-    )
-    .trim()
-    .toUpperCase()
-    .replace(/\s+/g,"");
-
-    let nombreAsesor =
-    asesor
-    .trim()
-    .toUpperCase()
-    .replace(/\s+/g,"");
-
-    return nombreMeta === nombreAsesor;
-
-});
-     
-    //=========================================
-    // FUNCIONES AUXILIARES
-    //=========================================
-
-    const normalizar = texto =>
+    const normalizarAsesor = texto =>
         String(texto || "")
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g,"")
-        .replace(/\s+/g," ")
+        .replace(/\s+/g,"")
         .trim()
         .toUpperCase();
 
-    //=========================================
-    // META DEL ASESOR
-    //=========================================
-    function buscarColumna(tipo,mes){
-
-        if(!meta) return null;
-
-        return Object.keys(meta).find(col=>{
-
-            let nombre =
-            col
-            .toUpperCase()
-            .replace(/\s+/g," ")
-            .trim();
-
-            return(
-                nombre.includes(tipo.toUpperCase())
-                &&
-                nombre.includes(mes.toUpperCase())
-            );
-
-        });
-
-    }
-
-    //=========================================
-    // VARIABLES
-    //=========================================
-
-   let colocacion = ranking[asesor] || 0;
-let oper = operaciones[asesor] || 0;
-     
-    let tem =
-temPromedio[asesor] && temPromedio[asesor].length
-?
-(
-temPromedio[asesor]
-.reduce((a,b)=>a+b,0)
-/
-temPromedio[asesor].length
-).toFixed(2)
-:
-0;
-
-    //=========================================
-    // CLIENTES
-    //=========================================
-
-  let clientesActual =
-    clientesHistorico[asesor]
-    ?
-    clientesHistorico[asesor].size
-    :
-    0;
-
-    let colClientes =
-    buscarColumna(
-        "CLIENTES",
-        mesAnterior
+    const metasValidas = metas.filter(meta =>
+        normalizarAsesor(
+            meta["Asesor (A)"] ||
+            meta["ASESOR"] ||
+            ""
+        ) !== ""
     );
 
-    let clientesAnterior =
-    colClientes
-    ?
-    Number(meta[colClientes] || 0)
-    :
-    0;
+    console.log("📊 METAS VÁLIDAS PARA TABLA:",metasValidas);
+    console.log("📊 CANTIDAD DE ASESORES EN TABLA:",metasValidas.length);
 
-    let variacionClientes =
-    clientesActual - clientesAnterior;
+    metasValidas.forEach(meta=>{
 
-    let colorVariacion = "#657789";
+        const asesor = normalizarAsesor(
+            meta["Asesor (A)"] ||
+            meta["ASESOR"] ||
+            ""
+        );
 
-    if(variacionClientes>0){
+        const buscarColumna = (tipo,mes)=>{
 
-        colorVariacion="#159447";
+            const tipoN = normalizarAsesor(tipo);
+            const mesN = normalizarAsesor(mes);
 
-    }else if(variacionClientes<0){
+            return Object.keys(meta || {}).find(col=>{
 
-        colorVariacion="#D64545";
+                const nombre = normalizarAsesor(col);
 
-    }
+                return nombre.includes(tipoN) && nombre.includes(mesN);
 
-    //=========================================
-    // TEM HISTÓRICO
-    //=========================================
+            });
 
-    let temAnterior=0;
+        };
 
-    let colTEM=
-    buscarColumna(
-        "TEM",
-        mesAnterior
-    );
+        // Producción real del asesor. Si no produjo, queda en 0.
+        const colocacion = Number(ranking[asesor] || 0);
+        const oper = Number(operaciones[asesor] || 0);
 
-    if(colTEM){
+        const tem =
+            temPromedio[asesor] && temPromedio[asesor].length
+            ?
+            (
+                temPromedio[asesor].reduce((a,b)=>a+b,0) /
+                temPromedio[asesor].length
+            ).toFixed(2)
+            : "0.00";
 
-        temAnterior=
-        parseFloat(
-            String(meta[colTEM])
-            .replace(/,/g,"")
-        )||0;
+        // Clientes acumulados por asesor.
+        const clientesActual =
+            clientesHistorico[asesor]
+            ? clientesHistorico[asesor].size
+            : 0;
 
-    }
+        const colClientes = buscarColumna("CLIENTES",mesAnterior);
 
-    //=========================================
-    // MORA HISTÓRICA
-    //=========================================
+        const clientesAnterior = colClientes
+            ? Number(String(meta[colClientes] || 0).replace(/,/g,"")) || 0
+            : 0;
 
-    let moraAnterior=0;
+        const variacionClientes = clientesActual - clientesAnterior;
 
-    let colMora=
-    buscarColumna(
-        "MORA",
-        mesAnterior
-    );
+        const colorVariacion =
+            variacionClientes > 0 ? "#159447" :
+            variacionClientes < 0 ? "#D64545" :
+            "#657789";
 
-    if(colMora){
+        // TEM histórico: se mantiene el mes anterior.
+        let temAnterior = 0;
+        const colTEM = buscarColumna("TEM",mesAnterior);
 
-        moraAnterior=
-        parseFloat(
-            String(meta[colMora])
-            .replace(/,/g,"")
-        )||0;
+        if(colTEM){
+            temAnterior =
+                parseFloat(
+                    String(meta[colTEM] || 0)
+                    .replace(/,/g,"")
+                    .replace(",",".")
+                ) || 0;
+        }
 
-    }
+        // Mora histórica: para septiembre se lee MORA AGOSTO.
+        let moraAnterior = 0;
+        const colMora = buscarColumna("MORA",mesAnterior);
 
-   let moraActual =
-    moraActualAsesor[asesor] || 0;
+        if(colMora){
+            moraAnterior =
+                parseFloat(
+                    String(meta[colMora] || 0)
+                    .replace(/,/g,"")
+                    .replace(",",".")
+                ) || 0;
+        }
 
-let mora31Mas =
-    mora31MasAsesor[asesor] || 0;
+        // Mora actual desde la cartera/producción actual.
+        const moraActual = Number(moraActualAsesor[asesor] || 0);
+        const mora31Mas = Number(mora31MasAsesor[asesor] || 0);
+        const mora1Mas = Number(mora1MasAsesor[asesor] || 0);
 
-let mora1Mas =
-    mora1MasAsesor[asesor] || 0;
+        // Metas.
+        const metaDesembolso =
+            Number(
+                String(meta["COLOCACION"] || meta["COLOC."] || 0)
+                .replace(/,/g,"")
+                .replace(",",".")
+            ) || 0;
 
-    //=========================================
-    // METAS
-    //=========================================
+        const metaOperaciones =
+            Number(
+                String(meta["OPERACIONES"] || 0)
+                .replace(/,/g,"")
+                .replace(",",".")
+            ) || 0;
 
-    let metaDesembolso =
-    meta
-    ?
-    Number(
-        String(
-            meta["COLOCACION"] ||
-            meta["COLOC."] ||
-            0
-        ).replace(/,/g,"")
-    )
-    :
-    0;
+        const porcentajeDesembolso =
+            metaDesembolso > 0
+            ? ((colocacion / metaDesembolso) * 100).toFixed(1)
+            : "0.0";
 
-    let metaOperaciones =
-    meta
-    ?
-    Number(
-        String(
-            meta["OPERACIONES"] || 0
-        ).replace(/,/g,"")
-    )
-    :
-    0;
+        const porcentajeOperaciones =
+            metaOperaciones > 0
+            ? ((oper / metaOperaciones) * 100).toFixed(1)
+            : "0.0";
 
-    //=========================================
-    // PORCENTAJES
-    //=========================================
+        let colorEstado = "🔴";
 
-    let porcentajeDesembolso =
-    metaDesembolso>0
-    ?
-    ((colocacion/metaDesembolso)*100).toFixed(1)
-    :
-    0;
+        if(Number(porcentajeDesembolso) >= 100){
+            colorEstado = "🟢";
+        }else if(Number(porcentajeDesembolso) >= 80){
+            colorEstado = "🟡";
+        }
 
-    let porcentajeOperaciones =
-    metaOperaciones>0
-    ?
-    ((oper/metaOperaciones)*100).toFixed(1)
-    :
-    0;
-
-    let colorEstado="🔴";
-
-    if(Number(porcentajeDesembolso)>=100){
-
-        colorEstado="🟢";
-
-    }else if(Number(porcentajeDesembolso)>=80){
-
-        colorEstado="🟡";
-
-    }
-
-    //=========================================
-    // TABLA
-    //=========================================
-
-    resumen +=`
-
+        // Fila del asesor.
+        resumen += `
 <tr>
-
 <td><b>${asesor}</b></td>
-
-<td>S/${metaDesembolso.toLocaleString()}</td>
-
-<td>S/${Math.round(colocacion).toLocaleString()}</td>
-
-<td style="
-background:${
-Number(porcentajeDesembolso)>=100
-?
-'#22B55A'
-:
-'#ffffff'
-};
-color:${
-Number(porcentajeDesembolso)>=100
-?
-'white'
-:
-'#000'
-};
-font-weight:bold;
-">
-${porcentajeDesembolso}%
-</td>
-
+<td>S/${Math.round(metaDesembolso).toLocaleString("es-PE")}</td>
+<td>S/${Math.round(colocacion).toLocaleString("es-PE")}</td>
+<td style="background:${Number(porcentajeDesembolso)>=100?'#22B55A':'#FFFFFF'};color:${Number(porcentajeDesembolso)>=100?'white':'#000000'};font-weight:bold;">${porcentajeDesembolso}%</td>
 <td>${metaOperaciones}</td>
-
 <td>${oper}</td>
-
-<td style="
-background:${
-Number(porcentajeOperaciones)>=100
-?
-'#22B55A'
-:
-Number(porcentajeOperaciones)>=80
-?
-'#E0AA24'
-:
-'#D64545'
-};
-color:white;
-font-weight:bold;
-">
-${porcentajeOperaciones}%
-</td>
-
+<td style="background:${Number(porcentajeOperaciones)>=100?'#22B55A':Number(porcentajeOperaciones)>=80?'#E0AA24':'#D64545'};color:white;font-weight:bold;">${porcentajeOperaciones}%</td>
 <td><b>${clientesAnterior}</b></td>
-
 <td><b>${clientesActual}</b></td>
-
-<td style="
-font-weight:bold;
-color:${colorVariacion};
-">
-${variacionClientes>0?"+":""}${variacionClientes}
-</td>
-
+<td style="font-weight:bold;color:${colorVariacion};">${variacionClientes>0?'+':''}${variacionClientes}</td>
 <td>${Number(temAnterior).toFixed(1)}%</td>
-
-<td>${tem}%</td>
-
-<td>S/${Number(moraAnterior).toLocaleString()}</td>
-
-<td style="
-font-weight:bold;
-color:#991B1B;
-">
-S/${Math.round(mora31Mas).toLocaleString("es-PE")}
-</td>
-
-<td style="
-font-weight:bold;
-color:#C43D3D;
-">
-S/${Math.round(moraActual).toLocaleString("es-PE")}
-</td>
-
-<td style="
-font-weight:bold;
-color:#C43D3D;
-">
-S/${Math.round(mora1Mas).toLocaleString("es-PE")}
-</td>
-
+<td>${Number(tem).toFixed(2)}%</td>
+<td>S/${Math.round(moraAnterior).toLocaleString("es-PE")}</td>
+<td style="font-weight:bold;color:#991B1B;">S/${Math.round(mora31Mas).toLocaleString("es-PE")}</td>
+<td style="font-weight:bold;color:#C43D3D;">S/${Math.round(moraActual).toLocaleString("es-PE")}</td>
+<td style="font-weight:bold;color:#C43D3D;">S/${Math.round(mora1Mas).toLocaleString("es-PE")}</td>
 <td>${colorEstado}</td>
-
 </tr>
-
 `;
 
-// =========================================
-// ACUMULAR TOTALES EMPRESA
-// =========================================
+        // Totales empresa.
+        totalMetaColocacion += metaDesembolso;
+        totalAvanceColocacion += colocacion;
+        totalMetaOperaciones += metaOperaciones;
+        totalAvanceOperaciones += oper;
+        totalClientesJulio += clientesAnterior;
+        totalClientesAgosto += clientesActual;
+        totalMoraJulio += moraAnterior;
+        totalMoraAgosto += moraActual;
+        totalMoraAgosto31Mas += mora31Mas;
+        totalMoraAgosto1Mas += mora1Mas;
 
-totalMetaColocacion += Number(metaDesembolso) || 0;
-totalAvanceColocacion += Number(colocacion) || 0;
+        if(Number(temAnterior) > 0){
+            sumaTemJulio += Number(temAnterior);
+            cantidadTemJulio++;
+        }
 
-totalMetaOperaciones += Number(metaOperaciones) || 0;
-totalAvanceOperaciones += Number(oper) || 0;
+        if(Number(tem) > 0){
+            sumaTemAgosto += Number(tem);
+            cantidadTemAgosto++;
+        }
 
-totalClientesJulio += Number(clientesAnterior) || 0;
-totalClientesAgosto += Number(clientesActual) || 0;
-
-totalMoraJulio += Number(moraAnterior) || 0;
-totalMoraAgosto += Number(moraActual) || 0;
-totalMoraAgosto31Mas += Number(mora31Mas) || 0;
-totalMoraAgosto1Mas += Number(mora1Mas) || 0;
-
-if(Number(temAnterior) > 0){
-
-    sumaTemJulio += Number(temAnterior);
-    cantidadTemJulio++;
-
-}
-
-if(Number(tem) > 0){
-
-    sumaTemAgosto += Number(tem);
-    cantidadTemAgosto++;
-
-}
-     }); 
+    });
     
 // =========================================
 // TOTAL EMPRESA
@@ -3313,11 +3128,8 @@ function cargarMetasKPI(){
     document.getElementById("excelMetas").files[0];
 
     if(!archivo){
-
         alert("Seleccione el archivo de metas.");
-
         return;
-
     }
 
     const lector = new FileReader();
@@ -3326,92 +3138,117 @@ function cargarMetasKPI(){
 
         try{
 
-            const data =
-            new Uint8Array(e.target.result);
+            const data = new Uint8Array(e.target.result);
+            const wb = XLSX.read(data,{type:"array"});
+            const hoja = wb.Sheets[wb.SheetNames[0]];
 
-            const wb =
-            XLSX.read(
-                data,
-                {type:"array"}
-            );
+            // Detectar automáticamente la fila real de encabezados.
+            const matriz = XLSX.utils.sheet_to_json(hoja,{
+                header:1,
+                defval:"",
+                raw:true
+            });
 
-            const hoja =
-            wb.Sheets[wb.SheetNames[0]];
+            let filaEncabezado = -1;
 
-           const json =
-XLSX.utils.sheet_to_json(
-    hoja,
-    {
-        range: 5,
-        defval: ""
-    }
-);
+            for(let i=0; i<Math.min(matriz.length,30); i++){
 
-            if(!json.length){
-
-                alert(
-                    "❌ El archivo de metas no contiene datos."
+                const fila = matriz[i].map(v =>
+                    String(v || "").trim().toUpperCase()
                 );
 
-                return;
+                const tieneAsesor = fila.some(v => v.includes("ASESOR"));
+                const tieneColocacion = fila.some(v =>
+                    v.includes("COLOCACION") || v.includes("COLOCACIÓN")
+                );
+                const tieneOperaciones = fila.some(v => v.includes("OPERACIONES"));
 
+                if(tieneAsesor && tieneColocacion && tieneOperaciones){
+                    filaEncabezado = i;
+                    break;
+                }
             }
 
-            // =====================================
-            // GUARDAR METAS
-            // =====================================
+            if(filaEncabezado === -1){
+                alert("❌ No se encontraron los encabezados ASESOR, COLOCACIÓN y OPERACIONES en el archivo de metas.");
+                console.error("ENCABEZADOS ENCONTRADOS:", matriz.slice(0,15));
+                return;
+            }
 
-            localStorage.setItem(
-                "metasKPI",
-                JSON.stringify(json)
+            let json = XLSX.utils.sheet_to_json(hoja,{
+                range:filaEncabezado,
+                defval:"",
+                raw:true
+            });
+
+            const normalizarTexto = texto =>
+                String(texto || "")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g,"")
+                .replace(/\s+/g," ")
+                .trim()
+                .toUpperCase();
+
+            json = json.map(fila => {
+
+                const claves = Object.keys(fila);
+
+                const buscarClave = patrones => claves.find(clave => {
+                    const n = normalizarTexto(clave);
+                    return patrones.some(p => n.includes(p));
+                });
+
+                const claveAsesor = buscarClave(["ASESOR"]);
+                const claveColocacion = buscarClave(["COLOCACION"]);
+                const claveOperaciones = buscarClave(["OPERACIONES"]);
+
+                const salida = {...fila};
+
+                if(claveAsesor){
+                    salida["Asesor (A)"] = String(fila[claveAsesor] || "").trim();
+                }
+
+                if(claveColocacion){
+                    salida["COLOCACION"] = fila[claveColocacion];
+                }
+
+                if(claveOperaciones){
+                    salida["OPERACIONES"] = fila[claveOperaciones];
+                }
+
+                return salida;
+
+            }).filter(fila =>
+                String(fila["Asesor (A)"] || "").trim() !== ""
             );
 
-            localStorage.setItem(
-                "nombreMetaKPI",
-                archivo.name
-            );
+            if(!json.length){
+                alert("❌ Se encontró la estructura del Excel, pero no se encontraron asesores con datos.");
+                return;
+            }
 
-            localStorage.setItem(
-                "fechaMetaKPI",
-                new Date().toLocaleString()
-            );
+            localStorage.setItem("metasKPI",JSON.stringify(json));
+            localStorage.setItem("nombreMetaKPI",archivo.name);
+            localStorage.setItem("fechaMetaKPI",new Date().toLocaleString());
 
-            // =====================================
-            // MOSTRAR META ACTIVA
-            // =====================================
-
-            const metaActiva =
-            document.getElementById("metaActivaKPI");
+            const metaActiva = document.getElementById("metaActivaKPI");
 
             if(metaActiva){
-
                 metaActiva.style.display = "block";
-
                 metaActiva.innerHTML =
-                "🎯 Metas activas: " + archivo.name;
-
+                    "🎯 Metas activas: " + archivo.name +
+                    " • " + json.length + " asesores";
             }
 
-            console.log(
-                "✅ METAS CARGADAS:",
-                json
-            );
+            console.log("✅ METAS CARGADAS:",json);
+            console.log("📌 FILA DE ENCABEZADOS DETECTADA:",filaEncabezado + 1);
+            console.log("📌 ASESORES CARGADOS:",json.map(m => m["Asesor (A)"]));
 
-            alert(
-                "✅ Metas cargadas correctamente."
-            );
+            alert("✅ Metas cargadas correctamente. " + json.length + " asesores detectados.");
 
         }catch(error){
-
-            console.error(
-                "❌ ERROR CARGANDO METAS:",
-                error
-            );
-
-            alert(
-                "❌ Error al leer el archivo de metas."
-            );
-
+            console.error("❌ ERROR CARGANDO METAS:",error);
+            alert("❌ Error al leer el archivo de metas.");
         }
 
     };

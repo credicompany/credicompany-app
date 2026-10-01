@@ -159,6 +159,9 @@ meses[indiceMes];
 const mesAnterior =
 meses[(indiceMes+11)%12];
 
+const mesSiguiente =
+meses[(indiceMes+1)%12];
+
 json=jsonGeneral.filter(c=>{
 
     let fechaExcel=
@@ -786,8 +789,8 @@ color:white;
 <th>META OPERACIONES</th>
 <th>AVANCE</th>
 <th>% AVANCE OPER</th>
-<th>CLIENTES ${mesAnterior.toUpperCase()}</th>
 <th>CLIENTES ${mesActual.toUpperCase()}</th>
+<th>CLIENTES ${mesSiguiente.toUpperCase()}</th>
 <th>VARIACIÓN</th>
 <th>TEM ${mesAnterior.toUpperCase()}</th>
 <th>TEM ${mesActual.toUpperCase()}</th>
@@ -806,7 +809,74 @@ color:white;
 let moraActualAsesor = {};
 let mora31MasAsesor = {};
 let mora1MasAsesor = {};
+// ==========================================
+// CLIENTES DEL MES SIGUIENTE
+// Ejemplo:
+// Septiembre = histórico
+// Octubre = producción actual del nuevo mes
+// ==========================================
 
+let clientesMesSiguiente = {};
+
+jsonGeneral.forEach(c => {
+
+    let fechaExcel =
+        Number(c["Fecha Desembolso"]);
+
+    if(isNaN(fechaExcel)) return;
+
+    let fecha =
+        new Date(
+            (fechaExcel - 25569) *
+            86400 * 1000
+        );
+
+    if(
+        fecha.getUTCMonth() !==
+        ((indiceMes + 1) % 12)
+    ){
+        return;
+    }
+
+    if(
+        fecha.getUTCFullYear() !==
+        (
+            indiceMes === 11
+            ? anioActual + 1
+            : anioActual
+        )
+    ){
+        return;
+    }
+
+    let asesor =
+        String(c["Asesor(a)"] || "")
+        .trim()
+        .toUpperCase();
+
+    let codigoCliente =
+        String(
+            c["Cod Cliente"] ||
+            c["DNI"] ||
+            c["dni"] ||
+            ""
+        )
+        .trim()
+        .toUpperCase();
+
+    if(!asesor || !codigoCliente){
+        return;
+    }
+
+    if(!clientesMesSiguiente[asesor]){
+        clientesMesSiguiente[asesor] =
+            new Set();
+    }
+
+    clientesMesSiguiente[asesor]
+        .add(codigoCliente);
+
+});
 jsonGeneral.forEach(c=>{
 
     let asesor =
@@ -917,37 +987,52 @@ let cantidadTemAgosto = 0;
 
         };
 
-        // Producción real del asesor. Si no produjo, queda en 0.
-        const colocacion = Number(ranking[asesor] || 0);
-        const oper = Number(operaciones[asesor] || 0);
+       // ==========================================
+// CLIENTES
+// ==========================================
 
-        const tem =
-            temPromedio[asesor] && temPromedio[asesor].length
-            ?
-            (
-                temPromedio[asesor].reduce((a,b)=>a+b,0) /
-                temPromedio[asesor].length
-            ).toFixed(2)
-            : "0.00";
+// SEPTIEMBRE = HISTÓRICO
+let colClientesHistorico =
+    buscarColumna(
+        "CLIENTES",
+        mesActual
+    );
 
-        // Clientes acumulados por asesor.
-        const clientesActual =
-            clientesHistorico[asesor]
-            ? clientesHistorico[asesor].size
-            : 0;
+let clientesHistoricoMes =
+    colClientesHistorico
+    ?
+    Number(
+        meta[colClientesHistorico] || 0
+    )
+    :
+    0;
 
-        const colClientes = buscarColumna("CLIENTES",mesAnterior);
 
-        const clientesAnterior = colClientes
-            ? Number(String(meta[colClientes] || 0).replace(/,/g,"")) || 0
-            : 0;
+// OCTUBRE = PRODUCCIÓN DEL MES SIGUIENTE
+let clientesMesActual =
+    clientesMesSiguiente[asesor]
+    ?
+    clientesMesSiguiente[asesor].size
+    :
+    0;
 
-        const variacionClientes = clientesActual - clientesAnterior;
 
-        const colorVariacion =
-            variacionClientes > 0 ? "#159447" :
-            variacionClientes < 0 ? "#D64545" :
-            "#657789";
+// VARIACIÓN
+let variacionClientes =
+    clientesMesActual -
+    clientesHistoricoMes;
+
+let colorVariacion = "#657789";
+
+if(variacionClientes > 0){
+
+    colorVariacion = "#159447";
+
+}else if(variacionClientes < 0){
+
+    colorVariacion = "#D64545";
+
+}
 
         // TEM histórico: se mantiene el mes anterior.
         let temAnterior = 0;
@@ -1023,8 +1108,13 @@ let cantidadTemAgosto = 0;
 <td>${metaOperaciones}</td>
 <td>${oper}</td>
 <td style="background:${Number(porcentajeOperaciones)>=100?'#22B55A':Number(porcentajeOperaciones)>=80?'#E0AA24':'#D64545'};color:white;font-weight:bold;">${porcentajeOperaciones}%</td>
-<td><b>${clientesAnterior}</b></td>
-<td><b>${clientesActual}</b></td>
+<td>
+    <b>${clientesHistoricoMes}</b>
+</td>
+
+<td>
+    <b>${clientesMesActual}</b>
+</td>
 <td style="font-weight:bold;color:${colorVariacion};">${variacionClientes>0?'+':''}${variacionClientes}</td>
 <td>${Number(temAnterior).toFixed(1)}%</td>
 <td>${Number(tem).toFixed(2)}%</td>

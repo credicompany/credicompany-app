@@ -558,200 +558,139 @@ margin:2px 0 6px;
 }
 
 }
-/*=========================================
-RESULTADO MENSUAL MOBILE PREMIUM
-=========================================*/
+/* ==========================================
+   RESULTADO MENSUAL - DASHBOARD COMPACTO
+========================================== */
 
 .resultado-grid{
-
-display:grid;
-
-grid-template-columns:repeat(2,1fr);
-
-gap:12px;
-
-margin-top:15px;
-
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    margin-top:12px;
 }
 
 .resultado-card{
-
-border-radius:18px;
-
-padding:14px;
-
-color:#fff;
-
-text-align:center;
-
-min-height:90px;
-
-display:flex;
-
-flex-direction:column;
-
-justify-content:center;
-
-align-items:center;
-
-box-shadow:0 6px 14px rgba(0,0,0,.08);
-
-transition:.25s;
-
+    min-height:92px !important;
+    padding:12px 15px !important;
+    border-radius:12px !important;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    box-shadow:0 3px 10px rgba(0,0,0,.08);
 }
 
 .resultado-card h3{
-
-margin:0;
-
-font-size:14px;
-
-font-weight:700;
-
-line-height:1.2;
-
-opacity:.95;
-
+    margin:0 0 5px 0 !important;
+    font-size:14px !important;
+    font-weight:700;
 }
 
 .resultado-card h2{
-
-margin-top:8px;
-
-font-size:26px;
-
-font-weight:800;
-
-line-height:1;
-
+    margin:0 !important;
+    font-size:24px !important;
+    line-height:1.1;
+    font-weight:800;
 }
 
-/*=========== CELULAR ===========*/
-
-@media(max-width:768px){
-
-.resultado-grid{
-
-gap:8px;
-
-margin-top:10px;
-
-}
-
-.resultado-card{
-
-min-height:74px;
-
-padding:10px;
-
-border-radius:14px;
-
-box-shadow:0 4px 10px rgba(0,0,0,.08);
-
-}
-
-.resultado-card h3{
-
-font-size:11px;
-
-font-weight:600;
-
-}
-
-.resultado-card h2{
-
-font-size:16px;
-
-margin-top:4px;
-
-}
+/* ARCHIVOS */
 
 #archivoIngresosActivo,
 #archivoGastosActivo{
-
-padding:10px !important;
-
-font-size:13px;
-
-border-radius:12px;
-
-margin-top:-6px;
-
+    padding:7px 10px !important;
+    margin-top:6px;
+    border-radius:8px !important;
+    font-size:12px;
+    min-height:18px;
 }
 
+/* DETALLE */
+
 #detalleResultadoMensual{
-
-padding:14px !important;
-
-margin-top:14px !important;
-
-border-radius:16px !important;
-
+    margin-top:12px !important;
+    padding:14px !important;
+    border-radius:12px !important;
+    box-shadow:0 2px 8px rgba(0,0,0,.06) !important;
 }
 
 #detalleResultadoMensual h3{
-
-font-size:18px;
-
-margin-bottom:12px !important;
-
+    margin:0 0 10px 0 !important;
+    font-size:16px !important;
 }
 
-.detalle-ingresos td{
-
-padding:8px 2px !important;
-
-font-size:14px !important;
-
-}
-
-.tabla-historico th{
-
-padding:8px;
-
-font-size:12px;
-
-}
-
-.tabla-historico td{
-
-padding:8px;
-
-font-size:12px;
-
-}
-
-}
- /* ===== DETALLE INGRESOS ===== */
+/* TABLA DETALLE */
 
 .detalle-ingresos{
     width:100%;
     border-collapse:collapse;
+    font-size:13px;
 }
 
 .detalle-ingresos td{
-    padding:14px 8px;
-    font-size:16px;
+    padding:8px 4px;
+    border-bottom:1px solid #e5e7eb;
 }
 
-.detalle-ingresos tr:not(:last-child){
-    border-bottom:1px solid #ececec;
+.detalle-ingresos tr:last-child td{
+    border-bottom:none;
 }
 
-.detalle-ingresos td:last-child{
-    text-align:right;
-    font-weight:700;
-    color:#123B63;
+/* HISTÓRICO */
+
+#resultadoMensual .historial-responsive{
+    margin-top:8px;
 }
+
+#resultadoMensual .tabla-historico{
+    font-size:12px;
+}
+
+/* ==========================================
+   CELULAR
+========================================== */
 
 @media(max-width:768px){
 
-.detalle-ingresos td{
-    padding:10px 4px;
-    font-size:15px;
-}
+    .resultado-grid{
+        grid-template-columns:repeat(2,1fr);
+        gap:7px;
+        margin-top:8px;
+    }
 
-} 
+    .resultado-card{
+        min-height:72px !important;
+        padding:8px !important;
+        border-radius:10px !important;
+    }
+
+    .resultado-card h3{
+        font-size:11px !important;
+        margin-bottom:3px !important;
+    }
+
+    .resultado-card h2{
+        font-size:17px !important;
+    }
+
+    #detalleResultadoMensual{
+        padding:10px !important;
+        margin-top:9px !important;
+    }
+
+    #detalleResultadoMensual h3{
+        font-size:14px !important;
+    }
+
+    .detalle-ingresos{
+        font-size:12px;
+    }
+
+    .detalle-ingresos td{
+        padding:7px 3px;
+    }
+
+}
 
   /*=====================================
 FILTROS DE MORA - CREDICOMPANY

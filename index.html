@@ -2259,33 +2259,80 @@ getDoc
     text-align:center !important;
     font-weight:600;
 }
-  /* ==========================================
-   RENTABILIDAD POR ASESOR — HORIZONTAL
+/* ==========================================
+   RENTABILIDAD POR ASESOR — TABLA HORIZONTAL
+   CREDICOMPANY
 ========================================== */
 
+#resultadoMensual #rankingRentabilidadAsesor{
+    width:100%;
+    overflow-x:auto;
+}
+
+/* FILA DE CADA ASESOR */
 #resultadoMensual .rentabilidad-grid{
-    display:grid !important;
-    grid-template-columns:repeat(4,1fr) !important;
-    gap:8px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    gap:5px !important;
+    width:100% !important;
 }
 
+/* TARJETA / FILA */
 #resultadoMensual .rentabilidad-item{
-    padding:8px 10px !important;
-    border-radius:10px !important;
-    background:#f5f7fa;
-    font-size:12px !important;
-    line-height:1.35 !important;
-}
+    display:grid !important;
+    grid-template-columns:180px 1fr 1fr 1fr !important;
+    align-items:center !important;
+    gap:12px !important;
 
-#resultadoMensual .rentabilidad-item strong{
+    width:100% !important;
+    min-height:42px !important;
+
+    padding:7px 12px !important;
+
+    background:#F8FAFC !important;
+    border:1px solid #E5EAF1 !important;
+    border-radius:9px !important;
+
     font-size:13px !important;
+    line-height:1.2 !important;
+
+    box-sizing:border-box !important;
 }
 
+/* NOMBRE DEL ASESOR */
+#resultadoMensual .rentabilidad-item strong{
+    font-size:14px !important;
+    color:#123B63 !important;
+    white-space:nowrap !important;
+}
+
+/* DATOS */
+#resultadoMensual .rentabilidad-item div{
+    margin:0 !important;
+    padding:0 !important;
+    line-height:1.2 !important;
+}
+
+/* INGRESO */
+#resultadoMensual .rentabilidad-item div:last-child{
+    font-weight:700 !important;
+}
+
+/* CELULAR */
 @media(max-width:768px){
 
-    #resultadoMensual .rentabilidad-grid{
-        grid-template-columns:repeat(2,1fr) !important;
-        gap:6px !important;
+    #resultadoMensual .rentabilidad-item{
+        grid-template-columns:120px 1fr 1fr 1fr !important;
+        gap:5px !important;
+
+        min-height:38px !important;
+        padding:5px 7px !important;
+
+        font-size:10px !important;
+    }
+
+    #resultadoMensual .rentabilidad-item strong{
+        font-size:11px !important;
     }
 
 }

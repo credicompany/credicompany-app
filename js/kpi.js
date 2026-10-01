@@ -879,7 +879,6 @@ let cantidadTemAgosto = 0;
     "| OPERACIONES:",
     meta["OPERACIONES"]
 );
-
    let asesor =
 String(meta["Asesor (A)"] || "")
 .trim()

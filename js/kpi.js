@@ -920,76 +920,50 @@ let mora1MasAsesor = {};
 // ==========================================
 
 // ==========================================
-// CLIENTES ACUMULADOS
+// CLIENTES EN CARTERA - MES ACTUAL
 // ==========================================
-// El mes siguiente debe conservar los clientes
-// del mes histórico y sumar solamente los nuevos.
+// IMPORTANTE:
+//
+// NO se cuentan solamente los desembolsos de octubre.
+//
+// Se cuentan TODOS los clientes únicos que existen
+// en la data de producción cargada.
+//
+// Si un cliente tiene varios créditos,
+// cuenta solamente UNA vez.
+//
+// Esto permite comparar:
+//
+// CLIENTES SEPTIEMBRE
+//        VS
+// CLIENTES OCTUBRE
 //
 // Ejemplo:
-// Septiembre = 147
-// Octubre tiene los mismos 147 = 147 / variación 0
-// Octubre tiene 147 + 5 nuevos = 152 / variación +5
 //
-// Un cliente repetido en varias operaciones cuenta UNA sola vez.
+// Septiembre = 147
+// Octubre    = 147
+// Variación  = 0
+//
+// Si aparecen 5 clientes nuevos:
+//
+// Septiembre = 147
+// Octubre    = 152
+// Variación  = +5
 // ==========================================
 
 let clientesMesActual = {};
 
-const clientesHistoricosPorAsesor = {};
-const clientesProduccionPorAsesor = {};
-
-const mesHistoricoIndex = indiceMesClientesHistorico;
-const mesProduccionIndex = (indiceMesClientesHistorico + 1) % 12;
-
 // ==========================================
-// RECORRER TODA LA DATA
+// TOMAR TODOS LOS CLIENTES DE LA DATA
 // ==========================================
 
 jsonGeneral.forEach(c => {
 
-    const fechaExcel = c["Fecha Desembolso"];
-
-    let fecha;
-
-    if(fechaExcel instanceof Date){
-
-        fecha = new Date(fechaExcel);
-
-    }else if(typeof fechaExcel === "number"){
-
-        fecha = new Date(
-            (fechaExcel - 25569) * 86400 * 1000
-        );
-
-    }else{
-
-        const textoFecha =
-            String(fechaExcel || "").trim();
-
-        if(
-            /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(textoFecha)
-        ){
-
-            const partes =
-                textoFecha.split("/");
-
-            fecha = new Date(
-                Number(partes[2]),
-                Number(partes[1]) - 1,
-                Number(partes[0])
-            );
-
-        }else{
-
-            fecha = new Date(textoFecha);
-
-        }
-    }
-
-    if(!fecha || isNaN(fecha.getTime())) return;
-
     const asesor =
-        String(c["Asesor(a)"] || "")
+        String(
+            c["Asesor(a)"] ||
+            ""
+        )
         .trim()
         .toUpperCase();
 
@@ -1008,79 +982,11 @@ jsonGeneral.forEach(c => {
         .trim()
         .toUpperCase();
 
-    if(!asesor || !codigoCliente) return;
-
-    const mes = fecha.getMonth();
-    const anio = fecha.getFullYear();
-
-    // ==========================================
-    // CLIENTES DEL MES HISTÓRICO
-    // ==========================================
-
-    const anioHistorico =
-        mesHistoricoIndex === 11
-        ? anioClientesProduccion - 1
-        : anioClientesProduccion;
-
-    if(
-        mes === mesHistoricoIndex &&
-        anio === anioHistorico
-    ){
-
-        if(!clientesHistoricosPorAsesor[asesor]){
-
-            clientesHistoricosPorAsesor[asesor] =
-                new Set();
-
-        }
-
-        clientesHistoricosPorAsesor[asesor]
-            .add(codigoCliente);
+    if(!asesor || !codigoCliente){
+        return;
     }
 
-    // ==========================================
-    // CLIENTES DEL MES DE PRODUCCIÓN
-    // ==========================================
-
-    if(
-        mes === mesProduccionIndex &&
-        anio === anioClientesProduccion
-    ){
-
-        if(!clientesProduccionPorAsesor[asesor]){
-
-            clientesProduccionPorAsesor[asesor] =
-                new Set();
-
-        }
-
-        clientesProduccionPorAsesor[asesor]
-            .add(codigoCliente);
-    }
-
-});
-
-
-// ==========================================
-// UNIR CLIENTES HISTÓRICOS + CLIENTES NUEVOS
-// ==========================================
-
-Object.keys(clientesHistoricosPorAsesor).forEach(asesor => {
-
-    clientesMesActual[asesor] =
-        new Set(
-            clientesHistoricosPorAsesor[asesor]
-        );
-
-});
-
-
-// ==========================================
-// AGREGAR LOS CLIENTES DEL MES SIGUIENTE
-// ==========================================
-
-Object.keys(clientesProduccionPorAsesor).forEach(asesor => {
-
+    // Crear Set para el asesor
     if(!clientesMesActual[asesor]){
 
         clientesMesActual[asesor] =
@@ -1088,16 +994,38 @@ Object.keys(clientesProduccionPorAsesor).forEach(asesor => {
 
     }
 
-    clientesProduccionPorAsesor[asesor]
-        .forEach(cliente => {
-
-            clientesMesActual[asesor]
-                .add(cliente);
-
-        });
+    // Cliente único
+    clientesMesActual[asesor]
+        .add(codigoCliente);
 
 });
 
+
+// ==========================================
+// VERIFICACIÓN EN CONSOLA
+// ==========================================
+
+console.log(
+    "📊 CLIENTES ACTUALES POR ASESOR:",
+    Object.fromEntries(
+        Object.entries(clientesMesActual)
+        .map(([asesor,set]) => [
+            asesor,
+            set.size
+        ])
+    )
+);
+
+console.log(
+    "📊 TOTAL CLIENTES ACTUALES:",
+    Object.values(clientesMesActual)
+        .reduce(
+            (total,set) =>
+                total + set.size,
+            0
+        )
+);
+    
 jsonGeneral.forEach(c=>{
 
     let asesor =

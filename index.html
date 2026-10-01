@@ -1958,6 +1958,165 @@ getDoc
     }
 }
 
+  /* =====================================================
+   RESULTADO MENSUAL — DISEÑO GERENCIAL COMPACTO
+   ===================================================== */
+
+#resultadoMensual{
+    padding:14px !important;
+}
+
+/* Título */
+#resultadoMensual h3{
+    margin:8px 0 10px 0 !important;
+    font-size:18px !important;
+}
+
+/* BOTONES DE CARGA */
+#resultadoMensual .btn-verde{
+    width:auto !important;
+    min-width:190px;
+    height:40px !important;
+    min-height:40px !important;
+    padding:7px 18px !important;
+    font-size:13px !important;
+    border-radius:9px !important;
+}
+
+/* Contenedores de carga */
+#resultadoMensual #excelIngresos,
+#resultadoMensual #excelGastos{
+    display:none;
+}
+
+/* ARCHIVOS */
+#resultadoMensual #archivoIngresosActivo,
+#resultadoMensual #archivoGastosActivo{
+    display:inline-block !important;
+    width:auto !important;
+    min-width:190px;
+    padding:6px 10px !important;
+    margin:4px 0 8px 0 !important;
+    border-radius:7px !important;
+    font-size:11px !important;
+    font-weight:600 !important;
+}
+
+/* ESPACIOS ENTRE CARGAS */
+#resultadoMensual > div > div[style*="margin-top"],
+#resultadoMensual div[style*="margin-bottom:20px"]{
+    margin-top:5px !important;
+    margin-bottom:5px !important;
+}
+
+/* ==========================================
+   4 INDICADORES
+   ========================================== */
+
+#resultadoMensual .resultado-grid{
+    display:grid !important;
+    grid-template-columns:repeat(4,1fr) !important;
+    gap:8px !important;
+    margin:10px 0 !important;
+}
+
+/* TARJETAS */
+#resultadoMensual .resultado-card{
+    min-height:78px !important;
+    height:78px !important;
+    padding:8px 10px !important;
+    border-radius:10px !important;
+    box-shadow:0 2px 7px rgba(0,0,0,.07) !important;
+}
+
+/* Título de tarjeta */
+#resultadoMensual .resultado-card h3{
+    margin:0 0 3px 0 !important;
+    font-size:11px !important;
+    line-height:1.1 !important;
+}
+
+/* Valor */
+#resultadoMensual .resultado-card h2{
+    margin:0 !important;
+    font-size:20px !important;
+    line-height:1 !important;
+}
+
+/* ==========================================
+   DETALLE
+   ========================================== */
+
+#resultadoMensual #detalleResultadoMensual{
+    margin-top:8px !important;
+    padding:10px 14px !important;
+    border-radius:10px !important;
+}
+
+#resultadoMensual #detalleResultadoMensual h3{
+    font-size:14px !important;
+    margin:0 0 6px 0 !important;
+}
+
+#resultadoMensual .detalle-ingresos{
+    font-size:12px !important;
+}
+
+#resultadoMensual .detalle-ingresos td{
+    padding:5px 4px !important;
+}
+
+/* ==========================================
+   HISTÓRICO
+   ========================================== */
+
+#resultadoMensual .tabla-historico{
+    font-size:11px !important;
+}
+
+#resultadoMensual .tabla-historico th,
+#resultadoMensual .tabla-historico td{
+    padding:5px !important;
+}
+
+/* ==========================================
+   CELULAR
+   ========================================== */
+
+@media(max-width:768px){
+
+    #resultadoMensual .resultado-grid{
+        grid-template-columns:repeat(2,1fr) !important;
+        gap:6px !important;
+    }
+
+    #resultadoMensual .resultado-card{
+        height:68px !important;
+        min-height:68px !important;
+        padding:6px !important;
+    }
+
+    #resultadoMensual .resultado-card h3{
+        font-size:10px !important;
+    }
+
+    #resultadoMensual .resultado-card h2{
+        font-size:16px !important;
+    }
+
+    #resultadoMensual .btn-verde{
+        width:100% !important;
+        height:38px !important;
+        min-height:38px !important;
+    }
+
+    #resultadoMensual #archivoIngresosActivo,
+    #resultadoMensual #archivoGastosActivo{
+        display:block !important;
+        width:100% !important;
+        box-sizing:border-box;
+    }
+}
       /* BOTONES CARGAR METAS / PRODUCCIÓN */
 
    #panelCargaKPI{

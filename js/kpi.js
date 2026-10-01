@@ -1200,18 +1200,73 @@ let cantidadTemAgosto = 0;
             colorVariacion = "#D64545";
         }
 
-        // TEM histórico: se mantiene el mes anterior.
-        let temAnterior = 0;
-        const colTEM = buscarColumna("TEM",mesAnterior);
+       // ==========================================
+// TEM HISTÓRICO - DESDE EXCEL DE METAS
+// ==========================================
+// Detecta automáticamente la columna:
+// TEM SEPTIEMBRE
+// TEM SETIEMBRE
+// TEM OCTUBRE
+// etc.
+//
+// No depende de mesAnterior.
+// ==========================================
 
-        if(colTEM){
-            temAnterior =
-                parseFloat(
-                    String(meta[colTEM] || 0)
-                    .replace(/,/g,"")
-                    .replace(",",".")
-                ) || 0;
-        }
+let temAnterior = 0;
+
+let columnaTEMHistorico = null;
+
+if(configuracionClientes){
+
+    const mesTEMHistorico =
+        configuracionClientes.mes;
+
+    columnaTEMHistorico =
+        Object.keys(meta || {}).find(col => {
+
+            const nombreColumna =
+                normalizarTextoClientes(col);
+
+            return (
+                nombreColumna.includes("TEM") &&
+                (
+                    nombreColumna.includes(
+                        mesTEMHistorico
+                    ) ||
+                    (
+                        mesTEMHistorico === "SEPTIEMBRE" &&
+                        nombreColumna.includes("SETIEMBRE")
+                    )
+                )
+            );
+
+        });
+
+}
+
+// ==========================================
+// LEER TEM DESDE METAS
+// ==========================================
+
+if(columnaTEMHistorico){
+
+    temAnterior =
+        parseFloat(
+            String(
+                meta[columnaTEMHistorico] || 0
+            )
+            .replace(/%/g,"")
+            .replace(/,/g,".")
+        ) || 0;
+
+}
+
+console.log(
+    "📊 TEM HISTÓRICO:",
+    asesor,
+    columnaTEMHistorico,
+    temAnterior
+);
 
         // Mora histórica: se toma siempre el mes anterior.
         let moraAnterior = 0;

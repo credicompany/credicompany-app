@@ -673,83 +673,104 @@ minimumFractionDigits:2
 });
 
 }
+// =====================================
+// RENTABILIDAD POR ASESOR - HORIZONTAL
+// =====================================
+
 function mostrarRentabilidadAsesor(){
 
-let datos =
-JSON.parse(
-localStorage.getItem("rankingRentabilidadAsesor")
-)||{};
+    let datos =
+        JSON.parse(
+            localStorage.getItem("rankingRentabilidadAsesor")
+        ) || {};
 
-let div =
-document.getElementById("rankingRentabilidadAsesor");
+    let div =
+        document.getElementById(
+            "rankingRentabilidadAsesor"
+        );
 
-if(!div) return;
+    if(!div) return;
 
-let html="";
+    let html = "";
 
-Object.entries(datos)
+    // CABECERA
+    html += `
+        <div class="rentabilidad-grid">
 
-.sort((a,b)=>
+            <div class="rentabilidad-item rentabilidad-header">
+                <strong>ASESOR</strong>
+                <strong>INTERÉS</strong>
+                <strong>MORA REAL</strong>
+                <strong>INGRESO</strong>
+            </div>
+    `;
 
-(b[1].interes+b[1].moraReal)-
+    Object.entries(datos)
 
-(a[1].interes+a[1].moraReal)
+    .sort((a,b)=>
+        (b[1].interes + b[1].moraReal) -
+        (a[1].interes + a[1].moraReal)
+    )
 
-)
+    .forEach((item,index)=>{
 
-.forEach((item,index)=>{
+        let medalla = "🥉";
 
-let medalla="🥉";
+        if(index === 0) medalla = "🥇";
+        if(index === 1) medalla = "🥈";
 
-if(index==0) medalla="🥇";
+        let interes =
+            Number(item[1].interes) || 0;
 
-if(index==1) medalla="🥈";
+        let moraReal =
+            Number(item[1].moraReal) || 0;
 
-let ingreso=
-item[1].interes+
-item[1].moraReal;
+        let ingreso =
+            interes + moraReal;
 
-html+=`
+        html += `
 
-<div style="
-padding:12px;
-margin-bottom:10px;
-background:#f8fafc;
-border-radius:12px;
-">
+            <div class="rentabilidad-item">
 
-<b style="font-size:16px;">
-${medalla} ${item[0]}
-</b>
+                <strong>
+                    ${medalla} ${item[0]}
+                </strong>
 
-<br>
+                <div>
+                    💰 S/
+                    ${interes.toLocaleString("es-PE",{
+                        minimumFractionDigits:2
+                    })}
+                </div>
 
-💰 Interés:
-<b>
-S/ ${item[1].interes.toLocaleString("es-PE",{minimumFractionDigits:2})}
-</b>
+                <div>
+                    🚨 S/
+                    ${moraReal.toLocaleString("es-PE",{
+                        minimumFractionDigits:2
+                    })}
+                </div>
 
-<br>
+                <div style="
+                    color:#16a34a;
+                    font-weight:800;
+                ">
+                    🏦 S/
+                    ${ingreso.toLocaleString("es-PE",{
+                        minimumFractionDigits:2
+                    })}
+                </div>
 
-🚨 Mora Real:
-<b>
-S/ ${item[1].moraReal.toLocaleString("es-PE",{minimumFractionDigits:2})}
-</b>
+            </div>
 
-<br>
+        `;
 
-🏦 Ingreso:
-<b style="color:#16a34a;">
-S/ ${ingreso.toLocaleString("es-PE",{minimumFractionDigits:2})}
-</b>
+    });
 
-</div>
+    html += `
+        </div>
+    `;
 
-`;
-
-});
-
-div.innerHTML=html;
+    div.innerHTML = html;
 
 }
 

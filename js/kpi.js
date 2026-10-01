@@ -194,11 +194,16 @@ console.log(
 mesActual,
 json.length,
 "REGISTROS"
-);let metas =
+);
+    let metas =
 JSON.parse(
     localStorage.getItem("metasKPI")
 ) || [];
-
+console.log("=================================");
+console.log("METAS KPI CARGADAS:");
+console.log(metas);
+console.log("CANTIDAD DE ASESORES EN METAS:", metas.length);
+console.log("=================================");
 console.log(
 "REGISTROS MES ACTUAL:",
 json.length
@@ -865,6 +870,15 @@ let sumaTemAgosto = 0;
 let cantidadTemJulio = 0;
 let cantidadTemAgosto = 0;   
  metas.forEach(meta=>{
+
+     console.log(
+    "ASESOR DE METAS:",
+    meta["Asesor (A)"],
+    "| COLOCACION:",
+    meta["COLOCACION"],
+    "| OPERACIONES:",
+    meta["OPERACIONES"]
+);
 
    let asesor =
 String(meta["Asesor (A)"] || "")

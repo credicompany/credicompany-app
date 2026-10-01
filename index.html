@@ -1872,8 +1872,6 @@ getDoc
 
 <style>
 
-  
-
 @media (max-width: 600px){
 
     #kpi{
@@ -2261,7 +2259,36 @@ getDoc
     text-align:center !important;
     font-weight:600;
 }
-  
+  /* ==========================================
+   RENTABILIDAD POR ASESOR — HORIZONTAL
+========================================== */
+
+#resultadoMensual .rentabilidad-grid{
+    display:grid !important;
+    grid-template-columns:repeat(4,1fr) !important;
+    gap:8px !important;
+}
+
+#resultadoMensual .rentabilidad-item{
+    padding:8px 10px !important;
+    border-radius:10px !important;
+    background:#f5f7fa;
+    font-size:12px !important;
+    line-height:1.35 !important;
+}
+
+#resultadoMensual .rentabilidad-item strong{
+    font-size:13px !important;
+}
+
+@media(max-width:768px){
+
+    #resultadoMensual .rentabilidad-grid{
+        grid-template-columns:repeat(2,1fr) !important;
+        gap:6px !important;
+    }
+
+}
 </style>
   
 </head>

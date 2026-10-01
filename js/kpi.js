@@ -906,6 +906,7 @@ let metaAsesor = metas.find(m => {
 
 });
 
+     let meta = metaAsesor;
     //=========================================
     // FUNCIONES AUXILIARES
     //=========================================

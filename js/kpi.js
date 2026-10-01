@@ -147,17 +147,28 @@ const meses=[
 "Noviembre","Diciembre"
 ];
 
+// ========================================
+// MES REAL DEL REPORTE
+// ========================================
+// El KPI trabaja con el mes calendario actual.
+// En octubre:
+// mes anterior = SETIEMBRE
+// mes actual   = OCTUBRE
+// ========================================
+
+const fechaReferencia = new Date();
+
 const indiceMes =
-ultimaFecha.getUTCMonth();
+fechaReferencia.getMonth();
 
 const anioActual =
-ultimaFecha.getUTCFullYear();
+fechaReferencia.getFullYear();
 
 const mesActual =
 meses[indiceMes];
 
 const mesAnterior =
-meses[(indiceMes+11)%12];
+meses[(indiceMes + 11) % 12];
 
 const mesSiguiente =
 meses[(indiceMes+1)%12];
@@ -1014,22 +1025,40 @@ let cantidadTemAgosto = 0;
 // CLIENTES: HISTÓRICO VS MES SIGUIENTE
 // ==========================================
 
-// HISTÓRICO:
-// toma la columna CLIENTES del mes cerrado.
-// Ejemplo: si la última data disponible es
-// SEPTIEMBRE, toma CLIENTES SEPTIEMBRE del Excel.
+// ==========================================
+// CLIENTES HISTÓRICOS
+// ==========================================
+// La hoja de metas puede tener:
+// CLIENTES SEPTIEMBRE
+// o
+// CLIENTES SETIEMBRE
+// ==========================================
 
-const colClientesHistorico =
+let colClientesHistorico =
     buscarColumna(
         "CLIENTES",
-        mesActual
+        mesAnterior
     );
+
+// Compatibilidad con "SETIEMBRE"
+if(
+    !colClientesHistorico &&
+    mesAnterior.toUpperCase() === "SEPTIEMBRE"
+){
+    colClientesHistorico =
+        buscarColumna(
+            "CLIENTES",
+            "SETIEMBRE"
+        );
+}
 
 const clientesHistoricoMes =
     colClientesHistorico
     ?
     Number(
-        String(meta[colClientesHistorico] || 0)
+        String(
+            meta[colClientesHistorico] || 0
+        )
         .replace(/,/g,"")
     )
     :

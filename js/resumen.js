@@ -25,23 +25,58 @@ let clientes = {};
 let hoyCount = 0;
 let moraCount = 0;
 let criticoCount = 0;
+
+// ======================================
+// REPAGO DIARIO POR TRAMO
+// ======================================
+let repagoHoy = 0;
+let repagoMora = 0;
+let repagoCritico = 0;
   data.forEach(c=>{
 
 let retraso = parseFloat(c.retraso) || 0;
 let monto = parseFloat(c.monto) || 0;
+// ======================================
+// CUOTA MORA DEL CLIENTE
+// ======================================
+
+let cuotaMora =
+    parseFloat(
+        String(
+            c.cuota_mora ||
+            c["cuota_mora"] ||
+            0
+        ).replace(",", ".")
+    ) || 0;
+    
+// ======================================
+// TRAMOS + REPAGO DIARIO
+// ======================================
 
 if(retraso === 0 && !c.pagado_hoy){
+
     hoyCount++;
+
+    repagoHoy += cuotaMora;
+
 }
 
 if(retraso >= 1 && retraso <= 8 && !c.pagado_hoy){
+
     moraCount++;
+
+    repagoMora += cuotaMora;
+
 }
 
 if(retraso >= 9 && !c.pagado_hoy){
+
     criticoCount++;
 
+    repagoCritico += cuotaMora;
+
 }
+    
 let pagado = parseFloat(c.pagado_monto) || 0;
 let cuota = parseFloat(c.monto) || 0;
 
@@ -209,18 +244,51 @@ let btnHoy = document.getElementById("btnHoy");
 let btnMora = document.getElementById("btnMora");
 let btnCriticos = document.getElementById("btnCriticos");
 if(btnHoy){
-btnHoy.innerHTML =
-`🟢 Clientes al día (${hoyCount})`;
+
+    btnHoy.innerHTML =
+    `
+    🟢 Clientes al día (${hoyCount})
+    <br>
+    <small>
+        💰 Repago diario: S/ ${repagoHoy.toLocaleString("es-PE",{
+            minimumFractionDigits:2,
+            maximumFractionDigits:2
+        })}
+    </small>
+    `;
+
 }
 
 if(btnMora){
-btnMora.innerHTML =
-`🟡 Mora leve (${moraCount})`;
+
+    btnMora.innerHTML =
+    `
+    🟡 Mora leve (${moraCount})
+    <br>
+    <small>
+        💰 Repago diario: S/ ${repagoMora.toLocaleString("es-PE",{
+            minimumFractionDigits:2,
+            maximumFractionDigits:2
+        })}
+    </small>
+    `;
+
 }
 
 if(btnCriticos){
-btnCriticos.innerHTML =
-`🔴 Mora crítica (${criticoCount})`;
+
+    btnCriticos.innerHTML =
+    `
+    🔴 Mora crítica (${criticoCount})
+    <br>
+    <small>
+        💰 Repago diario: S/ ${repagoCritico.toLocaleString("es-PE",{
+            minimumFractionDigits:2,
+            maximumFractionDigits:2
+        })}
+    </small>
+    `;
+
 }
 
 }

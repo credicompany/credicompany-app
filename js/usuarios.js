@@ -217,21 +217,80 @@ let esMio = asesorCliente === asesorActual;
 return r>=filtroMin && r<=filtroMax && esMio;
 });
 
-let hoy=0, alDia=0, leve=0, medio=0, critico=0;
-filtrados.forEach(c=>{
-    let r=parseFloat(c.retraso)||0;
+// =====================================
+// RESUMEN DE COBRANZA POR TRAMOS
+// =====================================
 
-    if(r === 0) hoy++;
-    else if(r <= 8) alDia++;
-    else if(r <= 30) leve++;
-    else if(r <= 60) medio++;
-    else critico++;
+let tramo0 = 0, tramo8 = 0, tramo30 = 0, tramo60 = 0, tramo61 = 0;
+let repago0 = 0, repago8 = 0, repago30 = 0, repago60 = 0, repago61 = 0;
+
+filtrados.forEach(c=>{
+
+    let r = parseFloat(c.retraso) || 0;
+
+    // CUOTA_MORA se guarda en c.monto
+    let repago = parseFloat(c.monto) || 0;
+
+    if(r === 0){
+        tramo0++;
+        repago0 += repago;
+    }else if(r >= 1 && r <= 8){
+        tramo8++;
+        repago8 += repago;
+    }else if(r >= 9 && r <= 30){
+        tramo30++;
+        repago30 += repago;
+    }else if(r >= 31 && r <= 60){
+        tramo60++;
+        repago60 += repago;
+    }else if(r >= 61){
+        tramo61++;
+        repago61 += repago;
+    }
+
 });
 
+const formatoRepago = valor =>
+    Number(valor || 0).toLocaleString("es-PE",{
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+    });
+
 html+=`
-<div class="item" style="background:#123B63;color:white">
-<b>📊 Resumen</b><br>
-🟢 ${hoy} | 🟢 ${alDia} | 🟡 ${leve} | 🔴 ${medio} | ⚫ ${critico}
+<div class="item"
+style="
+    background:#123B63;
+    color:white;
+    border:none;
+    border-radius:12px;
+    padding:10px;
+    margin-bottom:10px;
+">
+
+    <div style="
+        font-size:14px;
+        font-weight:800;
+        margin-bottom:8px;
+    ">
+        📊 RESUMEN DE COBRANZA
+    </div>
+
+    <div style="
+        display:grid;
+        grid-template-columns:1fr;
+        gap:5px;
+        font-size:12px;
+        line-height:1.4;
+    ">
+
+        <div>🟢 <b>0 días</b> — ${tramo0} clientes — S/ ${formatoRepago(repago0)}</div>
+        <div>🟢 <b>1–8 días</b> — ${tramo8} clientes — S/ ${formatoRepago(repago8)}</div>
+        <div>🟡 <b>9–30 días</b> — ${tramo30} clientes — S/ ${formatoRepago(repago30)}</div>
+        <div>🟠 <b>31–60 días</b> — ${tramo60} clientes — S/ ${formatoRepago(repago60)}</div>
+        <div>🔴 <b>61+ días</b> — ${tramo61} clientes — S/ ${formatoRepago(repago61)}</div>
+
+    </div>
+
 </div>`;
 
 filtrados.sort((a,b)=>{

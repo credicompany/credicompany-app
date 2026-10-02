@@ -257,6 +257,14 @@ const formatoRepago = valor =>
     });
 
 html+=`
+<style>
+@media (max-width:768px){
+    .resumen-tramos-text{
+        color:#123B63 !important;
+        font-weight:700;
+    }
+}
+</style>
 <div class="item"
 style="
     background:#123B63;
@@ -275,7 +283,7 @@ style="
         📊 RESUMEN DE COBRANZA
     </div>
 
-    <div style="
+    <div class="resumen-tramos-text" style="
         display:grid;
         grid-template-columns:1fr;
         gap:5px;

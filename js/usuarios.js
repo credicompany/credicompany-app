@@ -1158,16 +1158,36 @@ function renderBotonesAsesores(){
 
     if(!contenedor) return;
 
-    const usuarios =
+    let usuarios =
         JSON.parse(
             localStorage.getItem("usuarios")
         ) || [];
 
+    // ==========================================
+    // ASEGURAR QUE EDGAR BENITES APAREZCA
+    // ==========================================
+
+    const existeEdgar = usuarios.some(u =>
+        (u.user || "").toLowerCase().trim() === "ebenites"
+    );
+
+    if(!existeEdgar){
+
+        usuarios.unshift({
+            user: "ebenites",
+            nombre: "Edgar Benites",
+            pass: "",
+            foto: ""
+        });
+
+    }
+
     contenedor.innerHTML = "";
 
     // ==========================================
-    // CUADRÍCULA: 3 BOTONES POR FILA
+    // CUADRÍCULA
     // ==========================================
+
     contenedor.style.display = "grid";
     contenedor.style.gridTemplateColumns =
         "repeat(3, minmax(0, 1fr))";
@@ -1175,9 +1195,11 @@ function renderBotonesAsesores(){
     contenedor.style.width = "100%";
     contenedor.style.boxSizing = "border-box";
 
+
     // ==========================================
     // BOTÓN TEAM CREDICOMPANY
     // ==========================================
+
     const botonTeam =
         document.createElement("button");
 
@@ -1194,8 +1216,9 @@ function renderBotonesAsesores(){
     botonTeam.style.whiteSpace = "normal";
     botonTeam.style.overflow = "hidden";
 
-   botonTeam.innerHTML =
-    "🏆 Team Credicompany";
+    botonTeam.innerHTML =
+        "🏆 Team Credicompany";
+
     botonTeam.onclick = function(){
 
         resetFiltros();
@@ -1208,6 +1231,7 @@ function renderBotonesAsesores(){
     // ==========================================
     // BOTONES DE ASESORES
     // ==========================================
+
     usuarios.forEach(u => {
 
         const user =
@@ -1215,30 +1239,51 @@ function renderBotonesAsesores(){
 
         if(!user) return;
 
+
         const boton =
             document.createElement("button");
 
         boton.className = "btn-verde";
 
+        boton.style.width = "100%";
         boton.style.height = "52px";
         boton.style.minWidth = "0";
+        boton.style.padding = "6px";
+        boton.style.fontSize = "12px";
         boton.style.lineHeight = "1.15";
+        boton.style.borderRadius = "12px";
         boton.style.boxSizing = "border-box";
         boton.style.whiteSpace = "normal";
         boton.style.overflow = "hidden";
 
+
+        // ======================================
+        // NOMBRE MOSTRADO
+        // ======================================
+
+        let nombreMostrar =
+            u.nombre || user;
+
+        // Nombre específico de Edgar
+        if(user === "ebenites"){
+            nombreMostrar = "Edgar Benites";
+        }
+
+
         boton.innerHTML =
-            "👤 " +
-            (
-                u.nombre ||
-                user
-            );
+            "👤 " + nombreMostrar;
+
+
+        // ======================================
+        // FILTRAR CARTERA
+        // ======================================
 
         boton.onclick = function(){
 
             filtrarPorAsesor(user);
 
         };
+
 
         contenedor.appendChild(boton);
 

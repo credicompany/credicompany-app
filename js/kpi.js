@@ -2369,8 +2369,6 @@ if(divResumen){
 
 }
         
-// Cargar histórico KPI
-cargarHistoricoKPI();
         
         if(
             datos.rankingKPIHTML &&
@@ -2400,6 +2398,19 @@ cargarHistoricoKPI();
     });
 
 }
+
+
+// ==========================================
+// CARGAR HISTÓRICO KPI DESPUÉS DEL RESUMEN
+// ==========================================
+
+setTimeout(() => {
+
+    cargarHistoricoKPI();
+
+}, 500);
+
+
 // ======================================================
 // FIREBASE KPI FINANCIERO
 // ======================================================

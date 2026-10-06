@@ -1780,20 +1780,17 @@ function cargarHistoricoKPI(){
             historicoKPIData
         );
 
-        const selectorMes =
-            document.getElementById("historicoKPIMes");
+       const selectorAsesor =
+    document.getElementById("historicoKPIAsesor");
 
-        const selectorAsesor =
-            document.getElementById("historicoKPIAsesor");
+if(!selectorAsesor){
 
-        if(!selectorMes || !selectorAsesor){
+    console.warn(
+        "⚠️ No se encontró el selector de asesor"
+    );
 
-            console.warn(
-                "⚠️ No se encontró el módulo Histórico KPI"
-            );
-
-            return;
-        }
+    return;
+}
 
         selectorMes.innerHTML = "";
         selectorAsesor.innerHTML = "";
@@ -1852,23 +1849,10 @@ function cargarHistoricoKPI(){
         });
 
         // ==========================================
-        // SELECTOR DE MES
-        // ==========================================
-
-        periodos.forEach(periodo => {
-
-            const option =
-                document.createElement("option");
-
-            option.value =
-                periodo.anio + "|" + periodo.mes;
-
-            option.textContent =
-                periodo.mes + " " + periodo.anio;
-
-            selectorMes.appendChild(option);
-
-        });
+// PERÍODOS HISTÓRICOS
+// ==========================================
+// Los meses se muestran automáticamente
+// en la tabla de evolución mensual.
 
         // ==========================================
         // ASESORES
@@ -1957,10 +1941,10 @@ function renderHistoricoKPI(){
             "historicoKPIAsesor"
         );
 
-    if(
-        !contenido ||
-        !selectorAsesor
-    ){
+   if(
+    !contenido ||
+    !selectorAsesor
+){
 
         return;
 

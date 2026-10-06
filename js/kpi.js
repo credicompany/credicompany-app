@@ -1114,7 +1114,11 @@ let cantidadTemAgosto = 0;
     console.log("📊 CANTIDAD DE ASESORES EN TABLA:",metasValidas.length);
 
 
-
+// ==========================================
+// HISTÓRICO KPI POR ASESOR
+// ==========================================
+const historicoKPI = {};
+    
     metasValidas.forEach(meta=>{
 
         const asesor = normalizarAsesor(
@@ -1318,7 +1322,34 @@ console.log(
         }else if(Number(porcentajeDesembolso) >= 80){
             colorEstado = "🟡";
         }
+// ==========================================
+// REGISTRO HISTÓRICO DEL ASESOR
+// ==========================================
+historicoKPI[asesor] = {
+    asesor: asesor,
 
+    metaColocacion: Number(metaDesembolso) || 0,
+    avanceColocacion: Number(colocacion) || 0,
+    porcentajeColocacion: Number(porcentajeDesembolso) || 0,
+
+    metaOperaciones: Number(metaOperaciones) || 0,
+    avanceOperaciones: Number(oper) || 0,
+    porcentajeOperaciones: Number(porcentajeOperaciones) || 0,
+
+    clientesHistorico: Number(clientesHistoricoMes) || 0,
+    clientesActuales: Number(clientesMesActualAsesor) || 0,
+    variacionClientes: Number(variacionClientes) || 0,
+
+    temHistorico: Number(temAnterior) || 0,
+    temActual: Number(tem) || 0,
+
+    moraHistorica: Number(moraAnterior) || 0,
+    mora31Mas: Number(mora31Mas) || 0,
+    mora9Mas: Number(moraActual) || 0,
+    mora1Mas: Number(mora1Mas) || 0,
+
+    estado: colorEstado || ""
+};
         // Fila del asesor.
         resumen += `
 <tr>
@@ -1573,11 +1604,9 @@ localStorage.setItem(
     "resumenKPI",
     resumen
 );
-guardarGerencialFirebase(
-    resumen,
-    rankingKPIHTML
-);
-
+guardarGerencialFirebase(resumen,rankingKPIHTML);
+    
+guardarHistoricoKPI(historicoKPI, anioActual, mesActual);
 
 }
 
@@ -1628,6 +1657,34 @@ function guardarGerencialFirebase(
 
     });
 
+}
+// ==========================================
+// GUARDAR HISTÓRICO KPI POR MES
+// ==========================================
+function guardarHistoricoKPI(historicoKPI, anio, mes){
+
+    const periodo = String(mes).toUpperCase();
+
+    const refHistorico = db
+        .ref("kpiHistorico")
+        .child(String(anio))
+        .child(periodo);
+
+    refHistorico.set({
+        asesores: historicoKPI,
+        fechaActualizacion: new Date().toISOString()
+    })
+    .then(() => {
+        console.log(
+            `✅ HISTÓRICO KPI GUARDADO: ${periodo} ${anio}`
+        );
+    })
+    .catch(error => {
+        console.error(
+            "❌ ERROR GUARDANDO HISTÓRICO KPI:",
+            error
+        );
+    });
 }
 
 function cargarGerencialFirebase(){

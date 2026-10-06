@@ -2134,28 +2134,21 @@ function renderHistoricoKPI(){
 
     }
 
-    // ==========================================
-    // COLORES VARIACIÓN
-    // ==========================================
+    function variacion(
+    actual,
+    anterior,
+    tipo = "normal"
+){
 
-    function variacion(actual, anterior){
+    actual =
+        Number(actual || 0);
 
-        actual =
-            Number(actual || 0);
+    anterior =
+        Number(anterior || 0);
 
-        anterior =
-            Number(anterior || 0);
+    if(anterior === 0){
 
-        if(anterior === 0){
-
-            if(actual > 0){
-
-                return {
-                    texto:"↑",
-                    color:"#159447"
-                };
-
-            }
+        if(actual === 0){
 
             return {
                 texto:"—",
@@ -2164,26 +2157,28 @@ function renderHistoricoKPI(){
 
         }
 
-        const diferencia =
-            actual - anterior;
-
-        if(diferencia > 0){
+        // Si es mora, comenzar con mora
+        // es algo negativo
+        if(tipo === "mora"){
 
             return {
                 texto:"↑",
-                color:"#159447"
-            };
-
-        }
-
-        if(diferencia < 0){
-
-            return {
-                texto:"↓",
                 color:"#D64545"
             };
 
         }
+
+        return {
+            texto:"↑",
+            color:"#159447"
+        };
+
+    }
+
+    const diferencia =
+        actual - anterior;
+
+    if(diferencia === 0){
 
         return {
             texto:"—",
@@ -2191,6 +2186,50 @@ function renderHistoricoKPI(){
         };
 
     }
+
+    // ==========================================
+    // MORA
+    // MENOR MORA = MEJOR
+    // ==========================================
+
+    if(tipo === "mora"){
+
+        if(diferencia < 0){
+
+            return {
+                texto:"↓",
+                color:"#159447"
+            };
+
+        }
+
+        return {
+            texto:"↑",
+            color:"#D64545"
+        };
+
+    }
+
+    // ==========================================
+    // KPI NORMAL
+    // MAYOR = MEJOR
+    // ==========================================
+
+    if(diferencia > 0){
+
+        return {
+            texto:"↑",
+            color:"#159447"
+        };
+
+    }
+
+    return {
+        texto:"↓",
+        color:"#D64545"
+    };
+
+}
 
     // ==========================================
     // CONSTRUIR TABLA
@@ -2369,11 +2408,12 @@ function renderHistoricoKPI(){
                     registros.length - 2
                 ].data[campo];
 
-            tendencia =
-                variacion(
-                    ultimo,
-                    anterior
-                );
+           tendencia =
+    variacion(
+        ultimo,
+        anterior,
+        mejor
+    );
 
         }
 
@@ -2439,21 +2479,21 @@ function renderHistoricoKPI(){
         "🔴 Mora 31+",
         "mora31Mas",
         "dinero",
-        "baja"
+        "mora"
     );
 
     fila(
         "🟠 Mora 9+",
         "mora9Mas",
         "dinero",
-        "baja"
+         "mora"
     );
 
     fila(
         "🟡 Mora 1+",
         "mora1Mas",
         "dinero",
-        "baja"
+         "mora"
     );
 
     // ==========================================

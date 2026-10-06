@@ -2227,11 +2227,11 @@ function renderHistoricoKPI(){
     ">
 
     <table style="
-        width:100%;
-        min-width:900px;
-        border-collapse:collapse;
-        font-size:12px;
-    ">
+    width:100%;
+    min-width:680px;
+    border-collapse:collapse;
+    font-size:10px;
+">
 
     <thead>
 
@@ -2259,7 +2259,7 @@ function renderHistoricoKPI(){
         html += `
 
             <th style="
-                padding:10px;
+                padding:6px 5px;
                 text-align:center;
                 white-space:nowrap;
             ">
@@ -2307,7 +2307,7 @@ function renderHistoricoKPI(){
         ">
 
            <td style="
-    padding:11px 12px;
+    padding:7px 8px;
     font-weight:800;
     color:#123F63;
     background:#F3F7FA;
@@ -2360,7 +2360,7 @@ function renderHistoricoKPI(){
             html += `
 
                 <td style="
-    padding:11px 9px;
+    padding:6px 5px;
     text-align:center;
     font-weight:700;
     color:#123F63;

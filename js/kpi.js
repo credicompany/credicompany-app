@@ -2306,18 +2306,19 @@ function renderHistoricoKPI(){
             border-bottom:1px solid #ddd;
         ">
 
-            <td style="
-                padding:9px;
-                font-weight:700;
-                color:#123F63;
-                background:#F8FAFC;
-                white-space:nowrap;
-                position:sticky;
-                left:0;
-                z-index:1;
-            ">
-                ${nombre}
-            </td>
+           <td style="
+    padding:11px 12px;
+    font-weight:800;
+    color:#123F63;
+    background:#F3F7FA;
+    white-space:nowrap;
+    position:sticky;
+    left:0;
+    z-index:1;
+    border-right:2px solid #D9E4EC;
+">
+    ${nombre}
+</td>
         `;
 
         registros.forEach(registro => {
@@ -2359,12 +2360,15 @@ function renderHistoricoKPI(){
             html += `
 
                 <td style="
-                    padding:9px;
-                    text-align:center;
-                    font-weight:600;
-                ">
-                    ${texto}
-                </td>
+    padding:11px 9px;
+    text-align:center;
+    font-weight:700;
+    color:#123F63;
+    background:#FFFFFF;
+    border-bottom:1px solid #E5E7EB;
+">
+    ${texto}
+</td>
 
             `;
 
@@ -2402,15 +2406,27 @@ function renderHistoricoKPI(){
 
         html += `
 
-            <td style="
-                padding:9px;
-                text-align:center;
-                font-size:18px;
-                color:${tendencia.color};
-                font-weight:800;
-            ">
-                ${tendencia.texto}
-            </td>
+           <td style="
+    padding:9px;
+    text-align:center;
+">
+
+    <span style="
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        width:32px;
+        height:32px;
+        border-radius:50%;
+        background:${tendencia.color}18;
+        color:${tendencia.color};
+        font-size:20px;
+        font-weight:900;
+    ">
+        ${tendencia.texto}
+    </span>
+
+</td>
 
         </tr>
 
@@ -2485,9 +2501,11 @@ function renderHistoricoKPI(){
 
     html += `
 
-        <tr style="
-            border-bottom:1px solid #ddd;
-        ">
+       <tr style="
+    border-top:2px solid #D9E4EC;
+    border-bottom:1px solid #D9E4EC;
+    background:#F8FAFC;
+">
 
             <td style="
                 padding:9px;

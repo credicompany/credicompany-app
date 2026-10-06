@@ -1582,7 +1582,7 @@ box-shadow:0 2px 8px rgba(0,0,0,.08);
             color:#123F63;
             font-weight:700;
         ">
-            📈 HISTÓRICO KPI POR ASESOR
+           📈 EVOLUCIÓN KPI POR ASESOR
         </h4>
 
         <div style="
@@ -1591,16 +1591,16 @@ box-shadow:0 2px 8px rgba(0,0,0,.08);
             flex-wrap:wrap;
         ">
 
-            <select
-                id="historicoKPIMes"
-                onchange="renderHistoricoKPI()"
-                style="
-                    padding:8px 10px;
-                    border:1px solid #ccc;
-                    border-radius:6px;
-                    font-weight:600;
-                ">
-            </select>
+            <div style="
+    padding:8px 12px;
+    background:#EDF4F8;
+    border-radius:6px;
+    color:#123F63;
+    font-size:12px;
+    font-weight:700;
+">
+    📊 EVOLUCIÓN MENSUAL
+</div>
 
             <select
                 id="historicoKPIAsesor"
@@ -1942,19 +1942,14 @@ function cargarHistoricoKPI(){
 }
 
 // ==========================================
-// RENDER HISTÓRICO KPI
+// EVOLUCIÓN KPI POR ASESOR
 // ==========================================
 
 function renderHistoricoKPI(){
 
-    const contenedor =
+    const contenido =
         document.getElementById(
             "historicoKPIContenido"
-        );
-
-    const selectorMes =
-        document.getElementById(
-            "historicoKPIMes"
         );
 
     const selectorAsesor =
@@ -1963,8 +1958,7 @@ function renderHistoricoKPI(){
         );
 
     if(
-        !contenedor ||
-        !selectorMes ||
+        !contenido ||
         !selectorAsesor
     ){
 
@@ -1972,188 +1966,317 @@ function renderHistoricoKPI(){
 
     }
 
-    const valorPeriodo =
-        selectorMes.value;
-
-    if(!valorPeriodo){
-
-        contenedor.innerHTML = `
-            <div style="
-                padding:20px;
-                text-align:center;
-                color:#777;
-            ">
-                No existen períodos históricos.
-            </div>
-        `;
-
-        return;
-
-    }
-
-    const partes =
-        valorPeriodo.split("|");
-
-    const anio =
-        partes[0];
-
-    const mes =
-        partes[1];
-
-    const datosPeriodo =
-        historicoKPIData
-        [anio]
-        [mes];
-
-    if(
-        !datosPeriodo ||
-        !datosPeriodo.asesores
-    ){
-
-        contenedor.innerHTML = `
-            <div style="
-                padding:20px;
-                text-align:center;
-                color:#777;
-            ">
-                No hay información para este período.
-            </div>
-        `;
-
-        return;
-
-    }
-
-    let asesores =
-        datosPeriodo.asesores;
-
     const asesorSeleccionado =
         selectorAsesor.value;
 
+    // ==========================================
+    // OBTENER TODOS LOS PERIODOS
+    // ==========================================
+
+    const ordenMeses = [
+        "ENERO",
+        "FEBRERO",
+        "MARZO",
+        "ABRIL",
+        "MAYO",
+        "JUNIO",
+        "JULIO",
+        "AGOSTO",
+        "SEPTIEMBRE",
+        "OCTUBRE",
+        "NOVIEMBRE",
+        "DICIEMBRE"
+    ];
+
+    let periodos = [];
+
+    Object.keys(historicoKPIData)
+    .forEach(anio => {
+
+        const meses =
+            historicoKPIData[anio] || {};
+
+        Object.keys(meses)
+        .forEach(mes => {
+
+            periodos.push({
+                anio:Number(anio),
+                mes:String(mes).toUpperCase()
+            });
+
+        });
+
+    });
+
+    periodos.sort((a,b) => {
+
+        if(a.anio !== b.anio){
+
+            return a.anio - b.anio;
+
+        }
+
+        return (
+            ordenMeses.indexOf(a.mes) -
+            ordenMeses.indexOf(b.mes)
+        );
+
+    });
+
+    if(periodos.length === 0){
+
+        contenido.innerHTML = `
+            <div style="
+                padding:20px;
+                text-align:center;
+                color:#777;
+            ">
+                ⚠️ No existen períodos históricos.
+            </div>
+        `;
+
+        return;
+
+    }
+
+    // ==========================================
+    // SI ES "TODOS"
+    // MOSTRAR TABLA RESUMEN
+    // ==========================================
+
     if(
-        asesorSeleccionado &&
-        asesorSeleccionado !== "TODOS"
+        !asesorSeleccionado ||
+        asesorSeleccionado === "TODOS"
     ){
 
-        asesores = {
+        contenido.innerHTML = `
 
-            [asesorSeleccionado]:
-                asesores[asesorSeleccionado]
+        <div style="
+            padding:18px;
+            background:#EDF4F8;
+            border-radius:8px;
+            color:#123F63;
+            text-align:center;
+            font-size:13px;
+            font-weight:600;
+        ">
 
+            👤 Seleccione un asesor para visualizar
+            su evolución mensual.
+
+        </div>
+
+        `;
+
+        return;
+
+    }
+
+    // ==========================================
+    // OBTENER INFORMACIÓN DEL ASESOR
+    // ==========================================
+
+    let registros = [];
+
+    periodos.forEach(periodo => {
+
+        const datosPeriodo =
+            historicoKPIData
+            [periodo.anio]
+            [periodo.mes];
+
+        if(
+            !datosPeriodo ||
+            !datosPeriodo.asesores
+        ){
+
+            return;
+
+        }
+
+        const dato =
+            datosPeriodo.asesores[
+                asesorSeleccionado
+            ];
+
+        if(dato){
+
+            registros.push({
+
+                anio:periodo.anio,
+                mes:periodo.mes,
+                data:dato
+
+            });
+
+        }
+
+    });
+
+    if(registros.length === 0){
+
+        contenido.innerHTML = `
+
+            <div style="
+                padding:20px;
+                text-align:center;
+                color:#D64545;
+            ">
+
+                ❌ No existen datos históricos
+                para <b>${asesorSeleccionado}</b>.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+    // ==========================================
+    // COLORES VARIACIÓN
+    // ==========================================
+
+    function variacion(actual, anterior){
+
+        actual =
+            Number(actual || 0);
+
+        anterior =
+            Number(anterior || 0);
+
+        if(anterior === 0){
+
+            if(actual > 0){
+
+                return {
+                    texto:"↑",
+                    color:"#159447"
+                };
+
+            }
+
+            return {
+                texto:"—",
+                color:"#777"
+            };
+
+        }
+
+        const diferencia =
+            actual - anterior;
+
+        if(diferencia > 0){
+
+            return {
+                texto:"↑",
+                color:"#159447"
+            };
+
+        }
+
+        if(diferencia < 0){
+
+            return {
+                texto:"↓",
+                color:"#D64545"
+            };
+
+        }
+
+        return {
+            texto:"—",
+            color:"#777"
         };
 
     }
+
+    // ==========================================
+    // CONSTRUIR TABLA
+    // ==========================================
 
     let html = `
 
     <div style="
         overflow-x:auto;
         width:100%;
+        -webkit-overflow-scrolling:touch;
     ">
 
     <table style="
         width:100%;
-        min-width:1450px;
+        min-width:900px;
         border-collapse:collapse;
         font-size:12px;
     ">
 
-        <thead>
+    <thead>
 
-            <tr style="
+        <tr style="
+            background:#123F63;
+            color:#fff;
+        ">
+
+            <th style="
+                padding:10px;
+                text-align:left;
+                position:sticky;
+                left:0;
                 background:#123F63;
-                color:#fff;
+                z-index:2;
             ">
-
-                <th style="padding:8px;">
-                    ASESOR
-                </th>
-
-                <th style="padding:8px;">
-                    META COLOCACIÓN
-                </th>
-
-                <th style="padding:8px;">
-                    AVANCE
-                </th>
-
-                <th style="padding:8px;">
-                    % AVANCE
-                </th>
-
-                <th style="padding:8px;">
-                    META OPER.
-                </th>
-
-                <th style="padding:8px;">
-                    OPER.
-                </th>
-
-                <th style="padding:8px;">
-                    % OPER.
-                </th>
-
-                <th style="padding:8px;">
-                    CLIENTES HIST.
-                </th>
-
-                <th style="padding:8px;">
-                    CLIENTES ACT.
-                </th>
-
-                <th style="padding:8px;">
-                    VARIACIÓN
-                </th>
-
-                <th style="padding:8px;">
-                    TEM HIST.
-                </th>
-
-                <th style="padding:8px;">
-                    TEM ACT.
-                </th>
-
-                <th style="padding:8px;">
-                    MORA HIST.
-                </th>
-
-                <th style="padding:8px;">
-                    MORA 31+
-                </th>
-
-                <th style="padding:8px;">
-                    MORA 9+
-                </th>
-
-                <th style="padding:8px;">
-                    MORA 1+
-                </th>
-
-                <th style="padding:8px;">
-                    🚦
-                </th>
-
-            </tr>
-
-        </thead>
-
-        <tbody>
+                INDICADOR
+            </th>
     `;
 
-    let cantidad = 0;
+    // Encabezados de meses
 
-    Object.keys(asesores)
-    .forEach(asesor => {
+    registros.forEach(registro => {
 
-        const d =
-            asesores[asesor];
+        html += `
 
-        if(!d) return;
+            <th style="
+                padding:10px;
+                text-align:center;
+                white-space:nowrap;
+            ">
+                ${registro.mes}
+                <br>
+                ${registro.anio}
+            </th>
 
-        cantidad++;
+        `;
 
-        const estado =
-            d.estado || "⚪";
+    });
+
+    html += `
+
+            <th style="
+                padding:10px;
+                text-align:center;
+                background:#0B304D;
+            ">
+                TENDENCIA
+            </th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+    `;
+
+    // ==========================================
+    // FUNCIÓN PARA CREAR FILAS
+    // ==========================================
+
+    function fila(
+        nombre,
+        campo,
+        formato,
+        mejor="sube"
+    ){
 
         html += `
 
@@ -2162,176 +2285,281 @@ function renderHistoricoKPI(){
         ">
 
             <td style="
-                padding:8px;
+                padding:9px;
                 font-weight:700;
+                color:#123F63;
+                background:#F8FAFC;
                 white-space:nowrap;
+                position:sticky;
+                left:0;
+                z-index:1;
             ">
-                ${d.asesor || asesor}
+                ${nombre}
             </td>
+        `;
 
-            <td style="padding:8px;text-align:right;">
-                S/ ${Number(d.metaColocacion || 0)
-                    .toLocaleString("es-PE",{
-                        minimumFractionDigits:2
-                    })}
-            </td>
+        registros.forEach(registro => {
 
-            <td style="padding:8px;text-align:right;">
-                S/ ${Number(d.avanceColocacion || 0)
-                    .toLocaleString("es-PE",{
-                        minimumFractionDigits:2
-                    })}
-            </td>
+            const valor =
+                Number(
+                    registro.data[campo] || 0
+                );
+
+            let texto = "";
+
+            if(formato === "dinero"){
+
+                texto =
+                    "S/" +
+                    valor.toLocaleString(
+                        "es-PE",
+                        {
+                            maximumFractionDigits:0
+                        }
+                    );
+
+            }
+
+            else if(formato === "porcentaje"){
+
+                texto =
+                    valor.toFixed(1) + "%";
+
+            }
+
+            else{
+
+                texto =
+                    valor.toLocaleString("es-PE");
+
+            }
+
+            html += `
+
+                <td style="
+                    padding:9px;
+                    text-align:center;
+                    font-weight:600;
+                ">
+                    ${texto}
+                </td>
+
+            `;
+
+        });
+
+        // ==========================================
+        // TENDENCIA
+        // ==========================================
+
+        let tendencia = {
+            texto:"—",
+            color:"#777"
+        };
+
+        if(registros.length >= 2){
+
+            const ultimo =
+                registros[
+                    registros.length - 1
+                ].data[campo];
+
+            const anterior =
+                registros[
+                    registros.length - 2
+                ].data[campo];
+
+            tendencia =
+                variacion(
+                    ultimo,
+                    anterior
+                );
+
+        }
+
+        html += `
 
             <td style="
-                padding:8px;
-                text-align:center;
-                font-weight:700;
-            ">
-                ${Number(d.porcentajeColocacion || 0)
-                    .toFixed(1)}%
-            </td>
-
-            <td style="
-                padding:8px;
-                text-align:center;
-            ">
-                ${Number(d.metaOperaciones || 0)}
-            </td>
-
-            <td style="
-                padding:8px;
-                text-align:center;
-            ">
-                ${Number(d.avanceOperaciones || 0)}
-            </td>
-
-            <td style="
-                padding:8px;
-                text-align:center;
-                font-weight:700;
-            ">
-                ${Number(d.porcentajeOperaciones || 0)
-                    .toFixed(1)}%
-            </td>
-
-            <td style="
-                padding:8px;
-                text-align:center;
-            ">
-                ${Number(d.clientesHistorico || 0)}
-            </td>
-
-            <td style="
-                padding:8px;
-                text-align:center;
-            ">
-                ${Number(d.clientesActuales || 0)}
-            </td>
-
-            <td style="
-                padding:8px;
-                text-align:center;
-                font-weight:700;
-            ">
-                ${Number(d.variacionClientes || 0)}
-            </td>
-
-            <td style="
-                padding:8px;
-                text-align:center;
-            ">
-                ${Number(d.temHistorico || 0)
-                    .toFixed(1)}
-            </td>
-
-            <td style="
-                padding:8px;
-                text-align:center;
-                font-weight:700;
-            ">
-                ${Number(d.temActual || 0)
-                    .toFixed(1)}
-            </td>
-
-            <td style="
-                padding:8px;
-                text-align:right;
-            ">
-                S/ ${Number(d.moraHistorica || 0)
-                    .toLocaleString("es-PE",{
-                        minimumFractionDigits:2
-                    })}
-            </td>
-
-            <td style="
-                padding:8px;
-                text-align:right;
-            ">
-                S/ ${Number(d.mora31Mas || 0)
-                    .toLocaleString("es-PE",{
-                        minimumFractionDigits:2
-                    })}
-            </td>
-
-            <td style="
-                padding:8px;
-                text-align:right;
-            ">
-                S/ ${Number(d.mora9Mas || 0)
-                    .toLocaleString("es-PE",{
-                        minimumFractionDigits:2
-                    })}
-            </td>
-
-            <td style="
-                padding:8px;
-                text-align:right;
-            ">
-                S/ ${Number(d.mora1Mas || 0)
-                    .toLocaleString("es-PE",{
-                        minimumFractionDigits:2
-                    })}
-            </td>
-
-            <td style="
-                padding:8px;
+                padding:9px;
                 text-align:center;
                 font-size:18px;
+                color:${tendencia.color};
+                font-weight:800;
             ">
-                ${estado}
+                ${tendencia.texto}
             </td>
 
         </tr>
 
         `;
 
-    });
+    }
+
+    // ==========================================
+    // FILAS KPI
+    // ==========================================
+
+    fila(
+        "💰 Colocación",
+        "avanceColocacion",
+        "dinero"
+    );
+
+    fila(
+        "📊 % Avance",
+        "porcentajeColocacion",
+        "porcentaje"
+    );
+
+    fila(
+        "🎯 Operaciones",
+        "avanceOperaciones",
+        "numero"
+    );
+
+    fila(
+        "📊 % Operaciones",
+        "porcentajeOperaciones",
+        "porcentaje"
+    );
+
+    fila(
+        "👥 Clientes",
+        "clientesActuales",
+        "numero"
+    );
+
+    fila(
+        "📈 TEM",
+        "temActual",
+        "porcentaje"
+    );
+
+    fila(
+        "🔴 Mora 31+",
+        "mora31Mas",
+        "dinero",
+        "baja"
+    );
+
+    fila(
+        "🟠 Mora 9+",
+        "mora9Mas",
+        "dinero",
+        "baja"
+    );
+
+    fila(
+        "🟡 Mora 1+",
+        "mora1Mas",
+        "dinero",
+        "baja"
+    );
+
+    // ==========================================
+    // ESTADO
+    // ==========================================
 
     html += `
 
-        </tbody>
+        <tr style="
+            border-bottom:1px solid #ddd;
+        ">
+
+            <td style="
+                padding:9px;
+                font-weight:700;
+                color:#123F63;
+                background:#F8FAFC;
+                position:sticky;
+                left:0;
+            ">
+                🚦 Estado
+            </td>
+
+    `;
+
+    registros.forEach(registro => {
+
+        html += `
+
+            <td style="
+                padding:9px;
+                text-align:center;
+                font-size:20px;
+            ">
+                ${registro.data.estado || "⚪"}
+            </td>
+
+        `;
+
+    });
+
+    let estadoFinal =
+        registros[
+            registros.length - 1
+        ].data.estado || "⚪";
+
+    html += `
+
+            <td style="
+                padding:9px;
+                text-align:center;
+                font-size:20px;
+            ">
+                ${estadoFinal}
+            </td>
+
+        </tr>
+
+    `;
+
+    html += `
+
+    </tbody>
 
     </table>
 
     </div>
 
     <div style="
-        margin-top:8px;
+        margin-top:12px;
+        padding:10px 12px;
+        background:#EDF4F8;
+        border-radius:7px;
+        color:#657789;
         font-size:11px;
-        color:#777;
     ">
-        📅 Período: <b>${mes} ${anio}</b>
+
+        👤 <b>${asesorSeleccionado}</b>
         &nbsp; | &nbsp;
-        👥 Asesores mostrados: <b>${cantidad}</b>
+        📅 ${registros.length} período(s) registrado(s)
+
+        <br><br>
+
+        <span style="color:#159447;font-weight:700;">
+            ↑ Mejora
+        </span>
+
+        &nbsp;&nbsp;
+
+        <span style="color:#D64545;font-weight:700;">
+            ↓ Disminución
+        </span>
+
+        &nbsp;&nbsp;
+
+        <span style="color:#777;font-weight:700;">
+            — Sin variación
+        </span>
+
     </div>
 
     `;
 
-    contenedor.innerHTML = html;
+    contenido.innerHTML = html;
 
 }
-
 function cargarGerencialFirebase(){
 
     db.ref("kpiGerencial")

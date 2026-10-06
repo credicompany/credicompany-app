@@ -1792,8 +1792,7 @@ if(!selectorAsesor){
     return;
 }
 
-        selectorMes.innerHTML = "";
-        selectorAsesor.innerHTML = "";
+selectorAsesor.innerHTML = "";
 
         // ==========================================
         // ORDEN DE MESES

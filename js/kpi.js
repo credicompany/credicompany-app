@@ -2241,7 +2241,9 @@ function renderHistoricoKPI(){
         ">
 
             <th style="
-                padding:10px;
+                padding:6px 8px;
+min-width:120px;
+width:120px;
                 text-align:left;
                 position:sticky;
                 left:0;
@@ -2307,7 +2309,9 @@ function renderHistoricoKPI(){
         ">
 
            <td style="
-    padding:7px 8px;
+   padding:6px 8px;
+min-width:120px;
+width:120px;
     font-weight:800;
     color:#123F63;
     background:#F3F7FA;

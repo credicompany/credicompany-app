@@ -677,6 +677,7 @@ minimumFractionDigits:2
 // RENTABILIDAD POR ASESOR - HORIZONTAL
 // =====================================
 
+
 function mostrarRentabilidadAsesor(){
 
     let datos =
@@ -685,93 +686,135 @@ function mostrarRentabilidadAsesor(){
         ) || {};
 
     let div =
-        document.getElementById(
-            "rankingRentabilidadAsesor"
-        );
+        document.getElementById("rankingRentabilidadAsesor");
 
     if(!div) return;
 
-    let html = "";
+    let asesores = Object.entries(datos)
+        .map(([nombre, valores]) => ({
+            nombre,
+            interes: Number(valores.interes) || 0,
+            moraReal: Number(valores.moraReal) || 0
+        }))
+        .map(item => ({
+            ...item,
+            ingreso: item.interes + item.moraReal
+        }))
+        .sort((a,b) => b.ingreso - a.ingreso);
 
-    // CABECERA
-    html += `
-        <div class="rentabilidad-grid">
-
-            <div class="rentabilidad-item rentabilidad-header">
-                <strong>ASESOR</strong>
-                <strong>INTERÉS</strong>
-                <strong>MORA REAL</strong>
-                <strong>INGRESO</strong>
+    if(asesores.length === 0){
+        div.innerHTML = `
+            <div style="text-align:center;padding:20px;color:#888;">
+                No existen datos de rentabilidad
             </div>
+        `;
+        return;
+    }
+
+    let maxIngreso = Math.max(
+        ...asesores.map(a => a.ingreso),
+        1
+    );
+
+    let html = `
+        <div style="
+            display:flex;
+            flex-direction:column;
+            gap:16px;
+            width:100%;
+        ">
     `;
 
-    Object.entries(datos)
-
-    .sort((a,b)=>
-        (b[1].interes + b[1].moraReal) -
-        (a[1].interes + a[1].moraReal)
-    )
-
-    .forEach((item,index)=>{
+    asesores.forEach((asesor,index) => {
 
         let medalla = "🥉";
-
         if(index === 0) medalla = "🥇";
         if(index === 1) medalla = "🥈";
 
-        let interes =
-            Number(item[1].interes) || 0;
-
-        let moraReal =
-            Number(item[1].moraReal) || 0;
-
-        let ingreso =
-            interes + moraReal;
+        let porcentaje =
+            Math.max(0, Math.min(100,
+                (asesor.ingreso / maxIngreso) * 100
+            ));
 
         html += `
+            <div style="
+                padding:12px;
+                background:#F8FAFC;
+                border:1px solid #E5EAF1;
+                border-radius:12px;
+                box-sizing:border-box;
+                width:100%;
+            ">
 
-            <div class="rentabilidad-item">
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                    gap:8px;
+                    margin-bottom:8px;
+                    flex-wrap:wrap;
+                ">
+                    <strong style="color:#123B63;font-size:14px;">
+                        ${medalla} ${asesor.nombre}
+                    </strong>
 
-                <strong>
-                    ${medalla} ${item[0]}
-                </strong>
-
-                <div>
-                    💰 S/
-                    ${interes.toLocaleString("es-PE",{
-                        minimumFractionDigits:2
-                    })}
-                </div>
-
-                <div>
-                    🚨 S/
-                    ${moraReal.toLocaleString("es-PE",{
-                        minimumFractionDigits:2
-                    })}
+                    <strong style="color:#16A34A;font-size:14px;">
+                        S/ ${asesor.ingreso.toLocaleString("es-PE",{
+                            minimumFractionDigits:2,
+                            maximumFractionDigits:2
+                        })}
+                    </strong>
                 </div>
 
                 <div style="
-                    color:#16a34a;
-                    font-weight:800;
+                    width:100%;
+                    height:14px;
+                    background:#E2E8F0;
+                    border-radius:20px;
+                    overflow:hidden;
                 ">
-                    🏦 S/
-                    ${ingreso.toLocaleString("es-PE",{
-                        minimumFractionDigits:2
-                    })}
+                    <div style="
+                        width:${porcentaje}%;
+                        height:100%;
+                        background:linear-gradient(90deg,#123B63,#16A34A);
+                        border-radius:20px;
+                        transition:width .4s ease;
+                    "></div>
+                </div>
+
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    gap:8px;
+                    flex-wrap:wrap;
+                    margin-top:8px;
+                    font-size:12px;
+                    color:#475569;
+                ">
+                    <span>
+                        💰 Interés: S/
+                        ${asesor.interes.toLocaleString("es-PE",{
+                            minimumFractionDigits:2,
+                            maximumFractionDigits:2
+                        })}
+                    </span>
+
+                    <span>
+                        🚨 Mora real: S/
+                        ${asesor.moraReal.toLocaleString("es-PE",{
+                            minimumFractionDigits:2,
+                            maximumFractionDigits:2
+                        })}
+                    </span>
                 </div>
 
             </div>
-
         `;
-
     });
 
-    html += `
-        </div>
-    `;
+    html += `</div>`;
 
     div.innerHTML = html;
-
 }
 
 // =====================================

@@ -678,28 +678,31 @@ minimumFractionDigits:2
 // =====================================
 
 
+
 function mostrarRentabilidadAsesor(){
 
-    let datos =
-        JSON.parse(
-            localStorage.getItem("rankingRentabilidadAsesor")
-        ) || {};
+    let datos = JSON.parse(
+        localStorage.getItem("rankingRentabilidadAsesor")
+    ) || {};
 
-    let div =
-        document.getElementById("rankingRentabilidadAsesor");
+    let div = document.getElementById(
+        "rankingRentabilidadAsesor"
+    );
 
     if(!div) return;
 
     let asesores = Object.entries(datos)
-        .map(([nombre, valores]) => ({
-            nombre,
-            interes: Number(valores.interes) || 0,
-            moraReal: Number(valores.moraReal) || 0
-        }))
-        .map(item => ({
-            ...item,
-            ingreso: item.interes + item.moraReal
-        }))
+        .map(([nombre, valores]) => {
+            let interes = Number(valores.interes) || 0;
+            let moraReal = Number(valores.moraReal) || 0;
+
+            return {
+                nombre,
+                interes,
+                moraReal,
+                ingreso: interes + moraReal
+            };
+        })
         .sort((a,b) => b.ingreso - a.ingreso);
 
     if(asesores.length === 0){
@@ -716,34 +719,69 @@ function mostrarRentabilidadAsesor(){
         1
     );
 
+    let totalIngresos = asesores.reduce(
+        (total, a) => total + a.ingreso, 0
+    );
+
+    let formatoSoles = valor => valor.toLocaleString("es-PE", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+
     let html = `
         <div style="
             display:flex;
             flex-direction:column;
-            gap:16px;
+            gap:12px;
             width:100%;
         ">
+
+        <div style="
+            display:flex;
+            flex-wrap:wrap;
+            gap:14px;
+            font-size:12px;
+            color:#475569;
+            margin-bottom:4px;
+        ">
+            <span>
+                <span style="display:inline-block;width:10px;height:10px;
+                background:#2585C5;border-radius:2px;"></span>
+                Interés
+            </span>
+
+            <span>
+                <span style="display:inline-block;width:10px;height:10px;
+                background:#16A34A;border-radius:2px;"></span>
+                Mora real
+            </span>
+        </div>
     `;
 
-    asesores.forEach((asesor,index) => {
+    asesores.forEach((asesor, index) => {
 
         let medalla = "🥉";
         if(index === 0) medalla = "🥇";
         if(index === 1) medalla = "🥈";
 
-        let porcentaje =
-            Math.max(0, Math.min(100,
-                (asesor.ingreso / maxIngreso) * 100
-            ));
+        let anchoInteres =
+            Math.max(0, asesor.interes / maxIngreso * 100);
+
+        let anchoMora =
+            Math.max(0, asesor.moraReal / maxIngreso * 100);
+
+        let participacion = totalIngresos > 0
+            ? asesor.ingreso / totalIngresos * 100
+            : 0;
 
         html += `
             <div style="
                 padding:12px;
                 background:#F8FAFC;
-                border:1px solid #E5EAF1;
+                border:1px solid #E2E8F0;
                 border-radius:12px;
-                box-sizing:border-box;
                 width:100%;
+                box-sizing:border-box;
             ">
 
                 <div style="
@@ -751,61 +789,69 @@ function mostrarRentabilidadAsesor(){
                     justify-content:space-between;
                     align-items:center;
                     gap:8px;
-                    margin-bottom:8px;
                     flex-wrap:wrap;
+                    margin-bottom:9px;
                 ">
                     <strong style="color:#123B63;font-size:14px;">
                         ${medalla} ${asesor.nombre}
                     </strong>
 
-                    <strong style="color:#16A34A;font-size:14px;">
-                        S/ ${asesor.ingreso.toLocaleString("es-PE",{
-                            minimumFractionDigits:2,
-                            maximumFractionDigits:2
-                        })}
+                    <strong style="color:#123B63;font-size:14px;">
+                        S/ ${formatoSoles(asesor.ingreso)}
                     </strong>
                 </div>
 
                 <div style="
+                    display:flex;
                     width:100%;
-                    height:14px;
+                    height:18px;
                     background:#E2E8F0;
-                    border-radius:20px;
+                    border-radius:5px;
                     overflow:hidden;
                 ">
-                    <div style="
-                        width:${porcentaje}%;
-                        height:100%;
-                        background:linear-gradient(90deg,#123B63,#16A34A);
-                        border-radius:20px;
-                        transition:width .4s ease;
-                    "></div>
+                    <div title="Interés: S/ ${formatoSoles(asesor.interes)}"
+                        style="
+                            width:${anchoInteres}%;
+                            height:100%;
+                            background:#2585C5;
+                            flex-shrink:0;
+                        ">
+                    </div>
+
+                    <div title="Mora real: S/ ${formatoSoles(asesor.moraReal)}"
+                        style="
+                            width:${anchoMora}%;
+                            height:100%;
+                            background:#16A34A;
+                            flex-shrink:0;
+                        ">
+                    </div>
                 </div>
 
                 <div style="
                     display:flex;
                     justify-content:space-between;
-                    gap:8px;
+                    align-items:center;
                     flex-wrap:wrap;
+                    gap:6px;
                     margin-top:8px;
                     font-size:12px;
                     color:#475569;
                 ">
                     <span>
-                        💰 Interés: S/
-                        ${asesor.interes.toLocaleString("es-PE",{
-                            minimumFractionDigits:2,
-                            maximumFractionDigits:2
-                        })}
+                        Interés: S/ ${formatoSoles(asesor.interes)}
                     </span>
 
                     <span>
-                        🚨 Mora real: S/
-                        ${asesor.moraReal.toLocaleString("es-PE",{
-                            minimumFractionDigits:2,
-                            maximumFractionDigits:2
-                        })}
+                        Mora real: S/ ${formatoSoles(asesor.moraReal)}
                     </span>
+
+                    <strong style="color:#123B63;">
+                        ${participacion.toLocaleString("es-PE",{
+                            minimumFractionDigits:1,
+                            maximumFractionDigits:1
+                        })}%
+                    </strong>
                 </div>
 
             </div>
@@ -816,6 +862,7 @@ function mostrarRentabilidadAsesor(){
 
     div.innerHTML = html;
 }
+
 
 // =====================================
 // OBTENER PERÍODO DEL EXCEL

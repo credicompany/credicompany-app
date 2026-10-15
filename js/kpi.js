@@ -860,12 +860,16 @@ margin-top:4px;
 
 <div class="card">
 
+
 <h4 style="
 margin:5px 0;
 font-size:14px;
+text-align:center;
+width:100%;
 ">
 🎯 KPI POR ASESOR
 </h4>
+
 
 <div style="
 overflow-x:auto;

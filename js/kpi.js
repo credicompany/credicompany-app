@@ -1356,12 +1356,12 @@ historicoKPI[asesor] = {
 <td>S/${Math.round(metaDesembolso).toLocaleString("es-PE")}</td>
 <td>S/${Math.round(colocacion).toLocaleString("es-PE")}</td>
 <td style="
-background:${Number(porcentajeDesembolso)>=100?'#159447':Number(porcentajeDesembolso)>=80?'#FFF0C2':'#FCE4E4'};color:${Number(porcentajeDesembolso)>=100?'#FFFFFF':Number(porcentajeDesembolso)>=80?'#8A5A00':'#B42318'}
+background:${Number(porcentajeDesembolso)>=100?'#159447':Number(porcentajeDesembolso)>=80?'#EAF3F8':'#EAF3F8'};color:${Number(porcentajeDesembolso)>=100?'#FFFFFF':Number(porcentajeDesembolso)>=80?'#8A5A00':'#B42318'}
 ;font-weight:bold;">${porcentajeDesembolso}%</td>
 <td>${metaOperaciones}</td>
 <td>${oper}</td>
 <td style="
-background:${Number(porcentajeOperaciones)>=100?'#159447':Number(porcentajeOperaciones)>=80?'#FFF0C2':'#FCE4E4'};
+background:${Number(porcentajeOperaciones)>=100?'#159447':Number(porcentajeOperaciones)>=80?'#EAF3F8':'#EAF3F8'};
 color:${Number(porcentajeOperaciones)>=100?'#FFFFFF':Number(porcentajeOperaciones)>=80?'#8A5A00':'#B42318'}
 
 ;color:white;font-weight:bold;">${porcentajeOperaciones}%</td>

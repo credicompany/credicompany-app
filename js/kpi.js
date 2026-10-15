@@ -875,18 +875,17 @@ width:100%;
 padding-bottom:8px;
 ">
 
-<table style="
-width:100%;
-min-width:1100px;
-border-collapse:collapse;
-font-size:14px;
-text-align:center;
-">
+<table style="width:100%; min-width:1100px; border-collapse:collapse; font-size:12px; text-align:center;
+font-family:Arial,sans-serif; background:#FFFFFF; border:1px solid #D6E2EC; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(18,63,99,0.08);">
+
 
 <tr style="
-background:#123F63;
-color:white;
+background:linear-gradient(135deg,#123F63,#1B5B85);
+color:#FFFFFF;
+font-weight:bold;
+border-bottom:3px solid #D99A1A;
 ">
+
 
 <th>ASESOR</th>
 <th>META COLOCACIÓN</th>
@@ -1356,10 +1355,14 @@ historicoKPI[asesor] = {
 <td><b>${asesor}</b></td>
 <td>S/${Math.round(metaDesembolso).toLocaleString("es-PE")}</td>
 <td>S/${Math.round(colocacion).toLocaleString("es-PE")}</td>
-<td style="background:${Number(porcentajeDesembolso)>=100?'#22B55A':'#FFFFFF'};color:${Number(porcentajeDesembolso)>=100?'white':'#000000'};font-weight:bold;">${porcentajeDesembolso}%</td>
+<td style="
+background:${Number(porcentajeDesembolso)>=100?'#159447':Number(porcentajeDesembolso)>=80?'#FFF0C2':'#FCE4E4'};color:${Number(porcentajeDesembolso)>=100?'#FFFFFF':Number(porcentajeDesembolso)>=80?'#8A5A00':'#B42318'}
+;font-weight:bold;">${porcentajeDesembolso}%</td>
 <td>${metaOperaciones}</td>
 <td>${oper}</td>
-<td style="background:${Number(porcentajeOperaciones)>=100?'#22B55A':Number(porcentajeOperaciones)>=80?'#E0AA24':'#D64545'};color:white;font-weight:bold;">${porcentajeOperaciones}%</td>
+<td style="
+background:${Number(porcentajeOperaciones)>=100?'#159447':Number(porcentajeOperaciones)>=80?'#FFF0C2':'#FCE4E4'};color:${Number(porcentajeOperaciones)>=100?'#FFFFFF':Number(porcentajeOperaciones)>=80?'#8A5A00':'#B42318'}
+;color:white;font-weight:bold;">${porcentajeOperaciones}%</td>
 <td>
     <b>${clientesHistoricoMes}</b>
 </td>
@@ -1371,10 +1374,18 @@ historicoKPI[asesor] = {
 <td>${Number(temAnterior).toFixed(1)}%</td>
 <td>${Number(tem).toFixed(2)}%</td>
 <td>S/${Math.round(moraAnterior).toLocaleString("es-PE")}</td>
-<td style="font-weight:bold;color:#991B1B;">S/${Math.round(mora31Mas).toLocaleString("es-PE")}</td>
-<td style="font-weight:bold;color:#C43D3D;">S/${Math.round(moraActual).toLocaleString("es-PE")}</td>
-<td style="font-weight:bold;color:#C43D3D;">S/${Math.round(mora1Mas).toLocaleString("es-PE")}</td>
-<td>${colorEstado}</td>
+
+<td style="font-weight:bold;color:#B42318;background:#FCE4E4;border-radius:4px;">S/${Math.round(mora31Mas).toLocaleString("es-PE")}</td>
+
+
+<td style="font-weight:bold;color:#B42318;background:#FCE4E4;border-radius:4px;">S/${Math.round(moraActual).toLocaleString("es-PE")}</td>
+
+
+<td style="font-weight:bold;color:#B42318;background:#FCE4E4;border-radius:4px;">S/${Math.round(mora1Mas).toLocaleString("es-PE")}</td>
+
+
+<td style="font-size:20px;text-align:center;background:#EDF4F8;border-left:1px solid #D6E2EC;">${colorEstado}</td>
+
 </tr>
 `;
 

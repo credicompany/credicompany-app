@@ -3585,10 +3585,13 @@ if(dni){
 clientesProducto[producto].add(dni);
 }
 if(!carteraProducto[producto]){
-carteraProducto[producto] = 0;
+    carteraProducto[producto] = 0;
 }
 
-carteraProducto[producto] += saldo;
+// CARTERA NO VENCIDA
+if(atraso <= 0){
+    carteraProducto[producto] += saldo;
+}
 if(!rankingCartera[asesor]){
 rankingCartera[asesor] = 0;
 }
@@ -3598,9 +3601,11 @@ if(!vencidoProducto[producto]){
 vencidoProducto[producto] = 0;
 }
 
+
 if(atraso > 0){
-vencidoProducto[producto] += saldo;
+    vencidoProducto[producto] += saldo;
 }
+
 if(atraso > 30){
 
 vencidoAsesor[asesor] += saldo;

@@ -885,7 +885,7 @@ font-family:Arial,sans-serif; background:#FFFFFF; border:1px solid #D6E2EC; bord
 
 <tr style="
 background:linear-gradient(135deg,#123F63,#1B5B85);
-color:#FFFFFF;
+color:#123F63 !important;
 font-weight:bold;
 border-bottom:3px solid #D99A1A;
 ">
@@ -1360,7 +1360,8 @@ historicoKPI[asesor] = {
 <td>S/${Math.round(metaDesembolso).toLocaleString("es-PE")}</td>
 <td>S/${Math.round(colocacion).toLocaleString("es-PE")}</td>
 <td style="
-background:${Number(porcentajeDesembolso)>=100?'#159447':Number(porcentajeDesembolso)>=80?'#EAF3F8':'#EAF3F8'};color:${Number(porcentajeDesembolso)>=100?'#FFFFFF':Number(porcentajeDesembolso)>=80?'#8A5A00':'#B42318'}
+background:${Number(porcentajeDesembolso)>=100?'#159447':Number(porcentajeDesembolso)>=80?'#EAF3F8':'#EAF3F8'};color:${Number(porcentajeDesembolso)
+>=100?'#FFFFFF':Number(porcentajeDesembolso)>=80?'#8A5A00':'#B42318'}
 ;font-weight:bold;">${porcentajeDesembolso}%</td>
 <td>${metaOperaciones}</td>
 <td>${oper}</td>

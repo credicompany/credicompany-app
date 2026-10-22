@@ -1365,11 +1365,13 @@ background:${Number(porcentajeDesembolso)>=100?'#159447':Number(porcentajeDesemb
 ;font-weight:bold;">${porcentajeDesembolso}%</td>
 <td>${metaOperaciones}</td>
 <td>${oper}</td>
-<td style="
-background:${Number(porcentajeOperaciones)>=100?'#159447':Number(porcentajeOperaciones)>=80?'#EAF3F8':'#EAF3F8'};
-color:${Number(porcentajeOperaciones)>=100?'#123F63':Number(porcentajeOperaciones)>=80?'#8A5A00':'#B42318'}
 
-;color:white;font-weight:bold;">${porcentajeOperaciones}%</td>
+<td style="
+    background:${Number(porcentajeOperaciones)>=100?'#159447':'#EAF3F8'};
+    color:${Number(porcentajeOperaciones)>=100?'#FFFFFF':Number(porcentajeOperaciones)>=80?'#8A5A00':'#B42318'} !important;
+    font-weight:800;
+">${porcentajeOperaciones}%</td>
+
 <td>
     <b>${clientesHistoricoMes}</b>
 </td>

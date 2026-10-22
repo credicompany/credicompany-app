@@ -1367,7 +1367,7 @@ background:${Number(porcentajeDesembolso)>=100?'#159447':Number(porcentajeDesemb
 <td>${oper}</td>
 <td style="
 background:${Number(porcentajeOperaciones)>=100?'#159447':Number(porcentajeOperaciones)>=80?'#EAF3F8':'#EAF3F8'};
-color:${Number(porcentajeOperaciones)>=100?'#FFFFFF':Number(porcentajeOperaciones)>=80?'#8A5A00':'#B42318'}
+color:${Number(porcentajeOperaciones)>=100?'#123F63':Number(porcentajeOperaciones)>=80?'#8A5A00':'#B42318'}
 
 ;color:white;font-weight:bold;">${porcentajeOperaciones}%</td>
 <td>

@@ -885,7 +885,7 @@ font-family:Arial,sans-serif; background:#FFFFFF; border:1px solid #D6E2EC; bord
 
 <tr style="
 background:linear-gradient(135deg,#123F63,#1B5B85);
-color:#123F63 !important;
+color:#FFFFFF !important;
 font-weight:bold;
 border-bottom:3px solid #D99A1A;
 ">

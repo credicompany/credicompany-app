@@ -904,6 +904,7 @@ border-bottom:3px solid #D99A1A;
 <th>VARIACIÓN</th>
 <th>TEM ${mesAnterior.toUpperCase()}</th>
 <th>TEM ${mesActual.toUpperCase()}</th>
+<th>VARIACIÓN TEM</th>
 <th>MORA ${mesAnterior.toUpperCase()}</th>
 <th>MORA ${mesActual.toUpperCase()} 31+</th>
 <th>MORA ${mesActual.toUpperCase()} 9+</th>
@@ -1170,6 +1171,17 @@ const historicoKPI = {};
             :
             "0.00";
 
+        // VARIACIÓN TEM
+const variacionTEM =
+    Number(tem) - Number(temAnterior);
+
+const colorVariacionTEM =
+    variacionTEM > 0
+        ? "#159447"
+        : variacionTEM < 0
+            ? "#D64545"
+            : "#657789";
+
         // ==========================================
         // CLIENTES: METAS VS PRODUCCIÓN
         // ==========================================
@@ -1398,8 +1410,13 @@ background:${Number(porcentajeDesembolso)>=100?'#159447':Number(porcentajeDesemb
     <b>${clientesMesActualAsesor}</b>
 </td>
 <td style="font-weight:bold;color:${colorVariacion};">${variacionClientes>0?'+':''}${variacionClientes}</td>
-<td>${Number(temAnterior).toFixed(1)}%</td>
+<td>${Number(temAnterior).toFixed(2)}%</td>
+
 <td>${Number(tem).toFixed(2)}%</td>
+
+<td style="color:${colorVariacionTEM};font-weight:bold;">
+    ${variacionTEM > 0 ? "+" : ""}${variacionTEM.toFixed(2)} pp
+</td>
 <td>S/${Math.round(moraAnterior).toLocaleString("es-PE")}</td>
 
 <td style="font-weight:bold;color:#B42318;background:#FCE4E4;border-radius:4px;">S/${Math.round(mora31Mas).toLocaleString("es-PE")}</td>
@@ -1491,6 +1508,17 @@ cantidadTemAgosto > 0
 :
 0;
 
+// VARIACIÓN TEM TOTAL EMPRESA
+let variacionTEMTotal =
+    Number(temTotalAgosto) - Number(temTotalJulio);
+
+let colorVariacionTEMTotal =
+    variacionTEMTotal > 0
+        ? "#159447"
+        : variacionTEMTotal < 0
+            ? "#D64545"
+            : "#657789";
+
 let colorTotalVariacion =
 totalVariacionClientes > 0
 ?
@@ -1570,6 +1598,14 @@ ${temTotalJulio}%
 
 <td>
 ${temTotalAgosto}%
+</td>
+
+<td style="
+    color:${colorVariacionTEMTotal};
+    font-weight:bold;
+    text-align:center;
+">
+    ${variacionTEMTotal > 0 ? "+" : ""}${Number(variacionTEMTotal).toFixed(2)} pp
 </td>
 
 <td>

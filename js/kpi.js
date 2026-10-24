@@ -898,6 +898,7 @@ border-bottom:3px solid #D99A1A;
 <th>META OPERACIONES</th>
 <th>AVANCE</th>
 <th>% AVANCE OPER</th>
+<th>META CLIENTES</th>
 <th>CLIENTES ${mesClientesHistorico}</th>
 <th>CLIENTES ${mesClientesProduccion}</th>
 <th>VARIACIÓN</th>
@@ -1188,6 +1189,19 @@ const historicoKPI = {};
               ) || 0
             : 0;
 
+        // META DE CLIENTES: valor cargado desde el Excel de metas.
+const metaClientes =
+    Number(
+        String(
+            meta["META CLIENTES"] ??
+            meta["META_CLIENTES"] ??
+            meta["CLIENTES META"] ??
+            0
+        )
+        .replace(/,/g, "")
+        .replace(",", ".")
+    ) || 0;
+
         // PRODUCCIÓN: clientes únicos del mes siguiente al histórico.
         const clientesMesActualAsesor =
             clientesMesActual[asesor]
@@ -1373,9 +1387,12 @@ background:${Number(porcentajeDesembolso)>=100?'#159447':Number(porcentajeDesemb
 ">${porcentajeOperaciones}%</td>
 
 <td>
-    <b>${clientesHistoricoMes}</b>
+    <b>${metaClientes}</b>
 </td>
 
+<td>
+    <b>${clientesHistoricoMes}</b>
+</td>
 <td>
     <b>${clientesMesActualAsesor}</b>
 </td>
@@ -4526,6 +4543,7 @@ function cargarMetasKPI(){
                 const claveAsesor = buscarClave(["ASESOR"]);
                 const claveColocacion = buscarClave(["COLOCACION"]);
                 const claveOperaciones = buscarClave(["OPERACIONES"]);
+                const claveClientes = buscarClave(["CLIENTES"]);
 
                 const salida = {...fila};
 
@@ -4540,7 +4558,9 @@ function cargarMetasKPI(){
                 if(claveOperaciones){
                     salida["OPERACIONES"] = fila[claveOperaciones];
                 }
-
+if(claveClientes){
+    salida["META CLIENTES"] = Number(fila[claveClientes]) || 0;
+}
                 return salida;
 
             }).filter(fila =>

@@ -1076,6 +1076,7 @@ if(atraso >= 1){
 // =========================================
 
 let totalMetaColocacion = 0;
+let totalMetaClientes = 0;
 let totalAvanceColocacion = 0;
 
 let totalMetaOperaciones = 0;
@@ -1417,9 +1418,11 @@ background:${Number(porcentajeDesembolso)>=100?'#159447':Number(porcentajeDesemb
 
         // Totales empresa.
         totalMetaColocacion += metaDesembolso;
+        totalMetaClientes += Number(metaClientes) || 0;
         totalAvanceColocacion += colocacion;
         totalMetaOperaciones += metaOperaciones;
         totalAvanceOperaciones += oper;
+        totalMetaClientes += Number(metaClientes) || 0;
         totalClientesHistorico += clientesHistoricoMes;
         totalClientesSiguiente += clientesMesActualAsesor;
         totalMoraJulio += moraAnterior;
@@ -1540,6 +1543,10 @@ ${totalAvanceOperaciones}
 
 <td>
 ${porcentajeTotalOperaciones}%
+</td>
+
+<td>
+${totalMetaClientes}
 </td>
 
 <td>

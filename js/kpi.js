@@ -1231,6 +1231,33 @@ const porcentajeCumplimientoClientes =
           ).toFixed(1)
         : "0.0";
 
+// =========================================
+// RANKING DE DESEMPEÑO DEL ASESOR
+// =========================================
+
+// Limitar cada indicador a un máximo de 100%.
+const puntajeColocacion = Math.min(
+    100,
+    Math.max(0, Number(porcentajeDesembolso) || 0)
+);
+
+const puntajeOperaciones = Math.min(
+    100,
+    Math.max(0, Number(porcentajeOperaciones) || 0)
+);
+
+const puntajeClientes = Math.min(
+    100,
+    Math.max(0, Number(porcentajeCumplimientoClientes) || 0)
+);
+
+// Puntaje ponderado sobre 100 puntos.
+const puntajeRanking = (
+    puntajeColocacion * 0.40 +
+    puntajeOperaciones * 0.30 +
+    puntajeClientes * 0.30
+).toFixed(1);
+        
         // VARIACIÓN.
         const variacionClientes =
             clientesMesActualAsesor -
@@ -1397,6 +1424,7 @@ historicoKPI[asesor] = {
     metaOperaciones: Number(metaOperaciones) || 0,
     avanceOperaciones: Number(oper) || 0,
     porcentajeOperaciones: Number(porcentajeOperaciones) || 0,
+    puntajeRanking: Number(puntajeRanking) || 0,
 
     clientesHistorico: Number(clientesHistoricoMes) || 0,
     clientesActuales: Number(clientesMesActualAsesor) || 0,

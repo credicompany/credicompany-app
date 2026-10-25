@@ -898,7 +898,6 @@ border-bottom:3px solid #D99A1A;
 <th>AVANCE</th>
 <th>% AVANCE OPER</th>
 <th>META CLIENTES</th>
-<th>META CLIENTES</th>
 <th>CLIENTES ${mesClientesHistorico}</th>
 <th>CLIENTES ${mesClientesProduccion}</th>
 <th>% CUMPLIMIENTO<br>CLIENTES</th>
@@ -1484,7 +1483,6 @@ background:${Number(porcentajeDesembolso)>=100?'#159447':Number(porcentajeDesemb
         totalAvanceColocacion += colocacion;
         totalMetaOperaciones += metaOperaciones;
         totalAvanceOperaciones += oper;
-        totalMetaClientes += Number(metaClientes) || 0;
         totalClientesHistorico += clientesHistoricoMes;
         totalClientesSiguiente += clientesMesActualAsesor;
         totalMoraJulio += moraAnterior;
@@ -1628,6 +1626,26 @@ ${totalClientesHistorico}
 
 <td>
 ${totalClientesSiguiente}
+</td>
+
+<td style="
+    text-align:center;
+    font-weight:bold;
+    color:${
+        totalMetaClientes > 0 &&
+        (totalClientesSiguiente / totalMetaClientes * 100) >= 100
+            ? '#159447'
+            : totalMetaClientes > 0 &&
+              (totalClientesSiguiente / totalMetaClientes * 100) >= 80
+                ? '#B8860B'
+                : '#D64545'
+    };
+">
+    ${
+        totalMetaClientes > 0
+            ? (totalClientesSiguiente / totalMetaClientes * 100).toFixed(1) + "%"
+            : "0.0%"
+    }
 </td>
 
 <td style="

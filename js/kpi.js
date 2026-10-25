@@ -1410,8 +1410,10 @@ background:${Number(porcentajeDesembolso)>=100?'#159447':Number(porcentajeDesemb
 </td>
 <td style="font-weight:bold;color:${colorVariacion};">${variacionClientes>0?'+':''}${variacionClientes}</td>
 <td>${Number(temAnterior).toFixed(2)}%</td>
-
 <td>${Number(tem).toFixed(2)}%</td>
+<td style="color:${colorVariacionTEM};font-weight:bold;text-align:center;">
+    ${variacionTEM > 0 ? "+" : ""}${variacionTEM.toFixed(2)} pp
+</td>
 
 <td style="color:${colorVariacionTEM};font-weight:bold;">
     ${variacionTEM > 0 ? "+" : ""}${variacionTEM.toFixed(2)} pp

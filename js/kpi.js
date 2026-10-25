@@ -1404,13 +1404,6 @@ console.log(
             ? ((oper / metaOperaciones) * 100).toFixed(1)
             : "0.0";
 
-        // ==========================================
-// PUNTAJE BASE DEL RANKING
-// ==========================================
-const puntajeRanking =
-    (Number(porcentajeDesembolso) * 0.60) +
-    (Number(porcentajeOperaciones) * 0.40);
-
         let colorEstado = "🔴";
 
         if(Number(porcentajeDesembolso) >= 100){

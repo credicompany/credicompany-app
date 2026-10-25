@@ -1432,9 +1432,6 @@ background:${Number(porcentajeDesembolso)>=100?'#159447':Number(porcentajeDesemb
     ${variacionTEM > 0 ? "+" : ""}${variacionTEM.toFixed(2)} pp
 </td>
 
-<td style="color:${colorVariacionTEM};font-weight:bold;">
-    ${variacionTEM > 0 ? "+" : ""}${variacionTEM.toFixed(2)} pp
-</td>
 <td>S/${Math.round(moraAnterior).toLocaleString("es-PE")}</td>
 
 <td style="font-weight:bold;color:#B42318;background:#FCE4E4;border-radius:4px;">S/${Math.round(mora31Mas).toLocaleString("es-PE")}</td>

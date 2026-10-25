@@ -1170,16 +1170,11 @@ const historicoKPI = {};
             :
             "0.00";
 
-        // VARIACIÓN TEM
-const variacionTEM =
-    Number(tem) - Number(temAnterior);
+        // La variación se calculará después de obtener temAnterior.
+// Inicializamos las variables para evitar referencias prematuras.
+let variacionTEM = 0;
 
-const colorVariacionTEM =
-    variacionTEM > 0
-        ? "#159447"
-        : variacionTEM < 0
-            ? "#D64545"
-            : "#657789";
+let colorVariacionTEM = "#657789";
 
         // ==========================================
         // CLIENTES: METAS VS PRODUCCIÓN
@@ -1299,6 +1294,28 @@ console.log(
     asesor,
     columnaTEMHistorico,
     temAnterior
+);
+
+// ==========================================
+// VARIACIÓN TEM: ACTUAL MENOS HISTÓRICA
+// ==========================================
+
+variacionTEM =
+    Number(tem) - Number(temAnterior);
+
+colorVariacionTEM =
+    variacionTEM > 0
+        ? "#159447"
+        : variacionTEM < 0
+            ? "#D64545"
+            : "#657789";
+
+console.log(
+    "📈 VARIACIÓN TEM:",
+    asesor,
+    "Anterior:", temAnterior,
+    "Actual:", tem,
+    "Variación:", variacionTEM
 );
 
         // Mora histórica: se toma siempre el mes anterior.

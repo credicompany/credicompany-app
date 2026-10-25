@@ -898,8 +898,10 @@ border-bottom:3px solid #D99A1A;
 <th>AVANCE</th>
 <th>% AVANCE OPER</th>
 <th>META CLIENTES</th>
+<th>META CLIENTES</th>
 <th>CLIENTES ${mesClientesHistorico}</th>
 <th>CLIENTES ${mesClientesProduccion}</th>
+<th>% CUMPLIMIENTO<br>CLIENTES</th>
 <th>VARIACIÓN</th>
 <th>TEM ${mesAnterior.toUpperCase()}</th>
 <th>TEM ${mesActual.toUpperCase()}</th>
@@ -1214,6 +1216,21 @@ const metaClientes =
             clientesMesActual[asesor]
             ? clientesMesActual[asesor].size
             : 0;
+        // =========================================
+// CUMPLIMIENTO DE META DE CLIENTES
+// =========================================
+
+const metaClientesAsesor =
+    Number(meta["META CLIENTES"]) || 0;
+
+const porcentajeCumplimientoClientes =
+    metaClientesAsesor > 0
+        ? (
+            clientesMesActualAsesor /
+            metaClientesAsesor *
+            100
+          ).toFixed(1)
+        : "0.0";
 
         // VARIACIÓN.
         const variacionClientes =
@@ -1424,6 +1441,19 @@ background:${Number(porcentajeDesembolso)>=100?'#159447':Number(porcentajeDesemb
 </td>
 <td>
     <b>${clientesMesActualAsesor}</b>
+</td>
+<td style="
+    text-align:center;
+    font-weight:bold;
+    color:${
+        Number(porcentajeCumplimientoClientes) >= 100
+            ? '#159447'
+            : Number(porcentajeCumplimientoClientes) >= 80
+                ? '#B8860B'
+                : '#D64545'
+    };
+">
+    ${porcentajeCumplimientoClientes}%
 </td>
 <td style="font-weight:bold;color:${colorVariacion};">${variacionClientes>0?'+':''}${variacionClientes}</td>
 <td>${Number(temAnterior).toFixed(2)}%</td>

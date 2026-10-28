@@ -909,25 +909,6 @@ color:#667783;
 ">
 🏆 Líder del Mes
 </div>
-
-<div style="
-font-size:20px;
-font-weight:bold;
-margin-top:5px;
-">
-${mejorAsesor[0]}
-</div>
-
-<div style="
-font-size:18px;
-margin-top:4px;
-">
-💰 S/${mejorAsesor[1].toLocaleString()}
-</div>
-
-</div>
-`;
-
 }
    resumen += `
 

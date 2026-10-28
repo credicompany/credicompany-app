@@ -1753,14 +1753,17 @@ let resumen = `
  
  
    let ranking = {};
+ 
 let operaciones = {};
+ 
 let temPromedio = {};
+ 
 let clientes = {};
+ 
 let moraAsesor = {};
  
-// FILTRO AUTOMÁTICO DE PRODUCCIÓN DEL MES ACTUAL.
-// Producción, operaciones y TEM: solo por Fecha Desembolso del mes vigente.
-// Clientes y mora: cartera completa, sin filtro por fecha de desembolso.
+// PRODUCCIÓN KPI: filtrar por el mes y año actuales usando Fecha Desembolso.
+// Clientes y mora se mantienen sobre la cartera completa.
 const fechaActualKPI = new Date();
 const mesActualKPI = fechaActualKPI.getMonth();
 const anioActualKPI = fechaActualKPI.getFullYear();
@@ -1769,23 +1772,25 @@ function convertirFechaDesembolsoKPI(valor) {
     if (valor === null || valor === undefined || valor === "") return null;
     if (valor instanceof Date && !Number.isNaN(valor.getTime())) return valor;
  
-    // Fecha serial de Excel.
+    // Fechas seriales de Excel.
     if (typeof valor === "number" && Number.isFinite(valor)) {
-        const fechaSerial = new Date(Date.UTC(1899, 11, 30) + valor * 86400000);
-        return Number.isNaN(fechaSerial.getTime()) ? null : fechaSerial;
+        const fecha = new Date(Date.UTC(1899, 11, 30) + valor * 86400000);
+        return Number.isNaN(fecha.getTime()) ? null : fecha;
     }
  
     const texto = String(valor).trim();
     if (!texto) return null;
  
-    // Formatos dd/mm/aaaa, dd-mm-aaaa o dd.mm.aaaa.
-    const m = texto.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
-    if (m) {
-        const dia = Number(m[1]), mes = Number(m[2]) - 1, anio = Number(m[3]);
+    // dd/mm/aaaa, dd-mm-aaaa o dd.mm.aaaa.
+    const partes = texto.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
+    if (partes) {
+        const dia = Number(partes[1]);
+        const mes = Number(partes[2]) - 1;
+        const anio = Number(partes[3]);
         const fecha = new Date(anio, mes, dia);
         return fecha.getFullYear() === anio &&
-               fecha.getMonth() === mes &&
-               fecha.getDate() === dia ? fecha : null;
+            fecha.getMonth() === mes &&
+            fecha.getDate() === dia ? fecha : null;
     }
  
     const fecha = new Date(texto);
@@ -1794,7 +1799,7 @@ function convertirFechaDesembolsoKPI(valor) {
  
 function numeroKPI(valor) {
     if (typeof valor === "number") return Number.isFinite(valor) ? valor : 0;
-    let texto = String(valor ?? "").trim().replace(/S\//i, "").replace(/\s/g, "");
+    let texto = String(valor ?? "").trim().replace(/S\\//i, "").replace(/\s/g, "");
     if (!texto) return 0;
  
     if (texto.includes(",") && texto.includes(".")) {
@@ -1804,14 +1809,14 @@ function numeroKPI(valor) {
             texto = texto.replace(/,/g, "");
         }
     } else if (texto.includes(",")) {
-        const partes = texto.split(",");
-        texto = partes.length === 2 && partes[1].length <= 2
+        const p = texto.split(",");
+        texto = p.length === 2 && p[1].length <= 2
             ? texto.replace(",", ".")
             : texto.replace(/,/g, "");
     }
  
-    const numero = Number(texto);
-    return Number.isFinite(numero) ? numero : 0;
+    const n = Number(texto);
+    return Number.isFinite(n) ? n : 0;
 }
  
 json.forEach(c => {
@@ -1880,24 +1885,34 @@ parseFloat(
  
  
  
-       if (!Object.prototype.hasOwnProperty.call(ranking, asesor)) {
+       if(!ranking[asesor]){
+ 
+ 
+ 
     ranking[asesor] = 0;
+ 
     operaciones[asesor] = 0;
+ 
     temPromedio[asesor] = [];
+ 
     clientes[asesor] = new Set();
+ 
     moraAsesor[asesor] = 0;
+ 
+ 
+ 
 }
  
  
  
-        // Producción, operaciones y TEM: solo desembolsos del mes actual.
+        // Colocación, operaciones y TEM solo del mes actual.
 if (esDesembolsoMesActual) {
     ranking[asesor] += montoExcelKPI;
     operaciones[asesor]++;
     temPromedio[asesor].push(tem);
 }
  
-// Mora: cartera vigente completa, no solo préstamos del mes.
+// La mora se calcula con toda la cartera, no solo con créditos del mes.
 moraAsesor[asesor] += saldoCapitalVencido;
  
        
@@ -2524,42 +2539,30 @@ const historicoKPI = {};
  
                 return nombre.includes(tipoN) && nombre.includes(mesN);
  
+ 
+ 
             });
-  
+ 
+ 
+ 
         };
  
-// ==========================================
+ // ==========================================
 // PRODUCCIÓN REAL POR ASESOR
 // ==========================================
-
-const normalizarClaveKPI = (valor) => String(valor ?? "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim()
-    .toUpperCase()
-    .replace(/\s+/g, " ");
-
-// Busca la producción utilizando el nombre normalizado.
+ 
 const claveProduccion = Object.keys(ranking).find(
-    nombre =>
-        normalizarClaveKPI(nombre) === normalizarClaveKPI(asesor)
+    nombre => normalizarAsesor(nombre) === normalizarAsesor(asesor)
 );
-
+ 
 const colocacion = claveProduccion
     ? Number(ranking[claveProduccion]) || 0
     : 0;
-
+ 
 const oper = claveProduccion
     ? Number(operaciones[claveProduccion]) || 0
     : 0;
-
-console.log("AVANCE KPI:", {
-    asesor: asesor,
-    claveEncontrada: claveProduccion || "NO ENCONTRADO",
-    avance: colocacion,
-    operaciones: oper
-});
-     
+ 
 console.log("AVANCE KPI:", {
     asesor: asesor,
     claveEncontrada: claveProduccion || "NO ENCONTRADO",
@@ -2567,7 +2570,6 @@ console.log("AVANCE KPI:", {
     operaciones: oper
 });
  
-            Number(operaciones[asesor] || 0);
         const tem =
  
             temPromedio[asesor] &&
@@ -6665,11 +6667,16 @@ function cargarExcelFinanciero(){
             ==================================================
  
             VALIDAR FECHAS
+ 
             ==================================================
  
             */
  
+ 
+ 
             let fechasValidas = 0;
+ 
+ 
  
             json.forEach(c => {
  
@@ -9441,6 +9448,8 @@ function cargarMetasKPI(){
  
                 const salida = {...fila};
  
+ 
+ 
                 if(claveAsesor){
  
                     salida["Asesor (A)"] = String(fila[claveAsesor] || "").trim();
@@ -9515,6 +9524,8 @@ if(claveClientes){
  
             }
  
+ 
+ 
             console.log("✅ METAS CARGADAS:",json);
  
             console.log("📌 FILA DE ENCABEZADOS DETECTADA:",filaEncabezado + 1);
@@ -9550,7 +9561,9 @@ if(claveClientes){
  
  
 window.cargarExcelMetas = cargarMetasKPI;
-
+ 
+ 
+ 
 // ======================================================
  
 // DETALLE MORA POR PRODUCTO
@@ -9559,7 +9572,11 @@ window.cargarExcelMetas = cargarMetasKPI;
  
 function mostrarDetalleProducto(producto){
  
+ 
+ 
 const data=JSON.parse(localStorage.getItem("financiero"))||[];
+ 
+ 
  
 const clientes=data.filter(c=>
  
@@ -9574,6 +9591,7 @@ String(c["Producto"]||"").trim().toUpperCase()===producto.toUpperCase()
 );
  
  
+ 
 let html=`
  
 <div style="margin-bottom:15px">
@@ -9586,13 +9604,16 @@ let html=`
  
 </div>
  
+ 
+ 
 <div style="background:#fff;border-radius:16px;padding:16px;border:1px solid #DEE4EA">
  
 <h2 style="margin:0;text-align:center;color:#123F63">${producto}</h2>
  
 <p style="text-align:center">👥 ${clientes.length} Clientes</p>
  
-
+ 
+ 
 <div class="detallePC">
  
 <table style="width:100%;border-collapse:collapse">
@@ -9663,6 +9684,8 @@ html+=`
  
 `;
  
+ 
+ 
 clientes.forEach(c=>{
  
 const nombre=`${c["Apellido Paterno"]||""} ${c["Apellido Materno"]||""} ${c["Nombre"]||""}`.replace(/\s+/g," ").trim();
@@ -9694,6 +9717,7 @@ html+=`
 `;
  
  
+ 
 document.getElementById("listaProductos").style.display="none";
  
 document.getElementById("detalleProducto").style.display="block";
@@ -9706,11 +9730,16 @@ document.getElementById("detalleProducto").scrollIntoView({behavior:"smooth",blo
  
 function volverProductos(){
  
+ 
+ 
 document.getElementById("detalleProducto").style.display="none";
  
  
  
 document.getElementById("listaProductos").style.display="block";
+ 
+ 
+ 
 document.getElementById("listaProductos")
  
 .scrollIntoView({
@@ -9720,7 +9749,5 @@ behavior:"smooth",
 block:"start"
  
 });
- 
- 
  
 }

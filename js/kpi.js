@@ -4,124 +4,194 @@
 // ======================================================
 // MÓDULO KPI CREDICOMPANY
 // ======================================================
-//// ================================================
-// CARGAR PRODUCCIÓN KPI - VERSIÓN MEJORADA
-// ================================================
+// ======================================================
+// CARGA DE PRODUCCIÓN KPI - REGISTRO GLOBAL
+// ======================================================
 
-window.cargarExcelKPI = function() {
+window.cargarExcelKPI = function () {
 
     const input = document.getElementById("excelKPI");
-    const archivo = input?.files?.[0];
-    
-    if(!archivo){
-        alert("Seleccione el archivo de producción.");
+
+    if (!input) {
+        console.error("No existe el input #excelKPI.");
+        alert("Error: no se encontró el campo para seleccionar el Excel.");
         return;
     }
 
-    if(typeof XLSX === "undefined"){
-        alert("No se encuentra disponible la librería para leer Excel.");
-        console.error("La librería XLSX no está cargada.");
+    const archivo = input.files && input.files[0];
+
+    if (!archivo) {
+        console.warn("No se ha seleccionado ningún archivo.");
         return;
     }
+
+    if (typeof XLSX === "undefined") {
+        console.error("No está disponible la librería XLSX.");
+        alert("Error: no se encuentra la librería para leer Excel.");
+        return;
+    }
+
+    if (typeof generarKPI !== "function") {
+        console.error("La función generarKPI no está disponible.");
+        alert("Error: no se encuentra la función para generar el KPI.");
+        return;
+    }
+
+    console.log("Leyendo archivo de producción:", archivo.name);
 
     const lector = new FileReader();
 
-    lector.onload = function(e){
+    lector.onload = function (evento) {
 
-        try{
+        try {
 
-            const data = new Uint8Array(e.target.result);
+            const datos = new Uint8Array(evento.target.result);
 
-            const wb = XLSX.read(data, {
+            const libro = XLSX.read(datos, {
                 type: "array",
                 cellDates: true
             });
 
-            if(!wb.SheetNames || wb.SheetNames.length === 0){
-                throw new Error("El archivo no contiene hojas.");
+            if (!libro.SheetNames || libro.SheetNames.length === 0) {
+                throw new Error("El Excel no contiene hojas.");
             }
 
-            const hoja = wb.Sheets[wb.SheetNames[0]];
+            const nombreHoja = libro.SheetNames[0];
+            const hoja = libro.Sheets[nombreHoja];
 
-            // Mantener la fila de encabezados utilizada
-            // actualmente por el archivo de producción.
-            const json = XLSX.utils.sheet_to_json(hoja, {
+            // Conserva la fila de encabezados actual.
+            const registros = XLSX.utils.sheet_to_json(hoja, {
                 range: 6,
                 defval: ""
             });
 
-            if(!json.length){
+            if (!registros.length) {
                 throw new Error(
-                    "No se encontraron registros en la fila de encabezados esperada."
+                    "No se encontraron registros. Verifica los encabezados del Excel."
                 );
             }
 
-            console.log("📂 Archivo de producción:", archivo.name);
-            console.log("📊 Registros leídos:", json.length);
-            console.log("📋 Columnas detectadas:", Object.keys(json[0]));
-            console.log("📌 Primera fila:", json[0]);
+            console.log("Hoja:", nombreHoja);
+            console.log("Cantidad de registros:", registros.length);
+            console.log("Columnas detectadas:", Object.keys(registros[0]));
+            console.log("Primera fila:", registros[0]);
 
-            // Guardar los datos nuevos.
-            localStorage.setItem(
-                "produccionKPI",
-                JSON.stringify(json)
-            );
+            // Guardar temporalmente el estado anterior.
+            const produccionAnterior =
+                localStorage.getItem("produccionKPI");
 
-            localStorage.setItem(
-                "nombreProduccionKPI",
-                archivo.name
-            );
+            const nombreAnterior =
+                localStorage.getItem("nombreProduccionKPI");
 
-            const fechaCarga = new Date().toLocaleString("es-PE");
+            const fechaAnterior =
+                localStorage.getItem("fechaProduccionKPI");
 
-            localStorage.setItem(
-                "fechaProduccionKPI",
-                fechaCarga
-            );
+            try {
 
-            // Regenerar el KPI utilizando la producción recién cargada.
-            generarKPI(json);
+                // Guardar la nueva producción.
+                localStorage.setItem(
+                    "produccionKPI",
+                    JSON.stringify(registros)
+                );
 
-            // Actualizar la información del archivo activo.
-            if(typeof mostrarArchivosActivos === "function"){
-                mostrarArchivosActivos();
+                localStorage.setItem(
+                    "nombreProduccionKPI",
+                    archivo.name
+                );
+
+                localStorage.setItem(
+                    "fechaProduccionKPI",
+                    new Date().toLocaleString("es-PE")
+                );
+
+                // Actualizar los indicadores.
+                generarKPI(registros);
+
+                // Actualizar la información del archivo.
+                if (typeof mostrarArchivosActivos === "function") {
+                    mostrarArchivosActivos();
+                }
+
+                console.log(
+                    "PRODUCCIÓN ACTUALIZADA:",
+                    registros.length,
+                    "registros"
+                );
+
+                alert(
+                    "Producción procesada correctamente.\n\n" +
+                    "Archivo: " + archivo.name + "\n" +
+                    "Registros: " + registros.length
+                );
+
+            } catch (errorKPI) {
+
+                // Restaurar los datos anteriores si falla el KPI.
+                if (produccionAnterior === null) {
+                    localStorage.removeItem("produccionKPI");
+                } else {
+                    localStorage.setItem(
+                        "produccionKPI",
+                        produccionAnterior
+                    );
+                }
+
+                if (nombreAnterior === null) {
+                    localStorage.removeItem("nombreProduccionKPI");
+                } else {
+                    localStorage.setItem(
+                        "nombreProduccionKPI",
+                        nombreAnterior
+                    );
+                }
+
+                if (fechaAnterior === null) {
+                    localStorage.removeItem("fechaProduccionKPI");
+                } else {
+                    localStorage.setItem(
+                        "fechaProduccionKPI",
+                        fechaAnterior
+                    );
+                }
+
+                throw errorKPI;
             }
 
-            console.log("✅ KPI regenerado con la producción nueva.");
+        } catch (error) {
+
+            console.error("ERROR AL PROCESAR PRODUCCIÓN:", error);
 
             alert(
-                "Producción cargada correctamente.\n" +
-                "Registros leídos: " + json.length +
-                "\nArchivo: " + archivo.name
-            );
-
-        }catch(error){
-
-            console.error(
-                "❌ Error al cargar o generar el KPI:",
-                error
-            );
-
-            alert(
-                "No se pudo actualizar el KPI.\n" +
+                "No se pudo actualizar el KPI.\n\n" +
                 "Detalle: " + error.message
             );
 
-        }
-        
+        } finally {
 
+            // Permite volver a seleccionar el mismo archivo.
+            input.value = "";
+
+        }
     };
 
-    lector.onerror = function(){
+    lector.onerror = function () {
 
-        console.error("❌ No se pudo leer el archivo seleccionado.");
+        console.error("No se pudo leer el archivo Excel.");
 
         alert("No se pudo leer el archivo de producción.");
 
+        input.value = "";
     };
 
-   lector.readAsArrayBuffer(archivo);
+    lector.readAsArrayBuffer(archivo);
 };
+
+console.log(
+    "Carga de producción registrada:",
+    typeof window.cargarExcelKPI
+);
+
+// ======================================================
 // 1. Funciones Generales
 // 2. KPI Gerencial
 // 3. KPI Financiero

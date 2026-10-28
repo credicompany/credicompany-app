@@ -8,7 +8,7 @@
 // CARGA DE PRODUCCIÓN KPI - REGISTRO GLOBAL
 // ======================================================
 
-window.cargarExcelKPI = function () {
+function cargarExcelKPI() {
 
     const input = document.getElementById("excelKPI");
 
@@ -186,11 +186,7 @@ window.cargarExcelKPI = function () {
     lector.readAsArrayBuffer(archivo);
 };
 
-console.log(
-    "Carga de producción registrada:",
-    typeof window.cargarExcelKPI
-);
-
+window.cargarExcelKPI = cargarExcelKPI;
 // ======================================================
 // 1. Funciones Generales
 // 2. KPI Gerencial

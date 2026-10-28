@@ -2936,37 +2936,41 @@ font-weight:bold;
 </div>
 <div id="panelCargaKPI">
 
+    <!-- CARGAR METAS -->
     <input
         type="file"
         id="excelMetas"
         accept=".xlsx,.xls"
         style="display:none;"
-      onchange="cargarExcelMetas()"
-      
+        onchange="cargarExcelMetas()"
+    >
+
     <button
         type="button"
         class="btn-verde"
-        onclick="document.getElementById('excelMetas').click()">
+        onclick="document.getElementById('excelMetas').click()"
+    >
         🎯 Cargar Metas
     </button>
 
+    <!-- CARGAR PRODUCCIÓN -->
     <input
         type="file"
         id="excelKPI"
         accept=".xlsx,.xls"
         style="display:none;"
-         onchange="window.cargarExcelKPI()"
-      >
+        onchange="window.cargarExcelKPI()"
+    >
 
     <button
         type="button"
         class="btn-verde"
-        onclick="document.getElementById('excelKPI').click()">
+        onclick="document.getElementById('excelKPI').click()"
+    >
         📂 Cargar Producción
     </button>
 
 </div>
-
 <div id="kpiResumen"></div>
 </div>
 <div

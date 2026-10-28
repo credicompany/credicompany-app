@@ -4738,61 +4738,125 @@ if(claveClientes){
 // ==========================================
 // CARGAR PRODUCCIÓN KPI
 // ==========================================
+```javascript
+// ==========================================
+// CARGAR PRODUCCIÓN KPI — VERSIÓN MEJORADA
+// ==========================================
 function cargarExcelKPI(){
 
-    const archivo =
-    document.getElementById("excelKPI").files[0];
+    const input = document.getElementById("excelKPI");
+    const archivo = input?.files?.[0];
 
     if(!archivo){
         alert("Seleccione el archivo de producción.");
         return;
     }
 
+    if(typeof XLSX === "undefined"){
+        alert("No se encuentra disponible la librería para leer Excel.");
+        console.error("La librería XLSX no está cargada.");
+        return;
+    }
+
     const lector = new FileReader();
 
     lector.onload = function(e){
-        const data =
-        new Uint8Array(e.target.result);
 
-        const wb =
-        XLSX.read(data,{type:"array"});
+        try{
 
-        const hoja =
-        wb.Sheets[wb.SheetNames[0]];
+            const data = new Uint8Array(e.target.result);
 
-        const json =
-XLSX.utils.sheet_to_json(
-    hoja,
-    {
-        range: 6,
-        defval: ""
-    }
-);
+            const wb = XLSX.read(data, {
+                type: "array",
+                cellDates: true
+            });
 
-        localStorage.setItem(
-            "produccionKPI",
-            JSON.stringify(json)
-        );
+            if(!wb.SheetNames || wb.SheetNames.length === 0){
+                throw new Error("El archivo no contiene hojas.");
+            }
 
-        localStorage.setItem(
-            "nombreProduccionKPI",
-            archivo.name
-        );
+            const hoja = wb.Sheets[wb.SheetNames[0]];
 
-        localStorage.setItem(
-            "fechaProduccionKPI",
-            new Date().toLocaleString()
-        );
+            // Mantener la fila de encabezados utilizada
+            // actualmente por el archivo de producción.
+            const json = XLSX.utils.sheet_to_json(hoja, {
+                range: 6,
+                defval: ""
+            });
 
-        alert("✅ Producción cargada correctamente.");
+            if(!json.length){
+                throw new Error(
+                    "No se encontraron registros en la fila de encabezados esperada."
+                );
+            }
 
-generarKPI(json);
+            console.log("📂 Archivo de producción:", archivo.name);
+            console.log("📊 Registros leídos:", json.length);
+            console.log("📋 Columnas detectadas:", Object.keys(json[0]));
+            console.log("📌 Primera fila:", json[0]);
+
+            // Guardar los datos nuevos.
+            localStorage.setItem(
+                "produccionKPI",
+                JSON.stringify(json)
+            );
+
+            localStorage.setItem(
+                "nombreProduccionKPI",
+                archivo.name
+            );
+
+            const fechaCarga = new Date().toLocaleString("es-PE");
+
+            localStorage.setItem(
+                "fechaProduccionKPI",
+                fechaCarga
+            );
+
+            // Regenerar el KPI utilizando la producción recién cargada.
+            generarKPI(json);
+
+            // Actualizar la información del archivo activo.
+            if(typeof mostrarArchivosActivos === "function"){
+                mostrarArchivosActivos();
+            }
+
+            console.log("✅ KPI regenerado con la producción nueva.");
+
+            alert(
+                "Producción cargada correctamente.\n" +
+                "Registros leídos: " + json.length +
+                "\nArchivo: " + archivo.name
+            );
+
+        }catch(error){
+
+            console.error(
+                "❌ Error al cargar o generar el KPI:",
+                error
+            );
+
+            alert(
+                "No se pudo actualizar el KPI.\n" +
+                "Detalle: " + error.message
+            );
+
+        }
+
+    };
+
+    lector.onerror = function(){
+
+        console.error("❌ No se pudo leer el archivo seleccionado.");
+
+        alert("No se pudo leer el archivo de producción.");
 
     };
 
     lector.readAsArrayBuffer(archivo);
 
 }
+```
 // ======================================================
 // DETALLE MORA POR PRODUCTO
 // ======================================================

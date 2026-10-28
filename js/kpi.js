@@ -1235,10 +1235,16 @@ const porcentajeCumplimientoClientes =
 // RANKING DE DESEMPEÑO DEL ASESOR
 // =========================================
 
-// Limitar cada indicador a un máximo de 100%.
+// PUNTAJE DE COLOCACIÓN
+// Calculado directamente con los valores reales y la meta.
 const puntajeColocacion = Math.min(
     100,
-    Math.max(0, Number(porcentajeDesembolso) || 0)
+    Math.max(
+        0,
+        Number(metaDesembolso) > 0
+            ? (Number(colocacion) / Number(metaDesembolso)) * 100
+            : 0
+    )
 );
 
 const puntajeOperaciones = Math.min(

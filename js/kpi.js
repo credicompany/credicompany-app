@@ -1742,8 +1742,6 @@ guardarGerencialFirebase(resumen);
     
 guardarHistoricoKPI(historicoKPI, anioActual, mesActual);
 
-}
-
 // ======================================================
 // FIREBASE KPI GERENCIAL
 // ======================================================
@@ -2696,13 +2694,6 @@ if(divResumen){
 
     divResumen.innerHTML = datos.resumen || "";
 
-}
-
-            document.getElementById(
-                "rankingKPI"
-            ).innerHTML =
-            datos.rankingKPIHTML;
-
         }
 
         console.log(
@@ -2822,6 +2813,7 @@ let resumen =
 document.getElementById("panelResumen");
 
 let asesores =
+
 document.getElementById("panelAsesores");
 
 let rentabilidad =

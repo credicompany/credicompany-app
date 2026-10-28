@@ -1792,11 +1792,23 @@ console.log(
 
 );
 
-        let monto =
+       const fechaCreditoKPI = fechaDesembolsoKPI(
+    c["Fecha Desembolso"]
+);
 
-        parseFloat(c["Monto Otorgado"]) || 0;
+const correspondeMesActual = fechaCreditoKPI &&
+    fechaCreditoKPI.getMonth() === mesActualKPI &&
+    fechaCreditoKPI.getFullYear() === anioActualKPI;
 
- 
+const monto = correspondeMesActual
+    ? (
+        parseFloat(
+            String(c["Monto Otorgado"] ?? "")
+                .replace(/,/g, "")
+        ) || 0
+    )
+    : 0;
+
 
         let tem =
 
@@ -2498,28 +2510,30 @@ const historicoKPI = {};
 
         };
 
- 
+ // ==========================================
+// PRODUCCIÓN REAL POR ASESOR
+// ==========================================
 
-        // ==========================================
+const claveProduccion = Object.keys(ranking).find(
+    nombre => normalizarAsesor(nombre) === normalizarAsesor(asesor)
+);
 
-        // DATOS REALES DEL ASESOR
+const colocacion = claveProduccion
+    ? Number(ranking[claveProduccion]) || 0
+    : 0;
 
-        // ==========================================
+const oper = claveProduccion
+    ? Number(operaciones[claveProduccion]) || 0
+    : 0;
 
- 
-
-        const colocacion =
-
-            Number(ranking[asesor] || 0);
-
- 
-
-        const oper =
+console.log("AVANCE KPI:", {
+    asesor: asesor,
+    claveEncontrada: claveProduccion || "NO ENCONTRADO",
+    avance: colocacion,
+    operaciones: oper
+});
 
             Number(operaciones[asesor] || 0);
-
- 
-
         const tem =
 
             temPromedio[asesor] &&
@@ -6621,13 +6635,46 @@ function cargarExcelFinanciero(){
             ==================================================
 
             */
-
- 
-
             let fechasValidas = 0;
 
- 
+// ==========================================
+// PERIODO AUTOMÁTICO DE COLOCACIÓN
+// ==========================================
+const fechaActualKPI = new Date();
+const mesActualKPI = fechaActualKPI.getMonth();
+const anioActualKPI = fechaActualKPI.getFullYear();
 
+function fechaDesembolsoKPI(valor) {
+    if (valor instanceof Date) {
+        return valor;
+    }
+
+    if (typeof valor === "number") {
+        // Fecha serial de Excel
+        return new Date(
+            Date.UTC(1899, 11, 30) + valor * 86400000
+        );
+    }
+
+    if (!valor) return null;
+
+    const texto = String(valor).trim();
+    const partes = texto.match(
+        /^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/
+    );
+
+    if (partes) {
+        return new Date(
+            Number(partes[3]),
+            Number(partes[2]) - 1,
+            Number(partes[1])
+        );
+    }
+
+    const fecha = new Date(texto);
+
+    return Number.isNaN(fecha.getTime()) ? null : fecha;
+}
             json.forEach(c => {
 
  

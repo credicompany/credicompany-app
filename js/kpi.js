@@ -1885,6 +1885,8 @@ localStorage.setItem(
 guardarGerencialFirebase(resumen);
     
 guardarHistoricoKPI(historicoKPI, anioActual, mesActual);
+} 
+
 
 // ======================================================
 // FIREBASE KPI GERENCIAL

@@ -2524,30 +2524,42 @@ const historicoKPI = {};
  
                 return nombre.includes(tipoN) && nombre.includes(mesN);
  
- 
- 
             });
- 
- 
- 
+  
         };
  
- // ==========================================
+// ==========================================
 // PRODUCCIÓN REAL POR ASESOR
 // ==========================================
- 
+
+const normalizarClaveKPI = (valor) => String(valor ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g, " ");
+
+// Busca la producción utilizando el nombre normalizado.
 const claveProduccion = Object.keys(ranking).find(
-    nombre => normalizarAsesor(nombre) === normalizarAsesor(asesor)
+    nombre =>
+        normalizarClaveKPI(nombre) === normalizarClaveKPI(asesor)
 );
- 
+
 const colocacion = claveProduccion
     ? Number(ranking[claveProduccion]) || 0
     : 0;
- 
+
 const oper = claveProduccion
     ? Number(operaciones[claveProduccion]) || 0
     : 0;
- 
+
+console.log("AVANCE KPI:", {
+    asesor: asesor,
+    claveEncontrada: claveProduccion || "NO ENCONTRADO",
+    avance: colocacion,
+    operaciones: oper
+});
+     
 console.log("AVANCE KPI:", {
     asesor: asesor,
     claveEncontrada: claveProduccion || "NO ENCONTRADO",
@@ -6653,16 +6665,11 @@ function cargarExcelFinanciero(){
             ==================================================
  
             VALIDAR FECHAS
- 
             ==================================================
  
             */
  
- 
- 
             let fechasValidas = 0;
- 
- 
  
             json.forEach(c => {
  

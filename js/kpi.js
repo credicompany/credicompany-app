@@ -773,49 +773,6 @@ console.log(
     "CLIENTES EN CARTERA:",
     totalClientesActual
 );
-    
-// ==========================================
-// RANKING COLOCACIÓN
-// ==========================================
-
-// ==========================================
-// INCLUIR TODOS LOS ASESORES ACTIVOS
-// ==========================================
-usuarios.forEach(u => {
-
-    const asesor = String(
-        u.user || u.usuario || u.nombre || ""
-    ).trim().toUpperCase();
-
-    if (!asesor || asesor === "ADMIN") return;
-
-    ranking[asesor] = Number(ranking[asesor] || 0);
-    operaciones[asesor] = Number(operaciones[asesor] || 0);
-
-    if (!temPromedio[asesor]) temPromedio[asesor] = [];
-    if (!clientes[asesor]) clientes[asesor] = new Set();
-    if (!moraAsesor[asesor]) moraAsesor[asesor] = 0;
-
-});
-
-let top =
-Object.entries(ranking)
-
-.filter(([asesor]) =>
-    asesor.toUpperCase() !== "ADMIN"
-)
-
-.sort((a,b) => b[1] - a[1]);
-console.log("RANKING COLOCACION REAL:", ranking);
-console.log("TOP COLOCACION REAL:", top);
-let mejorAsesor =
-top.length > 0
-?
-top[0]
-:
-null;
-
-if(mejorAsesor){
 
 resumen += `
 
@@ -1773,46 +1730,6 @@ box-shadow:0 2px 8px rgba(0,0,0,.08);
 </div>
 `;
     
-let rankingKPIHTML = "";
-top
-.filter(([asesor]) =>
-    asesor.toUpperCase() !== "ADMIN"
-)
-.slice(0,10)
-.forEach((r,index)=>{
-
-let medalla="🥉";
-if(index===0) medalla="🥇";
-if(index===1) medalla="🥈";
-
-rankingKPIHTML += `
-<div style="
-font-size:11px;
-line-height:1.2;
-margin:2px 0;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
-">
-
-${medalla}
-${r[0].substring(0,8)}
-→ S/${Number(r[1]).toLocaleString("es-PE")}
-
-</div>
-`;
-
-});
-
-localStorage.setItem(
-"rankingKPIHTML",
-rankingKPIHTML
-);
-
-if(document.getElementById("rankingKPI")){
-document.getElementById("rankingKPI").innerHTML =
-rankingKPIHTML;
-}    
 document.getElementById(
     "kpiResumen"
 ).innerHTML = resumen;
@@ -1821,7 +1738,7 @@ localStorage.setItem(
     "resumenKPI",
     resumen
 );
-guardarGerencialFirebase(resumen,rankingKPIHTML);
+guardarGerencialFirebase(resumen);
     
 guardarHistoricoKPI(historicoKPI, anioActual, mesActual);
 
@@ -1830,15 +1747,11 @@ guardarHistoricoKPI(historicoKPI, anioActual, mesActual);
 // ======================================================
 // FIREBASE KPI GERENCIAL
 // ======================================================
-function guardarGerencialFirebase(
-    resumen,
-    rankingKPIHTML
-){
+function guardarGerencialFirebase(resumen){
 
     db.ref("kpiGerencial").set({
 
         resumen,
-        rankingKPIHTML,
 
         nombreMeta:
         localStorage.getItem("nombreMetaKPI") || "",
@@ -2784,12 +2697,6 @@ if(divResumen){
     divResumen.innerHTML = datos.resumen || "";
 
 }
-        
-        
-        if(
-            datos.rankingKPIHTML &&
-            document.getElementById("rankingKPI")
-        ){
 
             document.getElementById(
                 "rankingKPI"

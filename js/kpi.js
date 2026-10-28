@@ -4735,14 +4735,11 @@ if(claveClientes){
     lector.readAsArrayBuffer(archivo);
 
 }
-// ==========================================
-// CARGAR PRODUCCIÓN KPI
-// ==========================================
-```javascript
-// ==========================================
-// CARGAR PRODUCCIÓN KPI — VERSIÓN MEJORADA
-// ==========================================
-function cargarExcelKPI(){
+// ================================================
+// CARGAR PRODUCCIÓN KPI - VERSIÓN MEJORADA
+// ================================================
+
+window.cargarExcelKPI = function() {
 
     const input = document.getElementById("excelKPI");
     const archivo = input?.files?.[0];
@@ -4853,10 +4850,9 @@ function cargarExcelKPI(){
 
     };
 
-    lector.readAsArrayBuffer(archivo);
+   lector.readAsArrayBuffer(archivo);
+};
 
-}
-```
 // ======================================================
 // DETALLE MORA POR PRODUCTO
 // ======================================================

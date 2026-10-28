@@ -957,27 +957,7 @@ console.log(
     totalClientesActual
 );
 
-resumen += `
-
-<div style="
-background:#FFFFFF;
-border-left:5px solid #123F63;
-color:#243746;
-padding:12px;
-border-radius:12px;
-margin-bottom:12px;
-">
-
-<div style="
-font-size:14px;
-font-weight:600;
-color:#667783;
-">
-🏆 Líder del Mes
-</div>
-}
    resumen += `
-
 <div class="card">
 
 

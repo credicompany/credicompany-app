@@ -1797,6 +1797,15 @@ function convertirFechaDesembolsoKPI(valor) {
     return Number.isNaN(fecha.getTime()) ? null : fecha;
 }
  
+function normalizarClaveKPI(valor) {
+    return String(valor ?? "")
+        .normalize("NFD")
+        .replace(/[\\u0300-\\u036f]/g, "")
+        .trim()
+        .toUpperCase()
+        .replace(/\\s+/g, " ");
+}
+ 
 function numeroKPI(valor) {
     if (typeof valor === "number") return Number.isFinite(valor) ? valor : 0;
     let texto = String(valor ?? "").trim().replace(/S\\//i, "").replace(/\s/g, "");
@@ -1823,13 +1832,7 @@ json.forEach(c => {
  
 console.log(Object.keys(c));
  
-        let asesor =
- 
-        (c["Asesor(a)"] || "SIN ASESOR")
- 
-        .trim()
- 
-        .toUpperCase();
+        let asesor = normalizarClaveKPI(c["Asesor(a)"] || "SIN ASESOR");
  
 console.log(
  
@@ -2552,7 +2555,7 @@ const historicoKPI = {};
 // ==========================================
  
 const claveProduccion = Object.keys(ranking).find(
-    nombre => normalizarAsesor(nombre) === normalizarAsesor(asesor)
+    nombre => normalizarClaveKPI(nombre) === normalizarClaveKPI(asesor)
 );
  
 const colocacion = claveProduccion
@@ -9603,9 +9606,7 @@ let html=`
 </button>
  
 </div>
- 
- 
- 
+  
 <div style="background:#fff;border-radius:16px;padding:16px;border:1px solid #DEE4EA">
  
 <h2 style="margin:0;text-align:center;color:#123F63">${producto}</h2>

@@ -1187,6 +1187,10 @@ let cantidadTemAgosto = 0;
             ? clientesMesActual[asesor].size
             : 0;
 
+        // META DE CLIENTES DEL ASESOR
+const metaClientes =
+    Number(meta["META CLIENTES"]) || 0;
+
         // VARIACIÓN.
         const variacionClientes =
             clientesMesActualAsesor -

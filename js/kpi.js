@@ -1079,7 +1079,7 @@ let totalMetaOperaciones = 0;
 let totalAvanceOperaciones = 0;
 
 let totalClientesHistorico = 0;
-
+let totalMetaClientes = 0;
 let totalMoraJulio = 0;
 let totalMoraAgosto = 0;
 let totalMoraAgosto31Mas = 0;
@@ -1334,10 +1334,12 @@ console.log(
 <td>${metaOperaciones}</td>
 <td>${oper}</td>
 <td style="background:${Number(porcentajeOperaciones)>=100?'#22B55A':Number(porcentajeOperaciones)>=80?'#E0AA24':'#D64545'};color:white;font-weight:bold;">${porcentajeOperaciones}%</td>
+
+<td><b>${metaClientes}</b></td>
+
 <td>
     <b>${clientesHistoricoMes}</b>
 </td>
-
 <td>
     <b>${clientesMesActualAsesor}</b>
 </td>
@@ -1357,6 +1359,7 @@ console.log(
         totalAvanceColocacion += colocacion;
         totalMetaOperaciones += metaOperaciones;
         totalAvanceOperaciones += oper;
+        totalMetaClientes += metaClientes;
         totalClientesHistorico += clientesHistoricoMes;
         totalClientesSiguiente += clientesMesActualAsesor;
         totalMoraJulio += moraAnterior;
@@ -1477,6 +1480,10 @@ ${totalAvanceOperaciones}
 
 <td>
 ${porcentajeTotalOperaciones}%
+</td>
+
+<td>
+${totalMetaClientes}
 </td>
 
 <td>

@@ -3512,17 +3512,9 @@ function cargarMetasKPI(){
                 const claveAsesor = buscarClave(["ASESOR"]);
                 const claveColocacion = buscarClave(["COLOCACION"]);
                 const claveOperaciones = buscarClave(["OPERACIONES"]);
-                const claveClientes = claves.find(clave => {
-    const nombre = normalizarTexto(clave);
-    return [
-        "META CLIENTES",
-        "META_CLIENTES",
-        "CLIENTES META",
-        "META DE CLIENTES"
-    ].includes(nombre);
-}) || claves.find(clave => {
-    return normalizarTexto(clave) === "CLIENTES";
-});
+               const claveClientes = claves.find(clave =>
+    normalizarTexto(clave) === "CLIENTES"
+);
 
                 const salida = {...fila};
 

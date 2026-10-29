@@ -3516,26 +3516,28 @@ function cargarMetasKPI(){
     normalizarTexto(clave) === "CLIENTES"
 );
 
-                const salida = {...fila};
+const salida = {...fila};
 
-                if(claveAsesor){
-                    salida["Asesor (A)"] = String(fila[claveAsesor] || "").trim();
-                }
+if (claveAsesor) {
+    salida["Asesor (A)"] = String(
+        fila[claveAsesor] || ""
+    ).trim();
+}
 
-                if(claveColocacion){
-                    salida["COLOCACION"] = fila[claveColocacion];
-                }
+if (claveColocacion) {
+    salida["COLOCACION"] = fila[claveColocacion];
+}
 
-                if(claveOperaciones){
-                    salida["OPERACIONES"] = fila[claveOperaciones];
-                }
-                
-                if (claveClientes) {
-          salida["META CLIENTES"] = Number(fila[claveClientes]) || 0;
-                }
-                
-                return salida;
+if (claveOperaciones) {
+    salida["OPERACIONES"] = fila[claveOperaciones];
+}
 
+if (claveClientes) {
+    salida["META CLIENTES"] =
+        Number(fila[claveClientes]) || 0;
+}
+
+return salida;
             }).filter(fila =>
                 String(fila["Asesor (A)"] || "").trim() !== ""
             );

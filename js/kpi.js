@@ -3883,3 +3883,9 @@ block:"start"
 });
 
 }
+
+// ========================================
+// EXPONER FUNCIONES PARA LOS BOTONES HTML
+// ========================================
+window.cargarMetasKPI = cargarMetasKPI;
+window.cargarExcelKPI = cargarExcelKPI;

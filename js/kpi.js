@@ -856,150 +856,8 @@ margin-top:4px;
 `;
 
 }
-
-    resumen += `
-    
-<style>
-/* =========================================
-   CREDICOMPANY - DISEÑO KPI POR ASESOR
-   ========================================= */
-
-.tabla-kpi-asesor {
-    width: 100%;
-    min-width: 1450px;
-    border-collapse: separate;
-    border-spacing: 0;
-    table-layout: auto;
-    font-size: 12px;
-    text-align: center;
-    color: #263746;
-    background: #FFFFFF;
-}
-
-/* ENCABEZADOS */
-.tabla-kpi-asesor th {
-    background: #123F63;
-    color: #FFFFFF;
-    padding: 11px 8px;
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 1.3;
-    white-space: normal;
-    vertical-align: middle;
-    border-bottom: 3px solid #0B2F4A;
-}
-
-/* CELDAS */
-.tabla-kpi-asesor td {
-    padding: 8px 7px;
-    line-height: 1.25;
-    white-space: nowrap;
-    vertical-align: middle;
-    border-bottom: 1px solid #E6EDF3;
-    font-variant-numeric: tabular-nums;
-}
-
-/* FILAS ALTERNADAS */
-.tabla-kpi-asesor tr:nth-child(even) td {
-    background-color: #F4F8FB;
-}
-
-/* EFECTO AL PASAR EL CURSOR */
-.tabla-kpi-asesor tr:hover td {
-    background-color: #E8F3FA;
-}
-
-/* NOMBRE DEL ASESOR */
-.tabla-kpi-asesor td:first-child {
-    font-weight: 700;
-    color: #123F63;
-    text-align: left;
-    padding-left: 12px;
-}
-
-/* META CLIENTES */
-.tabla-kpi-asesor td:nth-child(8) {
-    font-weight: 800;
-    color: #123F63;
-    background-color: #EAF3FA;
-}
-
-/* VARIACIÓN DE CLIENTES */
-.tabla-kpi-asesor td:nth-child(11) {
-    font-weight: 800;
-}
-
-/* COLUMNAS DE MORA */
-.tabla-kpi-asesor td:nth-child(14),
-.tabla-kpi-asesor td:nth-child(15),
-.tabla-kpi-asesor td:nth-child(16),
-.tabla-kpi-asesor td:nth-child(17) {
-    font-weight: 700;
-}
-
-/* SEMÁFORO */
-.tabla-kpi-asesor th:last-child,
-.tabla-kpi-asesor td:last-child {
-    min-width: 35px;
-    width: 35px;
-    text-align: center;
-}
-
-/* TOTAL EMPRESA */
-.tabla-kpi-asesor tr:last-child td {
-    background-color: #E7F0F7;
-    color: #123F63;
-    font-weight: 800;
-    border-top: 3px solid #123F63;
-    border-bottom: none;
-    padding-top: 12px;
-    padding-bottom: 12px;
-}
-
-/* CONTENEDOR CON DESPLAZAMIENTO HORIZONTAL */
-.contenedor-kpi-asesor {
-    overflow-x: auto;
-    overflow-y: hidden;
-    width: 100%;
-    -webkit-overflow-scrolling: touch;
-    border-radius: 10px;
-    padding-bottom: 8px;
-}
-
-/* BARRA DE DESPLAZAMIENTO */
-.contenedor-kpi-asesor::-webkit-scrollbar {
-    height: 8px;
-}
-
-.contenedor-kpi-asesor::-webkit-scrollbar-thumb {
-    background: #9DB6C9;
-    border-radius: 10px;
-}
-
-.contenedor-kpi-asesor::-webkit-scrollbar-track {
-    background: #EEF3F7;
-    border-radius: 10px;
-}
-
-/* PANTALLAS PEQUEÑAS */
-@media (max-width: 768px) {
-    .tabla-kpi-asesor {
-        font-size: 11px;
-        min-width: 1450px;
-    }
-
-    .tabla-kpi-asesor th {
-        padding: 9px 6px;
-    }
-
-    .tabla-kpi-asesor td {
-        padding: 7px 6px;
-    }
-}
-</style>
-`;
-`;
    resumen += `
+
 <div class="card">
 
 <h4 style="
@@ -1009,9 +867,21 @@ font-size:14px;
 🎯 KPI POR ASESOR
 </h4>
 
-<div class="contenedor-kpi-asesor">
+<div style="
+overflow-x:auto;
+overflow-y:hidden;
+width:100%;
+-webkit-overflow-scrolling:touch;
+padding-bottom:8px;
+">
 
-<table class="tabla-kpi-asesor">
+<table style="
+width:100%;
+min-width:1100px;
+border-collapse:collapse;
+font-size:14px;
+text-align:center;
+">
 
 <tr style="
 background:#123F63;
@@ -3883,9 +3753,3 @@ block:"start"
 });
 
 }
-
-// ========================================
-// EXPONER FUNCIONES PARA LOS BOTONES HTML
-// ========================================
-window.cargarMetasKPI = cargarMetasKPI;
-window.cargarExcelKPI = cargarExcelKPI;

@@ -3756,15 +3756,11 @@ block:"start"
 }
 // ==========================================================
 
-// CUADRO DE DESEMBOLSOS AGRUPADO POR ASESOR
+// CREDICOMPANY - CUADRO DE DESEMBOLSOS POR ASESOR
 
-// - Una fila por asesor para la fecha más reciente del Excel.
+// Versión compacta para computadora y celular.
 
-// - Cliente: cantidad de clientes distintos (sin mostrar códigos).
-
-// - Total desembolsado: suma de todas las operaciones del asesor.
-
-// - Si producto/condición/plazo varían, se muestra "VARIOS".
+// Agrupa por asesor, cuenta clientes distintos y suma importes.
 
 // ==========================================================
 
@@ -3778,9 +3774,15 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
     const normalizar = v => String(v ?? "")
 
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .normalize("NFD")
 
-        .replace(/\s+/g, " ").trim().toUpperCase();
+        .replace(/[\u0300-\u036f]/g, "")
+
+        .replace(/\s+/g, " ")
+
+        .trim()
+
+        .toUpperCase();
 
  
 
@@ -3814,6 +3816,10 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
         if (valor instanceof Date && !isNaN(valor.getTime())) return valor;
 
+ 
+
+        // Fecha serial de Excel
+
         if (typeof valor === "number" && Number.isFinite(valor)) {
 
             const d = new Date(Date.UTC(1899, 11, 30) + valor * 86400000);
@@ -3822,17 +3828,27 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
         }
 
+ 
+
         if (valor == null || String(valor).trim() === "") return null;
 
         const texto = String(valor).trim();
 
         const m = texto.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
 
+ 
+
         let d;
 
-        if (m) d = new Date(Date.UTC(Number(m[3]), Number(m[2])-1, Number(m[1])));
+        if (m) {
 
-        else d = new Date(texto);
+            d = new Date(Date.UTC(Number(m[3]), Number(m[2]) - 1, Number(m[1])));
+
+        } else {
+
+            d = new Date(texto);
+
+        }
 
         return isNaN(d.getTime()) ? null : d;
 
@@ -3844,7 +3860,13 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
         if (typeof valor === "number") return Number.isFinite(valor) ? valor : 0;
 
-        const n = Number(String(valor ?? "").trim().replace(/[S\/\s,]/g, ""));
+        let texto = String(valor ?? "").trim().replace(/[S\/\s]/g, "");
+
+        // Admite formatos como 1,805.00
+
+        texto = texto.replace(/,/g, "");
+
+        const n = Number(texto);
 
         return Number.isFinite(n) ? n : 0;
 
@@ -3854,7 +3876,9 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
     const soles = n => Number(n || 0).toLocaleString("es-PE", {
 
-        minimumFractionDigits: 2, maximumFractionDigits: 2
+        minimumFractionDigits: 2,
+
+        maximumFractionDigits: 2
 
     });
 
@@ -3862,33 +3886,49 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
     const aviso = mensaje => `
 
-      <section id="cuadroDesembolsosAsesor" class="desembolsos-panel">
+        <section id="cuadroDesembolsosAsesor" class="desembolsos-panel">
 
-        <h3>CUADRO DE DESEMBOLSOS POR ASESOR</h3>
+            <h3>CUADRO DE DESEMBOLSOS POR ASESOR</h3>
 
-        <p>${escaparHTMLDesembolso(mensaje)}</p>
+            <p>${escaparHTMLDesembolso(mensaje)}</p>
 
-      </section>`;
+        </section>`;
 
  
 
-    if (!filas.length) return aviso("No se recibieron registros de producción.");
+    if (!filas.length) {
+
+        return aviso("No se recibieron registros de producción. Verifica la variable enviada.");
+
+    }
 
  
 
     const muestra = filas.find(f => f && typeof f === "object") || {};
 
+ 
+
+    // Encabezados conocidos del archivo DATA GENERAL
+
     const colFecha = buscarColumna(muestra, ["Fecha Desembolso"]);
 
-    const colMonto = buscarColumna(muestra, ["Monto Otorgado", "Monto Desembolsado", "Total Desembolsado"]);
+    const colMonto = buscarColumna(muestra, [
+
+        "Monto Otorgado", "Monto Desembolsado", "Total Desembolsado"
+
+    ]);
 
     const colAsesor = buscarColumna(muestra, ["Asesor(a)", "Asesor"]);
 
-    const colTipo = buscarColumna(muestra, ["Tipo Operacion", "Tipo Operación", "Condicion", "Condición"]);
+    const colTipo = buscarColumna(muestra, [
+
+        "Tipo Operacion", "Tipo Operación", "Condicion", "Condición"
+
+    ]);
 
     const colProducto = buscarColumna(muestra, ["Producto"]);
 
-    const colCuotas = buscarColumna(muestra, ["Plazo", "Cuotas", "N° Cuotas"]);
+    const colCuotas = buscarColumna(muestra, ["Cuotas", "N° Cuotas", "Numero Cuotas", "Plazo"]);
 
     const colEstado = buscarColumna(muestra, ["Estado Cartera", "Estado"]);
 
@@ -3900,13 +3940,21 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
     const colCliente = buscarColumna(muestra, ["Cliente", "Apellidos y Nombres"]);
 
-    const colCodigoCliente = buscarColumna(muestra, ["Cod Cliente", "Código Cliente", "Codigo Cliente", "DNI"]);
+    const colCodigoCliente = buscarColumna(muestra, [
+
+        "Cod Cliente", "Código Cliente", "Codigo Cliente", "DNI", "Documento"
+
+    ]);
 
  
 
     if (!colFecha || !colMonto || !colAsesor) {
 
-        return aviso("No se reconocieron las columnas Fecha Desembolso, Monto Otorgado y Asesor(a).");
+        return aviso(
+
+            "No se reconocieron las columnas Fecha Desembolso, Monto Otorgado y Asesor(a)."
+
+        );
 
     }
 
@@ -3916,27 +3964,39 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
         let cliente = colCliente ? String(f[colCliente] ?? "").trim() : "";
 
+ 
+
         if (!cliente) {
 
-            cliente = [colApellidoP ? f[colApellidoP] : "",
+            cliente = [
 
-                       colApellidoM ? f[colApellidoM] : "",
+                colApellidoP ? f[colApellidoP] : "",
 
-                       colNombre ? f[colNombre] : ""]
+                colApellidoM ? f[colApellidoM] : "",
 
-                .filter(x => x != null && String(x).trim() !== "")
+                colNombre ? f[colNombre] : ""
 
-                .map(x => String(x).trim()).join(" ");
+            ]
+
+            .filter(x => x != null && String(x).trim() !== "")
+
+            .map(x => String(x).trim())
+
+            .join(" ");
 
         }
 
-        // El identificador solo se usa internamente para contar clientes únicos;
+ 
 
-        // nunca se imprime en la tabla.
+        // Se utiliza el código internamente para identificar clientes únicos.
+
+        // El código no se imprime en la tabla.
 
         const codigo = colCodigoCliente ? String(f[colCodigoCliente] ?? "").trim() : "";
 
         const llaveCliente = normalizar(codigo || cliente);
+
+ 
 
         return {
 
@@ -3964,13 +4024,31 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
  
 
-    if (!registros.length) return aviso("No se encontraron operaciones con fecha y cliente válidos.");
+    if (!registros.length) {
+
+        return aviso("No se encontraron operaciones con fecha y cliente válidos.");
+
+    }
 
  
 
-    const fechaMax = registros.reduce((max, r) => !max || r.fecha > max ? r.fecha : max, null);
+    // La tabla toma la fecha más reciente presente en los registros recibidos.
 
-    const claveFecha = d => `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,"0")}-${String(d.getUTCDate()).padStart(2,"0")}`;
+    const fechaMax = registros.reduce(
+
+        (max, r) => !max || r.fecha > max ? r.fecha : max,
+
+        null
+
+    );
+
+ 
+
+    const claveFecha = d =>
+
+        `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+
+ 
 
     const objetivo = claveFecha(fechaMax);
 
@@ -3980,9 +4058,13 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
     const grupos = new Map();
 
+ 
+
     delDia.forEach(r => {
 
         const llaveAsesor = normalizar(r.asesor);
+
+ 
 
         if (!grupos.has(llaveAsesor)) {
 
@@ -4008,6 +4090,8 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
         }
 
+ 
+
         const g = grupos.get(llaveAsesor);
 
         g.clientes.add(r.llaveCliente);
@@ -4015,6 +4099,8 @@ function generarCuadroDesembolsosAsesor(produccion) {
         g.operaciones += 1;
 
         g.total += r.monto;
+
+ 
 
         if (r.condicion) g.condiciones.add(r.condicion);
 
@@ -4028,19 +4114,43 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
  
 
-    const valorUnico = set => set.size === 0 ? "—" : set.size === 1 ? [...set][0] : "VARIOS";
+    const valorUnico = set =>
 
-    const gruposOrdenados = [...grupos.values()].sort((a,b) => a.asesor.localeCompare(b.asesor, "es"));
+        set.size === 0 ? "—" : set.size === 1 ? [...set][0] : "VARIOS";
+
+ 
+
+    const gruposOrdenados = [...grupos.values()].sort(
+
+        (a, b) => a.asesor.localeCompare(b.asesor, "es")
+
+    );
+
+ 
 
     const fechaTitulo = fechaMax.toLocaleDateString("es-PE", {
 
-        day:"2-digit", month:"2-digit", year:"numeric", timeZone:"UTC"
+        day: "2-digit",
+
+        month: "2-digit",
+
+        year: "numeric",
+
+        timeZone: "UTC"
 
     });
 
+ 
+
     const fechaDia = fechaMax.toLocaleDateString("es-PE", {
 
-        weekday:"long", day:"2-digit", month:"2-digit", timeZone:"UTC"
+        weekday: "long",
+
+        day: "2-digit",
+
+        month: "2-digit",
+
+        timeZone: "UTC"
 
     }).toUpperCase();
 
@@ -4056,151 +4166,305 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
     let html = `
 
-    ```html
-<style>
-#cuadroDesembolsosAsesor {
-    margin-top: 10px;
-    padding: 8px;
-    background: #fff;
-    border: 1px solid #dbe4ee;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(18,59,99,.06);
-    font-family: Arial, sans-serif;
-    box-sizing: border-box;
-    width: 100%;
-}
+    <style>
 
-#cuadroDesembolsosAsesor h3 {
-    text-align: center;
-    margin: 2px 0 6px;
-    color: #123B63;
-    font-size: 15px;
-    font-weight: 800;
-}
+        #cuadroDesembolsosAsesor {
 
-#cuadroDesembolsosAsesor .meta {
-    margin: 0 0 6px;
-    text-align: right;
-    color: #526579;
-    font-size: 10px;
-}
+            margin-top: 10px;
 
-#cuadroDesembolsosAsesor .scroll {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
+            padding: 8px;
 
-#cuadroDesembolsosAsesor table {
-    width: 100%;
-    min-width: 720px;
-    border-collapse: collapse;
-    table-layout: auto;
-    font-size: 11px;
-    color: #17212b;
-}
+            background: #fff;
 
-#cuadroDesembolsosAsesor th {
-    background: #24547b;
-    color: #fff;
-    padding: 6px 4px;
-    border: 1px solid #d6dee7;
-    text-align: center;
-    white-space: normal;
-    font-size: 10px;
-}
+            border: 1px solid #dbe4ee;
 
-#cuadroDesembolsosAsesor td {
-    padding: 5px 4px;
-    border: 1px solid #d6dee7;
-    line-height: 1.2;
-}
+            border-radius: 10px;
 
-#cuadroDesembolsosAsesor tbody tr:nth-child(even) {
-    background: #f7fafc;
-}
+            box-shadow: 0 2px 8px rgba(18,59,99,.06);
 
-#cuadroDesembolsosAsesor .asesor {
-    font-weight: 800;
-    text-align: center;
-    color: #123B63;
-    white-space: nowrap;
-}
+            font-family: Arial, sans-serif;
 
-#cuadroDesembolsosAsesor .monto {
-    text-align: right;
-    white-space: nowrap;
-    font-weight: 700;
-}
+            box-sizing: border-box;
 
-#cuadroDesembolsosAsesor .clientes {
-    text-align: center;
-    font-weight: 700;
-    white-space: nowrap;
-}
+            width: 100%;
 
-#cuadroDesembolsosAsesor .estado {
-    color: #2f6e9f;
-    font-weight: 700;
-    white-space: nowrap;
-}
+        }
 
-#cuadroDesembolsosAsesor tfoot td {
-    background: #dce6f7;
-    font-weight: 800;
-    border-top: 2px solid #123B63;
-}
+ 
 
-/* AJUSTES PARA CELULARES */
-@media screen and (max-width: 600px) {
-    #cuadroDesembolsosAsesor {
-        margin-top: 7px;
-        padding: 6px;
-        border-radius: 8px;
-    }
+        #cuadroDesembolsosAsesor h3 {
 
-    #cuadroDesembolsosAsesor h3 {
-        font-size: 12px;
-        margin-bottom: 5px;
-    }
+            text-align: center;
 
-    #cuadroDesembolsosAsesor .meta {
-        font-size: 9px;
-        margin-bottom: 5px;
-    }
+            margin: 2px 0 6px;
 
-    #cuadroDesembolsosAsesor table {
-        min-width: 650px;
-        font-size: 10px;
-    }
+            color: #123B63;
 
-    #cuadroDesembolsosAsesor th {
-        padding: 5px 3px;
-        font-size: 9px;
-    }
+            font-size: 15px;
 
-    #cuadroDesembolsosAsesor td {
-        padding: 4px 3px;
-        line-height: 1.15;
-    }
-}
-</style>
+            font-weight: 800;
+
+        }
+
+ 
+
+        #cuadroDesembolsosAsesor .meta {
+
+            margin: 0 0 6px;
+
+            text-align: right;
+
+            color: #526579;
+
+            font-size: 10px;
+
+        }
+
+ 
+
+        #cuadroDesembolsosAsesor .scroll {
+
+            width: 100%;
+
+            overflow-x: auto;
+
+            -webkit-overflow-scrolling: touch;
+
+        }
+
+ 
+
+        #cuadroDesembolsosAsesor table {
+
+            width: 100%;
+
+            min-width: 720px;
+
+            border-collapse: collapse;
+
+            table-layout: auto;
+
+            font-size: 11px;
+
+            color: #17212b;
+
+        }
+
+ 
+
+        #cuadroDesembolsosAsesor th {
+
+            background: #24547b;
+
+            color: #fff;
+
+            padding: 6px 4px;
+
+            border: 1px solid #d6dee7;
+
+            text-align: center;
+
+            white-space: normal;
+
+            font-size: 10px;
+
+        }
+
+ 
+
+        #cuadroDesembolsosAsesor td {
+
+            padding: 5px 4px;
+
+            border: 1px solid #d6dee7;
+
+            line-height: 1.2;
+
+        }
+
+ 
+
+        #cuadroDesembolsosAsesor tbody tr:nth-child(even) {
+
+            background: #f7fafc;
+
+        }
+
+ 
+
+        #cuadroDesembolsosAsesor .asesor {
+
+            font-weight: 800;
+
+            text-align: center;
+
+            color: #123B63;
+
+            white-space: nowrap;
+
+        }
+
+ 
+
+        #cuadroDesembolsosAsesor .monto {
+
+            text-align: right;
+
+            white-space: nowrap;
+
+            font-weight: 700;
+
+        }
+
+ 
+
+        #cuadroDesembolsosAsesor .clientes {
+
+            text-align: center;
+
+            font-weight: 700;
+
+            white-space: nowrap;
+
+        }
+
+ 
+
+        #cuadroDesembolsosAsesor .estado {
+
+            color: #2f6e9f;
+
+            font-weight: 700;
+
+            white-space: nowrap;
+
+        }
+
+ 
+
+        #cuadroDesembolsosAsesor tfoot td {
+
+            background: #dce6f7;
+
+            font-weight: 800;
+
+            border-top: 2px solid #123B63;
+
+        }
+
+ 
+
+        /* Ajustes para celulares */
+
+        @media screen and (max-width: 600px) {
+
+            #cuadroDesembolsosAsesor {
+
+                margin-top: 7px;
+
+                padding: 6px;
+
+                border-radius: 8px;
+
+            }
+
+ 
+
+            #cuadroDesembolsosAsesor h3 {
+
+                font-size: 12px;
+
+                margin-bottom: 5px;
+
+            }
+
+ 
+
+            #cuadroDesembolsosAsesor .meta {
+
+                font-size: 9px;
+
+                margin-bottom: 5px;
+
+            }
+
+ 
+
+            #cuadroDesembolsosAsesor table {
+
+                min-width: 650px;
+
+                font-size: 10px;
+
+            }
+
+ 
+
+            #cuadroDesembolsosAsesor th {
+
+                padding: 5px 3px;
+
+                font-size: 9px;
+
+            }
+
+ 
+
+            #cuadroDesembolsosAsesor td {
+
+                padding: 4px 3px;
+
+                line-height: 1.15;
+
+            }
+
+        }
+
+    </style>
+
+ 
 
     <section id="cuadroDesembolsosAsesor" class="desembolsos-panel">
 
-      <h3>CUADRO DE DESEMBOLSOS POR ASESOR</h3>
+        <h3>CUADRO DE DESEMBOLSOS POR ASESOR</h3>
 
-      <p class="meta">Fecha: <b>${fechaTitulo}</b> · Asesores: ${gruposOrdenados.length}</p>
+        <p class="meta">
 
-      <div class="scroll"><table>
+            Fecha: <b>${fechaTitulo}</b> · Asesores: ${gruposOrdenados.length}
 
-        <thead><tr>
+        </p>
 
-          <th>Asesor</th><th>Cliente</th><th>Condición</th><th>Producto</th><th>Cuotas</th>
+ 
 
-          <th>${fechaDia}<br>(${fechaTitulo})</th><th>TOTAL DESEMBOLSADO</th><th>Estado</th>
+        <div class="scroll">
 
-        </tr></thead><tbody>`;
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Asesor</th>
+
+                        <th>Cliente</th>
+
+                        <th>Condición</th>
+
+                        <th>Producto</th>
+
+                        <th>Cuotas</th>
+
+                        <th>${fechaDia}<br>(${fechaTitulo})</th>
+
+                        <th>TOTAL DESEMBOLSADO</th>
+
+                        <th>Estado</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>`;
 
  
 
@@ -4212,49 +4476,73 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
         totalOperaciones += g.operaciones;
 
+ 
+
         const cantidad = g.clientes.size;
 
-        const textoClientes = `${String(cantidad).padStart(2, "0")} ${cantidad === 1 ? "CLIENTE" : "CLIENTES"}`;
+        const textoClientes =
 
-        html += `<tr>
+            `${String(cantidad).padStart(2, "0")} ${cantidad === 1 ? "CLIENTE" : "CLIENTES"}`;
 
-          <td class="asesor">${escaparHTMLDesembolso(g.asesor)}</td>
+ 
 
-          <td class="clientes">${textoClientes}</td>
+        html += `
 
-          <td style="text-align:center">${escaparHTMLDesembolso(valorUnico(g.condiciones))}</td>
+            <tr>
 
-          <td style="text-align:center">${escaparHTMLDesembolso(valorUnico(g.productos))}</td>
+                <td class="asesor">${escaparHTMLDesembolso(g.asesor)}</td>
 
-          <td style="text-align:center">${escaparHTMLDesembolso(valorUnico(g.cuotas))}</td>
+                <td class="clientes">${textoClientes}</td>
 
-          <td class="monto">${soles(g.total)}</td>
+                <td style="text-align:center">${escaparHTMLDesembolso(valorUnico(g.condiciones))}</td>
 
-          <td class="monto">${soles(g.total)}</td>
+                <td style="text-align:center">${escaparHTMLDesembolso(valorUnico(g.productos))}</td>
 
-          <td class="estado">${escaparHTMLDesembolso(valorUnico(g.estados))}</td>
+                <td style="text-align:center">${escaparHTMLDesembolso(valorUnico(g.cuotas))}</td>
 
-        </tr>`;
+                <td class="monto">${soles(g.total)}</td>
+
+                <td class="monto">${soles(g.total)}</td>
+
+                <td class="estado">${escaparHTMLDesembolso(valorUnico(g.estados))}</td>
+
+            </tr>`;
 
     });
 
  
 
-    html += `</tbody><tfoot><tr>
+    html += `
 
-      <td class="asesor">TOTAL GENERAL</td>
+                </tbody>
 
-      <td class="clientes">${String(totalClientes).padStart(2,"0")} CLIENTES</td>
+                <tfoot>
 
-      <td colspan="3" style="text-align:center">${totalOperaciones} OPERACIONES</td>
+                    <tr>
 
-      <td class="monto">${soles(totalGeneral)}</td>
+                        <td class="asesor">TOTAL GENERAL</td>
 
-      <td class="monto">${soles(totalGeneral)}</td>
+                        <td class="clientes">${String(totalClientes).padStart(2, "0")} CLIENTES</td>
 
-      <td></td>
+                        <td colspan="3" style="text-align:center">${totalOperaciones} OPERACIONES</td>
 
-    </tr></tfoot></table></div></section>`;
+                        <td class="monto">${soles(totalGeneral)}</td>
+
+                        <td class="monto">${soles(totalGeneral)}</td>
+
+                        <td></td>
+
+                    </tr>
+
+                </tfoot>
+
+            </table>
+
+        </div>
+
+    </section>`;
+
+ 
 
     return html;
 
@@ -4266,7 +4554,15 @@ function escaparHTMLDesembolso(valor) {
 
     return String(valor ?? "").replace(/[&<>"']/g, c => ({
 
-        "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+        "&": "&amp;",
+
+        "<": "&lt;",
+
+        ">": "&gt;",
+
+        '"': "&quot;",
+
+        "'": "&#39;"
 
     }[c]));
 

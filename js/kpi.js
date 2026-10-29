@@ -3549,6 +3549,18 @@ function cargarMetasKPI(){
             localStorage.setItem("nombreMetaKPI",archivo.name);
             localStorage.setItem("fechaMetaKPI",new Date().toLocaleString());
 
+            // ACTUALIZAR LA TABLA KPI CON LAS METAS RECIÉN CARGADAS
+const produccionGuardada = JSON.parse(
+    localStorage.getItem("produccionKPI") || "[]"
+);
+
+if (
+    produccionGuardada.length > 0 &&
+    typeof generarKPI === "function"
+) {
+    generarKPI(produccionGuardada);
+}
+
             const metaActiva = document.getElementById("metaActivaKPI");
 
             if(metaActiva){

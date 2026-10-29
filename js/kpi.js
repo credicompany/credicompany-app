@@ -3756,295 +3756,212 @@ block:"start"
 
 }
 
-
 // ==========================================================
-
-// CUADRO DE DESEMBOLSOS POR ASESOR
-
-// Fuente: archivo cargado mediante "Cargar Producción"
-
-// Muestra los registros de la fecha más reciente del archivo.
-
+// CUADRO DE DESEMBOLSOS POR ASESOR - DATA GENERAL
+// Encabezados reales del Excel:
+// Fecha Desembolso, Monto Otorgado, Asesor(a), Tipo Operacion,
+// Producto, Plazo, Estado Cartera, Apellidos y Nombre.
 // ==========================================================
-
  
-
 function generarCuadroDesembolsosAsesor(produccion) {
-
     const filas = Array.isArray(produccion) ? produccion : [];
-
+ 
     const normalizar = v => String(v ?? "")
-
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-
-        .replace(/\s+/g, " ").trim().toUpperCase();
-
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toUpperCase();
  
-
     const buscarColumna = (fila, opciones) => {
-
         const claves = Object.keys(fila || {});
-
         for (const op of opciones) {
-
-            const k = claves.find(x => normalizar(x) === normalizar(op));
-
-            if (k) return k;
-
+            const clave = claves.find(k => normalizar(k) === normalizar(op));
+            if (clave) return clave;
         }
-
         for (const op of opciones) {
-
-            const k = claves.find(x => normalizar(x).includes(normalizar(op)));
-
-            if (k) return k;
-
+            const clave = claves.find(k => normalizar(k).includes(normalizar(op)));
+            if (clave) return clave;
         }
-
         return null;
-
     };
-
  
-
     const convertirFecha = valor => {
-
         if (valor instanceof Date && !isNaN(valor.getTime())) return valor;
-
-        if (typeof valor === "number" && isFinite(valor)) {
-
-            return new Date(Date.UTC(1899, 11, 30) + valor * 86400000);
-
+ 
+        // Serial de fecha Excel
+        if (typeof valor === "number" && Number.isFinite(valor)) {
+            const d = new Date(Date.UTC(1899, 11, 30) + valor * 86400000);
+            return isNaN(d.getTime()) ? null : d;
         }
-
+ 
         if (valor == null || String(valor).trim() === "") return null;
-
-        const s = String(valor).trim();
-
-        const m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-
+        const texto = String(valor).trim();
+ 
+        // dd/mm/yyyy o dd-mm-yyyy
+        const m = texto.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
         let d;
-
-        if (m) d = new Date(Date.UTC(+m[3], +m[2]-1, +m[1]));
-
-        else d = new Date(s);
-
+        if (m) {
+            d = new Date(Date.UTC(Number(m[3]), Number(m[2]) - 1, Number(m[1])));
+        } else {
+            d = new Date(texto);
+        }
         return isNaN(d.getTime()) ? null : d;
-
     };
-
  
-
-    const numero = v => {
-
-        if (typeof v === "number") return Number.isFinite(v) ? v : 0;
-
-        const n = Number(String(v ?? "").replace(/[S\/\s,]/g, ""));
-
+    const numero = valor => {
+        if (typeof valor === "number") return Number.isFinite(valor) ? valor : 0;
+        let texto = String(valor ?? "").trim().replace(/[S\/\s]/g, "");
+        // Excel suele entregar números como 1,800.00; quitar separador de miles.
+        texto = texto.replace(/,/g, "");
+        const n = Number(texto);
         return Number.isFinite(n) ? n : 0;
-
     };
-
+ 
     const soles = n => Number(n || 0).toLocaleString("es-PE", {
-
-        minimumFractionDigits: 2, maximumFractionDigits: 2
-
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
     });
-
  
-
-    const contenedorVacio = mensaje => `
-
+    const aviso = mensaje => `
       <section id="cuadroDesembolsosAsesor" class="desembolsos-panel">
-
-        <h3>CUADRO DE DESEMBOLSOS POR ASESOR</h3><p>${mensaje}</p>
-
+        <h3>CUADRO DE DESEMBOLSOS POR ASESOR</h3>
+        <p>${escaparHTMLDesembolso(mensaje)}</p>
       </section>`;
-
  
-
-    if (!filas.length) return contenedorVacio("No hay producción cargada.");
-
- 
-
-    const muestra = filas.find(f => f && typeof f === "object") || {};
-
-    const colAsesor = buscarColumna(muestra, ["Asesor(a)", "Asesor", "Asesor de crédito"]);
-
-    const colCliente = buscarColumna(muestra, ["Cliente", "Nombre Cliente", "Nombre del Cliente"]);
-
-    const colCondicion = buscarColumna(muestra, ["Condición", "Condicion", "Tipo de Cliente"]);
-
-    const colProducto = buscarColumna(muestra, ["Producto", "Tipo de Crédito", "Tipo Credito"]);
-
-    const colCuotas = buscarColumna(muestra, ["Cuotas", "N° Cuotas", "Numero de Cuotas", "Nro Cuotas"]);
-
-    const colFecha = buscarColumna(muestra, ["Fecha Desembolso", "Fecha de Desembolso"]);
-
-    const colMonto = buscarColumna(muestra, ["Monto desembolsado", "Monto Desembolso", "Desembolso", "Monto", "Capital"]);
-
-    const colEstado = buscarColumna(muestra, ["Estado", "Estado del Crédito", "Estado Credito"]);
-
- 
-
-    if (!colFecha || !colCliente || !colMonto) {
-
-        return contenedorVacio(
-
-          "No se identificaron las columnas de fecha, cliente y monto. Encabezados detectados: " +
-
-          escaparHTMLDesembolso(Object.keys(muestra).join(" | "))
-
-        );
-
+    if (!filas.length) {
+        return aviso("No se recibieron registros de producción. Verifica la variable que se pasa a la función.");
     }
-
  
-
-    const registros = filas.map(f => ({
-
-        asesor: colAsesor ? String(f[colAsesor] ?? "").trim() : "SIN ASESOR",
-
-        cliente: String(f[colCliente] ?? "").trim(),
-
-        condicion: colCondicion ? String(f[colCondicion] ?? "").trim() : "",
-
-        producto: colProducto ? String(f[colProducto] ?? "").trim() : "",
-
-        cuotas: colCuotas ? String(f[colCuotas] ?? "").trim() : "",
-
-        fecha: convertirFecha(f[colFecha]),
-
-        monto: numero(f[colMonto]),
-
-        estado: colEstado ? String(f[colEstado] ?? "Desembolsado").trim() : "Desembolsado"
-
-    })).filter(r => r.fecha && r.cliente);
-
+    const muestra = filas.find(f => f && typeof f === "object") || {};
  
-
-    if (!registros.length) return contenedorVacio("No se encontraron fechas válidas en la producción.");
-
+    // Encabezados de DATA GENERAL(9).xlsx
+    const colFecha = buscarColumna(muestra, ["Fecha Desembolso"]);
+    const colMonto = buscarColumna(muestra, ["Monto Otorgado", "Monto Desembolsado"]);
+    const colAsesor = buscarColumna(muestra, ["Asesor(a)", "Asesor"]);
+    const colTipo = buscarColumna(muestra, ["Tipo Operacion", "Tipo Operación", "Condicion", "Condición"]);
+    const colProducto = buscarColumna(muestra, ["Producto"]);
+    const colCuotas = buscarColumna(muestra, ["Plazo", "Cuotas", "N° Cuotas"]);
+    const colEstado = buscarColumna(muestra, ["Estado Cartera", "Estado"]);
+    const colApellidoP = buscarColumna(muestra, ["Apellido Paterno"]);
+    const colApellidoM = buscarColumna(muestra, ["Apellido Materno"]);
+    const colNombre = buscarColumna(muestra, ["Nombre", "Nombres"]);
+    const colCliente = buscarColumna(muestra, ["Cliente", "Apellidos y Nombres"]);
  
-
+    if (!colFecha || !colMonto || !colAsesor) {
+        return aviso(
+            "No se reconocieron Fecha Desembolso, Monto Otorgado o Asesor(a). " +
+            "Encabezados recibidos: " + Object.keys(muestra).join(" | ")
+        );
+    }
+ 
+    const registros = filas.map(f => {
+        let cliente = colCliente ? String(f[colCliente] ?? "").trim() : "";
+        if (!cliente) {
+            cliente = [
+                colApellidoP ? f[colApellidoP] : "",
+                colApellidoM ? f[colApellidoM] : "",
+                colNombre ? f[colNombre] : ""
+            ].filter(x => x != null && String(x).trim() !== "")
+             .map(x => String(x).trim())
+             .join(" ");
+        }
+ 
+        return {
+            asesor: String(f[colAsesor] ?? "SIN ASESOR").trim() || "SIN ASESOR",
+            cliente: cliente || "CLIENTE SIN NOMBRE",
+            condicion: colTipo ? String(f[colTipo] ?? "").trim() : "",
+            producto: colProducto ? String(f[colProducto] ?? "").trim() : "",
+            cuotas: colCuotas ? String(f[colCuotas] ?? "").trim() : "",
+            fecha: convertirFecha(f[colFecha]),
+            monto: numero(f[colMonto]),
+            estado: colEstado ? String(f[colEstado] ?? "").trim() : "Registrado"
+        };
+    }).filter(r => r.fecha && r.cliente !== "CLIENTE SIN NOMBRE");
+ 
+    if (!registros.length) {
+        return aviso("No se encontraron operaciones con fecha y cliente válidos.");
+    }
+ 
+    // Mostrar operaciones del día más reciente incluido en el Excel.
     const fechaMax = registros.reduce((max, r) => !max || r.fecha > max ? r.fecha : max, null);
-
-    const claveFecha = d => `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,"0")}-${String(d.getUTCDate()).padStart(2,"0")}`;
-
+    const claveFecha = d =>
+        `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
     const objetivo = claveFecha(fechaMax);
-
-    const dia = registros.filter(r => claveFecha(r.fecha) === objetivo);
-
-    dia.sort((a,b) => a.asesor.localeCompare(b.asesor, "es") || a.cliente.localeCompare(b.cliente, "es"));
-
+    const delDia = registros
+        .filter(r => claveFecha(r.fecha) === objetivo)
+        .sort((a, b) =>
+            a.asesor.localeCompare(b.asesor, "es") ||
+            a.cliente.localeCompare(b.cliente, "es")
+        );
  
-
-    const fechaTitulo = fechaMax.toLocaleDateString("es-PE", {day:"2-digit", month:"2-digit", year:"numeric", timeZone:"UTC"});
-
-    const fechaDia = fechaMax.toLocaleDateString("es-PE", {weekday:"long", day:"2-digit", month:"2-digit", timeZone:"UTC"}).toUpperCase();
-
-    let total = 0, asesorAnterior = "";
-
-    let html = `
-
-    <style>
-
-      #cuadroDesembolsosAsesor{margin-top:20px;padding:16px;background:#fff;border:1px solid #dbe4ee;border-radius:14px;box-shadow:0 4px 14px rgba(18,59,99,.08);font-family:Arial,sans-serif;box-sizing:border-box}
-
-      #cuadroDesembolsosAsesor h3{text-align:center;margin:0 0 12px;color:#123B63;font-size:19px;font-weight:800}
-
-      #cuadroDesembolsosAsesor .meta{margin:0 0 10px;text-align:right;color:#526579;font-size:12px}
-
-      #cuadroDesembolsosAsesor .scroll{width:100%;overflow-x:auto}
-
-      #cuadroDesembolsosAsesor table{width:100%;min-width:900px;border-collapse:collapse;font-size:13px;color:#17212b}
-
-      #cuadroDesembolsosAsesor th{background:#24547b;color:white;padding:9px 8px;border:1px solid #d6dee7;text-align:center;white-space:nowrap}
-
-      #cuadroDesembolsosAsesor td{padding:7px 8px;border:1px solid #d6dee7}
-
-      #cuadroDesembolsosAsesor tbody tr:nth-child(even){background:#f7fafc}
-
-      #cuadroDesembolsosAsesor .asesor{font-weight:800;text-align:center;color:#123B63;white-space:nowrap}
-
-      #cuadroDesembolsosAsesor .monto{text-align:right;white-space:nowrap}
-
-      #cuadroDesembolsosAsesor .estado{color:#2f6e9f;font-weight:700;white-space:nowrap}
-
-      #cuadroDesembolsosAsesor tfoot td{background:#dce6f7;font-weight:800;border-top:2px solid #123B63}
-
-      @media(max-width:700px){#cuadroDesembolsosAsesor{padding:10px}#cuadroDesembolsosAsesor h3{font-size:16px}#cuadroDesembolsosAsesor table{font-size:12px;min-width:850px}#cuadroDesembolsosAsesor th,#cuadroDesembolsosAsesor td{padding:7px 6px}}
-
-    </style>
-
-    <h3>CUADRO DE DESEMBOLSOS POR ASESOR</h3>
-
-    <p class="meta">Fecha: <b>${fechaTitulo}</b> · Registros: ${dia.length}</p>
-
-    <div class="scroll"><table>
-
-      <thead><tr>
-
-        <th>Asesor</th><th>Cliente</th><th>Condición</th><th>Producto</th><th>Cuotas</th>
-
-        <th>${fechaDia}<br>(${fechaTitulo})</th><th>TOTAL DESEMBOLSADO</th><th>Estado</th>
-
-      </tr></thead><tbody>`;
-
- 
-
-    dia.forEach(r => {
-
-        total += r.monto;
-
-        const asesorTexto = r.asesor !== asesorAnterior ? r.asesor : "";
-
-        asesorAnterior = r.asesor;
-
-        html += `<tr>
-
-          <td class="asesor">${escaparHTMLDesembolso(asesorTexto)}</td>
-
-          <td>${escaparHTMLDesembolso(r.cliente)}</td>
-
-          <td style="text-align:center">${escaparHTMLDesembolso(r.condicion)}</td>
-
-          <td style="text-align:center">${escaparHTMLDesembolso(r.producto)}</td>
-
-          <td style="text-align:center">${escaparHTMLDesembolso(r.cuotas)}</td>
-
-          <td class="monto">${soles(r.monto)}</td>
-
-          <td class="monto">${soles(r.monto)}</td>
-
-          <td class="estado">${escaparHTMLDesembolso(r.estado || "Desembolsado")}</td>
-
-        </tr>`;
-
+    const fechaTitulo = fechaMax.toLocaleDateString("es-PE", {
+        day: "2-digit", month: "2-digit", year: "numeric", timeZone: "UTC"
     });
-
+    const fechaDia = fechaMax.toLocaleDateString("es-PE", {
+        weekday: "long", day: "2-digit", month: "2-digit", timeZone: "UTC"
+    }).toUpperCase();
  
-
+    let totalGeneral = 0;
+    let html = `
+    <style>
+      #cuadroDesembolsosAsesor{margin-top:20px;padding:16px;background:#fff;border:1px solid #dbe4ee;border-radius:14px;box-shadow:0 4px 14px rgba(18,59,99,.08);font-family:Arial,sans-serif;box-sizing:border-box}
+      #cuadroDesembolsosAsesor h3{text-align:center;margin:0 0 12px;color:#123B63;font-size:19px;font-weight:800}
+      #cuadroDesembolsosAsesor .meta{margin:0 0 10px;text-align:right;color:#526579;font-size:12px}
+      #cuadroDesembolsosAsesor .scroll{width:100%;overflow-x:auto}
+      #cuadroDesembolsosAsesor table{width:100%;min-width:900px;border-collapse:collapse;font-size:13px;color:#17212b}
+      #cuadroDesembolsosAsesor th{background:#24547b;color:#fff;padding:9px 8px;border:1px solid #d6dee7;text-align:center;white-space:nowrap}
+      #cuadroDesembolsosAsesor td{padding:7px 8px;border:1px solid #d6dee7}
+      #cuadroDesembolsosAsesor tbody tr:nth-child(even){background:#f7fafc}
+      #cuadroDesembolsosAsesor .asesor{font-weight:800;text-align:center;color:#123B63;white-space:nowrap}
+      #cuadroDesembolsosAsesor .monto{text-align:right;white-space:nowrap}
+      #cuadroDesembolsosAsesor .estado{color:#2f6e9f;font-weight:700;white-space:nowrap}
+      #cuadroDesembolsosAsesor tfoot td{background:#dce6f7;font-weight:800;border-top:2px solid #123B63}
+      @media(max-width:700px){#cuadroDesembolsosAsesor{padding:10px}#cuadroDesembolsosAsesor h3{font-size:16px}#cuadroDesembolsosAsesor table{font-size:12px;min-width:850px}#cuadroDesembolsosAsesor th,#cuadroDesembolsosAsesor td{padding:7px 6px}}
+    </style>
+    <section id="cuadroDesembolsosAsesor" class="desembolsos-panel">
+      <h3>CUADRO DE DESEMBOLSOS POR ASESOR</h3>
+      <p class="meta">Fecha: <b>${fechaTitulo}</b> · Operaciones: ${delDia.length}</p>
+      <div class="scroll"><table>
+        <thead><tr>
+          <th>Asesor</th><th>Cliente</th><th>Condición</th><th>Producto</th><th>Cuotas</th>
+          <th>${fechaDia}<br>(${fechaTitulo})</th><th>TOTAL DESEMBOLSADO</th><th>Estado</th>
+        </tr></thead><tbody>`;
+ 
+    let asesorAnterior = "";
+    delDia.forEach(r => {
+        totalGeneral += r.monto;
+        const mostrarAsesor = r.asesor !== asesorAnterior ? r.asesor : "";
+        asesorAnterior = r.asesor;
+ 
+        html += `<tr>
+          <td class="asesor">${escaparHTMLDesembolso(mostrarAsesor)}</td>
+          <td>${escaparHTMLDesembolso(r.cliente)}</td>
+          <td style="text-align:center">${escaparHTMLDesembolso(r.condicion)}</td>
+          <td style="text-align:center">${escaparHTMLDesembolso(r.producto)}</td>
+          <td style="text-align:center">${escaparHTMLDesembolso(r.cuotas)}</td>
+          <td class="monto">${soles(r.monto)}</td>
+          <td class="monto">${soles(r.monto)}</td>
+          <td class="estado">${escaparHTMLDesembolso(r.estado || "Registrado")}</td>
+        </tr>`;
+    });
+ 
     html += `</tbody><tfoot><tr>
-
       <td colspan="5" style="text-align:center">TOTAL GENERAL</td>
-
-      <td class="monto">${soles(total)}</td><td class="monto">${soles(total)}</td><td></td>
-
+      <td class="monto">${soles(totalGeneral)}</td>
+      <td class="monto">${soles(totalGeneral)}</td>
+      <td></td>
     </tr></tfoot></table></div></section>`;
-
-    return html;
-
-}
-
  
-
+    return html;
+}
+ 
 function escaparHTMLDesembolso(valor) {
-
     return String(valor ?? "").replace(/[&<>"']/g, c => ({
-
-        "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
-
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
     }[c]));
-
 }

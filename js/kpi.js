@@ -895,6 +895,7 @@ color:white;
 <th>META OPERACIONES</th>
 <th>AVANCE</th>
 <th>% AVANCE OPER</th>
+<th>META CLIENTES</th>
 <th>CLIENTES ${mesClientesHistorico}</th>
 <th>CLIENTES ${mesClientesProduccion}</th>
 <th>VARIACIÓN</th>

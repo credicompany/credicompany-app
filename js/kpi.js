@@ -4,124 +4,7 @@
 // ======================================================
 // MÓDULO KPI CREDICOMPANY
 // ======================================================
-//// ================================================
-// CARGAR PRODUCCIÓN KPI - VERSIÓN MEJORADA
-// ================================================
- 
-window.cargarExcelKPI = function() {
- 
-    const input = document.getElementById("excelKPI");
-    const archivo = input?.files?.[0];
-    
-    if(!archivo){
-        alert("Seleccione el archivo de producción.");
-        return;
-    }
- 
-    if(typeof XLSX === "undefined"){
-        alert("No se encuentra disponible la librería para leer Excel.");
-        console.error("La librería XLSX no está cargada.");
-        return;
-    }
- 
-    const lector = new FileReader();
- 
-    lector.onload = function(e){
- 
-        try{
- 
-            const data = new Uint8Array(e.target.result);
- 
-            const wb = XLSX.read(data, {
-                type: "array",
-                cellDates: true
-            });
- 
-            if(!wb.SheetNames || wb.SheetNames.length === 0){
-                throw new Error("El archivo no contiene hojas.");
-            }
- 
-            const hoja = wb.Sheets[wb.SheetNames[0]];
- 
-            // Mantener la fila de encabezados utilizada
-            // actualmente por el archivo de producción.
-            const json = XLSX.utils.sheet_to_json(hoja, {
-                range: 6,
-                defval: ""
-            });
- 
-            if(!json.length){
-                throw new Error(
-                    "No se encontraron registros en la fila de encabezados esperada."
-                );
-            }
- 
-            console.log("📂 Archivo de producción:", archivo.name);
-            console.log("📊 Registros leídos:", json.length);
-            console.log("📋 Columnas detectadas:", Object.keys(json[0]));
-            console.log("📌 Primera fila:", json[0]);
- 
-            // Guardar los datos nuevos.
-            localStorage.setItem(
-                "produccionKPI",
-                JSON.stringify(json)
-            );
- 
-            localStorage.setItem(
-                "nombreProduccionKPI",
-                archivo.name
-            );
- 
-            const fechaCarga = new Date().toLocaleString("es-PE");
- 
-            localStorage.setItem(
-                "fechaProduccionKPI",
-                fechaCarga
-            );
- 
-            // Regenerar el KPI utilizando la producción recién cargada.
-            generarKPI(json);
- 
-            // Actualizar la información del archivo activo.
-            if(typeof mostrarArchivosActivos === "function"){
-                mostrarArchivosActivos();
-            }
- 
-            console.log("✅ KPI regenerado con la producción nueva.");
- 
-            alert(
-                "Producción cargada correctamente.\n" +
-                "Registros leídos: " + json.length +
-                "\nArchivo: " + archivo.name
-            );
- 
-        }catch(error){
- 
-            console.error(
-                "❌ Error al cargar o generar el KPI:",
-                error
-            );
- 
-            alert(
-                "No se pudo actualizar el KPI.\n" +
-                "Detalle: " + error.message
-            );
- 
-        }
-        
- 
-    };
- 
-    lector.onerror = function(){
- 
-        console.error("❌ No se pudo leer el archivo seleccionado.");
- 
-        alert("No se pudo leer el archivo de producción.");
- 
-    };
- 
-   lector.readAsArrayBuffer(archivo);
-};
+//
 // 1. Funciones Generales
 // 2. KPI Gerencial
 // 3. KPI Financiero
@@ -130,91 +13,63 @@ window.cargarExcelKPI = function() {
 // 6. Carga de Excel
 //
 // ======================================================
+
 // ======================================================
 // KPI GERENCIAL
 // ======================================================
 function generarKPI(json){
- 
+
     let totalClientesActual = 0;
     let totalClientesSiguiente = 0;
- 
+
     const usuarios =
     JSON.parse(
         localStorage.getItem("usuarios")
     ) || [];
- 
+
     const clientesHistorico = {};
- 
+
 // ======================================
 // KPI GERENCIAL
 // DETECCIÓN AUTOMÁTICA DEL MES
 // ======================================
- 
- 
+
 const jsonGeneral = [...json];
- 
-// Normaliza asesores y números para que coincidan entre Excel y metas.
-const normalizarClaveKPI = (valor) => String(valor ?? "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim()
-    .toUpperCase()
-    .replace(/\s+/g, " ");
- 
-const convertirFechaKPI = (valor) => {
-    if (valor === null || valor === undefined || valor === "") return null;
-    if (valor instanceof Date && !Number.isNaN(valor.getTime())) return valor;
- 
-    if (typeof valor === "number" && Number.isFinite(valor)) {
-        const fecha = new Date(Date.UTC(1899, 11, 30) + valor * 86400000);
-        return Number.isNaN(fecha.getTime()) ? null : fecha;
-    }
- 
-    const texto = String(valor).trim();
-    const m = texto.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
-    if (m) {
-        const dia = Number(m[1]), mes = Number(m[2]) - 1, anio = Number(m[3]);
-        const fecha = new Date(anio, mes, dia);
-        if (fecha.getFullYear() !== anio || fecha.getMonth() !== mes || fecha.getDate() !== dia) {
-            return null;
-        }
-        return fecha;
-    }
- 
-    const fecha = new Date(texto);
-    return Number.isNaN(fecha.getTime()) ? null : fecha;
-};
- 
-const numeroKPI = (valor) => {
-    if (typeof valor === "number") return Number.isFinite(valor) ? valor : 0;
-    let texto = String(valor ?? "").trim().replace(/S\\//ig, "").replace(/\s/g, "");
-    if (!texto) return 0;
- 
-    if (texto.includes(",") && texto.includes(".")) {
-        texto = texto.lastIndexOf(",") > texto.lastIndexOf(".")
-            ? texto.replace(/\./g, "").replace(",", ".")
-            : texto.replace(/,/g, "");
-    } else if (texto.includes(",")) {
-        const partes = texto.split(",");
-        texto = partes.length === 2 && partes[1].length <= 2
-            ? texto.replace(",", ".")
-            : texto.replace(/,/g, "");
-    }
- 
-    const n = Number(texto);
-    return Number.isFinite(n) ? n : 0;
-};
- 
- 
+
 let ultimaFecha = null;
- 
-jsonGeneral.forEach(c => {
-    const fecha = convertirFechaKPI(c["Fecha Desembolso"]);
-    if (!fecha) return;
- 
-    if (!ultimaFecha || fecha > ultimaFecha) {
-        ultimaFecha = fecha;
-    }
+
+jsonGeneral.forEach(c=>{
+
+    let fechaExcel = c["Fecha Desembolso"];
+
+let fecha;
+
+if(fechaExcel instanceof Date){
+
+    fecha = fechaExcel;
+
+}else if(typeof fechaExcel === "number"){
+
+    fecha = new Date(
+        (fechaExcel - 25569) * 86400 * 1000
+    );
+
+}else{
+
+    fecha = new Date(fechaExcel);
+
+}
+
+if(!fecha || isNaN(fecha.getTime())){
+    return;
+}
+
+if(
+    !ultimaFecha ||
+    fecha > ultimaFecha
+){
+    ultimaFecha = fecha;
+}
 });
 // ========================================
 // CLIENTES ACUMULADOS HASTA EL MES ACTUAL
@@ -223,14 +78,14 @@ jsonGeneral.forEach(c => {
 // Incluye todos los desembolsos de la data cargada.
 // Un cliente con varios créditos cuenta UNA sola vez.
 // ========================================
- 
+
 jsonGeneral.forEach(c => {
- 
+
     let asesor =
         String(c["Asesor(a)"] || "")
         .trim()
         .toUpperCase();
- 
+
     let codigoCliente =
         String(
             c["Cod Cliente"] ||
@@ -240,19 +95,19 @@ jsonGeneral.forEach(c => {
         )
         .trim()
         .toUpperCase();
- 
+
     if(!asesor || !codigoCliente){
         return;
     }
- 
+
     if(!clientesHistorico[asesor]){
         clientesHistorico[asesor] = new Set();
     }
- 
+
     clientesHistorico[asesor].add(codigoCliente);
- 
+
 });
- 
+
 console.log(
     "CLIENTES ACUMULADOS POR ASESOR:",
     Object.fromEntries(
@@ -263,7 +118,7 @@ console.log(
         ])
     )
 );
- 
+
 console.log(
     "TOTAL CLIENTES ACUMULADOS:",
     Object.values(clientesHistorico)
@@ -274,48 +129,68 @@ console.log(
     )
 );
     
- 
+
 if(!ultimaFecha){
- 
+
     alert(
     "No existe ninguna fecha válida."
     );
- 
+
     return;
- 
+
 }
- 
+
 const meses=[
 "Enero","Febrero","Marzo","Abril",
 "Mayo","Junio","Julio","Agosto",
 "Septiembre","Octubre",
 "Noviembre","Diciembre"
 ];
- 
+
 const indiceMes =
 ultimaFecha.getUTCMonth();
- 
+
 const anioActual =
 ultimaFecha.getUTCFullYear();
- 
+
 const mesActual =
 meses[indiceMes];
- 
+
 const mesAnterior =
 meses[(indiceMes+11)%12];
- 
-json = jsonGeneral.filter(c => {
-    const fecha = convertirFechaKPI(c["Fecha Desembolso"]);
-    return Boolean(
-        fecha &&
-        fecha.getMonth() === indiceMes &&
-        fecha.getFullYear() === anioActual
+
+json=jsonGeneral.filter(c=>{
+
+    let fechaExcel=
+    Number(c["Fecha Desembolso"]);
+
+    if(isNaN(fechaExcel))
+    return false;
+
+    let fecha=
+    new Date(
+        (fechaExcel-25569)*
+        86400*1000
     );
+
+    return(
+
+        fecha.getUTCMonth()
+        ===
+        indiceMes
+
+        &&
+
+        fecha.getUTCFullYear()
+        ===
+        anioActual
+
+    );
+
 });
- 
+
 console.log(
-    "KPI:",
- 
+"KPI:",
 mesActual,
 json.length,
 "REGISTROS"
@@ -333,7 +208,7 @@ console.log(
 "REGISTROS MES ACTUAL:",
 json.length
 );
- 
+
 // ==========================================
 // CONFIGURACIÓN AUTOMÁTICA DE CLIENTES
 // ==========================================
@@ -346,13 +221,13 @@ json.length
 // DATA  -> Octubre
 // KPI   -> CLIENTES SETIEMBRE | CLIENTES OCTUBRE
 // ==========================================
- 
+
 const mesesKPIClientes = [
     "ENERO","FEBRERO","MARZO","ABRIL",
     "MAYO","JUNIO","JULIO","AGOSTO",
     "SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"
 ];
- 
+
 const equivalenciasMesKPI = {
     "ENERO":"ENERO",
     "FEBRERO":"FEBRERO",
@@ -368,7 +243,7 @@ const equivalenciasMesKPI = {
     "NOVIEMBRE":"NOVIEMBRE",
     "DICIEMBRE":"DICIEMBRE"
 };
- 
+
 const normalizarTextoClientes = texto =>
     String(texto || "")
     .normalize("NFD")
@@ -376,79 +251,79 @@ const normalizarTextoClientes = texto =>
     .replace(/\s+/g," ")
     .trim()
     .toUpperCase();
- 
+
 const mesesClientesEncontrados = [];
- 
+
 const metaReferenciaClientes = metas[0] || {};
- 
+
 Object.keys(metaReferenciaClientes).forEach(col => {
- 
+
     const nombre = normalizarTextoClientes(col);
- 
+
     if(!nombre.includes("CLIENTES")) return;
- 
+
     for(const mesDetectado of mesesKPIClientes){
- 
+
         const variantes =
             mesDetectado === "SEPTIEMBRE"
             ? ["SEPTIEMBRE","SETIEMBRE"]
             : [mesDetectado];
- 
+
         if(variantes.some(mes => nombre.includes(mes))){
- 
+
             mesesClientesEncontrados.push({
                 columna: col,
                 mes: mesDetectado,
                 indice: mesesKPIClientes.indexOf(mesDetectado)
             });
- 
+
             break;
         }
     }
 });
- 
+
 // Se toma el último mes disponible en la hoja de METAS.
 mesesClientesEncontrados.sort((a,b) => a.indice - b.indice);
- 
+
 const configuracionClientes =
     mesesClientesEncontrados.length
     ? mesesClientesEncontrados[mesesClientesEncontrados.length - 1]
     : null;
- 
+
 const indiceMesClientesHistorico =
     configuracionClientes
     ? configuracionClientes.indice
     : null;
- 
+
 const mesClientesHistorico =
     configuracionClientes
     ? configuracionClientes.mes
     : mesAnterior.toUpperCase();
- 
+
 const mesClientesProduccion =
     indiceMesClientesHistorico !== null
     ? mesesKPIClientes[
         (indiceMesClientesHistorico + 1) % 12
       ]
     : mesActual.toUpperCase();
- 
+
 // Año de comparación. Si el histórico es diciembre,
 // el siguiente período corresponde al año siguiente.
 const anioClientesProduccion =
     indiceMesClientesHistorico === 11
     ? anioActual + 1
     : anioActual;
- 
+
 console.log("📊 CLIENTES - MES HISTÓRICO DESDE METAS:", mesClientesHistorico);
 console.log("📊 CLIENTES - MES DE PRODUCCIÓN ESPERADO:", mesClientesProduccion);
- 
+
     let totalClientes = json.length;
- 
+
   let montoOtorgadoTotal = 0;
 let costoDesembolsoTotal = 0;
- 
+
 json.forEach(c=>{
- 
+
     montoOtorgadoTotal +=
     parseFloat(c["Monto Otorgado"]) || 0;
 let atraso =
@@ -459,15 +334,15 @@ console.log(
 "COSTO:",
 c["Costo por Desembolso"]
 );  
- 
+
 costoDesembolsoTotal += costo;
 });
- 
+
     let totalOperaciones = json.length;
 let metaEmpresa = 0;
- 
+
 metas.forEach(m=>{
- 
+
    metaEmpresa +=
    parseFloat(
       String(
@@ -476,7 +351,7 @@ metas.forEach(m=>{
          0
       ).replace(/,/g,"")
    ) || 0;
- 
+
 });
 let avanceEmpresa =
 metaEmpresa > 0
@@ -486,53 +361,53 @@ metaEmpresa > 0
 :
 0;
 let temGeneral = 0;
- 
+
 json.forEach(c=>{
- 
+
     temGeneral +=
     parseFloat(
         String(c["TEM"] || 0)
         .replace(",",".")
     ) || 0;
- 
+
 });
- 
+
 temGeneral =
 totalClientes > 0
 ?
 (temGeneral / totalClientes).toFixed(2)
 :
 0;
- 
+
 // ==========================================
 // TABLERO GERENCIAL - RESUMEN EJECUTIVO
 // ==========================================
- 
+
 let estadoMeta =
     Number(avanceEmpresa) >= 100
     ? "CUMPLIDO"
     : Number(avanceEmpresa) >= 80
     ? "EN RIESGO"
     : "CRÍTICO";
- 
+
 let colorMeta =
     Number(avanceEmpresa) >= 100
     ? "#159447"
     : Number(avanceEmpresa) >= 80
     ? "#D99A1A"
     : "#D64545";
- 
+
 let resumen = `
- 
+
 <div style="
     margin-bottom:18px;
 ">
- 
+
     <div style="
         text-align:center;
         margin-bottom:18px;
     ">
- 
+
         <div style="
             font-size:26px;
             font-weight:800;
@@ -541,7 +416,7 @@ let resumen = `
         ">
         🎯 GESTIÓN Y CUMPLIMIENTO DE METAS
         </div>
- 
+
         <div style="
             font-size:13px;
             color:#657789;
@@ -551,23 +426,23 @@ let resumen = `
             &nbsp;•&nbsp;
           Actualizado: ${localStorage.getItem("fechaProduccionKPI") || new Date().toLocaleString("es-PE")}
         </div>
- 
+
     </div>
- 
- 
+
+
     <!-- ================================= -->
     <!-- INDICADORES PRINCIPALES -->
     <!-- ================================= -->
- 
+
     <div style="
         display:grid;
         grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
         gap:10px;
     ">
- 
- 
+
+
         <!-- CLIENTES -->
- 
+
         <div style="
             background:#FFFFFF;
             border:1px solid #DCE4EC;
@@ -577,9 +452,9 @@ let resumen = `
             text-align:center;
             box-shadow:0 3px 10px rgba(18,63,99,.07);
         ">
- 
+
             <div style="font-size:23px;">👥</div>
- 
+
             <div style="
                 font-size:12px;
                 color:#657789;
@@ -587,7 +462,7 @@ let resumen = `
             ">
                 CLIENTES EN CARTERA
             </div>
- 
+
            <div style="
     font-size:25px;
     font-weight:800;
@@ -596,12 +471,12 @@ let resumen = `
 ">
  ${totalClientesActual}
 </div>
- 
+
         </div>
- 
- 
+
+
         <!-- COLOCACIÓN -->
- 
+
         <div style="
             background:#FFFFFF;
             border:1px solid #DCE4EC;
@@ -611,16 +486,16 @@ let resumen = `
             text-align:center;
             box-shadow:0 3px 10px rgba(18,63,99,.07);
         ">
- 
+
             <div style="font-size:23px;">💰</div>
- 
+
             <div style="
                 font-size:12px;
                 color:#657789;
             ">
                 COLOCACIÓN
             </div>
- 
+
             <div style="
                 font-size:24px;
                 font-weight:800;
@@ -628,7 +503,7 @@ let resumen = `
             ">
                 S/${Math.round(montoOtorgadoTotal).toLocaleString("es-PE")}
             </div>
- 
+
             <div style="
                 font-size:11px;
                 color:#657789;
@@ -636,12 +511,12 @@ let resumen = `
             ">
                 Meta: S/${Math.round(metaEmpresa).toLocaleString("es-PE")}
             </div>
- 
+
         </div>
- 
- 
+
+
         <!-- OPERACIONES -->
- 
+
         <div style="
             background:#FFFFFF;
             border:1px solid #DCE4EC;
@@ -651,16 +526,16 @@ let resumen = `
             text-align:center;
             box-shadow:0 3px 10px rgba(18,63,99,.07);
         ">
- 
+
             <div style="font-size:23px;">📋</div>
- 
+
             <div style="
                 font-size:12px;
                 color:#657789;
             ">
                 OPERACIONES
             </div>
- 
+
             <div style="
                 font-size:25px;
                 font-weight:800;
@@ -668,12 +543,12 @@ let resumen = `
             ">
                 ${totalOperaciones}
             </div>
- 
+
         </div>
- 
- 
+
+
         <!-- TEM -->
- 
+
         <div style="
             background:#FFFFFF;
             border:1px solid #DCE4EC;
@@ -683,16 +558,16 @@ let resumen = `
             text-align:center;
             box-shadow:0 3px 10px rgba(18,63,99,.07);
         ">
- 
+
             <div style="font-size:23px;">📈</div>
- 
+
             <div style="
                 font-size:12px;
                 color:#657789;
             ">
                 TEM PROMEDIO
             </div>
- 
+
             <div style="
                 font-size:25px;
                 font-weight:800;
@@ -700,12 +575,12 @@ let resumen = `
             ">
                 ${temGeneral}%
             </div>
- 
+
         </div>
- 
- 
+
+
         <!-- CUMPLIMIENTO -->
- 
+
         <div style="
             background:#FFFFFF;
             border:1px solid #DCE4EC;
@@ -715,16 +590,16 @@ let resumen = `
             text-align:center;
             box-shadow:0 3px 10px rgba(18,63,99,.07);
         ">
- 
+
             <div style="font-size:23px;">🎯</div>
- 
+
             <div style="
                 font-size:12px;
                 color:#657789;
             ">
                 CUMPLIMIENTO
             </div>
- 
+
             <div style="
                 font-size:25px;
                 font-weight:800;
@@ -732,7 +607,7 @@ let resumen = `
             ">
                 ${avanceEmpresa}%
             </div>
- 
+
             <div style="
                 font-size:11px;
                 font-weight:700;
@@ -741,16 +616,16 @@ let resumen = `
             ">
                 ${estadoMeta}
             </div>
- 
+
         </div>
- 
+
     </div>
- 
- 
+
+
     <!-- ================================= -->
     <!-- BARRA DE CUMPLIMIENTO -->
     <!-- ================================= -->
- 
+
     <div style="
         background:#F6F8FA;
         border:1px solid #DCE4EC;
@@ -758,7 +633,7 @@ let resumen = `
         padding:13px;
         margin-top:12px;
     ">
- 
+
         <div style="
             display:flex;
             justify-content:space-between;
@@ -766,17 +641,17 @@ let resumen = `
             font-weight:700;
             margin-bottom:7px;
         ">
- 
+
             <span>
                 🎯 Avance de colocación
             </span>
- 
+
             <span style="color:${colorMeta};">
                 ${avanceEmpresa}%
             </span>
- 
+
         </div>
- 
+
         <div style="
             width:100%;
             height:10px;
@@ -784,16 +659,16 @@ let resumen = `
             border-radius:20px;
             overflow:hidden;
         ">
- 
+
             <div style="
                 width:${Math.min(Number(avanceEmpresa),100)}%;
                 height:100%;
                 background:${colorMeta};
                 border-radius:20px;
             "></div>
- 
+
         </div>
- 
+
         <div style="
             display:flex;
             justify-content:space-between;
@@ -801,32 +676,35 @@ let resumen = `
             font-size:11px;
             color:#657789;
         ">
- 
+
             <span>
                 Real: S/${Math.round(montoOtorgadoTotal).toLocaleString("es-PE")}
             </span>
- 
+
             <span>
                 Meta: S/${Math.round(metaEmpresa).toLocaleString("es-PE")}
             </span>
- 
+
         </div>
- 
+
     </div>
- 
+
 </div>
- 
+
 `;
- 
+
    let ranking = {};
 let operaciones = {};
 let temPromedio = {};
 let clientes = {};
 let moraAsesor = {};
- 
+
     json.forEach(c => {
 console.log(Object.keys(c));
-        let asesor = normalizarClaveKPI(c["Asesor(a)"] || "SIN ASESOR");
+        let asesor =
+        (c["Asesor(a)"] || "SIN ASESOR")
+        .trim()
+        .toUpperCase();
 console.log(
     "ASESOR:",
     JSON.stringify(c["Asesor(a)"]),
@@ -835,14 +713,15 @@ console.log(
     "| FECHA:",
     c["Fecha Desembolso"]
 );
-        let monto = numeroKPI(c["Monto Otorgado"]);
- 
+        let monto =
+        parseFloat(c["Monto Otorgado"]) || 0;
+
         let tem =
 parseFloat(
     String(c["TEM"])
     .replace(",",".")
 ) || 0;
- 
+
         let codigoCliente =
 String(c["Cod Cliente"] || "")
 .trim()
@@ -854,16 +733,18 @@ parseFloat(
     c["SALDO CAPITAL VENCIDO"] ??
     0
 ) || 0;
- 
- 
-       if (!Object.prototype.hasOwnProperty.call(ranking, asesor)) {
+
+
+       if(!ranking[asesor]){
+
     ranking[asesor] = 0;
     operaciones[asesor] = 0;
     temPromedio[asesor] = [];
     clientes[asesor] = new Set();
     moraAsesor[asesor] = 0;
+
 }
- 
+
         ranking[asesor] += monto;
         operaciones[asesor]++;
         temPromedio[asesor].push(tem);
@@ -871,36 +752,74 @@ parseFloat(
 moraAsesor[asesor] += saldoCapitalVencido;
        
       if(codigoCliente){
- 
+
     clientes[asesor].add(codigoCliente);
- 
+
 }
- 
+
     });
- 
-console.log("KPI FINAL - mes/año:", mesActual, anioActual);
-console.log("KPI FINAL - registros del mes:", json.length);
-console.log("KPI FINAL - colocación por asesor:", ranking);
-console.log("KPI FINAL - operaciones por asesor:", operaciones);
- 
+
 // =========================================
 // CLIENTES EN CARTERA
 // =========================================
- 
+
 totalClientesActual =
 Object.values(clientesHistorico)
 .reduce(
     (total, clientes) => total + clientes.size,
     0
 );
- 
+
 console.log(
     "CLIENTES EN CARTERA:",
     totalClientesActual
 );
- 
+    
+// ==========================================
+// RANKING COLOCACIÓN
+// ==========================================
+
+// ==========================================
+// INCLUIR TODOS LOS ASESORES ACTIVOS
+// ==========================================
+usuarios.forEach(u => {
+
+    const asesor = String(
+        u.user || u.usuario || u.nombre || ""
+    ).trim().toUpperCase();
+
+    if (!asesor || asesor === "ADMIN") return;
+
+    ranking[asesor] = Number(ranking[asesor] || 0);
+    operaciones[asesor] = Number(operaciones[asesor] || 0);
+
+    if (!temPromedio[asesor]) temPromedio[asesor] = [];
+    if (!clientes[asesor]) clientes[asesor] = new Set();
+    if (!moraAsesor[asesor]) moraAsesor[asesor] = 0;
+
+});
+
+let top =
+Object.entries(ranking)
+
+.filter(([asesor]) =>
+    asesor.toUpperCase() !== "ADMIN"
+)
+
+.sort((a,b) => b[1] - a[1]);
+console.log("RANKING COLOCACION REAL:", ranking);
+console.log("TOP COLOCACION REAL:", top);
+let mejorAsesor =
+top.length > 0
+?
+top[0]
+:
+null;
+
+if(mejorAsesor){
+
 resumen += `
- 
+
 <div style="
 background:#FFFFFF;
 border-left:5px solid #123F63;
@@ -909,7 +828,7 @@ padding:12px;
 border-radius:12px;
 margin-bottom:12px;
 ">
- 
+
 <div style="
 font-size:14px;
 font-weight:600;
@@ -917,24 +836,37 @@ color:#667783;
 ">
 🏆 Líder del Mes
 </div>
+
+<div style="
+font-size:20px;
+font-weight:bold;
+margin-top:5px;
+">
+${mejorAsesor[0]}
+</div>
+
+<div style="
+font-size:18px;
+margin-top:4px;
+">
+💰 S/${mejorAsesor[1].toLocaleString()}
+</div>
+
 </div>
 `;
+
 }
-resumen += `
- 
+   resumen += `
+
 <div class="card">
- 
- 
+
 <h4 style="
 margin:5px 0;
 font-size:14px;
-text-align:center;
-width:100%;
 ">
 🎯 KPI POR ASESOR
 </h4>
- 
- 
+
 <div style="
 overflow-x:auto;
 overflow-y:hidden;
@@ -942,19 +874,20 @@ width:100%;
 -webkit-overflow-scrolling:touch;
 padding-bottom:8px;
 ">
- 
-<table style="width:100%; min-width:1100px; border-collapse:collapse; font-size:12px; text-align:center;
-font-family:Arial,sans-serif; background:#FFFFFF; border:1px solid #D6E2EC; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(18,63,99,0.08);">
- 
- 
-<tr style="
-background:linear-gradient(135deg,#123F63,#1B5B85);
-color:#FFFFFF !important;
-font-weight:bold;
-border-bottom:3px solid #D99A1A;
+
+<table style="
+width:100%;
+min-width:1100px;
+border-collapse:collapse;
+font-size:14px;
+text-align:center;
 ">
- 
- 
+
+<tr style="
+background:#123F63;
+color:white;
+">
+
 <th>ASESOR</th>
 <th>META COLOCACIÓN</th>
 <th>AVANCE</th>
@@ -962,33 +895,30 @@ border-bottom:3px solid #D99A1A;
 <th>META OPERACIONES</th>
 <th>AVANCE</th>
 <th>% AVANCE OPER</th>
-<th>META CLIENTES</th>
 <th>CLIENTES ${mesClientesHistorico}</th>
 <th>CLIENTES ${mesClientesProduccion}</th>
-<th>% CUMPLIMIENTO<br>CLIENTES</th>
 <th>VARIACIÓN</th>
 <th>TEM ${mesAnterior.toUpperCase()}</th>
 <th>TEM ${mesActual.toUpperCase()}</th>
-<th>VARIACIÓN TEM</th>
 <th>MORA ${mesAnterior.toUpperCase()}</th>
 <th>MORA ${mesActual.toUpperCase()} 31+</th>
 <th>MORA ${mesActual.toUpperCase()} 9+</th>
 <th>MORA ${mesActual.toUpperCase()} 1+</th>
 <th>🚦</th>
- 
+
 </tr>
 `;
 // ==========================
 // MORA ACTUAL (TODA LA CARTERA)
 // ==========================
- 
+
 let moraActualAsesor = {};
 let mora31MasAsesor = {};
 let mora1MasAsesor = {};
 // ==========================================
 // CLIENTES: HISTÓRICO VS SIGUIENTE PERÍODO
 // ==========================================
- 
+
 // ==========================================
 // CLIENTES EN CARTERA - MES ACTUAL
 // ==========================================
@@ -1020,15 +950,15 @@ let mora1MasAsesor = {};
 // Octubre    = 152
 // Variación  = +5
 // ==========================================
- 
+
 let clientesMesActual = {};
- 
+
 // ==========================================
 // TOMAR TODOS LOS CLIENTES DE LA DATA
 // ==========================================
- 
+
 jsonGeneral.forEach(c => {
- 
+
     const asesor =
         String(
             c["Asesor(a)"] ||
@@ -1036,7 +966,7 @@ jsonGeneral.forEach(c => {
         )
         .trim()
         .toUpperCase();
- 
+
     const codigoCliente =
         String(
             c["Cod Cliente"] ||
@@ -1051,30 +981,30 @@ jsonGeneral.forEach(c => {
         )
         .trim()
         .toUpperCase();
- 
+
     if(!asesor || !codigoCliente){
         return;
     }
- 
+
     // Crear Set para el asesor
     if(!clientesMesActual[asesor]){
- 
+
         clientesMesActual[asesor] =
             new Set();
- 
+
     }
- 
+
     // Cliente único
     clientesMesActual[asesor]
         .add(codigoCliente);
- 
+
 });
- 
- 
+
+
 // ==========================================
 // VERIFICACIÓN EN CONSOLA
 // ==========================================
- 
+
 console.log(
     "📊 CLIENTES ACTUALES POR ASESOR:",
     Object.fromEntries(
@@ -1085,7 +1015,7 @@ console.log(
         ])
     )
 );
- 
+
 console.log(
     "📊 TOTAL CLIENTES ACTUALES:",
     Object.values(clientesMesActual)
@@ -1097,41 +1027,41 @@ console.log(
 );
     
 jsonGeneral.forEach(c=>{
- 
+
     let asesor =
     (c["Asesor(a)"] || "")
     .toString()
     .trim()
     .toUpperCase();
- 
+
     let atraso =
     parseFloat(c["Dias de retraso"] || 0) || 0;
- 
+
     let saldo =
     parseFloat(c["Saldo Capital"] || 0) || 0;
- 
+
   if(!moraActualAsesor[asesor]){
     moraActualAsesor[asesor] = 0;
 }
- 
+
 if(!mora31MasAsesor[asesor]){
     mora31MasAsesor[asesor] = 0;
 }
- 
+
 if(!mora1MasAsesor[asesor]){
     mora1MasAsesor[asesor] = 0;
 }
- 
+
 // Mora de 9 días o más
 if(atraso >= 9){
     moraActualAsesor[asesor] += saldo;
 }
- 
+
 // Mora de 31 días o más
 if(atraso > 30){
     mora31MasAsesor[asesor] += saldo;
 }
- 
+
 // Mora de 1 día o más
 if(atraso >= 1){
     mora1MasAsesor[asesor] += saldo;
@@ -1140,21 +1070,20 @@ if(atraso >= 1){
  // =========================================
 // TOTALES EMPRESA
 // =========================================
- 
+
 let totalMetaColocacion = 0;
-let totalMetaClientes = 0;
 let totalAvanceColocacion = 0;
- 
+
 let totalMetaOperaciones = 0;
 let totalAvanceOperaciones = 0;
- 
+
 let totalClientesHistorico = 0;
- 
+
 let totalMoraJulio = 0;
 let totalMoraAgosto = 0;
 let totalMoraAgosto31Mas = 0;
 let totalMoraAgosto1Mas = 0;
- 
+
 let sumaTemJulio = 0;
 let sumaTemAgosto = 0;
 let cantidadTemJulio = 0;
@@ -1164,7 +1093,7 @@ let cantidadTemAgosto = 0;
     // Se recorren LAS METAS, no la producción.
     // Por eso todos los asesores aparecen aunque tengan S/0.
     // ======================================================
- 
+
     const normalizarAsesor = texto =>
         String(texto || "")
         .normalize("NFD")
@@ -1172,7 +1101,7 @@ let cantidadTemAgosto = 0;
         .replace(/\s+/g,"")
         .trim()
         .toUpperCase();
- 
+
     const metasValidas = metas.filter(meta =>
         normalizarAsesor(
             meta["Asesor (A)"] ||
@@ -1180,55 +1109,45 @@ let cantidadTemAgosto = 0;
             ""
         ) !== ""
     );
- 
+
     console.log("📊 METAS VÁLIDAS PARA TABLA:",metasValidas);
     console.log("📊 CANTIDAD DE ASESORES EN TABLA:",metasValidas.length);
- 
- 
-// ==========================================
-// HISTÓRICO KPI POR ASESOR
-// ==========================================
-const historicoKPI = {};
-    
+
+
+
     metasValidas.forEach(meta=>{
- 
+
         const asesor = normalizarAsesor(
             meta["Asesor (A)"] ||
             meta["ASESOR"] ||
             ""
         );
- 
+
         const buscarColumna = (tipo,mes)=>{
- 
+
             const tipoN = normalizarAsesor(tipo);
             const mesN = normalizarAsesor(mes);
- 
+
             return Object.keys(meta || {}).find(col=>{
- 
+
                 const nombre = normalizarAsesor(col);
- 
+
                 return nombre.includes(tipoN) && nombre.includes(mesN);
- 
+
             });
- 
+
         };
- 
+
         // ==========================================
         // DATOS REALES DEL ASESOR
         // ==========================================
- 
-        const claveRankingAsesor = Object.keys(ranking).find(
-            nombre => normalizarClaveKPI(nombre) === normalizarClaveKPI(asesor)
-        );
- 
-        const colocacion = claveRankingAsesor
-            ? numeroKPI(ranking[claveRankingAsesor])
-            : 0;
- 
-        const oper = claveRankingAsesor
-            ? Number(operaciones[claveRankingAsesor]) || 0
-            : 0;
- 
+
+        const colocacion =
+            Number(ranking[asesor] || 0);
+
+        const oper =
+            Number(operaciones[asesor] || 0);
+
         const tem =
             temPromedio[asesor] &&
             temPromedio[asesor].length
@@ -1241,24 +1160,18 @@ const historicoKPI = {};
             ).toFixed(2)
             :
             "0.00";
- 
-        // La variación se calculará después de obtener temAnterior.
-// Inicializamos las variables para evitar referencias prematuras.
-let variacionTEM = 0;
- 
-let colorVariacionTEM = "#657789";
- 
+
         // ==========================================
         // CLIENTES: METAS VS PRODUCCIÓN
         // ==========================================
- 
+
         // HISTÓRICO: columna CLIENTES detectada automáticamente
         // desde el Excel de METAS.
         const colClientesHistorico =
             configuracionClientes
             ? configuracionClientes.columna
             : null;
- 
+
         const clientesHistoricoMes =
             colClientesHistorico
             ? Number(
@@ -1267,54 +1180,26 @@ let colorVariacionTEM = "#657789";
                 .replace(",", ".")
               ) || 0
             : 0;
- 
-        // META DE CLIENTES: valor cargado desde el Excel de metas.
-const metaClientes =
-    Number(
-        String(
-            meta["META CLIENTES"] ??
-            meta["META_CLIENTES"] ??
-            meta["CLIENTES META"] ??
-            0
-        )
-        .replace(/,/g, "")
-        .replace(",", ".")
-    ) || 0;
- 
+
         // PRODUCCIÓN: clientes únicos del mes siguiente al histórico.
         const clientesMesActualAsesor =
             clientesMesActual[asesor]
             ? clientesMesActual[asesor].size
             : 0;
-        // =========================================
-// CUMPLIMIENTO DE META DE CLIENTES
-// =========================================
- 
-const metaClientesAsesor =
-    Number(meta["META CLIENTES"]) || 0;
- 
-const porcentajeCumplimientoClientes =
-    metaClientesAsesor > 0
-        ? (
-            clientesMesActualAsesor /
-            metaClientesAsesor *
-            100
-          ).toFixed(1)
-        : "0.0";
-        
+
         // VARIACIÓN.
         const variacionClientes =
             clientesMesActualAsesor -
             clientesHistoricoMes;
- 
+
         let colorVariacion = "#657789";
- 
+
         if(variacionClientes > 0){
             colorVariacion = "#159447";
         }else if(variacionClientes < 0){
             colorVariacion = "#D64545";
         }
- 
+
        // ==========================================
 // TEM HISTÓRICO - DESDE EXCEL DE METAS
 // ==========================================
@@ -1326,22 +1211,22 @@ const porcentajeCumplimientoClientes =
 //
 // No depende de mesAnterior.
 // ==========================================
- 
+
 let temAnterior = 0;
- 
+
 let columnaTEMHistorico = null;
- 
+
 if(configuracionClientes){
- 
+
     const mesTEMHistorico =
         configuracionClientes.mes;
- 
+
     columnaTEMHistorico =
         Object.keys(meta || {}).find(col => {
- 
+
             const nombreColumna =
                 normalizarTextoClientes(col);
- 
+
             return (
                 nombreColumna.includes("TEM") &&
                 (
@@ -1354,17 +1239,17 @@ if(configuracionClientes){
                     )
                 )
             );
- 
+
         });
- 
+
 }
- 
+
 // ==========================================
 // LEER TEM DESDE METAS
 // ==========================================
- 
+
 if(columnaTEMHistorico){
- 
+
     temAnterior =
         parseFloat(
             String(
@@ -1373,42 +1258,20 @@ if(columnaTEMHistorico){
             .replace(/%/g,"")
             .replace(/,/g,".")
         ) || 0;
- 
+
 }
- 
+
 console.log(
     "📊 TEM HISTÓRICO:",
     asesor,
     columnaTEMHistorico,
     temAnterior
 );
- 
-// ==========================================
-// VARIACIÓN TEM: ACTUAL MENOS HISTÓRICA
-// ==========================================
- 
-variacionTEM =
-    Number(tem) - Number(temAnterior);
- 
-colorVariacionTEM =
-    variacionTEM > 0
-        ? "#159447"
-        : variacionTEM < 0
-            ? "#D64545"
-            : "#657789";
- 
-console.log(
-    "📈 VARIACIÓN TEM:",
-    asesor,
-    "Anterior:", temAnterior,
-    "Actual:", tem,
-    "Variación:", variacionTEM
-);
- 
+
         // Mora histórica: se toma siempre el mes anterior.
         let moraAnterior = 0;
         const colMora = buscarColumna("MORA",mesAnterior);
- 
+
         if(colMora){
             moraAnterior =
                 parseFloat(
@@ -1417,12 +1280,12 @@ console.log(
                     .replace(",",".")
                 ) || 0;
         }
- 
+
         // Mora actual desde la cartera/producción actual.
         const moraActual = Number(moraActualAsesor[asesor] || 0);
         const mora31Mas = Number(mora31MasAsesor[asesor] || 0);
         const mora1Mas = Number(mora1MasAsesor[asesor] || 0);
- 
+
         // Metas.
         const metaDesembolso =
             Number(
@@ -1430,127 +1293,62 @@ console.log(
                 .replace(/,/g,"")
                 .replace(",",".")
             ) || 0;
- 
+
         const metaOperaciones =
             Number(
                 String(meta["OPERACIONES"] || 0)
                 .replace(/,/g,"")
                 .replace(",",".")
             ) || 0;
- 
+
         const porcentajeDesembolso =
             metaDesembolso > 0
             ? ((colocacion / metaDesembolso) * 100).toFixed(1)
             : "0.0";
- 
+
         const porcentajeOperaciones =
             metaOperaciones > 0
             ? ((oper / metaOperaciones) * 100).toFixed(1)
             : "0.0";
- 
+
         let colorEstado = "🔴";
- 
+
         if(Number(porcentajeDesembolso) >= 100){
             colorEstado = "🟢";
         }else if(Number(porcentajeDesembolso) >= 80){
             colorEstado = "🟡";
         }
-// ==========================================
-// REGISTRO HISTÓRICO DEL ASESOR
-// ==========================================
-historicoKPI[asesor] = {
-    asesor: asesor,
- 
-    metaColocacion: Number(metaDesembolso) || 0,
-    avanceColocacion: Number(colocacion) || 0,
-    porcentajeColocacion: Number(porcentajeDesembolso) || 0,
- 
-    metaOperaciones: Number(metaOperaciones) || 0,
-    avanceOperaciones: Number(oper) || 0,
-    porcentajeOperaciones: Number(porcentajeOperaciones) || 0,
- 
-    clientesHistorico: Number(clientesHistoricoMes) || 0,
-    clientesActuales: Number(clientesMesActualAsesor) || 0,
-    variacionClientes: Number(variacionClientes) || 0,
- 
-    temHistorico: Number(temAnterior) || 0,
-    temActual: Number(tem) || 0,
- 
-    moraHistorica: Number(moraAnterior) || 0,
-    mora31Mas: Number(mora31Mas) || 0,
-    mora9Mas: Number(moraActual) || 0,
-    mora1Mas: Number(mora1Mas) || 0,
- 
-    estado: colorEstado || ""
-};
+
         // Fila del asesor.
         resumen += `
 <tr>
 <td><b>${asesor}</b></td>
 <td>S/${Math.round(metaDesembolso).toLocaleString("es-PE")}</td>
 <td>S/${Math.round(colocacion).toLocaleString("es-PE")}</td>
-<td style="
-background:${Number(porcentajeDesembolso)>=100?'#159447':Number(porcentajeDesembolso)>=80?'#EAF3F8':'#EAF3F8'};color:${Number(porcentajeDesembolso)
->=100?'#FFFFFF':Number(porcentajeDesembolso)>=80?'#8A5A00':'#B42318'}
-;font-weight:bold;">${porcentajeDesembolso}%</td>
+<td style="background:${Number(porcentajeDesembolso)>=100?'#22B55A':'#FFFFFF'};color:${Number(porcentajeDesembolso)>=100?'white':'#000000'};font-weight:bold;">${porcentajeDesembolso}%</td>
 <td>${metaOperaciones}</td>
 <td>${oper}</td>
- 
-<td style="
-    background:${Number(porcentajeOperaciones)>=100?'#159447':'#EAF3F8'};
-    color:${Number(porcentajeOperaciones)>=100?'#FFFFFF':Number(porcentajeOperaciones)>=80?'#8A5A00':'#B42318'} !important;
-    font-weight:800;
-">${porcentajeOperaciones}%</td>
- 
-<td>
-    <b>${metaClientes}</b>
-</td>
- 
+<td style="background:${Number(porcentajeOperaciones)>=100?'#22B55A':Number(porcentajeOperaciones)>=80?'#E0AA24':'#D64545'};color:white;font-weight:bold;">${porcentajeOperaciones}%</td>
 <td>
     <b>${clientesHistoricoMes}</b>
 </td>
+
 <td>
     <b>${clientesMesActualAsesor}</b>
 </td>
-<td style="
-    text-align:center;
-    font-weight:bold;
-    color:${
-        Number(porcentajeCumplimientoClientes) >= 100
-            ? '#159447'
-            : Number(porcentajeCumplimientoClientes) >= 80
-                ? '#B8860B'
-                : '#D64545'
-    };
-">
-    ${porcentajeCumplimientoClientes}%
-</td>
 <td style="font-weight:bold;color:${colorVariacion};">${variacionClientes>0?'+':''}${variacionClientes}</td>
-<td>${Number(temAnterior).toFixed(2)}%</td>
+<td>${Number(temAnterior).toFixed(1)}%</td>
 <td>${Number(tem).toFixed(2)}%</td>
-<td style="color:${colorVariacionTEM};font-weight:bold;text-align:center;">
-    ${variacionTEM > 0 ? "+" : ""}${variacionTEM.toFixed(2)} pp
-</td>
- 
 <td>S/${Math.round(moraAnterior).toLocaleString("es-PE")}</td>
- 
-<td style="font-weight:bold;color:#B42318;background:#FCE4E4;border-radius:4px;">S/${Math.round(mora31Mas).toLocaleString("es-PE")}</td>
- 
- 
-<td style="font-weight:bold;color:#B42318;background:#FCE4E4;border-radius:4px;">S/${Math.round(moraActual).toLocaleString("es-PE")}</td>
- 
- 
-<td style="font-weight:bold;color:#B42318;background:#FCE4E4;border-radius:4px;">S/${Math.round(mora1Mas).toLocaleString("es-PE")}</td>
- 
- 
-<td style="font-size:20px;text-align:center;background:#EDF4F8;border-left:1px solid #D6E2EC;">${colorEstado}</td>
- 
+<td style="font-weight:bold;color:#991B1B;">S/${Math.round(mora31Mas).toLocaleString("es-PE")}</td>
+<td style="font-weight:bold;color:#C43D3D;">S/${Math.round(moraActual).toLocaleString("es-PE")}</td>
+<td style="font-weight:bold;color:#C43D3D;">S/${Math.round(mora1Mas).toLocaleString("es-PE")}</td>
+<td>${colorEstado}</td>
 </tr>
 `;
- 
+
         // Totales empresa.
         totalMetaColocacion += metaDesembolso;
-        totalMetaClientes += Number(metaClientes) || 0;
         totalAvanceColocacion += colocacion;
         totalMetaOperaciones += metaOperaciones;
         totalAvanceOperaciones += oper;
@@ -1560,26 +1358,26 @@ background:${Number(porcentajeDesembolso)>=100?'#159447':Number(porcentajeDesemb
         totalMoraAgosto += moraActual;
         totalMoraAgosto31Mas += mora31Mas;
         totalMoraAgosto1Mas += mora1Mas;
- 
+
         if(Number(temAnterior) > 0){
             sumaTemJulio += Number(temAnterior);
             cantidadTemJulio++;
         }
- 
+
         if(Number(tem) > 0){
             sumaTemAgosto += Number(tem);
             cantidadTemAgosto++;
         }
- 
+
     });
     
 // =========================================
 // TOTAL EMPRESA
 // =========================================
- 
+
 let totalVariacionClientes =
 totalClientesSiguiente - totalClientesHistorico;
- 
+
 let porcentajeTotalColocacion =
 totalMetaColocacion > 0
 ?
@@ -1590,7 +1388,7 @@ totalMetaColocacion > 0
 ).toFixed(1)
 :
 0;
- 
+
 let porcentajeTotalOperaciones =
 totalMetaOperaciones > 0
 ?
@@ -1601,7 +1399,7 @@ totalMetaOperaciones > 0
 ).toFixed(1)
 :
 0;
- 
+
 let temTotalJulio =
 cantidadTemJulio > 0
 ?
@@ -1611,7 +1409,7 @@ cantidadTemJulio > 0
 ).toFixed(1)
 :
 0;
- 
+
 let temTotalAgosto =
 cantidadTemAgosto > 0
 ?
@@ -1621,18 +1419,7 @@ cantidadTemAgosto > 0
 ).toFixed(1)
 :
 0;
- 
-// VARIACIÓN TEM TOTAL EMPRESA
-let variacionTEMTotal =
-    Number(temTotalAgosto) - Number(temTotalJulio);
- 
-let colorVariacionTEMTotal =
-    variacionTEMTotal > 0
-        ? "#159447"
-        : variacionTEMTotal < 0
-            ? "#D64545"
-            : "#657789";
- 
+
 let colorTotalVariacion =
 totalVariacionClientes > 0
 ?
@@ -1643,9 +1430,9 @@ totalVariacionClientes < 0
 "#D64545"
 :
 "#657789";
- 
+
 resumen += `
- 
+
 <tr style="
 background:#EDF4F8;
 font-weight:800;
@@ -1654,7 +1441,7 @@ height:42px;
 border-top:3px solid #123F63;
 vertical-align:middle;
 ">
- 
+
 <td style="
 font-size:16px;
 font-weight:900;
@@ -1662,1372 +1449,440 @@ line-height:1.1;
 ">
 TOTAL<br>EMPRESA
 </td>
- 
+
 <td>
 S/${totalMetaColocacion.toLocaleString("es-PE")}
 </td>
- 
+
 <td>
 S/${Math.round(totalAvanceColocacion).toLocaleString("es-PE")}
 </td>
- 
+
 <td>
 ${porcentajeTotalColocacion}%
 </td>
- 
+
 <td>
 ${totalMetaOperaciones}
 </td>
- 
+
 <td>
 ${totalAvanceOperaciones}
 </td>
- 
+
 <td>
 ${porcentajeTotalOperaciones}%
 </td>
- 
-<td>
-${totalMetaClientes}
-</td>
- 
+
 <td>
 ${totalClientesHistorico}
 </td>
- 
+
 <td>
 ${totalClientesSiguiente}
 </td>
- 
-<td style="
-    text-align:center;
-    font-weight:bold;
-    color:${
-        totalMetaClientes > 0 &&
-        (totalClientesSiguiente / totalMetaClientes * 100) >= 100
-            ? '#159447'
-            : totalMetaClientes > 0 &&
-              (totalClientesSiguiente / totalMetaClientes * 100) >= 80
-                ? '#B8860B'
-                : '#D64545'
-    };
-">
-    ${
-        totalMetaClientes > 0
-            ? (totalClientesSiguiente / totalMetaClientes * 100).toFixed(1) + "%"
-            : "0.0%"
-    }
-</td>
- 
+
 <td style="
 color:${colorTotalVariacion};
 ">
 ${totalVariacionClientes > 0 ? "+" : ""}
 ${totalVariacionClientes}
 </td>
- 
+
 <td>
 ${temTotalJulio}%
 </td>
- 
+
 <td>
 ${temTotalAgosto}%
 </td>
- 
-<td style="
-    color:${colorVariacionTEMTotal};
-    font-weight:bold;
-    text-align:center;
-">
-    ${variacionTEMTotal > 0 ? "+" : ""}${Number(variacionTEMTotal).toFixed(2)} pp
-</td>
- 
+
 <td>
 S/${Math.round(totalMoraJulio).toLocaleString("es-PE")}
 </td>
- 
+
 <td>
 S/${Math.round(totalMoraAgosto31Mas).toLocaleString("es-PE")}
 </td>
- 
+
 <td>
 S/${Math.round(totalMoraAgosto).toLocaleString("es-PE")}
 </td>
- 
+
 <td>
 S/${Math.round(totalMoraAgosto1Mas).toLocaleString("es-PE")}
 </td>
- 
+
 <td>
 🏢
 </td>
- 
+
 </tr>
- 
+
 `;
-   resumen += `
+    resumen += `
 </table>
-</div>
- 
-<!-- ==========================================
-     HISTÓRICO KPI POR ASESOR
-========================================== -->
- 
-<div id="contenedorHistoricoKPI"
-style="
-margin-top:20px;
-padding:15px;
-background:#ffffff;
-border-radius:12px;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
-">
- 
-    <div style="
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        flex-wrap:wrap;
-        gap:10px;
-        margin-bottom:15px;
-    ">
- 
-        <h4 style="
-            margin:0;
-            color:#123F63;
-            font-weight:700;
-        ">
-           📈 EVOLUCIÓN KPI POR ASESOR
-        </h4>
- 
-        <div style="
-            display:flex;
-            gap:8px;
-            flex-wrap:wrap;
-        ">
- 
-            <div style="
-    padding:8px 12px;
-    background:#EDF4F8;
-    border-radius:6px;
-    color:#123F63;
-    font-size:12px;
-    font-weight:700;
-">
-    📊 EVOLUCIÓN MENSUAL
-</div>
- 
-            <select
-                id="historicoKPIAsesor"
-                onchange="renderHistoricoKPI()"
-                style="
-                    padding:8px 10px;
-                    border:1px solid #ccc;
-                    border-radius:6px;
-                    font-weight:600;
-                ">
-            </select>
- 
-        </div>
- 
-    </div>
- 
-    <div id="historicoKPIContenido">
-        <div style="
-            padding:20px;
-            text-align:center;
-            color:#777;
-        ">
-            ⏳ Cargando histórico KPI...
-        </div>
-    </div>
- 
 </div>
 `;
     
+let rankingKPIHTML = "";
+top
+.filter(([asesor]) =>
+    asesor.toUpperCase() !== "ADMIN"
+)
+.slice(0,10)
+.forEach((r,index)=>{
+
+let medalla="🥉";
+if(index===0) medalla="🥇";
+if(index===1) medalla="🥈";
+
+rankingKPIHTML += `
+<div style="
+font-size:11px;
+line-height:1.2;
+margin:2px 0;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+">
+
+${medalla}
+${r[0].substring(0,8)}
+→ S/${Number(r[1]).toLocaleString("es-PE")}
+
+</div>
+`;
+
+});
+
+localStorage.setItem(
+"rankingKPIHTML",
+rankingKPIHTML
+);
+
+if(document.getElementById("rankingKPI")){
+document.getElementById("rankingKPI").innerHTML =
+rankingKPIHTML;
+}    
 document.getElementById(
     "kpiResumen"
 ).innerHTML = resumen;
- 
+
 localStorage.setItem(
     "resumenKPI",
     resumen
 );
-guardarGerencialFirebase(resumen);
-    
-guardarHistoricoKPI(historicoKPI, anioActual, mesActual);
- 
+guardarGerencialFirebase(
+    resumen,
+    rankingKPIHTML
+);
+
+
+}
+
 // ======================================================
 // FIREBASE KPI GERENCIAL
 // ======================================================
-function guardarGerencialFirebase(resumen){
- 
+function guardarGerencialFirebase(
+    resumen,
+    rankingKPIHTML
+){
+
     db.ref("kpiGerencial").set({
- 
+
         resumen,
- 
+        rankingKPIHTML,
+
         nombreMeta:
         localStorage.getItem("nombreMetaKPI") || "",
- 
+
         fechaMeta:
         localStorage.getItem("fechaMetaKPI") || "",
- 
+
         nombreProduccion:
         localStorage.getItem("nombreProduccionKPI") || "",
- 
+
         fechaProduccion:
         localStorage.getItem("fechaProduccionKPI") || "",
- 
+
         fechaActualizacion:
         new Date().toLocaleString()
- 
+
     })
- 
+
     .then(()=>{
- 
+
         console.log(
             "✅ KPI GERENCIAL FIREBASE"
         );
- 
+
     })
- 
+
     .catch(error=>{
- 
+
         console.error(
             "❌ ERROR KPI GERENCIAL",
             error
         );
- 
+
     });
- 
+
 }
-// ==========================================
-// GUARDAR HISTÓRICO KPI POR MES
-// ==========================================
-function guardarHistoricoKPI(historicoKPI, anio, mes){
- 
-    const periodo = String(mes).toUpperCase();
- 
-    const refHistorico = db
-        .ref("kpiHistorico")
-        .child(String(anio))
-        .child(periodo);
- 
-    refHistorico.set({
-        asesores: historicoKPI,
-        fechaActualizacion: new Date().toISOString()
-    })
-    .then(() => {
-        console.log(
-            `✅ HISTÓRICO KPI GUARDADO: ${periodo} ${anio}`
-        );
-    })
-    .catch(error => {
-        console.error(
-            "❌ ERROR GUARDANDO HISTÓRICO KPI:",
-            error
-        );
-    });
-}
- 
-// ==========================================
-// CARGAR HISTÓRICO KPI DESDE FIREBASE
-// ==========================================
- 
-let historicoKPIData = {};
- 
-function cargarHistoricoKPI(){
- 
-    db.ref("kpiHistorico")
-    .once("value")
-    .then(snapshot => {
- 
-        historicoKPIData = snapshot.val() || {};
- 
-        console.log(
-            "📈 HISTÓRICO KPI FIREBASE:",
-            historicoKPIData
-        );
- 
-       const selectorAsesor =
-    document.getElementById("historicoKPIAsesor");
- 
-if(!selectorAsesor){
- 
-    console.warn(
-        "⚠️ No se encontró el selector de asesor"
-    );
- 
-    return;
-}
- 
-selectorAsesor.innerHTML = "";
- 
-        // ==========================================
-        // ORDEN DE MESES
-        // ==========================================
- 
-        const ordenMeses = [
-            "ENERO",
-            "FEBRERO",
-            "MARZO",
-            "ABRIL",
-            "MAYO",
-            "JUNIO",
-            "JULIO",
-            "AGOSTO",
-            "SEPTIEMBRE",
-            "OCTUBRE",
-            "NOVIEMBRE",
-            "DICIEMBRE"
-        ];
- 
-        let periodos = [];
- 
-        Object.keys(historicoKPIData).forEach(anio => {
- 
-            const mesesAnio =
-                historicoKPIData[anio] || {};
- 
-            Object.keys(mesesAnio).forEach(mes => {
- 
-                periodos.push({
-                    anio:Number(anio),
-                    mes:mes.toUpperCase()
-                });
- 
-            });
- 
-        });
- 
-        // Más reciente primero
-        periodos.sort((a,b) => {
- 
-            if(a.anio !== b.anio){
- 
-                return b.anio - a.anio;
- 
-            }
- 
-            return (
-                ordenMeses.indexOf(b.mes) -
-                ordenMeses.indexOf(a.mes)
-            );
- 
-        });
- 
-        // ==========================================
-// PERÍODOS HISTÓRICOS
-// ==========================================
-// Los meses se muestran automáticamente
-// en la tabla de evolución mensual.
- 
-        // ==========================================
-        // ASESORES
-        // ==========================================
- 
-        const asesores = new Set();
- 
-        periodos.forEach(periodo => {
- 
-            const datosMes =
-                historicoKPIData
-                [periodo.anio]
-                [periodo.mes];
- 
-            if(
-                datosMes &&
-                datosMes.asesores
-            ){
- 
-                Object.keys(
-                    datosMes.asesores
-                ).forEach(asesor => {
- 
-                    asesores.add(asesor);
- 
-                });
- 
-            }
- 
-        });
- 
-        const optionTodos =
-            document.createElement("option");
- 
-        optionTodos.value = "TODOS";
-        optionTodos.textContent =
-            "TODOS LOS ASESORES";
- 
-        selectorAsesor.appendChild(
-            optionTodos
-        );
- 
-        Array.from(asesores)
-        .sort()
-        .forEach(asesor => {
- 
-            const option =
-                document.createElement("option");
- 
-            option.value = asesor;
-            option.textContent = asesor;
- 
-            selectorAsesor.appendChild(
-                option
-            );
- 
-        });
- 
-        renderHistoricoKPI();
- 
-    })
-    .catch(error => {
- 
-        console.error(
-            "❌ ERROR CARGANDO HISTÓRICO KPI:",
-            error
-        );
- 
-    });
- 
-}
- 
-// ==========================================
-// EVOLUCIÓN KPI POR ASESOR
-// ==========================================
- 
-function renderHistoricoKPI(){
- 
-    const contenido =
-        document.getElementById(
-            "historicoKPIContenido"
-        );
- 
-    const selectorAsesor =
-        document.getElementById(
-            "historicoKPIAsesor"
-        );
- 
-   if(
-    !contenido ||
-    !selectorAsesor
-){
- 
-        return;
- 
-    }
- 
-    const asesorSeleccionado =
-        selectorAsesor.value;
- 
-    // ==========================================
-    // OBTENER TODOS LOS PERIODOS
-    // ==========================================
- 
-    const ordenMeses = [
-        "ENERO",
-        "FEBRERO",
-        "MARZO",
-        "ABRIL",
-        "MAYO",
-        "JUNIO",
-        "JULIO",
-        "AGOSTO",
-        "SEPTIEMBRE",
-        "OCTUBRE",
-        "NOVIEMBRE",
-        "DICIEMBRE"
-    ];
- 
-    let periodos = [];
- 
-    Object.keys(historicoKPIData)
-    .forEach(anio => {
- 
-        const meses =
-            historicoKPIData[anio] || {};
- 
-        Object.keys(meses)
-        .forEach(mes => {
- 
-            periodos.push({
-                anio:Number(anio),
-                mes:String(mes).toUpperCase()
-            });
- 
-        });
- 
-    });
- 
-    periodos.sort((a,b) => {
- 
-        if(a.anio !== b.anio){
- 
-            return a.anio - b.anio;
- 
-        }
- 
-        return (
-            ordenMeses.indexOf(a.mes) -
-            ordenMeses.indexOf(b.mes)
-        );
- 
-    });
- 
-    if(periodos.length === 0){
- 
-        contenido.innerHTML = `
-            <div style="
-                padding:20px;
-                text-align:center;
-                color:#777;
-            ">
-                ⚠️ No existen períodos históricos.
-            </div>
-        `;
- 
-        return;
- 
-    }
- 
-    // ==========================================
-    // SI ES "TODOS"
-    // MOSTRAR TABLA RESUMEN
-    // ==========================================
- 
-    if(
-        !asesorSeleccionado ||
-        asesorSeleccionado === "TODOS"
-    ){
- 
-        contenido.innerHTML = `
- 
-        <div style="
-            padding:18px;
-            background:#EDF4F8;
-            border-radius:8px;
-            color:#123F63;
-            text-align:center;
-            font-size:13px;
-            font-weight:600;
-        ">
- 
-            👤 Seleccione un asesor para visualizar
-            su evolución mensual.
- 
-        </div>
- 
-        `;
- 
-        return;
- 
-    }
- 
-    // ==========================================
-    // OBTENER INFORMACIÓN DEL ASESOR
-    // ==========================================
- 
-    let registros = [];
- 
-    periodos.forEach(periodo => {
- 
-        const datosPeriodo =
-            historicoKPIData
-            [periodo.anio]
-            [periodo.mes];
- 
-        if(
-            !datosPeriodo ||
-            !datosPeriodo.asesores
-        ){
- 
-            return;
- 
-        }
- 
-        const dato =
-            datosPeriodo.asesores[
-                asesorSeleccionado
-            ];
- 
-        if(dato){
- 
-            registros.push({
- 
-                anio:periodo.anio,
-                mes:periodo.mes,
-                data:dato
- 
-            });
- 
-        }
- 
-    });
- 
-    if(registros.length === 0){
- 
-        contenido.innerHTML = `
- 
-            <div style="
-                padding:20px;
-                text-align:center;
-                color:#D64545;
-            ">
- 
-                ❌ No existen datos históricos
-                para <b>${asesorSeleccionado}</b>.
- 
-            </div>
- 
-        `;
- 
-        return;
- 
-    }
- 
-    function variacion(
-    actual,
-    anterior,
-    tipo = "normal"
-){
- 
-    actual =
-        Number(actual || 0);
- 
-    anterior =
-        Number(anterior || 0);
- 
-    if(anterior === 0){
- 
-        if(actual === 0){
- 
-            return {
-                texto:"—",
-                color:"#777"
-            };
- 
-        }
- 
-        // Si es mora, comenzar con mora
-        // es algo negativo
-        if(tipo === "mora"){
- 
-            return {
-                texto:"↑",
-                color:"#D64545"
-            };
- 
-        }
- 
-        return {
-            texto:"↑",
-            color:"#159447"
-        };
- 
-    }
- 
-    const diferencia =
-        actual - anterior;
- 
-    if(diferencia === 0){
- 
-        return {
-            texto:"—",
-            color:"#777"
-        };
- 
-    }
- 
-    // ==========================================
-    // MORA
-    // MENOR MORA = MEJOR
-    // ==========================================
- 
-    if(tipo === "mora"){
- 
-        if(diferencia < 0){
- 
-            return {
-                texto:"↓",
-                color:"#159447"
-            };
- 
-        }
- 
-        return {
-            texto:"↑",
-            color:"#D64545"
-        };
- 
-    }
- 
-    // ==========================================
-    // KPI NORMAL
-    // MAYOR = MEJOR
-    // ==========================================
- 
-    if(diferencia > 0){
- 
-        return {
-            texto:"↑",
-            color:"#159447"
-        };
- 
-    }
- 
-    return {
-        texto:"↓",
-        color:"#D64545"
-    };
- 
-}
- 
-    // ==========================================
-    // CONSTRUIR TABLA
-    // ==========================================
- 
-    let html = `
- 
-    <div style="
-        overflow-x:auto;
-        width:100%;
-        -webkit-overflow-scrolling:touch;
-    ">
- 
-    <table style="
-    width:100%;
-    min-width:680px;
-    border-collapse:collapse;
-    font-size:10px;
-">
- 
-    <thead>
- 
-        <tr style="
-            background:#123F63;
-            color:#fff;
-        ">
- 
-            <th style="
-                padding:6px 8px;
-min-width:120px;
-width:120px;
-                text-align:left;
-                position:sticky;
-                left:0;
-                background:#123F63;
-                z-index:2;
-            ">
-                INDICADOR
-            </th>
-    `;
- 
-    // Encabezados de meses
- 
-    registros.forEach(registro => {
- 
-        html += `
- 
-            <th style="
-                padding:6px 5px;
-                text-align:center;
-                white-space:nowrap;
-            ">
-                ${registro.mes}
-                <br>
-                ${registro.anio}
-            </th>
- 
-        `;
- 
-    });
- 
-    html += `
- 
-            <th style="
-                padding:10px;
-                text-align:center;
-                background:#0B304D;
-            ">
-                TENDENCIA
-            </th>
- 
-        </tr>
- 
-    </thead>
- 
-    <tbody>
-    `;
- 
-    // ==========================================
-    // FUNCIÓN PARA CREAR FILAS
-    // ==========================================
- 
-    function fila(
-        nombre,
-        campo,
-        formato,
-        mejor="sube"
-    ){
- 
-        html += `
- 
-        <tr style="
-            border-bottom:1px solid #ddd;
-        ">
- 
-           <td style="
-   padding:6px 8px;
-min-width:120px;
-width:120px;
-    font-weight:800;
-    color:#123F63;
-    background:#F3F7FA;
-    white-space:nowrap;
-    position:sticky;
-    left:0;
-    z-index:1;
-    border-right:2px solid #D9E4EC;
-">
-    ${nombre}
-</td>
-        `;
- 
-        registros.forEach(registro => {
- 
-            const valor =
-                Number(
-                    registro.data[campo] || 0
-                );
- 
-            let texto = "";
- 
-            if(formato === "dinero"){
- 
-                texto =
-                    "S/" +
-                    valor.toLocaleString(
-                        "es-PE",
-                        {
-                            maximumFractionDigits:0
-                        }
-                    );
- 
-            }
- 
-            else if(formato === "porcentaje"){
- 
-                texto =
-                    valor.toFixed(1) + "%";
- 
-            }
- 
-            else{
- 
-                texto =
-                    valor.toLocaleString("es-PE");
- 
-            }
- 
-            html += `
- 
-                <td style="
-    padding:6px 5px;
-    text-align:center;
-    font-weight:700;
-    color:#123F63;
-    background:#FFFFFF;
-    border-bottom:1px solid #E5E7EB;
-">
-    ${texto}
-</td>
- 
-            `;
- 
-        });
- 
-        // ==========================================
-        // TENDENCIA
-        // ==========================================
- 
-        let tendencia = {
-            texto:"—",
-            color:"#777"
-        };
- 
-        if(registros.length >= 2){
- 
-            const ultimo =
-                registros[
-                    registros.length - 1
-                ].data[campo];
- 
-            const anterior =
-                registros[
-                    registros.length - 2
-                ].data[campo];
- 
-           tendencia =
-    variacion(
-        ultimo,
-        anterior,
-        mejor
-    );
- 
-        }
- 
-        html += `
- 
-           <td style="
-    padding:9px;
-    text-align:center;
-">
- 
-    <span style="
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        width:32px;
-        height:32px;
-        border-radius:50%;
-        background:${tendencia.color}18;
-        color:${tendencia.color};
-        font-size:20px;
-        font-weight:900;
-    ">
-        ${tendencia.texto}
-    </span>
- 
-</td>
- 
-        </tr>
- 
-        `;
- 
-    }
- 
-    // ==========================================
-    // FILAS KPI
-    // ==========================================
- 
-    fila(
-        "💰 Colocación",
-        "avanceColocacion",
-        "dinero"
-    );
- 
-    fila(
-        "📊 % Avance",
-        "porcentajeColocacion",
-        "porcentaje"
-    );
- 
-    fila(
-        "🎯 Operaciones",
-        "avanceOperaciones",
-        "numero"
-    );
- 
-    fila(
-        "📊 % Operaciones",
-        "porcentajeOperaciones",
-        "porcentaje"
-    );
- 
-    fila(
-        "👥 Clientes",
-        "clientesActuales",
-        "numero"
-    );
- 
-    fila(
-        "📈 TEM",
-        "temActual",
-        "porcentaje"
-    );
- 
-    fila(
-        "🔴 Mora 31+",
-        "mora31Mas",
-        "dinero",
-        "mora"
-    );
- 
-    fila(
-        "🟠 Mora 9+",
-        "mora9Mas",
-        "dinero",
-         "mora"
-    );
- 
-    fila(
-        "🟡 Mora 1+",
-        "mora1Mas",
-        "dinero",
-         "mora"
-    );
- 
-    // ==========================================
-    // ESTADO
-    // ==========================================
- 
-    html += `
- 
-       <tr style="
-    border-top:2px solid #D9E4EC;
-    border-bottom:1px solid #D9E4EC;
-    background:#F8FAFC;
-">
- 
-            <td style="
-                padding:9px;
-                font-weight:700;
-                color:#123F63;
-                background:#F8FAFC;
-                position:sticky;
-                left:0;
-            ">
-                🚦 Estado
-            </td>
- 
-    `;
- 
-    registros.forEach(registro => {
- 
-        html += `
- 
-            <td style="
-                padding:9px;
-                text-align:center;
-                font-size:20px;
-            ">
-                ${registro.data.estado || "⚪"}
-            </td>
- 
-        `;
- 
-    });
- 
-    let estadoFinal =
-        registros[
-            registros.length - 1
-        ].data.estado || "⚪";
- 
-    html += `
- 
-            <td style="
-                padding:9px;
-                text-align:center;
-                font-size:20px;
-            ">
-                ${estadoFinal}
-            </td>
- 
-        </tr>
- 
-    `;
- 
-    html += `
- 
-    </tbody>
- 
-    </table>
- 
-    </div>
- 
-    <div style="
-        margin-top:12px;
-        padding:10px 12px;
-        background:#EDF4F8;
-        border-radius:7px;
-        color:#657789;
-        font-size:11px;
-    ">
- 
-        👤 <b>${asesorSeleccionado}</b>
-        &nbsp; | &nbsp;
-        📅 ${registros.length} período(s) registrado(s)
- 
-        <br><br>
- 
-        <span style="color:#159447;font-weight:700;">
-            ↑ Mejora
-        </span>
- 
-        &nbsp;&nbsp;
- 
-        <span style="color:#D64545;font-weight:700;">
-            ↓ Disminución
-        </span>
- 
-        &nbsp;&nbsp;
- 
-        <span style="color:#777;font-weight:700;">
-            — Sin variación
-        </span>
- 
-    </div>
- 
-    `;
- 
-    contenido.innerHTML = html;
- 
-}
+
 function cargarGerencialFirebase(){
- 
+
     db.ref("kpiGerencial")
     .once("value")
     .then(snapshot=>{
- 
+
         const datos = snapshot.val();
 console.log("================================");
 console.log("GERENCIAL FIREBASE");
 console.log(datos);
 console.log("================================");
         if(!datos) return;
- 
+
       if(datos.fechaProduccion){
- 
+
     const fechaCargaProduccion =
     new Date().toLocaleString("es-PE");
- 
+
 localStorage.setItem(
     "fechaProduccionKPI",
     fechaCargaProduccion
 );
- 
+
 }
- 
+
        console.log("RESUMEN GERENCIAL:", datos.resumen);
- 
+
 const divResumen = document.getElementById("kpiResumen");
- 
+
 console.log("DIV KPI:", divResumen);
- 
+
 if(divResumen){
- 
+
     divResumen.innerHTML = datos.resumen || "";
- 
+
+}
+
+        if(
+            datos.rankingKPIHTML &&
+            document.getElementById("rankingKPI")
+        ){
+
+            document.getElementById(
+                "rankingKPI"
+            ).innerHTML =
+            datos.rankingKPIHTML;
+
         }
- 
+
         console.log(
             "✅ KPI GERENCIAL DESDE FIREBASE"
         );
- 
+
     })
- 
+
     .catch(error=>{
- 
+
         console.error(
             "❌ ERROR CARGANDO KPI GERENCIAL",
             error
         );
- 
+
     });
- 
+
 }
- 
- 
-// ==========================================
-// CARGAR HISTÓRICO KPI DESPUÉS DEL RESUMEN
-// ==========================================
- 
-setTimeout(() => {
- 
-    cargarHistoricoKPI();
- 
-}, 500);
- 
- 
 // ======================================================
 // FIREBASE KPI FINANCIERO
 // ======================================================
- 
+
 function cargarFinancieroFirebase(){
- 
+
     db.ref("kpiFinanciero")
     .once("value")
     .then(snapshot=>{
- 
+
         const datos = snapshot.val();
         const divFinanciero = document.getElementById("resumenFinanciero");
- 
+
         if(datos){
- 
+
             // Restaurar datos del Excel
             if(datos.datos){
- 
+
                 localStorage.setItem(
                     "financiero",
                     JSON.stringify(datos.datos)
                 );
- 
+
                 mostrarResumenFinanciero();
- 
+
             }
             // Si no existen datos, mostrar el HTML guardado
             else if(divFinanciero){
- 
+
                 divFinanciero.innerHTML = datos.html || "";
- 
+
             }
- 
+
             console.log("✅ KPI FINANCIERO DESDE FIREBASE");
- 
+
         }
         else{
- 
+
             let financieroGuardado =
             localStorage.getItem("financiero");
- 
+
             if(financieroGuardado){
- 
+
                 mostrarResumenFinanciero();
- 
+
             }
- 
+
         }
- 
+
     })
     .catch(error=>{
- 
+
         console.error(
             "❌ ERROR CARGANDO KPI FINANCIERO",
             error
         );
- 
+
     });
- 
+
 }
 // ======================================================
 // FUNCIONES GENERALES
 // ======================================================
 function toggleKPI(asesor){
- 
+
     let detalle =
     document.getElementById(
         "detalle_" + asesor
     );
- 
+
     if(!detalle) return;
- 
+
     if(detalle.style.display==="none"){
- 
+
         detalle.style.display="block";
- 
+
     }else{
- 
+
         detalle.style.display="none";
 }
- 
+
  }
 function mostrarPanel(panel){
- 
+
 let resumen =
 document.getElementById("panelResumen");
- 
+
 let asesores =
- 
 document.getElementById("panelAsesores");
- 
+
 let rentabilidad =
 document.getElementById("panelRentabilidad");
- 
+
 let clientes =
 document.getElementById("panelClientes");
- 
+
 if(resumen)
 resumen.style.display="none";
- 
+
 if(asesores)
 asesores.style.display="none";
- 
+
 if(rentabilidad)
 rentabilidad.style.display="none";
- 
+
 if(clientes)
 clientes.style.display="none";
- 
+
 if(panel==="resumen")
 resumen.style.display="block";
- 
+
 if(panel==="asesores")
 asesores.style.display="block";
- 
+
 if(panel==="rentabilidad")
 rentabilidad.style.display="block";
- 
+
 if(panel==="clientes")
 clientes.style.display="block";
- 
+
 }
 // ======================================================
 // ARCHIVOS ACTIVOS
 // ======================================================
- 
+
 function mostrarArchivosActivos(){
- 
+
     let div =
     document.getElementById("metaActivaKPI");
- 
+
     let nombre =
     localStorage.getItem("nombreMetaKPI");
- 
+
     let fecha =
     localStorage.getItem("fechaMetaKPI");
- 
+
     if(div && nombre){
- 
+
         div.innerHTML =
         `📅 Meta vigente: ${nombre}<br>
         🕒 Cargada: ${fecha}`;
- 
+
     }
- 
+
     let nombreProd =
     localStorage.getItem("nombreProduccionKPI");
- 
+
     let fechaProd =
     localStorage.getItem("fechaProduccionKPI");
- 
+
     if(div && nombreProd){
- 
+
         div.innerHTML +=
         `<br><br>
         📂 Producción vigente: ${nombreProd}<br>
         🕒 Cargada: ${fechaProd}`;
- 
+
     }
- 
+
     let nombreFinanciero =
     localStorage.getItem("nombreFinanciero");
- 
+
     let archivo =
     document.getElementById(
         "archivoFinancieroActivo"
     );
- 
+
     if(archivo){
- 
+
         archivo.innerHTML =
         "📂 Archivo vigente: " +
         (nombreFinanciero || "Sin archivo");
- 
+
     }
- 
+
 }
 // ======================================================
 // INICIALIZACIÓN
 // ======================================================
 window.addEventListener("load", iniciarKPI);
- 
+
 function iniciarKPI(){
- 
+
     mostrarArchivosActivos();
- 
+
     // KPI GERENCIAL
     cargarGerencialFirebase();
- 
+
     // KPI FINANCIERO
     // Se carga únicamente cuando exista información válida
     try{
@@ -3038,38 +1893,38 @@ function iniciarKPI(){
             error
         );
     }
- 
+
 }
 // ======================================================
 // KPI FINANCIERO
 // CARGAR DATA GENERAL
 // ======================================================
- 
+
 function cargarExcelFinanciero(){
- 
+
     const input =
         document.getElementById("excelFinanciero");
- 
+
     if(!input || !input.files.length){
- 
+
         alert("Seleccione el archivo financiero.");
- 
+
         return;
     }
- 
+
     const archivo = input.files[0];
- 
+
     const lector = new FileReader();
- 
+
     lector.onload = function(e){
- 
+
         try{
- 
+
             const data =
                 new Uint8Array(
                     e.target.result
                 );
- 
+
             const wb =
                 XLSX.read(
                     data,
@@ -3077,18 +1932,18 @@ function cargarExcelFinanciero(){
                         type:"array"
                     }
                 );
- 
+
             const hoja =
                 wb.Sheets[
                     wb.SheetNames[0]
                 ];
- 
+
             /*
             ==================================================
             LEER TODO EL EXCEL COMO MATRIZ
             ==================================================
             */
- 
+
             const filas =
                 XLSX.utils.sheet_to_json(
                     hoja,
@@ -3097,29 +1952,29 @@ function cargarExcelFinanciero(){
                         defval:""
                     }
                 );
- 
+
             console.log(
                 "📊 FILAS LEÍDAS:",
                 filas.length
             );
- 
+
             /*
             ==================================================
             BUSCAR AUTOMÁTICAMENTE LA FILA DE ENCABEZADOS
             ==================================================
             */
- 
+
             let filaEncabezado = -1;
- 
+
             for(
                 let i = 0;
                 i < filas.length;
                 i++
             ){
- 
+
                 const fila =
                     filas[i];
- 
+
                 const existeFecha =
                     fila.some(
                         celda =>
@@ -3129,51 +1984,51 @@ function cargarExcelFinanciero(){
                         ===
                         "fecha desembolso"
                     );
- 
+
                 if(existeFecha){
- 
+
                     filaEncabezado = i;
- 
+
                     break;
                 }
- 
+
             }
- 
+
             console.log(
                 "📌 FILA ENCABEZADOS:",
                 filaEncabezado + 1
             );
- 
+
             /*
             ==================================================
             SI NO ENCUENTRA FECHA DE DESEMBOLSO
             ==================================================
             */
- 
+
             if(filaEncabezado === -1){
- 
+
                 console.error(
                     "❌ No se encontró 'Fecha Desembolso'."
                 );
- 
+
                 console.log(
                     "Primeras filas del Excel:",
                     filas.slice(0,10)
                 );
- 
+
                 alert(
                     "❌ No se encontró la columna 'Fecha Desembolso' en el Excel."
                 );
- 
+
                 return;
             }
- 
+
             /*
             ==================================================
             CONVERTIR DESDE LA FILA CORRECTA
             ==================================================
             */
- 
+
             const json =
                 XLSX.utils.sheet_to_json(
                     hoja,
@@ -3182,39 +2037,39 @@ function cargarExcelFinanciero(){
                         defval:""
                     }
                 );
- 
+
             console.log(
                 "📊 REGISTROS FINANCIEROS:",
                 json.length
             );
- 
+
             console.log(
                 "📋 ENCABEZADOS ENCONTRADOS:",
                 Object.keys(
                     json[0] || {}
                 )
             );
- 
+
             /*
             ==================================================
             VALIDAR ENCABEZADOS NECESARIOS
             ==================================================
             */
- 
+
             if(!json.length){
- 
+
                 alert(
                     "❌ El Excel no contiene registros."
                 );
- 
+
                 return;
             }
- 
+
             const encabezados =
                 Object.keys(
                     json[0]
                 );
- 
+
             const tieneFecha =
                 encabezados.some(
                     x =>
@@ -3224,29 +2079,29 @@ function cargarExcelFinanciero(){
                     ===
                     "fecha desembolso"
                 );
- 
+
             if(!tieneFecha){
- 
+
                 console.error(
                     "❌ ENCABEZADOS:",
                     encabezados
                 );
- 
+
                 alert(
                     "❌ No se encontró la columna Fecha Desembolso."
                 );
- 
+
                 return;
             }
- 
+
             /*
             ==================================================
             NORMALIZAR NOMBRE DE COLUMNA
             ==================================================
             */
- 
+
             json.forEach(fila => {
- 
+
                 const claveFecha =
                     Object.keys(fila)
                     .find(
@@ -3257,219 +2112,219 @@ function cargarExcelFinanciero(){
                         ===
                         "fecha desembolso"
                     );
- 
+
                 if(
                     claveFecha &&
                     claveFecha !== "Fecha Desembolso"
                 ){
- 
+
                     fila["Fecha Desembolso"] =
                         fila[claveFecha];
- 
+
                     delete fila[claveFecha];
- 
+
                 }
- 
+
             });
- 
+
             /*
             ==================================================
             VALIDAR FECHAS
             ==================================================
             */
- 
+
             let fechasValidas = 0;
- 
+
             json.forEach(c => {
- 
+
                 const valor =
                     c["Fecha Desembolso"];
- 
+
                 if(
                     valor !== undefined &&
                     valor !== null &&
                     valor !== ""
                 ){
- 
+
                     if(
                         typeof valor === "number"
                     ){
- 
+
                         if(!isNaN(valor)){
                             fechasValidas++;
                         }
- 
+
                     }
                     else{
- 
+
                         const fecha =
                             new Date(valor);
- 
+
                         if(
                             !isNaN(
                                 fecha.getTime()
                             )
                         ){
- 
+
                             fechasValidas++;
- 
+
                         }
- 
+
                     }
- 
+
                 }
- 
+
             });
- 
+
             console.log(
                 "📅 FECHAS VÁLIDAS:",
                 fechasValidas
             );
- 
+
             if(!fechasValidas){
- 
+
                 alert(
                     "❌ El Excel tiene la columna Fecha Desembolso, pero no contiene fechas válidas."
                 );
- 
+
                 return;
             }
- 
+
             /*
             ==================================================
             GUARDAR LOCALMENTE
             ==================================================
             */
- 
+
             localStorage.setItem(
                 "financiero",
                 JSON.stringify(json)
             );
- 
+
             localStorage.setItem(
                 "nombreFinanciero",
                 archivo.name
             );
- 
+
             localStorage.setItem(
                 "fechaFinanciero",
                 new Date().toLocaleString()
             );
- 
+
             /*
             ==================================================
             ACTUALIZAR ARCHIVO ACTIVO
             ==================================================
             */
- 
+
             const archivoActivo =
                 document.getElementById(
                     "archivoFinancieroActivo"
                 );
- 
+
             if(archivoActivo){
- 
+
                 archivoActivo.innerHTML =
                     "📂 Archivo vigente: " +
                     archivo.name;
- 
+
             }
- 
+
             /*
             ==================================================
             GENERAR KPI
             ==================================================
             */
- 
+
             mostrarResumenFinanciero();
- 
+
             /*
             ==================================================
             GUARDAR DATA COMPLETA EN FIREBASE
             ==================================================
             */
- 
+
             guardarDatosFinancieros(
                 json
             );
- 
+
             /*
             ==================================================
             GUARDAR RESUMEN EN FIREBASE
             ==================================================
             */
- 
+
             setTimeout(
                 () => {
- 
+
                     guardarFinancieroFirebase();
- 
+
                 },
                 1000
             );
- 
+
             alert(
                 "✅ Excel financiero cargado y actualizado correctamente."
             );
- 
+
         }
         catch(error){
- 
+
             console.error(
                 "❌ ERROR CARGANDO EXCEL FINANCIERO:",
                 error
             );
- 
+
             alert(
                 "❌ Error al cargar el Excel financiero. Revise la consola."
             );
- 
+
         }
- 
+
     };
- 
+
     lector.readAsArrayBuffer(
         archivo
     );
- 
+
 }
 function cargarFinancieroFirebase(){
- 
+
     db.ref("kpiFinanciero")
     .once("value")
     .then(snapshot => {
- 
+
         const datos =
             snapshot.val();
- 
+
         const divFinanciero =
             document.getElementById(
                 "resumenFinanciero"
             );
- 
+
         if(!datos){
             return;
         }
- 
+
         /*
         ============================================
         VALIDAR DATOS DE FIREBASE
         ============================================
         */
- 
+
         if(
             Array.isArray(datos.datos) &&
             datos.datos.length > 0
         ){
- 
+
             const primeraFila =
                 datos.datos[0];
- 
+
             /*
             Solo procesar si la data tiene
             la estructura correcta.
             */
- 
+
             if(
                 primeraFila &&
                 Object.keys(
@@ -3483,64 +2338,64 @@ function cargarFinancieroFirebase(){
                     "fecha desembolso"
                 )
             ){
- 
+
                 localStorage.setItem(
                     "financiero",
                     JSON.stringify(
                         datos.datos
                     )
                 );
- 
+
                 mostrarResumenFinanciero();
- 
+
                 console.log(
                     "✅ KPI FINANCIERO RESTAURADO DESDE FIREBASE"
                 );
- 
+
             }
             else{
- 
+
                 console.warn(
                     "⚠️ Firebase contiene datos financieros antiguos. No se procesarán."
                 );
- 
+
             }
- 
+
         }
         else if(
             divFinanciero &&
             datos.html
         ){
- 
+
             divFinanciero.innerHTML =
                 datos.html;
- 
+
         }
- 
+
     })
     .catch(error => {
- 
+
         console.error(
             "❌ ERROR CARGANDO KPI FINANCIERO:",
             error
         );
- 
+
     });
- 
+
 }
- 
+
 function guardarDatosFinancieros(datos){
- 
+
     // ==========================================
     // LIMPIAR COLUMNAS PARA FIREBASE
     // ==========================================
- 
+
     const datosLimpios = datos.map(fila => {
- 
+
         const nuevaFila = {};
- 
+
         Object.keys(fila).forEach(clave => {
- 
+
             const claveLimpia =
                 String(clave)
                 .replace(/\./g, "")
@@ -3550,36 +2405,36 @@ function guardarDatosFinancieros(datos){
                 .replace(/\[/g, "")
                 .replace(/\]/g, "")
                 .trim();
- 
+
             nuevaFila[claveLimpia] = fila[clave];
- 
+
         });
- 
+
         return nuevaFila;
- 
+
     });
- 
+
     db.ref("kpiFinanciero/datos")
     .set(datosLimpios)
- 
+
     .then(() => {
- 
+
         console.log(
             "✅ Datos financieros guardados:",
             datosLimpios.length
         );
- 
+
     })
- 
+
     .catch(error => {
- 
+
         console.error(
             "❌ Error guardando datos financieros:",
             error
         );
- 
+
     });
- 
+
 }
 function mostrarResumenFinanciero(){
 let data =
@@ -3588,7 +2443,7 @@ localStorage.getItem(
 "financiero"
 )
 ) || [];
- 
+
 const esMovil = window.innerWidth <= 768;
     
 let carteraTotal = 0;
@@ -3610,77 +2465,77 @@ let clientesAsesor = {};
 let moraAsesor = {};
 let vencidoAsesor = {};
     let ultimaFecha = null;
- 
+
 data.forEach(c=>{
 let fechaValor = c["Fecha Desembolso"];
- 
+
 let fecha = null;
- 
+
 if(typeof fechaValor === "number"){
- 
+
     fecha = new Date(
         (fechaValor - 25569) * 86400 * 1000
     );
- 
+
 }else{
- 
+
     fecha = new Date(fechaValor);
- 
+
 }
- 
+
 if(!isNaN(fecha.getTime())){
- 
+
     if(!ultimaFecha || fecha > ultimaFecha){
- 
+
         ultimaFecha = fecha;
- 
+
     }
- 
+
 }
- 
- 
+
+
 });
 if(!ultimaFecha){
- 
+
 alert(
 "No se encontró ninguna fecha de desembolso válida"
 );
- 
+
 return;
- 
+
 }
     let mesConsulta =
 ultimaFecha.getUTCMonth();
- 
+
 let anioConsulta =
 ultimaFecha.getUTCFullYear();
   console.log(
 "ULTIMA FECHA:",
 ultimaFecha
 );
- 
- 
+
+
 console.log(
 "MES DETECTADO:",
 mesConsulta + 1
 );
- 
+
 console.log(
 "AÑO DETECTADO:",
 anioConsulta
 );
 data.forEach(c=>{
- 
+
 let saldo =
 parseFloat(c["Saldo Capital"]) || 0;
- 
+
 let atraso =
 parseFloat(c["Dias de retraso"]) || 0;
- 
+
 if(atraso >= 1){
- 
+
     moraTotal += saldo;
- 
+
 }
 let asesor =
 (c["Asesor(a)"] || "SIN ASESOR")
@@ -3690,15 +2545,15 @@ let asesor =
 if(!moraAsesor[asesor]){
     moraAsesor[asesor] = 0;
 }
- 
+
 if(!vencidoAsesor[asesor]){
     vencidoAsesor[asesor] = 0;
 }
- 
+
 if(atraso > 30){
- 
+
     moraAsesor[asesor] += saldo;
- 
+
 }
 let producto =
 (c["Producto"] || "SIN PRODUCTO")
@@ -3712,61 +2567,56 @@ let dni =
 if(!clientesAsesor[asesor]){
 clientesAsesor[asesor] = new Set();
 }
- 
+
 if(dni){
 clientesAsesor[asesor].add(dni);
 }
 if(!clientesProducto[producto]){
 clientesProducto[producto] = new Set();
 }
- 
+
 if(dni){
 clientesProducto[producto].add(dni);
 }
 if(!carteraProducto[producto]){
-    carteraProducto[producto] = 0;
+carteraProducto[producto] = 0;
 }
- 
-// CARTERA NO VENCIDA
-if(atraso <= 0){
-    carteraProducto[producto] += saldo;
-}
+
+carteraProducto[producto] += saldo;
 if(!rankingCartera[asesor]){
 rankingCartera[asesor] = 0;
 }
- 
+
 rankingCartera[asesor] += saldo;
 if(!vencidoProducto[producto]){
 vencidoProducto[producto] = 0;
 }
- 
- 
+
 if(atraso > 0){
-    vencidoProducto[producto] += saldo;
+vencidoProducto[producto] += saldo;
 }
- 
 if(atraso > 30){
- 
+
 vencidoAsesor[asesor] += saldo;
- 
+
 }
 let interes =
 parseFloat(c["Interes Devengado"]) || 0;
- 
+
 rentabilidad += interes;
     if(!rentabilidadAsesor[asesor]){
     rentabilidadAsesor[asesor] = 0;
 }
- 
+
 rentabilidadAsesor[asesor] += interes;
 let costo =
 parseFloat(c["Costo por Desembolso"]) || 0;
- 
+
 let fechaExcel =
 parseFloat(c["Fecha Desembolso"]);
- 
+
 if(!isNaN(fechaExcel)){
- 
+
 let fecha =
 new Date(
 Date.UTC(
@@ -3775,16 +2625,16 @@ Date.UTC(
 30 + fechaExcel
 )
 );
- 
+
 if(
 fecha.getUTCMonth() === mesConsulta
 &&
 fecha.getUTCFullYear() === anioConsulta
 ){
- 
+
 costoDesembolsoTotal += costo;
 registrosMes++;
- 
+
 console.log(
 "SUMANDO:",
 fecha,
@@ -3793,72 +2643,72 @@ costo,
 "ACUMULADO:",
 costoDesembolsoTotal
 );
- 
+
 }
- 
+
 }
- 
+
 carteraTotal += saldo;
 if(!rankingAsesores[asesor]){
- 
+
 rankingAsesores[asesor] = 0;
- 
+
 }
- 
+
 rankingAsesores[asesor] += saldo;
- 
+
    if(atraso > 30){
- 
+
 capitalVencido += saldo;
- 
+
 }else{
- 
+
 carteraSana += saldo;
- 
+
 }
 if(atraso > 30){
- 
+
 clientesCriticos++;
- 
+
 }
 });
 console.log(
 Object.keys(rankingAsesores)
 );
 let rankingHTML = "";
- 
+
 Object.entries(rankingAsesores)
 .filter(([asesor]) =>
     asesor.toLowerCase() !== "admin"
 )
- 
+
 .sort((a,b)=>b[1]-a[1])
- 
+
 .slice(0,7)
- 
+
 .forEach((r,index)=>{
- 
+
 let medalla = "🥉";
- 
+
 if(index===0) medalla="🥇";
 if(index===1) medalla="🥈";
- 
+
 let cantidadClientes =
 clientesAsesor[r[0]]
 ?
 clientesAsesor[r[0]].size
 :
 0;
- 
+
 let ticket =
 cantidadClientes > 0
 ?
 (r[1] / cantidadClientes)
 :
 0;
- 
+
 rankingHTML += `
- 
+
 <div style="
 background:white;
 padding:12px;
@@ -3873,28 +2723,28 @@ justify-content:space-between;
 align-items:center;
 flex-wrap:wrap;
 ">
- 
+
 <span>
 ${medalla}
 <b>${r[0]}</b>
 </span>
- 
+
 <span>
 👥 ${cantidadClientes}
 </span>
- 
+
 <span>
 💰 ${Math.round(r[1]/1000)}K
 </span>
- 
+
 <span>
 🎯 ${Math.round(ticket)}
 </span>
- 
+
 </div>
- 
+
 `;
- 
+
 });
     console.log(
 "TOTAL COSTO DESEMBOLSO:",
@@ -3923,7 +2773,7 @@ let rankingProductoHTML = "";
 Object.entries(carteraProducto)
 .sort((a,b)=>b[1]-a[1])
 .forEach(r=>{
- 
+
 let cantidadClientes =
 clientesProducto[r[0]]
 ?
@@ -3937,7 +2787,7 @@ carteraTotal > 0
 :
 0;
 rankingProductoHTML += `
- 
+
 <div style="
 background:white;
 padding:12px;
@@ -3950,27 +2800,27 @@ align-items:center;
 flex-wrap:wrap;
 font-size:14px;
 ">
- 
+
 <span>
 💰 <b>${r[0]}</b>
 </span>
- 
+
 <span>
 👥 ${cantidadClientes}
 </span>
- 
+
 <span>
 💵 ${Math.round(r[1]/1000)}K
 </span>
- 
+
 <span>
 📈 ${participacion}%
 </span>
- 
+
 </div>
- 
+
 `;
- 
+
 });
 Object.entries(carteraProducto)
 .sort((a,b)=>b[1]-a[1])
@@ -3983,31 +2833,31 @@ clientesProducto[r[0]].size
 0;
 let cartera =
 r[1];
- 
+
 let vencido =
 vencidoProducto[r[0]] || 0;
- 
+
 let mora =
 cartera > 0
 ?
 ((vencido / cartera) * 100).toFixed(1)
 :
 0;
- 
+
 let color =
 mora <= 5
 ? "#159447"
 : mora <= 10
 ? "#D99A1A"
 : "#D64545";
- 
+
 let fondo =
 mora <= 5
 ? "#F2FAF4"
 : mora <= 10
 ? "#FFF9EF"
 : "#FFF3F3";
- 
+
 let borde =
 mora <= 5
 ? "#22C55E"
@@ -4035,39 +2885,39 @@ margin-bottom:8px;
 ">
 ${r[0]}
 </div>
- 
+
 👥 Clientes: <b>${cantidadClientes}</b><br>
- 
+
 💰 Cartera: <b>S/${cartera.toLocaleString()}</b><br>
- 
+
 📍 Vencido: <b>S/${vencido.toLocaleString()}</b><br>
- 
+
 📉 Mora: <b>${mora}%</b>
- 
+
 </div>
 `;
 });
- 
+
 let topClientesHTML = "";
- 
+
 let topClientes = [...data]
- 
+
 .sort((a,b)=>
- 
+
 (parseFloat(b["Saldo Capital"]) || 0)
- 
+
 -
- 
+
 (parseFloat(a["Saldo Capital"]) || 0)
- 
+
 )
- 
+
 .slice(0,30);
- 
+
 topClientes.forEach((c,index)=>{
- 
+
 topClientesHTML += `
- 
+
 <div style="
 background:white;
 padding:10px;
@@ -4078,12 +2928,12 @@ display:flex;
 justify-content:space-between;
 font-size:13px;
 ">
- 
+
 <div style="
 display:flex;
 flex-direction:column;
 ">
- 
+
 <span style="
 font-weight:bold;
 ">
@@ -4095,23 +2945,23 @@ ${index+1}. ${
 ).trim()
 }
 </span>
- 
+
 <span style="
 font-size:11px;
 color:#667783;
 ">
 👤 ${c["Asesor(a)"] || "SIN ASESOR"}
 </span>
- 
+
 <span style="
 font-size:11px;
 color:#667783;
 ">
 📦 ${c["Producto"] || ""}
 </span>
- 
+
 </div>
- 
+
 <div style="
 text-align:right;
 font-weight:bold;
@@ -4119,24 +2969,24 @@ color:#159447;
 ">
 💰 S/${(parseFloat(c["Saldo Capital"]) || 0).toLocaleString()}
 </div>
- 
+
 </div>
- 
+
 `;
- 
+
 });
 let moraAsesorHTML = "";
- 
+
 Object.keys(moraAsesor)
- 
+
 .forEach(asesor=>{
- 
+
 let cartera =
 moraAsesor[asesor] || 0;
- 
+
 let vencido =
 vencidoAsesor[asesor] || 0;
- 
+
 let mora =
 cartera > 0
 ?
@@ -4144,9 +2994,9 @@ cartera > 0
 .toFixed(1)
 :
 0;
- 
+
 moraAsesorHTML += `
- 
+
 <div style="
 background:white;
 padding:12px;
@@ -4157,36 +3007,36 @@ display:flex;
 justify-content:space-between;
 font-size:14px;
 ">
- 
+
 <span>
 👨‍💼 ${asesor}
 </span>
- 
+
 <span>
 📉 ${mora}%
 </span>
- 
+
 </div>
- 
+
 `;
- 
+
 });
     let rentabilidadHTML = "";
- 
+
 Object.entries(rentabilidadAsesor)
- 
+
 .sort((a,b)=>b[1]-a[1])
- 
+
 .forEach((r,index)=>{
- 
+
 let medalla = "🏅";
- 
+
 if(index===0) medalla="🥇";
 if(index===1) medalla="🥈";
 if(index===2) medalla="🥉";
- 
+
 rentabilidadHTML += `
- 
+
 <div style="
 background:white;
 padding:12px;
@@ -4197,29 +3047,29 @@ display:flex;
 justify-content:space-between;
 font-size:14px;
 ">
- 
+
 <span>
 ${medalla} ${r[0]}
 </span>
- 
+
 <span>
 💰 S/${Math.round(r[1]).toLocaleString()}
 </span>
- 
+
 </div>
- 
+
 `;
- 
+
 });
 let rankingCarteraHTML = "";
- 
+
 topCartera.forEach((r,index)=>{
- 
+
 let medalla = "🥉";
- 
+
 if(index===0) medalla="🥇";
 if(index===1) medalla="🥈";
- 
+
 rankingCarteraHTML += `
 <div style="
 font-size:13px;
@@ -4230,62 +3080,62 @@ ${r[0]}
 → S/${r[1].toLocaleString()}
 </div>
 `;
- 
+
 });
 document.getElementById(
 "resumenFinanciero"
 ).innerHTML =
- 
+
 `
- 
+
 <div style="
 display:grid;
 grid-template-columns:${esMovil ? "repeat(2,1fr)" : "repeat(3,1fr)"};
 gap:${esMovil ? "6px" : "8px"};
 margin-bottom:${esMovil ? "10px" : "15px"};
 ">
- 
+
 <div class="card-resumen"
 onclick="mostrarPanel('resumen')">
 📊<br>Resumen
 </div>
- 
+
 <div class="card-resumen"
 onclick="mostrarPanel('asesores')">
 👨‍💼<br>Asesores
 </div>
- 
+
 <div class="card-resumen"
 onclick="mostrarPanel('rentabilidad')">
 💰<br>Rentabilidad
 </div>
- 
+
 <div class="card-resumen"
 onclick="mostrarPanel('resumen')">
 📦<br>Productos
 </div>
- 
+
 <div class="card-resumen"
 onclick="mostrarPanel('resumen')">
 📉<br>Mora
 </div>
- 
+
 <div class="card-resumen"
 onclick="mostrarPanel('clientes')">
 🏆<br>Clientes
 </div>
- 
+
 </div>
- 
+
 <div id="panelResumen"
 style="display:block;">
- 
+
 <div style="
 display:grid;
 grid-template-columns:${esMovil ? "repeat(2,1fr)" : "repeat(2,1fr)"};
 gap:${esMovil ? "6px" : "10px"};
 ">
- 
+
 <div style="
 background:#FFFFFF;
 color:#243746;
@@ -4306,7 +3156,7 @@ margin-bottom:5px;
 S/${carteraTotal.toLocaleString()}
 </div>
 </div>
- 
+
 <div style="
 background:#FFFFFF;
 color:#243746;
@@ -4371,7 +3221,7 @@ padding:${esMovil ? "6px" : "10px"};
 ${clientesCriticos}
 </div>
 </div>
- 
+
 <div style="
 background:#FFF7F7;
 color:#991B1B;
@@ -4382,22 +3232,22 @@ border-radius:12px;
 text-align:center;
 min-height:80px;min-height:${esMovil ? "62px" : "80px"};
 padding:${esMovil ? "6px" : "10px"};">
- 
+
 <div style="font-size:${esMovil ? "16px" : "22px"};">🔴</div>
- 
+
 <div>Mora Total (+1)</div>
- 
+
 <div style="
 font-size:20px;
 font-weight:bold;
 ">
- 
+
 S/${moraTotal.toLocaleString()}
- 
+
 </div>
- 
+
 </div>
- 
+
 <div style="
 background:#FFFFFF;
 color:#243746;
@@ -4420,7 +3270,7 @@ grid-template-columns:repeat(2,1fr);
 gap:10px;
 margin-top:15px;
 ">
- 
+
 <div style="
 background:#159447;
 color:white;
@@ -4428,24 +3278,24 @@ padding:15px;
 border-radius:12px;
 text-align:center;
 ">
- 
+
 <div style="font-size:24px;">
 🟢
 </div>
- 
+
 <div>
 Cartera Sana
 </div>
- 
+
 <div style="
 font-size:${esMovil ? "16px" : "22px"};
 font-weight:bold;
 ">
 S/${carteraSana.toLocaleString()}
 </div>
- 
+
 </div>
- 
+
 <div style="
 background:#D64545;
 color:white;
@@ -4453,26 +3303,26 @@ padding:15px;
 border-radius:12px;
 text-align:center;
 ">
- 
+
 <div style="font-size:24px;">
 🔴
 </div>
- 
+
 <div>
 Cartera Vencida
 </div>
- 
+
 <div style="
 font-size:${esMovil ? "16px" : "22px"};
 font-weight:bold;
 ">
 S/${capitalVencido.toLocaleString()}
 </div>
- 
+
 </div>
- 
+
 </div>
- 
+
 <div style="
 background:#FFFFFF;
 border:1px solid #DEE4EA;
@@ -4482,13 +3332,13 @@ margin-top:10px;
 text-align:center;
 font-weight:bold;
 ">
- 
+
 🟢 ${((carteraSana/carteraTotal)*100).toFixed(1)}%
- 
+
 &nbsp;&nbsp;|&nbsp;&nbsp;
- 
+
 🔴 ${((capitalVencido/carteraTotal)*100).toFixed(1)}%
- 
+
 </div>
 <div style="
 background:#FFFFFF;
@@ -4498,23 +3348,23 @@ box-shadow:0 3px 12px rgba(18,63,99,.07);
 margin-top:15px;
 ">
 </div>
- 
+
 </div>
- 
+
 <div id="panelAsesores"
 style="display:none;">
- 
+
 <h3 style="
 text-align:center;
 color:black;
 ">
 👨‍💼 Ranking Asesores
 </h3>
- 
+
 ${rankingHTML}
- 
+
 </div>
- 
+
 <hr style="margin:15px 0;">
 <h3 style="
 text-align:center;
@@ -4522,126 +3372,126 @@ color:black;
 ">
 📊 Cartera por Producto
 </h3>
- 
+
 ${rankingProductoHTML}
 <hr style="margin:15px 0;">
- 
+
 <h3 style="
 text-align:center;
 color:black;
 ">
 📉 Mora por Producto
 </h3>
- 
+
 <div id="listaProductos">
- 
+
 ${moraProductoHTML}
- 
+
 </div>
- 
+
 <div id="detalleProducto" style="display:none;"></div>
- 
+
 <hr style="margin:15px 0;">
- 
+
 <div id="panelRentabilidad"
 style="display:none;">
- 
+
 <h3 style="
 text-align:center;
 color:black;
 ">
 💰 RENTABILIDAD POR ASESOR
 </h3>
- 
+
 ${rentabilidadHTML}
 <hr style="margin:15px 0;">
- 
+
 <h3 style="
 text-align:center;
 color:black;
 ">
 📉 MORA POR ASESOR
 </h3>
- 
+
 ${moraAsesorHTML}
 </div>
 <hr style="margin:15px 0;">
- 
+
 <div id="panelClientes"
 style="display:none;">
- 
+
 <h3 style="
 text-align:center;
 color:black;
 ">
 🏆 TOP 30 CLIENTES
 </h3>
- 
+
 ${topClientesHTML}
- 
+
 </div>
 `;
- 
+
 }
 function cargarMetasKPI(){
- 
+
     const archivo =
     document.getElementById("excelMetas").files[0];
- 
+
     if(!archivo){
         alert("Seleccione el archivo de metas.");
         return;
     }
- 
+
     const lector = new FileReader();
- 
+
     lector.onload = function(e){
- 
+
         try{
- 
+
             const data = new Uint8Array(e.target.result);
             const wb = XLSX.read(data,{type:"array"});
             const hoja = wb.Sheets[wb.SheetNames[0]];
- 
+
             // Detectar automáticamente la fila real de encabezados.
             const matriz = XLSX.utils.sheet_to_json(hoja,{
                 header:1,
                 defval:"",
                 raw:true
             });
- 
+
             let filaEncabezado = -1;
- 
+
             for(let i=0; i<Math.min(matriz.length,30); i++){
- 
+
                 const fila = matriz[i].map(v =>
                     String(v || "").trim().toUpperCase()
                 );
- 
+
                 const tieneAsesor = fila.some(v => v.includes("ASESOR"));
                 const tieneColocacion = fila.some(v =>
                     v.includes("COLOCACION") || v.includes("COLOCACIÓN")
                 );
                 const tieneOperaciones = fila.some(v => v.includes("OPERACIONES"));
- 
+
                 if(tieneAsesor && tieneColocacion && tieneOperaciones){
                     filaEncabezado = i;
                     break;
                 }
             }
- 
+
             if(filaEncabezado === -1){
                 alert("❌ No se encontraron los encabezados ASESOR, COLOCACIÓN y OPERACIONES en el archivo de metas.");
                 console.error("ENCABEZADOS ENCONTRADOS:", matriz.slice(0,15));
                 return;
             }
- 
+
             let json = XLSX.utils.sheet_to_json(hoja,{
                 range:filaEncabezado,
                 defval:"",
                 raw:true
             });
- 
+
             const normalizarTexto = texto =>
                 String(texto || "")
                 .normalize("NFD")
@@ -4649,104 +3499,157 @@ function cargarMetasKPI(){
                 .replace(/\s+/g," ")
                 .trim()
                 .toUpperCase();
- 
+
             json = json.map(fila => {
- 
+
                 const claves = Object.keys(fila);
- 
+
                 const buscarClave = patrones => claves.find(clave => {
                     const n = normalizarTexto(clave);
                     return patrones.some(p => n.includes(p));
                 });
- 
+
                 const claveAsesor = buscarClave(["ASESOR"]);
                 const claveColocacion = buscarClave(["COLOCACION"]);
                 const claveOperaciones = buscarClave(["OPERACIONES"]);
-                const claveClientes = buscarClave(["CLIENTES"]);
- 
+
                 const salida = {...fila};
- 
+
                 if(claveAsesor){
                     salida["Asesor (A)"] = String(fila[claveAsesor] || "").trim();
                 }
- 
+
                 if(claveColocacion){
                     salida["COLOCACION"] = fila[claveColocacion];
                 }
- 
+
                 if(claveOperaciones){
                     salida["OPERACIONES"] = fila[claveOperaciones];
                 }
-if(claveClientes){
-    salida["META CLIENTES"] = Number(fila[claveClientes]) || 0;
-}
+
                 return salida;
- 
+
             }).filter(fila =>
                 String(fila["Asesor (A)"] || "").trim() !== ""
             );
- 
+
             if(!json.length){
                 alert("❌ Se encontró la estructura del Excel, pero no se encontraron asesores con datos.");
                 return;
             }
- 
+
             localStorage.setItem("metasKPI",JSON.stringify(json));
             localStorage.setItem("nombreMetaKPI",archivo.name);
             localStorage.setItem("fechaMetaKPI",new Date().toLocaleString());
- 
+
             const metaActiva = document.getElementById("metaActivaKPI");
- 
+
             if(metaActiva){
                 metaActiva.style.display = "block";
                 metaActiva.innerHTML =
                     "🎯 Metas activas: " + archivo.name +
                     " • " + json.length + " asesores";
             }
- 
+
             console.log("✅ METAS CARGADAS:",json);
             console.log("📌 FILA DE ENCABEZADOS DETECTADA:",filaEncabezado + 1);
             console.log("📌 ASESORES CARGADOS:",json.map(m => m["Asesor (A)"]));
- 
+
             alert("✅ Metas cargadas correctamente. " + json.length + " asesores detectados.");
- 
+
         }catch(error){
             console.error("❌ ERROR CARGANDO METAS:",error);
             alert("❌ Error al leer el archivo de metas.");
         }
- 
+
     };
- 
+
     lector.readAsArrayBuffer(archivo);
- 
+
 }
- 
- 
+// ==========================================
+// CARGAR PRODUCCIÓN KPI
+// ==========================================
+function cargarExcelKPI(){
+
+    const archivo =
+    document.getElementById("excelKPI").files[0];
+
+    if(!archivo){
+        alert("Seleccione el archivo de producción.");
+        return;
+    }
+
+    const lector = new FileReader();
+
+    lector.onload = function(e){
+        const data =
+        new Uint8Array(e.target.result);
+
+        const wb =
+        XLSX.read(data,{type:"array"});
+
+        const hoja =
+        wb.Sheets[wb.SheetNames[0]];
+
+        const json =
+XLSX.utils.sheet_to_json(
+    hoja,
+    {
+        range: 6,
+        defval: ""
+    }
+);
+
+        localStorage.setItem(
+            "produccionKPI",
+            JSON.stringify(json)
+        );
+
+        localStorage.setItem(
+            "nombreProduccionKPI",
+            archivo.name
+        );
+
+        localStorage.setItem(
+            "fechaProduccionKPI",
+            new Date().toLocaleString()
+        );
+
+        alert("✅ Producción cargada correctamente.");
+
+generarKPI(json);
+
+    };
+
+    lector.readAsArrayBuffer(archivo);
+
+}
 // ======================================================
 // DETALLE MORA POR PRODUCTO
 // ======================================================
 function mostrarDetalleProducto(producto){
- 
+
 const data=JSON.parse(localStorage.getItem("financiero"))||[];
- 
+
 const clientes=data.filter(c=>
 String(c["Producto"]||"").trim().toUpperCase()===producto.toUpperCase()
 ).sort((a,b)=>
 (parseFloat(b["Dias de retraso"])||0)-
 (parseFloat(a["Dias de retraso"])||0)
 );
- 
+
 let html=`
 <div style="margin-bottom:15px">
 <button onclick="volverProductos()" style="width:100%;padding:14px;border:none;border-radius:12px;background:#123F63;color:#fff;font-weight:bold;cursor:pointer">
 ← Volver a Productos
 </button>
 </div>
- 
+
 <div style="background:#fff;border-radius:16px;padding:16px;border:1px solid #DEE4EA">
 <h2 style="margin:0;text-align:center;color:#123F63">${producto}</h2>
 <p style="text-align:center">👥 ${clientes.length} Clientes</p>
- 
+
 <div class="detallePC">
 <table style="width:100%;border-collapse:collapse">
 <thead>
@@ -4761,7 +3664,7 @@ let html=`
 </thead>
 <tbody>
 `;
- 
+
 clientes.forEach((c,i)=>{
 const nombre=`${c["Apellido Paterno"]||""} ${c["Apellido Materno"]||""} ${c["Nombre"]||""}`.replace(/\s+/g," ").trim();
 html+=`
@@ -4774,15 +3677,15 @@ html+=`
 <td>S/${(parseFloat(c["CC"])||0).toLocaleString()}</td>
 </tr>`;
 });
- 
+
 html+=`
 </tbody>
 </table>
 </div>
- 
+
 <div class="detalleMobile">
 `;
- 
+
 clientes.forEach(c=>{
 const nombre=`${c["Apellido Paterno"]||""} ${c["Apellido Materno"]||""} ${c["Nombre"]||""}`.replace(/\s+/g," ").trim();
 html+=`
@@ -4793,27 +3696,27 @@ html+=`
 <div class="fila"><span>CC</span><b>S/${(parseFloat(c["CC"])||0).toLocaleString()}</b></div>
 </div>`;
 });
- 
+
 html+=`
 </div>
 </div>
 `;
- 
+
 document.getElementById("listaProductos").style.display="none";
 document.getElementById("detalleProducto").style.display="block";
 document.getElementById("detalleProducto").innerHTML=html;
 document.getElementById("detalleProducto").scrollIntoView({behavior:"smooth",block:"start"});
 }
 function volverProductos(){
- 
+
 document.getElementById("detalleProducto").style.display="none";
- 
+
 document.getElementById("listaProductos").style.display="block";
- 
+
 document.getElementById("listaProductos")
 .scrollIntoView({
 behavior:"smooth",
 block:"start"
 });
- 
+
 }

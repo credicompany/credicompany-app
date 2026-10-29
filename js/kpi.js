@@ -1,4 +1,3 @@
-// =====================
 // KPI CREDICOMPANY
 // =====================
 // ======================================================
@@ -4057,37 +4056,135 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
     let html = `
 
-    <style>
+    ```html
+<style>
+#cuadroDesembolsosAsesor {
+    margin-top: 10px;
+    padding: 8px;
+    background: #fff;
+    border: 1px solid #dbe4ee;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(18,59,99,.06);
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+    width: 100%;
+}
 
-      #cuadroDesembolsosAsesor{margin-top:20px;padding:16px;background:#fff;border:1px solid #dbe4ee;border-radius:14px;box-shadow:0 4px 14px rgba(18,59,99,.08);font-family:Arial,sans-serif;box-sizing:border-box}
+#cuadroDesembolsosAsesor h3 {
+    text-align: center;
+    margin: 2px 0 6px;
+    color: #123B63;
+    font-size: 15px;
+    font-weight: 800;
+}
 
-      #cuadroDesembolsosAsesor h3{text-align:center;margin:0 0 12px;color:#123B63;font-size:19px;font-weight:800}
+#cuadroDesembolsosAsesor .meta {
+    margin: 0 0 6px;
+    text-align: right;
+    color: #526579;
+    font-size: 10px;
+}
 
-      #cuadroDesembolsosAsesor .meta{margin:0 0 10px;text-align:right;color:#526579;font-size:12px}
+#cuadroDesembolsosAsesor .scroll {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
 
-      #cuadroDesembolsosAsesor .scroll{width:100%;overflow-x:auto}
+#cuadroDesembolsosAsesor table {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+    table-layout: auto;
+    font-size: 11px;
+    color: #17212b;
+}
 
-      #cuadroDesembolsosAsesor table{width:100%;min-width:900px;border-collapse:collapse;font-size:13px;color:#17212b}
+#cuadroDesembolsosAsesor th {
+    background: #24547b;
+    color: #fff;
+    padding: 6px 4px;
+    border: 1px solid #d6dee7;
+    text-align: center;
+    white-space: normal;
+    font-size: 10px;
+}
 
-      #cuadroDesembolsosAsesor th{background:#24547b;color:#fff;padding:9px 8px;border:1px solid #d6dee7;text-align:center;white-space:nowrap}
+#cuadroDesembolsosAsesor td {
+    padding: 5px 4px;
+    border: 1px solid #d6dee7;
+    line-height: 1.2;
+}
 
-      #cuadroDesembolsosAsesor td{padding:8px;border:1px solid #d6dee7}
+#cuadroDesembolsosAsesor tbody tr:nth-child(even) {
+    background: #f7fafc;
+}
 
-      #cuadroDesembolsosAsesor tbody tr:nth-child(even){background:#f7fafc}
+#cuadroDesembolsosAsesor .asesor {
+    font-weight: 800;
+    text-align: center;
+    color: #123B63;
+    white-space: nowrap;
+}
 
-      #cuadroDesembolsosAsesor .asesor{font-weight:800;text-align:center;color:#123B63;white-space:nowrap}
+#cuadroDesembolsosAsesor .monto {
+    text-align: right;
+    white-space: nowrap;
+    font-weight: 700;
+}
 
-      #cuadroDesembolsosAsesor .monto{text-align:right;white-space:nowrap;font-weight:700}
+#cuadroDesembolsosAsesor .clientes {
+    text-align: center;
+    font-weight: 700;
+    white-space: nowrap;
+}
 
-      #cuadroDesembolsosAsesor .clientes{text-align:center;font-weight:700;white-space:nowrap}
+#cuadroDesembolsosAsesor .estado {
+    color: #2f6e9f;
+    font-weight: 700;
+    white-space: nowrap;
+}
 
-      #cuadroDesembolsosAsesor .estado{color:#2f6e9f;font-weight:700;white-space:nowrap}
+#cuadroDesembolsosAsesor tfoot td {
+    background: #dce6f7;
+    font-weight: 800;
+    border-top: 2px solid #123B63;
+}
 
-      #cuadroDesembolsosAsesor tfoot td{background:#dce6f7;font-weight:800;border-top:2px solid #123B63}
+/* AJUSTES PARA CELULARES */
+@media screen and (max-width: 600px) {
+    #cuadroDesembolsosAsesor {
+        margin-top: 7px;
+        padding: 6px;
+        border-radius: 8px;
+    }
 
-      @media(max-width:700px){#cuadroDesembolsosAsesor{padding:10px}#cuadroDesembolsosAsesor h3{font-size:16px}#cuadroDesembolsosAsesor table{font-size:12px;min-width:850px}#cuadroDesembolsosAsesor th,#cuadroDesembolsosAsesor td{padding:7px 6px}}
+    #cuadroDesembolsosAsesor h3 {
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
 
-    </style>
+    #cuadroDesembolsosAsesor .meta {
+        font-size: 9px;
+        margin-bottom: 5px;
+    }
+
+    #cuadroDesembolsosAsesor table {
+        min-width: 650px;
+        font-size: 10px;
+    }
+
+    #cuadroDesembolsosAsesor th {
+        padding: 5px 3px;
+        font-size: 9px;
+    }
+
+    #cuadroDesembolsosAsesor td {
+        padding: 4px 3px;
+        line-height: 1.15;
+    }
+}
+</style>
 
     <section id="cuadroDesembolsosAsesor" class="desembolsos-panel">
 

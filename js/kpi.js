@@ -3758,15 +3758,13 @@ block:"start"
 
 // ==========================================================
 
-// CUADRO DE DESEMBOLSOS AGRUPADO POR ASESOR
+// CREDICOMPANY - DESEMBOLSOS POR ASESOR DE LUNES A SABADO
 
-// - Una fila por asesor para la fecha más reciente del Excel.
+// Agrupa por asesor y suma los desembolsos de cada dia.
 
-// - Cliente: cantidad de clientes distintos (sin mostrar códigos).
+// Usa la semana (lunes-sabado) que contiene la fecha mas reciente
 
-// - Total desembolsado: suma de todas las operaciones del asesor.
-
-// - Si producto/condición/plazo varían, se muestra "VARIOS".
+// presente en los datos recibidos desde Cargar Produccion.
 
 // ==========================================================
 
@@ -3778,11 +3776,25 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
  
 
-    const normalizar = v => String(v ?? "")
+    const normalizar = valor => String(valor ?? "")
 
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .normalize("NFD")
 
-        .replace(/\s+/g, " ").trim().toUpperCase();
+        .replace(/[\u0300-\u036f]/g, "")
+
+        .replace(/\s+/g, " ")
+
+        .trim()
+
+        .toUpperCase();
+
+ 
+
+    const escapar = valor => String(valor ?? "").replace(/[&<>"']/g, c => ({
+
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+
+    }[c]));
 
  
 
@@ -3790,19 +3802,19 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
         const claves = Object.keys(fila || {});
 
-        for (const op of opciones) {
+        for (const opcion of opciones) {
 
-            const clave = claves.find(k => normalizar(k) === normalizar(op));
+            const exacta = claves.find(k => normalizar(k) === normalizar(opcion));
 
-            if (clave) return clave;
+            if (exacta) return exacta;
 
         }
 
-        for (const op of opciones) {
+        for (const opcion of opciones) {
 
-            const clave = claves.find(k => normalizar(k).includes(normalizar(op)));
+            const parcial = claves.find(k => normalizar(k).includes(normalizar(opcion)));
 
-            if (clave) return clave;
+            if (parcial) return parcial;
 
         }
 
@@ -3814,39 +3826,71 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
     const convertirFecha = valor => {
 
-        if (valor instanceof Date && !isNaN(valor.getTime())) return valor;
+        if (valor instanceof Date && !isNaN(valor.getTime())) {
+
+            return new Date(Date.UTC(valor.getFullYear(), valor.getMonth(), valor.getDate()));
+
+        }
+
+ 
+
+        // Numero serial de fecha de Excel.
 
         if (typeof valor === "number" && Number.isFinite(valor)) {
 
-            const d = new Date(Date.UTC(1899, 11, 30) + valor * 86400000);
+            const fecha = new Date(Date.UTC(1899, 11, 30) + Math.floor(valor) * 86400000);
 
-            return isNaN(d.getTime()) ? null : d;
+            return isNaN(fecha.getTime()) ? null : fecha;
 
         }
+
+ 
 
         if (valor == null || String(valor).trim() === "") return null;
 
         const texto = String(valor).trim();
 
-        const m = texto.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+        let m = texto.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
 
-        let d;
+        let fecha;
 
-        if (m) d = new Date(Date.UTC(Number(m[3]), Number(m[2])-1, Number(m[1])));
+ 
 
-        else d = new Date(texto);
+        if (m) {
 
-        return isNaN(d.getTime()) ? null : d;
+            fecha = new Date(Date.UTC(Number(m[3]), Number(m[2]) - 1, Number(m[1])));
+
+        } else {
+
+            // Maneja cadenas ISO y formatos que el navegador pueda interpretar.
+
+            fecha = new Date(texto);
+
+            if (!isNaN(fecha.getTime())) {
+
+                fecha = new Date(Date.UTC(fecha.getFullYear(), fecha.getMonth(), fecha.getDate()));
+
+            }
+
+        }
+
+        return !fecha || isNaN(fecha.getTime()) ? null : fecha;
 
     };
 
  
 
-    const numero = valor => {
+    const convertirNumero = valor => {
 
         if (typeof valor === "number") return Number.isFinite(valor) ? valor : 0;
 
-        const n = Number(String(valor ?? "").trim().replace(/[S\/\s,]/g, ""));
+        let texto = String(valor ?? "").trim().replace(/[S\/\s]/g, "");
+
+        // Ejemplo: 1,805.00 -> 1805.00
+
+        texto = texto.replace(/,/g, "");
+
+        const n = Number(texto);
 
         return Number.isFinite(n) ? n : 0;
 
@@ -3854,61 +3898,69 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
  
 
-    const soles = n => Number(n || 0).toLocaleString("es-PE", {
+    const formatoSoles = valor => Number(valor || 0).toLocaleString("es-PE", {
 
-        minimumFractionDigits: 2, maximumFractionDigits: 2
+        minimumFractionDigits: 2,
+
+        maximumFractionDigits: 2
 
     });
 
  
 
-    const aviso = mensaje => `
+    const mostrarAviso = mensaje => `
 
-      <section id="cuadroDesembolsosAsesor" class="desembolsos-panel">
+        <section id="cuadroDesembolsosAsesor" class="desembolsos-panel">
 
-        <h3>CUADRO DE DESEMBOLSOS POR ASESOR</h3>
+            <h3>DESEMBOLSOS POR ASESOR · LUNES A SÁBADO</h3>
 
-        <p>${escaparHTMLDesembolso(mensaje)}</p>
+            <p>${escapar(mensaje)}</p>
 
-      </section>`;
+        </section>`;
 
  
 
-    if (!filas.length) return aviso("No se recibieron registros de producción.");
+    if (!filas.length) {
+
+        return mostrarAviso("No se recibieron registros. Verifica que Cargar Producción haya cargado la data.");
+
+    }
 
  
 
     const muestra = filas.find(f => f && typeof f === "object") || {};
 
-    const colFecha = buscarColumna(muestra, ["Fecha Desembolso"]);
+ 
 
-    const colMonto = buscarColumna(muestra, ["Monto Otorgado", "Monto Desembolsado", "Total Desembolsado"]);
+    // Columnas esperadas en DATA GENERAL / Cargar Produccion.
+
+    const colFecha = buscarColumna(muestra, ["Fecha Desembolso", "Fecha de Desembolso"]);
+
+    const colMonto = buscarColumna(muestra, [
+
+        "Monto Otorgado", "Monto Desembolsado", "Total Desembolsado", "Monto"
+
+    ]);
 
     const colAsesor = buscarColumna(muestra, ["Asesor(a)", "Asesor"]);
 
-    const colTipo = buscarColumna(muestra, ["Tipo Operacion", "Tipo Operación", "Condicion", "Condición"]);
+    const colCliente = buscarColumna(muestra, ["Cliente", "Apellidos y Nombres", "Nombre Cliente"]);
 
-    const colProducto = buscarColumna(muestra, ["Producto"]);
+    const colCodigo = buscarColumna(muestra, [
 
-    const colCuotas = buscarColumna(muestra, ["Plazo", "Cuotas", "N° Cuotas"]);
+        "Cod Cliente", "Código Cliente", "Codigo Cliente", "DNI", "Documento"
 
-    const colEstado = buscarColumna(muestra, ["Estado Cartera", "Estado"]);
-
-    const colApellidoP = buscarColumna(muestra, ["Apellido Paterno"]);
-
-    const colApellidoM = buscarColumna(muestra, ["Apellido Materno"]);
-
-    const colNombre = buscarColumna(muestra, ["Nombre", "Nombres"]);
-
-    const colCliente = buscarColumna(muestra, ["Cliente", "Apellidos y Nombres"]);
-
-    const colCodigoCliente = buscarColumna(muestra, ["Cod Cliente", "Código Cliente", "Codigo Cliente", "DNI"]);
+    ]);
 
  
 
     if (!colFecha || !colMonto || !colAsesor) {
 
-        return aviso("No se reconocieron las columnas Fecha Desembolso, Monto Otorgado y Asesor(a).");
+        return mostrarAviso(
+
+            "No se reconocieron las columnas de fecha de desembolso, monto y asesor. Revisa los encabezados del Excel."
+
+        );
 
     }
 
@@ -3916,79 +3968,125 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
     const registros = filas.map(f => {
 
-        let cliente = colCliente ? String(f[colCliente] ?? "").trim() : "";
+        const fecha = convertirFecha(f[colFecha]);
 
-        if (!cliente) {
+        const asesor = String(f[colAsesor] ?? "").trim() || "SIN ASESOR";
 
-            cliente = [colApellidoP ? f[colApellidoP] : "",
+        const nombreCliente = colCliente ? String(f[colCliente] ?? "").trim() : "";
 
-                       colApellidoM ? f[colApellidoM] : "",
+        const codigoCliente = colCodigo ? String(f[colCodigo] ?? "").trim() : "";
 
-                       colNombre ? f[colNombre] : ""]
+        const llaveCliente = normalizar(codigoCliente || nombreCliente);
 
-                .filter(x => x != null && String(x).trim() !== "")
-
-                .map(x => String(x).trim()).join(" ");
-
-        }
-
-        // El identificador solo se usa internamente para contar clientes únicos;
-
-        // nunca se imprime en la tabla.
-
-        const codigo = colCodigoCliente ? String(f[colCodigoCliente] ?? "").trim() : "";
-
-        const llaveCliente = normalizar(codigo || cliente);
+ 
 
         return {
 
-            asesor: String(f[colAsesor] ?? "SIN ASESOR").trim() || "SIN ASESOR",
+            fecha,
 
-            cliente: cliente || "CLIENTE SIN NOMBRE",
+            asesor,
+
+            llaveAsesor: normalizar(asesor),
 
             llaveCliente,
 
-            condicion: colTipo ? String(f[colTipo] ?? "").trim() : "",
-
-            producto: colProducto ? String(f[colProducto] ?? "").trim() : "",
-
-            cuotas: colCuotas ? String(f[colCuotas] ?? "").trim() : "",
-
-            fecha: convertirFecha(f[colFecha]),
-
-            monto: numero(f[colMonto]),
-
-            estado: colEstado ? String(f[colEstado] ?? "").trim() : "Registrado"
+            monto: convertirNumero(f[colMonto])
 
         };
 
-    }).filter(r => r.fecha && r.llaveCliente && r.cliente !== "CLIENTE SIN NOMBRE");
+    }).filter(r => r.fecha && r.llaveAsesor && r.llaveCliente);
 
  
 
-    if (!registros.length) return aviso("No se encontraron operaciones con fecha y cliente válidos.");
+    if (!registros.length) {
+
+        return mostrarAviso("No se encontraron registros con fecha, asesor y cliente válidos.");
+
+    }
 
  
 
-    const fechaMax = registros.reduce((max, r) => !max || r.fecha > max ? r.fecha : max, null);
+    // La semana mostrada es la semana calendario (lunes-sabado)
 
-    const claveFecha = d => `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,"0")}-${String(d.getUTCDate()).padStart(2,"0")}`;
+    // que contiene la fecha mas reciente disponible en la data.
 
-    const objetivo = claveFecha(fechaMax);
+    const fechaMasReciente = registros.reduce(
 
-    const delDia = registros.filter(r => claveFecha(r.fecha) === objetivo);
+        (max, r) => !max || r.fecha > max ? r.fecha : max,
+
+        null
+
+    );
+
+ 
+
+    const inicioSemana = new Date(fechaMasReciente);
+
+    const diaSemana = inicioSemana.getUTCDay(); // domingo=0, lunes=1
+
+    const retroceso = diaSemana === 0 ? 6 : diaSemana - 1;
+
+    inicioSemana.setUTCDate(inicioSemana.getUTCDate() - retroceso);
+
+    inicioSemana.setUTCHours(0, 0, 0, 0);
+
+ 
+
+    const dias = [];
+
+    for (let i = 0; i < 6; i++) {
+
+        const fecha = new Date(inicioSemana);
+
+        fecha.setUTCDate(inicioSemana.getUTCDate() + i);
+
+        dias.push(fecha);
+
+    }
+
+ 
+
+    const fechaFinSemana = dias[5];
+
+    const claveFecha = fecha => [
+
+        fecha.getUTCFullYear(),
+
+        String(fecha.getUTCMonth() + 1).padStart(2, "0"),
+
+        String(fecha.getUTCDate()).padStart(2, "0")
+
+    ].join("-");
+
+ 
+
+    const fechaEnRango = registros.filter(r =>
+
+        claveFecha(r.fecha) >= claveFecha(inicioSemana) &&
+
+        claveFecha(r.fecha) <= claveFecha(fechaFinSemana)
+
+    );
+
+ 
+
+    const nombresDias = ["LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO"];
+
+    const fechaCorta = fecha => `${String(fecha.getUTCDate()).padStart(2, "0")}/${String(fecha.getUTCMonth() + 1).padStart(2, "0")}`;
+
+    const fechaCompleta = fecha => `${fechaCorta(fecha)}/${fecha.getUTCFullYear()}`;
 
  
 
     const grupos = new Map();
 
-    delDia.forEach(r => {
+ 
 
-        const llaveAsesor = normalizar(r.asesor);
+    fechaEnRango.forEach(r => {
 
-        if (!grupos.has(llaveAsesor)) {
+        if (!grupos.has(r.llaveAsesor)) {
 
-            grupos.set(llaveAsesor, {
+            grupos.set(r.llaveAsesor, {
 
                 asesor: r.asesor,
 
@@ -3996,59 +4094,43 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
                 operaciones: 0,
 
-                total: 0,
-
-                condiciones: new Set(),
-
-                productos: new Set(),
-
-                cuotas: new Set(),
-
-                estados: new Set()
+                dias: [0, 0, 0, 0, 0, 0]
 
             });
 
         }
 
-        const g = grupos.get(llaveAsesor);
+ 
 
-        g.clientes.add(r.llaveCliente);
+        const grupo = grupos.get(r.llaveAsesor);
 
-        g.operaciones += 1;
+        grupo.clientes.add(r.llaveCliente);
 
-        g.total += r.monto;
+        grupo.operaciones += 1;
 
-        if (r.condicion) g.condiciones.add(r.condicion);
+ 
 
-        if (r.producto) g.productos.add(r.producto);
+        const indiceDia = Math.round((r.fecha - inicioSemana) / 86400000);
 
-        if (r.cuotas) g.cuotas.add(r.cuotas);
+        if (indiceDia >= 0 && indiceDia <= 5) {
 
-        if (r.estado) g.estados.add(r.estado);
+            grupo.dias[indiceDia] += r.monto;
+
+        }
 
     });
 
  
 
-    const valorUnico = set => set.size === 0 ? "—" : set.size === 1 ? [...set][0] : "VARIOS";
+    const gruposOrdenados = [...grupos.values()].sort(
 
-    const gruposOrdenados = [...grupos.values()].sort((a,b) => a.asesor.localeCompare(b.asesor, "es"));
+        (a, b) => a.asesor.localeCompare(b.asesor, "es")
 
-    const fechaTitulo = fechaMax.toLocaleDateString("es-PE", {
-
-        day:"2-digit", month:"2-digit", year:"numeric", timeZone:"UTC"
-
-    });
-
-    const fechaDia = fechaMax.toLocaleDateString("es-PE", {
-
-        weekday:"long", day:"2-digit", month:"2-digit", timeZone:"UTC"
-
-    }).toUpperCase();
+    );
 
  
 
-    let totalGeneral = 0;
+    let totalGeneralDias = [0, 0, 0, 0, 0, 0];
 
     let totalClientes = 0;
 
@@ -4056,122 +4138,326 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
  
 
+    const rangoTexto = `${fechaCorta(inicioSemana)} al ${fechaCorta(fechaFinSemana)}/${fechaFinSemana.getUTCFullYear()}`;
+
+ 
+
     let html = `
 
     <style>
 
-      #cuadroDesembolsosAsesor{margin-top:20px;padding:16px;background:#fff;border:1px solid #dbe4ee;border-radius:14px;box-shadow:0 4px 14px rgba(18,59,99,.08);font-family:Arial,sans-serif;box-sizing:border-box}
+        #cuadroDesembolsosAsesor {
 
-      #cuadroDesembolsosAsesor h3{text-align:center;margin:0 0 12px;color:#123B63;font-size:19px;font-weight:800}
+            margin-top: 9px;
 
-      #cuadroDesembolsosAsesor .meta{margin:0 0 10px;text-align:right;color:#526579;font-size:12px}
+            padding: 8px;
 
-      #cuadroDesembolsosAsesor .scroll{width:100%;overflow-x:auto}
+            width: 100%;
 
-      #cuadroDesembolsosAsesor table{width:100%;min-width:900px;border-collapse:collapse;font-size:13px;color:#17212b}
+            box-sizing: border-box;
 
-      #cuadroDesembolsosAsesor th{background:#24547b;color:#fff;padding:9px 8px;border:1px solid #d6dee7;text-align:center;white-space:nowrap}
+            background: #fff;
 
-      #cuadroDesembolsosAsesor td{padding:8px;border:1px solid #d6dee7}
+            border: 1px solid #dbe4ee;
 
-      #cuadroDesembolsosAsesor tbody tr:nth-child(even){background:#f7fafc}
+            border-radius: 10px;
 
-      #cuadroDesembolsosAsesor .asesor{font-weight:800;text-align:center;color:#123B63;white-space:nowrap}
+            box-shadow: 0 2px 8px rgba(18,59,99,.06);
 
-      #cuadroDesembolsosAsesor .monto{text-align:right;white-space:nowrap;font-weight:700}
+            font-family: Arial, sans-serif;
 
-      #cuadroDesembolsosAsesor .clientes{text-align:center;font-weight:700;white-space:nowrap}
+        }
 
-      #cuadroDesembolsosAsesor .estado{color:#2f6e9f;font-weight:700;white-space:nowrap}
+        #cuadroDesembolsosAsesor h3 {
 
-      #cuadroDesembolsosAsesor tfoot td{background:#dce6f7;font-weight:800;border-top:2px solid #123B63}
+            text-align: center;
 
-      @media(max-width:700px){#cuadroDesembolsosAsesor{padding:10px}#cuadroDesembolsosAsesor h3{font-size:16px}#cuadroDesembolsosAsesor table{font-size:12px;min-width:850px}#cuadroDesembolsosAsesor th,#cuadroDesembolsosAsesor td{padding:7px 6px}}
+            color: #123B63;
+
+            font-size: 15px;
+
+            font-weight: 800;
+
+            margin: 2px 0 5px;
+
+        }
+
+        #cuadroDesembolsosAsesor .meta {
+
+            text-align: right;
+
+            color: #526579;
+
+            font-size: 10px;
+
+            margin: 0 0 6px;
+
+        }
+
+        #cuadroDesembolsosAsesor .scroll {
+
+            width: 100%;
+
+            overflow-x: auto;
+
+            -webkit-overflow-scrolling: touch;
+
+        }
+
+        #cuadroDesembolsosAsesor table {
+
+            width: 100%;
+
+            min-width: 790px;
+
+            border-collapse: collapse;
+
+            font-size: 10px;
+
+            color: #17212b;
+
+        }
+
+        #cuadroDesembolsosAsesor th {
+
+            background: #24547b;
+
+            color: #fff;
+
+            border: 1px solid #d6dee7;
+
+            padding: 6px 4px;
+
+            text-align: center;
+
+            white-space: normal;
+
+            font-size: 9px;
+
+        }
+
+        #cuadroDesembolsosAsesor td {
+
+            border: 1px solid #d6dee7;
+
+            padding: 5px 4px;
+
+            line-height: 1.15;
+
+        }
+
+        #cuadroDesembolsosAsesor tbody tr:nth-child(even) {
+
+            background: #f7fafc;
+
+        }
+
+        #cuadroDesembolsosAsesor .asesor {
+
+            color: #123B63;
+
+            font-weight: 800;
+
+            white-space: nowrap;
+
+            text-align: center;
+
+        }
+
+        #cuadroDesembolsosAsesor .clientes,
+
+        #cuadroDesembolsosAsesor .operaciones {
+
+            text-align: center;
+
+            white-space: nowrap;
+
+            font-weight: 700;
+
+        }
+
+        #cuadroDesembolsosAsesor .monto {
+
+            text-align: right;
+
+            white-space: nowrap;
+
+            font-variant-numeric: tabular-nums;
+
+        }
+
+        #cuadroDesembolsosAsesor .total-semana {
+
+            background: #edf3fb;
+
+            font-weight: 800;
+
+        }
+
+        #cuadroDesembolsosAsesor tfoot td {
+
+            background: #dce6f7;
+
+            font-weight: 800;
+
+            border-top: 2px solid #123B63;
+
+        }
+
+        @media screen and (max-width: 600px) {
+
+            #cuadroDesembolsosAsesor {
+
+                margin-top: 6px;
+
+                padding: 5px;
+
+                border-radius: 8px;
+
+            }
+
+            #cuadroDesembolsosAsesor h3 {
+
+                font-size: 12px;
+
+            }
+
+            #cuadroDesembolsosAsesor .meta {
+
+                font-size: 9px;
+
+            }
+
+            #cuadroDesembolsosAsesor table {
+
+                min-width: 740px;
+
+                font-size: 9px;
+
+            }
+
+            #cuadroDesembolsosAsesor th {
+
+                padding: 5px 3px;
+
+                font-size: 8px;
+
+            }
+
+            #cuadroDesembolsosAsesor td {
+
+                padding: 4px 3px;
+
+            }
+
+        }
 
     </style>
 
+ 
+
     <section id="cuadroDesembolsosAsesor" class="desembolsos-panel">
 
-      <h3>CUADRO DE DESEMBOLSOS POR ASESOR</h3>
+        <h3>CUADRO DE DESEMBOLSOS POR ASESOR · LUNES A SÁBADO</h3>
 
-      <p class="meta">Fecha: <b>${fechaTitulo}</b> · Asesores: ${gruposOrdenados.length}</p>
+        <p class="meta">Semana: <b>${rangoTexto}</b> · Asesores: ${gruposOrdenados.length}</p>
 
-      <div class="scroll"><table>
+        <div class="scroll">
 
-        <thead><tr>
+            <table>
 
-          <th>Asesor</th><th>Cliente</th><th>Condición</th><th>Producto</th><th>Cuotas</th>
+                <thead>
 
-          <th>${fechaDia}<br>(${fechaTitulo})</th><th>TOTAL DESEMBOLSADO</th><th>Estado</th>
+                    <tr>
 
-        </tr></thead><tbody>`;
+                        <th>ASESOR</th>
+
+                        <th>CLIENTES</th>
+
+                        ${dias.map((d, i) => `<th>${nombresDias[i]}<br>${fechaCorta(d)}</th>`).join("")}
+
+                        <th>TOTAL SEMANAL</th>
+
+                        <th>OPERACIONES</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>`;
 
  
 
     gruposOrdenados.forEach(g => {
 
-        totalGeneral += g.total;
+        const cantidadClientes = g.clientes.size;
 
-        totalClientes += g.clientes.size;
+        totalClientes += cantidadClientes;
 
         totalOperaciones += g.operaciones;
 
-        const cantidad = g.clientes.size;
+ 
 
-        const textoClientes = `${String(cantidad).padStart(2, "0")} ${cantidad === 1 ? "CLIENTE" : "CLIENTES"}`;
+        const sumaSemanal = g.dias.reduce((s, n) => s + n, 0);
 
-        html += `<tr>
+        g.dias.forEach((n, i) => totalGeneralDias[i] += n);
 
-          <td class="asesor">${escaparHTMLDesembolso(g.asesor)}</td>
+ 
 
-          <td class="clientes">${textoClientes}</td>
+        html += `
 
-          <td style="text-align:center">${escaparHTMLDesembolso(valorUnico(g.condiciones))}</td>
+            <tr>
 
-          <td style="text-align:center">${escaparHTMLDesembolso(valorUnico(g.productos))}</td>
+                <td class="asesor">${escapar(g.asesor)}</td>
 
-          <td style="text-align:center">${escaparHTMLDesembolso(valorUnico(g.cuotas))}</td>
+                <td class="clientes">${String(cantidadClientes).padStart(2, "0")}</td>
 
-          <td class="monto">${soles(g.total)}</td>
+                ${g.dias.map(n => `<td class="monto">${formatoSoles(n)}</td>`).join("")}
 
-          <td class="monto">${soles(g.total)}</td>
+                <td class="monto total-semana">${formatoSoles(sumaSemanal)}</td>
 
-          <td class="estado">${escaparHTMLDesembolso(valorUnico(g.estados))}</td>
+                <td class="operaciones">${g.operaciones}</td>
 
-        </tr>`;
+            </tr>`;
 
     });
 
  
 
-    html += `</tbody><tfoot><tr>
-
-      <td class="asesor">TOTAL GENERAL</td>
-
-      <td class="clientes">${String(totalClientes).padStart(2,"0")} CLIENTES</td>
-
-      <td colspan="3" style="text-align:center">${totalOperaciones} OPERACIONES</td>
-
-      <td class="monto">${soles(totalGeneral)}</td>
-
-      <td class="monto">${soles(totalGeneral)}</td>
-
-      <td></td>
-
-    </tr></tfoot></table></div></section>`;
-
-    return html;
-
-}
+    const totalGeneral = totalGeneralDias.reduce((s, n) => s + n, 0);
 
  
 
-function escaparHTMLDesembolso(valor) {
+    html += `
 
-    return String(valor ?? "").replace(/[&<>"']/g, c => ({
+                </tbody>
 
-        "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+                <tfoot>
 
-    }[c]));
+                    <tr>
+
+                        <td class="asesor">TOTAL GENERAL</td>
+
+                        <td class="clientes">${String(totalClientes).padStart(2, "0")}</td>
+
+                        ${totalGeneralDias.map(n => `<td class="monto">${formatoSoles(n)}</td>`).join("")}
+
+                        <td class="monto">${formatoSoles(totalGeneral)}</td>
+
+                        <td class="operaciones">${totalOperaciones}</td>
+
+                    </tr>
+
+                </tfoot>
+
+            </table>
+
+        </div>
+
+    </section>`;
+
+ 
+
+    return html;
 
 }

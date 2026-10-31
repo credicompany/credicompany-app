@@ -857,35 +857,129 @@ margin-top:4px;
 }
    resumen += `
 
-<div class="card">
+   <style>
+/* KPI POR ASESOR - DISEÑO PROFESIONAL */
 
-<h4 style="
-margin:5px 0;
-font-size:14px;
-">
+.kpi-asesor-card {
+    background: #FFFFFF;
+    border: 1px solid #DCE5ED;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 10px;
+    box-shadow: 0 2px 7px rgba(18,63,99,.05);
+}
+
+.kpi-asesor-titulo {
+    margin: 0 0 8px;
+    color: #123F63;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: .25px;
+}
+
+.kpi-asesor-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 5px;
+}
+
+.kpi-asesor-table {
+    width: 100%;
+    min-width: 1450px;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: center;
+    font-size: 11px;
+    color: #263746;
+    font-variant-numeric: tabular-nums;
+}
+
+.kpi-asesor-table th {
+    background: #123F63;
+    color: #FFFFFF;
+    padding: 7px 5px;
+    font-size: 10px;
+    line-height: 1.15;
+    font-weight: 750;
+    letter-spacing: .12px;
+    white-space: normal;
+    vertical-align: middle;
+    border-right: 1px solid rgba(255,255,255,.12);
+    border-bottom: 2px solid #0B2E4A;
+}
+
+.kpi-asesor-table th:first-child {
+    border-radius: 6px 0 0 0;
+}
+
+.kpi-asesor-table th:last-child {
+    border-radius: 0 6px 0 0;
+    border-right: 0;
+}
+
+.kpi-asesor-table td {
+    padding: 6px;
+    font-size: 11px;
+    line-height: 1.2;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-bottom: 1px solid #E8EDF2;
+}
+
+.kpi-asesor-table tbody tr:nth-child(even):not(.kpi-total-row) {
+    background: #F7F9FB;
+}
+
+.kpi-asesor-table tbody tr:hover:not(.kpi-total-row) {
+    background: #EEF4F8;
+}
+
+.kpi-asesor-table .kpi-total-row td {
+    padding: 7px 6px;
+    font-size: 12px;
+    font-weight: 800;
+    background: #EAF1F6;
+    border-top: 2px solid #123F63;
+    border-bottom: 0;
+}
+
+.kpi-asesor-table .kpi-total-row td:first-child {
+    color: #123F63;
+    font-size: 12px;
+    line-height: 1.05;
+}
+
+@media (max-width: 768px) {
+    .kpi-asesor-card {
+        padding: 8px;
+    }
+
+    .kpi-asesor-table {
+        min-width: 1400px;
+    }
+
+    .kpi-asesor-table th {
+        font-size: 9.5px;
+        padding: 6px 4px;
+    }
+
+    .kpi-asesor-table td {
+        font-size: 10.5px;
+        padding: 5px;
+    }
+}
+</style>
+
+<div class="card kpi-asesor-card">
+<h4 class="kpi-asesor-titulo">
 🎯 KPI POR ASESOR
 </h4>
-
-<div style="
-overflow-x:auto;
-overflow-y:hidden;
-width:100%;
--webkit-overflow-scrolling:touch;
-padding-bottom:8px;
-">
-
-<table style="
-width:100%;
-min-width:1100px;
-border-collapse:collapse;
-font-size:14px;
-text-align:center;
-">
-
-<tr style="
-background:#123F63;
-color:white;
-">
+<div class="kpi-asesor-scroll">
+<table class="kpi-asesor-table">
+<thead>
+<tr>
 
 <th>ASESOR</th>
 <th>META COLOCACIÓN</th>
@@ -907,6 +1001,8 @@ color:white;
 <th>🚦</th>
 
 </tr>
+</thead>
+<tbody>
 `;
 // ==========================
 // MORA ACTUAL (TODA LA CARTERA)
@@ -1440,20 +1536,8 @@ totalVariacionClientes < 0
 
 resumen += `
 
-<tr style="
-background:#EDF4F8;
-font-weight:800;
-font-size:15px;
-height:42px;
-border-top:3px solid #123F63;
-vertical-align:middle;
-">
-
-<td style="
-font-size:16px;
-font-weight:900;
-line-height:1.1;
-">
+<tr class="kpi-total-row">
+<td>
 TOTAL<br>EMPRESA
 </td>
 
@@ -1532,7 +1616,9 @@ S/${Math.round(totalMoraAgosto1Mas).toLocaleString("es-PE")}
 
 `;
     resumen += `
+</tbody>
 </table>
+</div>
 </div>
 `;
 

@@ -870,11 +870,12 @@ margin-top:4px;
 }
 
 .kpi-asesor-titulo {
-    margin: 0 0 8px;
+    margin: 0 0 10px;
     color: #123F63;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 800;
-    letter-spacing: .25px;
+    letter-spacing: .3px;
+    text-align: center;
 }
 
 .kpi-asesor-scroll {
@@ -937,18 +938,21 @@ margin-top:4px;
 }
 
 .kpi-asesor-table .kpi-total-row td {
-    padding: 7px 6px;
-    font-size: 12px;
-    font-weight: 800;
+    padding: 9px 7px;
+    font-size: 14px;
+    font-weight: 900;
     background: #EAF1F6;
     border-top: 2px solid #123F63;
     border-bottom: 0;
+    text-align: center;
 }
 
 .kpi-asesor-table .kpi-total-row td:first-child {
     color: #123F63;
-    font-size: 12px;
-    line-height: 1.05;
+    font-size: 15px;
+    font-weight: 900;
+    line-height: 1.1;
+    text-align: center;
 }
 
 @media (max-width: 768px) {

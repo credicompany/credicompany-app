@@ -994,6 +994,7 @@ margin-top:4px;
 <th>VARIACIÓN</th>
 <th>TEM ${mesAnterior.toUpperCase()}</th>
 <th>TEM ${mesActual.toUpperCase()}</th>
+<th>VARIACIÓN TEM</th>
 <th>MORA ${mesAnterior.toUpperCase()}</th>
 <th>MORA ${mesActual.toUpperCase()} 31+</th>
 <th>MORA ${mesActual.toUpperCase()} 9+</th>
@@ -1368,6 +1369,21 @@ console.log(
     temAnterior
 );
 
+        // ==========================================
+// VARIACIÓN TEM POR ASESOR
+// ==========================================
+
+const variacionTEM =
+    Number(tem) - Number(temAnterior);
+
+const colorVariacionTEM =
+    variacionTEM > 0
+        ? "#159447"
+        : variacionTEM < 0
+            ? "#D64545"
+            : "#657789";
+
+        
         // Mora histórica: se toma siempre el mes anterior.
         let moraAnterior = 0;
         const colMora = buscarColumna("MORA",mesAnterior);
@@ -1440,7 +1456,17 @@ console.log(
 </td>
 <td style="font-weight:bold;color:${colorVariacion};">${variacionClientes>0?'+':''}${variacionClientes}</td>
 <td>${Number(temAnterior).toFixed(1)}%</td>
+
 <td>${Number(tem).toFixed(2)}%</td>
+
+<td style="
+    color:${colorVariacionTEM};
+    font-weight:800;
+    text-align:center;
+    white-space:nowrap;
+">
+    ${variacionTEM > 0 ? "+" : ""}${variacionTEM.toFixed(1)}
+</td>
 <td>S/${Math.round(moraAnterior).toLocaleString("es-PE")}</td>
 <td style="font-weight:bold;color:#991B1B;">S/${Math.round(mora31Mas).toLocaleString("es-PE")}</td>
 <td style="font-weight:bold;color:#C43D3D;">S/${Math.round(moraActual).toLocaleString("es-PE")}</td>
@@ -1523,6 +1549,21 @@ cantidadTemAgosto > 0
 :
 0;
 
+// ==========================================
+// VARIACIÓN TEM TOTAL EMPRESA
+// ==========================================
+
+let variacionTEMTotal =
+    Number(temTotalAgosto) - Number(temTotalJulio);
+
+let colorVariacionTEMTotal =
+    variacionTEMTotal > 0
+        ? "#159447"
+        : variacionTEMTotal < 0
+            ? "#D64545"
+            : "#657789";
+    
+
 let colorTotalVariacion =
 totalVariacionClientes > 0
 ?
@@ -1590,6 +1631,14 @@ ${temTotalJulio}%
 
 <td>
 ${temTotalAgosto}%
+</td>
+
+<td style="
+    color:${colorVariacionTEMTotal};
+    font-weight:800;
+    text-align:center;
+">
+    ${variacionTEMTotal > 0 ? "+" : ""}${variacionTEMTotal.toFixed(1)}
 </td>
 
 <td>

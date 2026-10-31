@@ -1857,8 +1857,12 @@ KPI FINANCIERO - CELULAR
         font-size:11px !important;
         line-height:1.05 !important;
     }
-
+  
+  /* OCULTAR TARJETAS DE RESUMEN EN INICIO */
+#resumenTarjetasInicio {
+    display: none !important;
 }
+
 </style>
  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -2529,7 +2533,7 @@ onclick="mostrar('resultadoMensual')">
 </div>
 </div>
 
-<div class="resumen" style="display:none;">
+<div id="resumenTarjetasInicio" class="resumen" style="display:none !important;">
 
     <div class="card-resumen">
         <div>💰 Cartera</div>

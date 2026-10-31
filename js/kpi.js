@@ -3240,6 +3240,129 @@ document.getElementById(
 
 `
 
+<style>
+/* =========================================
+   KPI FINANCIERO - DISEÑO COMPACTO
+   ESCRITORIO Y CELULAR
+========================================= */
+
+#resumenFinanciero {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* BOTONES DE NAVEGACIÓN */
+
+#resumenFinanciero .card-resumen {
+    min-height: 65px !important;
+    height: auto !important;
+    padding: 9px 5px !important;
+    margin: 0 !important;
+    border-radius: 11px !important;
+    font-size: 12px !important;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    box-shadow: 0 2px 6px rgba(18,63,99,.06) !important;
+}
+
+/* TARJETAS DE INDICADORES */
+
+#panelResumen > div:first-child {
+    gap: 7px !important;
+    margin-bottom: 8px !important;
+}
+
+#panelResumen > div:first-child > div {
+    min-height: 65px !important;
+    height: auto !important;
+    padding: 8px 5px !important;
+    border-radius: 10px !important;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ICONOS */
+
+#panelResumen > div:first-child > div > div:first-child {
+    font-size: 17px !important;
+    margin-bottom: 2px !important;
+}
+
+/* VALORES PRINCIPALES */
+
+#panelResumen > div:first-child > div > div:last-child {
+    font-size: 16px !important;
+    line-height: 1.15 !important;
+    font-weight: 800 !important;
+}
+
+/* TARJETAS CARTERA SANA Y VENCIDA */
+
+#panelResumen > div:nth-child(2) {
+    gap: 7px !important;
+    margin-top: 8px !important;
+}
+
+#panelResumen > div:nth-child(2) > div {
+    padding: 9px !important;
+    border-radius: 10px !important;
+}
+
+/* CONTENEDORES GENERALES */
+
+#panelResumen > div {
+    box-sizing: border-box;
+}
+
+/* AJUSTES PARA CELULARES */
+
+@media screen and (max-width: 768px) {
+
+    #resumenFinanciero {
+        padding: 0 !important;
+    }
+
+    #resumenFinanciero .card-resumen {
+        min-height: 58px !important;
+        padding: 7px 4px !important;
+        font-size: 11px !important;
+    }
+
+    #panelResumen > div:first-child {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 6px !important;
+    }
+
+    #panelResumen > div:first-child > div {
+        min-height: 62px !important;
+        padding: 6px 4px !important;
+    }
+
+    #panelResumen > div:first-child > div > div:first-child {
+        font-size: 15px !important;
+    }
+
+    #panelResumen > div:first-child > div > div:last-child {
+        font-size: 15px !important;
+    }
+
+    #panelResumen > div:nth-child(2) {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 6px !important;
+    }
+
+    #panelResumen > div:nth-child(2) > div {
+        padding: 8px 5px !important;
+    }
+}
+</style>
+
 <div style="
 display:grid;
 grid-template-columns:${esMovil ? "repeat(2,1fr)" : "repeat(3,1fr)"};

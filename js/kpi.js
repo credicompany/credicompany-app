@@ -1917,6 +1917,11 @@ if(isNaN(fechaDetectada.getTime())){
     return;
 }
 
+    alert(
+    "FECHA GUARDADA: " + fechaProduccion +
+    "\nFECHA INTERPRETADA: " + fechaDetectada.toString()
+);
+    
 const anio = fechaDetectada.getFullYear();
 
 const mes = String(

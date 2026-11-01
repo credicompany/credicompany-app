@@ -2104,11 +2104,6 @@ console.log("================================");
 
      if(datos.fechaProduccion){
 
-    localStorage.setItem(
-        "fechaProduccionKPI",
-        datos.fechaProduccion
-    );
-
 }
        console.log("RESUMEN GERENCIAL:", datos.resumen);
 

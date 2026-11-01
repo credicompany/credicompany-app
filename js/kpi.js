@@ -1869,66 +1869,17 @@ function cerrarKPIHistorico(){
 
   const fecha = new Date();
 
-const fechaProduccion =
-    localStorage.getItem("fechaProduccionKPI");
+const periodo = localStorage.getItem("periodoProduccionKPI");
 
-if(!fechaProduccion){
+if(!periodo || !/^\d{4}-\d{2}$/.test(periodo)){
 
-    alert(
-        "No se encontró la fecha de carga de producción. Verifica primero el KPI."
-    );
+    alert("No se encontró un periodo válido de producción. Vuelve a cargar el Excel.");
 
     return;
-}
-
-let fechaDetectada;
-
-if (/^\d{4}-\d{2}-\d{2}/.test(fechaProduccion)) {
-
-    fechaDetectada = new Date(fechaProduccion);
-
-} else {
-
-    const fechaTexto = fechaProduccion.split(",")[0].trim();
-    const partes = fechaTexto.split("/");
-
-    if(partes.length === 3){
-
-        fechaDetectada = new Date(
-            Number(partes[2]),
-            Number(partes[1]) - 1,
-            Number(partes[0])
-        );
-
-    } else {
-
-        fechaDetectada = new Date(fechaProduccion);
-
-    }
 
 }
 
-if(isNaN(fechaDetectada.getTime())){
-
-    alert(
-        "No se pudo identificar el periodo de producción."
-    );
-
-    return;
-}
-
-    alert(
-    "FECHA GUARDADA: " + fechaProduccion +
-    "\nFECHA INTERPRETADA: " + fechaDetectada.toString()
-);
-    
-const anio = fechaDetectada.getFullYear();
-
-const mes = String(
-    fechaDetectada.getMonth() + 1
-).padStart(2,"0");
-
-const periodo = `${anio}-${mes}`;
+const [anio, mes] = periodo.split("-");
 
     const confirmar = confirm(
         `¿Deseas guardar el cierre KPI del periodo ${periodo}?`
@@ -3015,8 +2966,9 @@ return;
 // ==========================================
 
 localStorage.setItem(
-    "fechaProduccionKPI",
-    ultimaFecha.toISOString()
+    "periodoProduccionKPI",
+    ultimaFecha.getUTCFullYear() + "-" +
+    String(ultimaFecha.getUTCMonth() + 1).padStart(2, "0")
 );
     
     let mesConsulta =

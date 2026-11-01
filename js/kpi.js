@@ -1863,7 +1863,32 @@ if(!fechaProduccion){
     return;
 }
 
-const fechaDetectada = new Date(fechaProduccion);
+let fechaDetectada;
+
+if (/^\d{4}-\d{2}-\d{2}/.test(fechaProduccion)) {
+
+    fechaDetectada = new Date(fechaProduccion);
+
+} else {
+
+    const fechaTexto = fechaProduccion.split(",")[0].trim();
+    const partes = fechaTexto.split("/");
+
+    if(partes.length === 3){
+
+        fechaDetectada = new Date(
+            Number(partes[2]),
+            Number(partes[1]) - 1,
+            Number(partes[0])
+        );
+
+    } else {
+
+        fechaDetectada = new Date(fechaProduccion);
+
+    }
+
+}
 
 if(isNaN(fechaDetectada.getTime())){
 

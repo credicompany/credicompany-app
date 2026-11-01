@@ -1049,6 +1049,7 @@ margin-bottom:12px;
 
 <div style="
 display:${asesor === "admin" ? "flex" : "none"};
+console.log("USUARIO ACTUAL:", asesor);
 align-items:center;
 gap:8px;
 flex-wrap:wrap;

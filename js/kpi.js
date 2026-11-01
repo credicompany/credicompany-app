@@ -1048,7 +1048,7 @@ margin-bottom:12px;
 </h4>
 
 <div style="
-display:flex;
+display:${asesor === "admin" ? "flex" : "none"};
 align-items:center;
 gap:8px;
 flex-wrap:wrap;

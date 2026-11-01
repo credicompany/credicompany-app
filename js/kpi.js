@@ -1015,10 +1015,76 @@ margin-top:4px;
 </style>
 
 <div class="card kpi-asesor-card">
-<h4 class="kpi-asesor-titulo">
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:10px;
+margin-bottom:12px;
+">
+
+<h4 class="kpi-asesor-titulo" style="margin:0;">
 🎯 KPI POR ASESOR
 </h4>
+
+<div style="
+display:flex;
+align-items:center;
+gap:8px;
+flex-wrap:wrap;
+">
+
+<button
+type="button"
+onclick="cerrarKPIHistorico()"
+style="
+background:#123F63;
+color:white;
+border:0;
+padding:9px 12px;
+border-radius:6px;
+font-weight:bold;
+cursor:pointer;
+">
+🔒 Cerrar y guardar mes
+</button>
+
+<select
+id="selectorHistoricoKPI"
+onchange="consultarKPIHistorico(this.value)"
+style="
+padding:9px;
+border:1px solid #CCD6DF;
+border-radius:6px;
+font-weight:600;
+">
+
+<option value="">Consultar histórico mensual</option>
+
+</select>
+
+<button
+type="button"
+onclick="volverKPIActual()"
+style="
+background:#EAF1F6;
+color:#123F63;
+border:1px solid #CCD6DF;
+padding:9px 12px;
+border-radius:6px;
+font-weight:bold;
+cursor:pointer;
+">
+↩ KPI actual
+</button>
+
+</div>
+</div>
+
 <div class="kpi-asesor-scroll">
+
 <table class="kpi-asesor-table">
 <thead>
 <tr>
@@ -1771,6 +1837,211 @@ guardarGerencialFirebase(
 }
 
 // ======================================================
+// HISTÓRICO MENSUAL KPI CREDICOMPANY
+// ======================================================
+
+function cerrarKPIHistorico(){
+
+    const resumen = document.getElementById("kpiResumen");
+
+    if(!resumen){
+        alert("No se encontró el cuadro KPI.");
+        return;
+    }
+
+  const fecha = new Date();
+
+const fechaProduccion =
+    localStorage.getItem("fechaProduccionKPI");
+
+if(!fechaProduccion){
+
+    alert(
+        "No se encontró la fecha de carga de producción. Verifica primero el KPI."
+    );
+
+    return;
+}
+
+const fechaDetectada = new Date(fechaProduccion);
+
+if(isNaN(fechaDetectada.getTime())){
+
+    alert(
+        "No se pudo identificar el periodo de producción."
+    );
+
+    return;
+}
+
+const anio = fechaDetectada.getFullYear();
+
+const mes = String(
+    fechaDetectada.getMonth() + 1
+).padStart(2,"0");
+
+const periodo = `${anio}-${mes}`;
+
+    const confirmar = confirm(
+        `¿Deseas guardar el cierre KPI del periodo ${periodo}?`
+    );
+
+    if(!confirmar) return;
+
+    const tabla = resumen.querySelector(".kpi-asesor-card");
+
+    if(!tabla){
+        alert("No se encontró la tabla KPI por asesor.");
+        return;
+    }
+
+    const datos = {
+        periodo: periodo,
+        fechaCierre: fecha.toISOString(),
+        html: tabla.outerHTML
+    };
+
+    db.ref("kpiHistoricoMensual/" + periodo)
+    .once("value")
+    .then(snapshot=>{
+
+       if(snapshot.exists()){
+
+    alert(
+        "ATENCIÓN: El periodo " + periodo +
+        " ya tiene un cierre registrado.\n\n" +
+        "No se permitirá modificar el histórico existente."
+    );
+
+    return;
+
+}
+
+        return db.ref("kpiHistoricoMensual/" + periodo)
+        .set(datos);
+
+    })
+    .then(resultado=>{
+
+        if(resultado === undefined) return;
+
+        alert("Cierre KPI guardado correctamente.");
+
+        cargarSelectorHistoricoKPI();
+
+    })
+    .catch(error=>{
+
+        console.error("ERROR HISTÓRICO KPI:",error);
+
+        alert("No se pudo guardar el histórico. Revisa Firebase.");
+
+    });
+
+}
+
+
+// ======================================================
+// CARGAR MESES DISPONIBLES
+// ======================================================
+
+function cargarSelectorHistoricoKPI(){
+
+    const selector =
+        document.getElementById("selectorHistoricoKPI");
+
+    if(!selector) return;
+
+    db.ref("kpiHistoricoMensual")
+    .once("value")
+    .then(snapshot=>{
+
+        const historicos = snapshot.val() || {};
+
+        selector.innerHTML =
+        '<option value="">Consultar histórico mensual</option>';
+
+        Object.keys(historicos)
+        .sort()
+        .reverse()
+        .forEach(periodo=>{
+
+            const opcion = document.createElement("option");
+
+            opcion.value = periodo;
+            opcion.textContent = periodo;
+
+            selector.appendChild(opcion);
+
+        });
+
+    })
+    .catch(error=>{
+
+        console.error("ERROR CARGANDO HISTÓRICO:",error);
+
+    });
+
+}
+
+
+// ======================================================
+// CONSULTAR UN MES GUARDADO
+// ======================================================
+
+function consultarKPIHistorico(periodo){
+
+    if(!periodo) return;
+
+    db.ref("kpiHistoricoMensual/" + periodo)
+    .once("value")
+    .then(snapshot=>{
+
+        const datos = snapshot.val();
+
+        if(!datos || !datos.html){
+
+            alert("No se encontró información de ese periodo.");
+            return;
+
+        }
+
+        const resumen = document.getElementById("kpiResumen");
+
+        if(!resumen) return;
+
+        resumen.innerHTML = datos.html;
+
+    })
+    .catch(error=>{
+
+        console.error("ERROR CONSULTANDO HISTÓRICO:",error);
+
+        alert("No se pudo consultar el histórico.");
+
+    });
+
+}
+
+
+// ======================================================
+// VOLVER AL KPI ACTUAL
+// ======================================================
+
+function volverKPIActual(){
+
+    const selector =
+        document.getElementById("selectorHistoricoKPI");
+
+    if(selector){
+        selector.value = "";
+    }
+
+    cargarGerencialFirebase();
+
+}
+
+// ======================================================
 // FIREBASE KPI GERENCIAL
 // ======================================================
 function guardarGerencialFirebase(
@@ -1832,18 +2103,14 @@ console.log(datos);
 console.log("================================");
         if(!datos) return;
 
-      if(datos.fechaProduccion){
+     if(datos.fechaProduccion){
 
-    const fechaCargaProduccion =
-    new Date().toLocaleString("es-PE");
-
-localStorage.setItem(
-    "fechaProduccionKPI",
-    fechaCargaProduccion
-);
+    localStorage.setItem(
+        "fechaProduccionKPI",
+        datos.fechaProduccion
+    );
 
 }
-
        console.log("RESUMEN GERENCIAL:", datos.resumen);
 
 const divResumen = document.getElementById("kpiResumen");
@@ -1867,7 +2134,8 @@ if(divResumen){
             datos.rankingKPIHTML;
 
         }
-
+        
+cargarSelectorHistoricoKPI();
         console.log(
             "✅ KPI GERENCIAL DESDE FIREBASE"
         );
@@ -2693,6 +2961,16 @@ alert(
 return;
 
 }
+
+// ==========================================
+// GUARDAR PERIODO DE PRODUCCIÓN PARA HISTÓRICO
+// ==========================================
+
+localStorage.setItem(
+    "fechaProduccionKPI",
+    ultimaFecha.toISOString()
+);
+    
     let mesConsulta =
 ultimaFecha.getUTCMonth();
 

@@ -974,6 +974,44 @@ margin-top:4px;
         padding: 5px;
     }
 }
+
+/* =====================================
+   COLUMNA ASESOR FIJA
+===================================== */
+
+.kpi-asesor-table th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 5;
+    min-width: 90px;
+    background: #123F63;
+    box-shadow: 2px 0 4px rgba(0,0,0,.10);
+}
+
+.kpi-asesor-table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    min-width: 90px;
+    background: #FFFFFF;
+    box-shadow: 2px 0 4px rgba(0,0,0,.06);
+}
+
+/* Filas alternadas */
+
+.kpi-asesor-table tbody tr:nth-child(even):not(.kpi-total-row) td:first-child {
+    background: #F7F9FB;
+}
+
+/* Fila TOTAL EMPRESA */
+
+.kpi-asesor-table .kpi-total-row td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    background: #EAF1F6;
+}
+
 </style>
 
 <div class="card kpi-asesor-card">

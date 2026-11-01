@@ -55,7 +55,25 @@ if(fechaExcel instanceof Date){
 
 }else{
 
-    fecha = new Date(fechaExcel);
+    const fechaTexto = String(fechaExcel).trim();
+
+    const partes = fechaTexto.match(
+        /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/
+    );
+
+    if(partes){
+
+        fecha = new Date(Date.UTC(
+            Number(partes[3]),
+            Number(partes[2]) - 1,
+            Number(partes[1])
+        ));
+
+    }else{
+
+        fecha = new Date(fechaTexto);
+
+    }
 
 }
 

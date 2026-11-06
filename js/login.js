@@ -22,9 +22,12 @@ document.getElementById("panelExcel").style.display="block";
 document.getElementById("panelAsesores").style.display="grid";
 document.getElementById("boxKpiFinanciero").style.display="flex";
 document.getElementById("boxResultadoMensual").style.display="flex";
-document.getElementById("boxInteligencia").style.display="flex";
-    document.getElementById("boxCrecimientoCartera").style.display =
-    user === "admin" ? "flex" : "none";
+const boxCrecimiento = document.getElementById("boxCrecimientoCartera");
+
+if(boxCrecimiento){
+    boxCrecimiento.style.display =
+        user === "admin" ? "flex" : "none";
+}
 actualizarResumen();
 
 return;

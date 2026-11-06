@@ -3365,7 +3365,44 @@ style="display:none;">
 
     <h3>📈 Análisis de Crecimiento de Cartera</h3>
 
-    <div id="contenidoCrecimientoCartera">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px;margin-top:20px;">
+
+    <div class="card" style="padding:18px;border:1px solid #DCE4EC;">
+        <h4>📊 1. Cartera y desembolsos</h4>
+        <p>Archivo DATA GENERAL</p>
+
+        <input
+            type="file"
+            id="excelCarteraCrecimiento"
+            accept=".xlsx,.xls"
+        >
+
+        <p id="estadoExcelCartera">Pendiente de carga</p>
+    </div>
+
+    <div class="card" style="padding:18px;border:1px solid #DCE4EC;">
+        <h4>💰 2. Amortizaciones de capital</h4>
+        <p>Archivo INGRESO</p>
+
+        <input
+            type="file"
+            id="excelAmortizaciones"
+            accept=".xlsx,.xls"
+        >
+
+        <p id="estadoExcelAmortizaciones">Pendiente de carga</p>
+    </div>
+
+</div>
+
+<div style="margin-top:20px;">
+    <button onclick="procesarCrecimientoCartera()">
+        📈 Procesar análisis
+    </button>
+</div>
+
+<div id="resultadoCrecimientoCartera" style="margin-top:20px;"></div>
+  
         <p style="text-align:center;color:#64748B;">
             Módulo preparado para cargar y analizar la evolución de la cartera.
         </p>

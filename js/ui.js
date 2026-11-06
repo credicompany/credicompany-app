@@ -14,7 +14,8 @@ function ocultarPantallas(){
 "resultadoMensual",
 "historialDiv",
 "historialGestionesDiv",
-"historialClienteDiv"
+"historialClienteDiv",
+"crecimientoCartera"
 ].forEach(id=>{
 
 const el = document.getElementById(id);
@@ -113,6 +114,15 @@ function mostrar(p){
         return;
     }
 
+  // CRECIMIENTO DE CARTERA → SOLO ADMIN
+if(
+    p === "crecimientoCartera" &&
+    asesor !== "admin"
+){
+    alert("Acceso restringido");
+    return;
+}
+  
     prepararInterfaz();
     ocultarPantallas();
 

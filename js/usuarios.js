@@ -23,8 +23,8 @@ dashboard.style.display="block";
 document.querySelector(".resumen").style.display="grid";
 
 if(asesor === "admin"){
-
     document.getElementById("boxAdmin").style.display="flex";
+   document.getElementById("boxCrecimientoCartera").style.display="flex";
     document.getElementById("panelExcel").style.display="block";
     document.getElementById("panelAsesores").style.display="grid";
   renderBotonesAsesores();
@@ -34,6 +34,7 @@ if(asesor === "admin"){
 }else{
 
     document.getElementById("boxAdmin").style.display="none";
+    document.getElementById("boxCrecimientoCartera").style.display="none";
     document.getElementById("boxKpiFinanciero").style.display="none";
     document.getElementById("boxResultadoMensual").style.display="none";
 
@@ -56,6 +57,7 @@ let encontrado = usuarios.find(
 if(encontrado){
 
     asesor = user.toLowerCase().trim();
+  document.getElementById("boxCrecimientoCartera").style.display="none";
 if(asesor==="ebenites"){
 
 document.getElementById("boxKpiFinanciero").style.display="flex";

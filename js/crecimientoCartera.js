@@ -361,8 +361,12 @@ const par30 = carteraActual > 0
 
     });
 
-    // Periodo que se está cerrando: noviembre 2026
-const periodoCierre = "2026-11";
+    // Periodo automático según la fecha de la computadora
+const ahora = new Date();
+
+const periodoCierre =
+    ahora.getFullYear() + "-" +
+    String(ahora.getMonth() + 1).padStart(2, "0");
 
 // Mostrar únicamente el mes de cierre
 const periodos = mensual[periodoCierre]
@@ -384,6 +388,16 @@ periodos.forEach(periodo => {
 
 const crecimientoNeto =
     totalDesembolsos - totalAmortizaciones;
+
+    // Evitar cierres sin movimientos del mes
+if (totalDesembolsos === 0 && totalAmortizaciones === 0) {
+    resultadoCierreCrecimiento = null;
+
+    document.getElementById("btnGuardarCierreCartera").disabled = true;
+
+    alert("No existen desembolsos ni amortizaciones para el mes de cierre.");
+    return;
+}
 
     // Datos del cierre mensual
 resultadoCierreCrecimiento = {
@@ -431,7 +445,11 @@ resultadoCierreCrecimiento = {
                 <div>📈 Crecimiento neto del periodo</div>
                 <div>${soles(crecimientoNeto)}</div>
             </div>
-
+<div class="card-resumen">
+    <div>⚠️ Mora PAR > 30 días</div>
+    <div>${par30.toFixed(2)}%</div>
+    <small>Saldo: ${soles(saldoMora30)}</small>
+</div>
         </div>
 
         <h3 style="margin-top:25px;">
@@ -525,6 +543,23 @@ function guardarCierreCrecimientoCartera() {
         alert("Primero debes procesar el análisis.");
         return;
     }
+
+    // Verificar que solo el administrador pueda cerrar
+if (asesor !== "admin") {
+    alert("Solo el administrador puede realizar el cierre mensual.");
+    return;
+}
+
+// Confirmar cierre manual
+const confirmar = confirm(
+    "¿Confirma guardar el cierre de " +
+    resultadoCierreCrecimiento.periodo +
+    "?\n\nUna vez guardado, el histórico no podrá sobrescribirse."
+);
+
+if (!confirmar) {
+    return;
+}
 
     if (typeof db === "undefined") {
         alert("No se encuentra la conexión con Firebase.");

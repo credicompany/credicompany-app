@@ -204,7 +204,7 @@ document.getElementById("excelCarteraCrecimiento")
                 fila[estructura.columnas["Saldo Capital"]]
             );
 
-            if (!fecha || (!desembolso && !saldo)) return;
+        if (!fecha || desembolso < 0 || saldo < 0) return;
 
             registros.push({
                 fecha,
@@ -468,8 +468,6 @@ function procesarCrecimientoCartera() {
         </p>
     `;
 
-    document.getElementById(
-        "resultadoCrecimientoCartera"
-    ).innerHTML = html;
+document.getElementById("resultadoCrecimientoCartera").innerHTML = html;
 
 }

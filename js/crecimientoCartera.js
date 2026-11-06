@@ -608,3 +608,122 @@ if (!confirmar) {
         false
     );
 }
+
+// ==========================================
+// CONSULTAR CIERRE DEL MES ANTERIOR
+// ==========================================
+
+function obtenerCierreMesAnterior(periodo) {
+
+    const [anio, mes] = periodo.split("-").map(Number);
+
+    const fechaAnterior = new Date(anio, mes - 2, 1);
+
+    const periodoAnterior =
+        fechaAnterior.getFullYear() + "-" +
+        String(fechaAnterior.getMonth() + 1).padStart(2, "0");
+
+    return db.ref(
+        "historicoCrecimientoCartera/" + periodoAnterior
+    ).once("value").then(snapshot => {
+
+        return snapshot.exists()
+            ? snapshot.val()
+            : null;
+
+    });
+}
+
+// ==========================================
+// CUADRO COMPARATIVO MENSUAL
+// ==========================================
+
+function mostrarComparativoCrecimiento(actual, anterior) {
+
+    const contenedor = document.getElementById(
+        "resultadoComparativoCartera"
+    );
+
+    if (!contenedor) return;
+
+    const formatoSoles = valor =>
+        Number(valor || 0).toLocaleString("es-PE", {
+            style: "currency",
+            currency: "PEN"
+        });
+
+    const variacion = (actual, anterior) => {
+
+        if (!anterior) return "Sin histórico";
+
+        if (anterior === 0) return "N/A";
+
+        const porcentaje =
+            ((actual - anterior) / Math.abs(anterior)) * 100;
+
+        return (porcentaje > 0 ? "+" : "") +
+            porcentaje.toFixed(2) + "%";
+    };
+
+    const variacionPP = (actual, anterior) => {
+
+        if (!anterior) return "Sin histórico";
+
+        const diferencia = actual - anterior;
+
+        return (diferencia > 0 ? "+" : "") +
+            diferencia.toFixed(2) + " pp";
+    };
+
+    const filas = [
+        ["Cartera total", formatoSoles(actual.carteraActual),
+            anterior ? formatoSoles(anterior.carteraActual) : "Sin histórico",
+            variacion(actual.carteraActual, anterior?.carteraActual)],
+
+        ["Desembolsos", formatoSoles(actual.desembolsos),
+            anterior ? formatoSoles(anterior.desembolsos) : "Sin histórico",
+            variacion(actual.desembolsos, anterior?.desembolsos)],
+
+        ["Amortizaciones", formatoSoles(actual.amortizaciones),
+            anterior ? formatoSoles(anterior.amortizaciones) : "Sin histórico",
+            variacion(actual.amortizaciones, anterior?.amortizaciones)],
+
+        ["Crecimiento neto", formatoSoles(actual.crecimientoNeto),
+            anterior ? formatoSoles(anterior.crecimientoNeto) : "Sin histórico",
+            variacion(actual.crecimientoNeto, anterior?.crecimientoNeto)],
+
+        ["Mora PAR > 30 días", actual.par30.toFixed(2) + "%",
+            anterior ? anterior.par30.toFixed(2) + "%" : "Sin histórico",
+            variacionPP(actual.par30, anterior?.par30)]
+    ];
+
+    contenedor.innerHTML = `
+        <h3>📊 Comparativo mensual de cartera</h3>
+
+        <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;">
+                <thead>
+                    <tr style="background:#123B63;color:white;">
+                        <th>Concepto</th>
+                        <th>Mes actual</th>
+                        <th>Mes anterior</th>
+                        <th>Variación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${filas.map(fila => `
+                        <tr style="border-bottom:1px solid #ddd;">
+                            <td style="padding:12px;">${fila[0]}</td>
+                            <td style="text-align:right;">${fila[1]}</td>
+                            <td style="text-align:right;">${fila[2]}</td>
+                            <td style="text-align:right;font-weight:bold;">
+                                ${fila[3]}
+                            </td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+

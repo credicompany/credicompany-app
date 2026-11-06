@@ -23,6 +23,8 @@ document.getElementById("panelAsesores").style.display="grid";
 document.getElementById("boxKpiFinanciero").style.display="flex";
 document.getElementById("boxResultadoMensual").style.display="flex";
 document.getElementById("boxInteligencia").style.display="flex";
+    document.getElementById("boxCrecimientoCartera").style.display =
+    user === "admin" ? "flex" : "none";
 actualizarResumen();
 
 return;
@@ -39,6 +41,7 @@ let encontrado = usuarios.find(
 if(encontrado){
 
     asesor = user.toLowerCase().trim();
+    document.getElementById("boxCrecimientoCartera").style.display="none";
 if(asesor==="ebenites"){
 
 document.getElementById("boxKpiFinanciero").style.display="flex";

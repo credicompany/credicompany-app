@@ -6,6 +6,9 @@
 let datosCarteraCrecimiento = [];
 let datosAmortizaciones = [];
 
+// Resultado pendiente de guardar como cierre mensual
+let resultadoCierreCrecimiento = null;
+
 // Normalizar encabezados
 function normalizarCC(valor) {
     return String(valor || "")
@@ -175,10 +178,11 @@ document.getElementById("excelCarteraCrecimiento")
         const estructura = buscarEncabezadosCC(
             filas,
             [
-                "Fecha Desembolso",
-                "Monto Otorgado",
-                "Saldo Capital"
-            ]
+    "Fecha Desembolso",
+    "Monto Otorgado",
+    "Saldo Capital",
+    "Dias de retraso"
+]
         );
 
         if (!estructura) {
@@ -203,14 +207,18 @@ document.getElementById("excelCarteraCrecimiento")
             const saldo = numeroCC(
                 fila[estructura.columnas["Saldo Capital"]]
             );
+            const diasAtraso = numeroCC(
+    fila[estructura.columnas["Dias de retraso"]]
+);
 
         if (!fecha || desembolso < 0 || saldo < 0) return;
 
             registros.push({
-                fecha,
-                desembolso,
-                saldo
-            });
+    fecha,
+    desembolso,
+    saldo,
+    diasAtraso
+});
 
         });
 
@@ -297,6 +305,21 @@ function procesarCrecimientoCartera() {
         0
     );
 
+    // Saldo de capital con más de 30 días de atraso
+const saldoMora30 = datosCarteraCrecimiento.reduce(
+    (total, registro) => {
+        return registro.diasAtraso > 30
+            ? total + registro.saldo
+            : total;
+    },
+    0
+);
+
+// Indicador PAR mayor a 30 días
+const par30 = carteraActual > 0
+    ? (saldoMora30 / carteraActual) * 100
+    : 0;
+
     // Agrupar movimientos por mes
     const mensual = {};
 
@@ -338,24 +361,40 @@ function procesarCrecimientoCartera() {
 
     });
 
-    const periodos = Object.keys(mensual).sort();
+    // Periodo que se está cerrando: noviembre 2026
+const periodoCierre = "2026-11";
 
-    let totalDesembolsos = 0;
-    let totalAmortizaciones = 0;
+// Mostrar únicamente el mes de cierre
+const periodos = mensual[periodoCierre]
+    ? [periodoCierre]
+    : [];
 
-    periodos.forEach(periodo => {
+let totalDesembolsos = 0;
+let totalAmortizaciones = 0;
 
-        totalDesembolsos += mensual[periodo].desembolsos;
-        totalAmortizaciones += mensual[periodo].amortizaciones;
+periodos.forEach(periodo => {
 
-        mensual[periodo].crecimiento =
-            mensual[periodo].desembolsos -
-            mensual[periodo].amortizaciones;
+    totalDesembolsos = mensual[periodo].desembolsos;
+    totalAmortizaciones = mensual[periodo].amortizaciones;
 
-    });
-
-    const crecimientoNeto =
+    mensual[periodo].crecimiento =
         totalDesembolsos - totalAmortizaciones;
+
+});
+
+const crecimientoNeto =
+    totalDesembolsos - totalAmortizaciones;
+
+    // Datos del cierre mensual
+resultadoCierreCrecimiento = {
+    periodo: periodoCierre,
+    carteraActual,
+    desembolsos: totalDesembolsos,
+    amortizaciones: totalAmortizaciones,
+    crecimientoNeto,
+    saldoMora30,
+    par30
+};
 
     function soles(valor) {
         return valor.toLocaleString("es-PE", {
@@ -470,4 +509,67 @@ function procesarCrecimientoCartera() {
 
 document.getElementById("resultadoCrecimientoCartera").innerHTML = html;
 
+    // Habilitar guardado cuando el análisis esté procesado
+document.getElementById("btnGuardarCierreCartera").disabled =
+    !resultadoCierreCrecimiento;
+
+}
+
+// ==========================================
+// GUARDAR CIERRE MENSUAL EN FIREBASE
+// ==========================================
+
+function guardarCierreCrecimientoCartera() {
+
+    if (!resultadoCierreCrecimiento) {
+        alert("Primero debes procesar el análisis.");
+        return;
+    }
+
+    if (typeof db === "undefined") {
+        alert("No se encuentra la conexión con Firebase.");
+        return;
+    }
+
+    const periodo = resultadoCierreCrecimiento.periodo;
+
+    const ruta = "historicoCrecimientoCartera/" + periodo;
+
+    const datosGuardar = {
+        ...resultadoCierreCrecimiento,
+        fechaGuardado: new Date().toISOString()
+    };
+
+    db.ref(ruta).transaction(
+
+        function(actual) {
+
+            // No permitir sobrescribir un cierre existente
+            if (actual !== null) {
+                return;
+            }
+
+            return datosGuardar;
+        },
+
+        function(error, committed) {
+
+            if (error) {
+                alert("Error al guardar el cierre mensual.");
+                console.error(error);
+                return;
+            }
+
+            if (!committed) {
+                alert("Este mes ya tiene un cierre guardado. No se modificó el histórico.");
+                return;
+            }
+
+            alert("Cierre mensual guardado correctamente.");
+
+            document.getElementById("btnGuardarCierreCartera").disabled = true;
+        },
+
+        false
+    );
 }

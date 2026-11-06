@@ -126,6 +126,13 @@ if(
     prepararInterfaz();
     ocultarPantallas();
 
+  // Ocultar tarifario dentro de Crecimiento de Cartera
+const tarifario = document.getElementById("modalTarifario");
+
+if(tarifario){
+    tarifario.style.display = p === "crecimientoCartera" ? "none" : "";
+}
+
     document.getElementById(p).style.display="block";
 
     if(p==="kpi"){

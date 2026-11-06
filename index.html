@@ -3351,14 +3351,11 @@ No existen datos
 </div>
 </div>
 </div>
-  <!-- ================================= -->
+ <!-- ================================= -->
 <!-- ANÁLISIS DE CRECIMIENTO DE CARTERA -->
 <!-- ================================= -->
 
-<div
-id="crecimientoCartera"
-class="card"
-style="display:none;">
+<div id="crecimientoCartera" class="card" style="display:none;">
 
     <div class="volver" onclick="volver()">
         🏠 Inicio
@@ -3366,47 +3363,42 @@ style="display:none;">
 
     <h3>📈 Análisis de Crecimiento de Cartera</h3>
 
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px;margin-top:20px;">
+    <div id="contenidoCrecimientoCartera">
 
-    <div class="card" style="padding:18px;border:1px solid #DCE4EC;">
-        <h4>📊 1. Cartera y desembolsos</h4>
-        <p>Archivo DATA GENERAL</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px;margin-top:20px;">
 
-        <input
-            type="file"
-            id="excelCarteraCrecimiento"
-            accept=".xlsx,.xls"
-        >
+            <div class="card" style="padding:18px;border:1px solid #DCE4EC;">
+                <h4>📊 1. Cartera y desembolsos</h4>
+                <p>Archivo DATA GENERAL</p>
 
-        <p id="estadoExcelCartera">Pendiente de carga</p>
-    </div>
+                <input type="file"
+                       id="excelCarteraCrecimiento"
+                       accept=".xlsx,.xls">
 
-    <div class="card" style="padding:18px;border:1px solid #DCE4EC;">
-        <h4>💰 2. Amortizaciones de capital</h4>
-        <p>Archivo INGRESO</p>
+                <p id="estadoExcelCartera">Pendiente de carga</p>
+            </div>
 
-        <input
-            type="file"
-            id="excelAmortizaciones"
-            accept=".xlsx,.xls"
-        >
+            <div class="card" style="padding:18px;border:1px solid #DCE4EC;">
+                <h4>💰 2. Amortizaciones de capital</h4>
+                <p>Archivo INGRESO</p>
 
-        <p id="estadoExcelAmortizaciones">Pendiente de carga</p>
-    </div>
+                <input type="file"
+                       id="excelAmortizaciones"
+                       accept=".xlsx,.xls">
 
-</div>
+                <p id="estadoExcelAmortizaciones">Pendiente de carga</p>
+            </div>
 
-<div style="margin-top:20px;">
-    <button onclick="procesarCrecimientoCartera()">
-        📈 Procesar análisis
-    </button>
-</div>
+        </div>
 
-<div id="resultadoCrecimientoCartera" style="margin-top:20px;"></div>
-  
-        <p style="text-align:center;color:#64748B;">
-            Módulo preparado para cargar y analizar la evolución de la cartera.
-        </p>
+        <div style="margin-top:20px;">
+            <button onclick="procesarCrecimientoCartera()">
+                📈 Procesar análisis
+            </button>
+        </div>
+
+        <div id="resultadoCrecimientoCartera" style="margin-top:20px;"></div>
+
     </div>
 
 </div>

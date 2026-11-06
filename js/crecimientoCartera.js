@@ -526,6 +526,18 @@ resultadoCierreCrecimiento = {
     `;
 
 document.getElementById("resultadoCrecimientoCartera").innerHTML = html;
+    // Consultar y mostrar el cierre del mes anterior
+obtenerCierreMesAnterior(periodoCierre)
+    .then(anterior => {
+        mostrarComparativoCrecimiento(
+            resultadoCierreCrecimiento,
+            anterior
+        );
+    })
+    .catch(error => {
+        console.error("Error al consultar histórico:", error);
+        alert("No se pudo consultar el cierre del mes anterior.");
+    });
 
     // Habilitar guardado cuando el análisis esté procesado
 document.getElementById("btnGuardarCierreCartera").disabled =

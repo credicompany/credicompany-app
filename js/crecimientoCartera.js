@@ -738,4 +738,76 @@ function mostrarComparativoCrecimiento(actual, anterior) {
         </div>
     `;
 }
+// ==========================================
+// RECUPERAR HISTÓRICO DE CIERRES
+// ==========================================
 
+function cargarHistoricoCrecimientoCartera() {
+
+    const contenedor = document.getElementById(
+        "historicoCrecimientoCartera"
+    );
+
+    if (!contenedor || typeof db === "undefined") return;
+
+    contenedor.innerHTML = "Consultando histórico...";
+
+    db.ref("historicoCrecimientoCartera")
+        .once("value")
+        .then(snapshot => {
+
+            if (!snapshot.exists()) {
+                contenedor.innerHTML = `
+                    <h3>📚 Histórico de cierres</h3>
+                    <p>Aún no existen cierres mensuales guardados.</p>
+                `;
+                return;
+            }
+
+            const registros = Object.values(snapshot.val())
+                .sort((a, b) => a.periodo.localeCompare(b.periodo));
+
+            const soles = valor =>
+                Number(valor || 0).toLocaleString("es-PE", {
+                    style: "currency",
+                    currency: "PEN"
+                });
+
+            contenedor.innerHTML = `
+                <h3>📚 Histórico de cierres de cartera</h3>
+
+                <div style="overflow-x:auto;">
+                    <table style="width:100%;border-collapse:collapse;">
+                        <thead>
+                            <tr style="background:#123B63;color:white;">
+                                <th>Periodo</th>
+                                <th>Cartera total</th>
+                                <th>Desembolsos</th>
+                                <th>Amortizaciones</th>
+                                <th>Crecimiento neto</th>
+                                <th>PAR > 30</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${registros.map(r => `
+                                <tr style="border-bottom:1px solid #ddd;">
+                                    <td style="padding:10px;">${r.periodo}</td>
+                                    <td>${soles(r.carteraActual)}</td>
+                                    <td>${soles(r.desembolsos)}</td>
+                                    <td>${soles(r.amortizaciones)}</td>
+                                    <td>${soles(r.crecimientoNeto)}</td>
+                                    <td>${Number(r.par30 || 0).toFixed(2)}%</td>
+                                </tr>
+                            `).join("")}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+        })
+        .catch(error => {
+            console.error("Error al recuperar histórico:", error);
+            contenedor.innerHTML =
+                "No se pudo recuperar el histórico de cierres.";
+        });
+}

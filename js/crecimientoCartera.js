@@ -689,8 +689,9 @@ function obtenerCierreMesAnterior(periodo) {
     });
 }
 
+
 // ==========================================
-// CUADRO COMPARATIVO MENSUAL
+// CUADRO COMPARATIVO MENSUAL - DISEÑO MEJORADO
 // ==========================================
 
 function mostrarComparativoCrecimiento(actual, anterior) {
@@ -699,7 +700,7 @@ function mostrarComparativoCrecimiento(actual, anterior) {
         "resultadoComparativoCartera"
     );
 
-    if (!contenedor) return;
+    if (!contenedor || !actual) return;
 
     const formatoSoles = valor =>
         Number(valor || 0).toLocaleString("es-PE", {
@@ -709,8 +710,7 @@ function mostrarComparativoCrecimiento(actual, anterior) {
 
     const variacion = (actual, anterior) => {
 
-        if (!anterior) return "Sin histórico";
-
+        if (anterior == null) return "Sin histórico";
         if (anterior === 0) return "N/A";
 
         const porcentaje =
@@ -722,7 +722,7 @@ function mostrarComparativoCrecimiento(actual, anterior) {
 
     const variacionPP = (actual, anterior) => {
 
-        if (!anterior) return "Sin histórico";
+        if (anterior == null) return "Sin histórico";
 
         const diferencia = actual - anterior;
 
@@ -731,56 +731,155 @@ function mostrarComparativoCrecimiento(actual, anterior) {
     };
 
     const filas = [
-        ["Cartera total", formatoSoles(actual.carteraActual),
-            anterior ? formatoSoles(anterior.carteraActual) : "Sin histórico",
-            variacion(actual.carteraActual, anterior?.carteraActual)],
-
-        ["Desembolsos", formatoSoles(actual.desembolsos),
-            anterior ? formatoSoles(anterior.desembolsos) : "Sin histórico",
-            variacion(actual.desembolsos, anterior?.desembolsos)],
-
-        ["Amortizaciones", formatoSoles(actual.amortizaciones),
-            anterior ? formatoSoles(anterior.amortizaciones) : "Sin histórico",
-            variacion(actual.amortizaciones, anterior?.amortizaciones)],
-
-        ["Crecimiento neto", formatoSoles(actual.crecimientoNeto),
-            anterior ? formatoSoles(anterior.crecimientoNeto) : "Sin histórico",
-            variacion(actual.crecimientoNeto, anterior?.crecimientoNeto)],
-
-        ["Mora PAR > 30 días", actual.par30.toFixed(2) + "%",
-            anterior ? anterior.par30.toFixed(2) + "%" : "Sin histórico",
-            variacionPP(actual.par30, anterior?.par30)]
+        {
+            nombre: "💼 Cartera total",
+            actual: formatoSoles(actual.carteraActual),
+            anterior: anterior ? formatoSoles(anterior.carteraActual) : "Sin histórico",
+            variacion: variacion(actual.carteraActual, anterior?.carteraActual)
+        },
+        {
+            nombre: "💰 Desembolsos",
+            actual: formatoSoles(actual.desembolsos),
+            anterior: anterior ? formatoSoles(anterior.desembolsos) : "Sin histórico",
+            variacion: variacion(actual.desembolsos, anterior?.desembolsos)
+        },
+        {
+            nombre: "📥 Amortizaciones",
+            actual: formatoSoles(actual.amortizaciones),
+            anterior: anterior ? formatoSoles(anterior.amortizaciones) : "Sin histórico",
+            variacion: variacion(actual.amortizaciones, anterior?.amortizaciones)
+        },
+        {
+            nombre: "📈 Crecimiento neto",
+            actual: formatoSoles(actual.crecimientoNeto),
+            anterior: anterior ? formatoSoles(anterior.crecimientoNeto) : "Sin histórico",
+            variacion: variacion(actual.crecimientoNeto, anterior?.crecimientoNeto)
+        },
+        {
+            nombre: "⚠️ Mora PAR > 30 días",
+            actual: Number(actual.par30 || 0).toFixed(2) + "%",
+            anterior: anterior
+                ? Number(anterior.par30 || 0).toFixed(2) + "%"
+                : "Sin histórico",
+            variacion: variacionPP(
+                Number(actual.par30 || 0),
+                anterior ? Number(anterior.par30 || 0) : null
+            )
+        }
     ];
 
     contenedor.innerHTML = `
+
+        <style>
+
+            .cc-comparativo-grid {
+                display:grid;
+                grid-template-columns:repeat(
+                    auto-fit,
+                    minmax(min(100%, 230px), 1fr)
+                );
+                gap:14px;
+                margin-top:16px;
+            }
+
+            .cc-comparativo-card {
+                background:#ffffff;
+                border:1px solid #e2e8f0;
+                border-radius:14px;
+                padding:16px;
+                box-shadow:0 3px 10px rgba(0,0,0,0.05);
+                min-width:0;
+            }
+
+            .cc-comparativo-card strong {
+                display:block;
+                font-size:19px;
+                color:#123B63;
+                margin:12px 0;
+                overflow-wrap:anywhere;
+            }
+
+            .cc-comparativo-card small {
+                color:#64748b;
+                font-size:12px;
+                font-weight:600;
+            }
+
+            .cc-comparativo-detalle {
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:8px;
+                padding-top:9px;
+                margin-top:8px;
+                border-top:1px solid #edf0f4;
+                font-size:12px;
+            }
+
+            .cc-comparativo-variacion {
+                font-size:13px;
+                font-weight:800;
+                margin-top:12px;
+            }
+
+            @media(max-width:600px) {
+
+                .cc-comparativo-grid {
+                    grid-template-columns:1fr;
+                    gap:10px;
+                }
+
+                .cc-comparativo-card {
+                    padding:14px;
+                }
+
+                .cc-comparativo-card strong {
+                    font-size:18px;
+                }
+
+            }
+
+        </style>
+
         <h3>📊 Comparativo mensual de cartera</h3>
 
-        <div style="overflow-x:auto;">
-            <table style="width:100%;border-collapse:collapse;">
-                <thead>
-                    <tr style="background:#123B63;color:white;">
-                        <th>Concepto</th>
-                        <th>Mes actual</th>
-                        <th>Mes anterior</th>
-                        <th>Variación</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${filas.map(fila => `
-                        <tr style="border-bottom:1px solid #ddd;">
-                            <td style="padding:12px;">${fila[0]}</td>
-                            <td style="text-align:right;">${fila[1]}</td>
-                            <td style="text-align:right;">${fila[2]}</td>
-                            <td style="text-align:right;font-weight:bold;">
-                                ${fila[3]}
-                            </td>
-                        </tr>
-                    `).join("")}
-                </tbody>
-            </table>
+        <div class="cc-comparativo-grid">
+
+            ${filas.map(fila => `
+
+                <div class="cc-comparativo-card">
+
+                    <small>${fila.nombre}</small>
+
+                    <strong>${fila.actual}</strong>
+
+                    <div class="cc-comparativo-detalle">
+                        <span>Mes anterior</span>
+                        <b>${fila.anterior}</b>
+                    </div>
+
+                    <div class="cc-comparativo-variacion"
+                        style="color:${
+                            fila.variacion === "Sin histórico"
+                                ? "#64748b"
+                                : fila.variacion.startsWith("-")
+                                    ? "#DC2626"
+                                    : "#16A34A"
+                        }">
+
+                        Variación: ${fila.variacion}
+
+                    </div>
+
+                </div>
+
+            `).join("")}
+
         </div>
+
     `;
 }
+
 // ==========================================
 // RECUPERAR HISTÓRICO DE CIERRES
 // ==========================================

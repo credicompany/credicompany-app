@@ -881,6 +881,7 @@ function mostrarComparativoCrecimiento(actual, anterior) {
 }
 
 
+
 function cargarHistoricoCrecimientoCartera() {
 
     const contenedor = document.getElementById(
@@ -898,13 +899,19 @@ function cargarHistoricoCrecimientoCartera() {
             if (!snapshot.exists()) {
                 contenedor.innerHTML = `
                     <h3>📚 Histórico de cierres</h3>
-                    <p>Aún no existen cierres mensuales guardados.</p>
+                    <div class="cc-historico-vacio">
+                        <strong>📊 Aún no hay cierres mensuales</strong>
+                        <p>Guarda tu primer cierre mensual para comenzar a visualizar la evolución de cartera.</p>
+                    </div>
                 `;
                 return;
             }
 
             const registros = Object.values(snapshot.val())
-                .sort((a, b) => b.periodo.localeCompare(a.periodo));
+                .filter(r => r && r.periodo)
+                .sort((a, b) =>
+                    a.periodo.localeCompare(b.periodo)
+                );
 
             const soles = valor =>
                 Number(valor || 0).toLocaleString("es-PE", {
@@ -912,12 +919,323 @@ function cargarHistoricoCrecimientoCartera() {
                     currency: "PEN"
                 });
 
+            const compacto = valor =>
+                "S/ " + Number(valor || 0).toLocaleString(
+                    "es-PE",
+                    {
+                        notation: "compact",
+                        maximumFractionDigits: 1
+                    }
+                );
+
+            const etiquetaMes = periodo => {
+                const partes = periodo.split("-");
+                return partes[1] + "/" + partes[0].slice(2);
+            };
+
+            // ==================================
+            // GRAFICO LINEAL DE CARTERA
+            // ==================================
+
+            function graficoCartera() {
+
+                const valores = registros.map(r =>
+                    Number(r.carteraActual || 0)
+                );
+
+                const ancho = 900;
+                const alto = 270;
+
+                const izq = 85;
+                const der = 25;
+                const arriba = 25;
+                const abajo = 55;
+
+                const anchoUtil = ancho - izq - der;
+                const altoUtil = alto - arriba - abajo;
+
+                let minimo = Math.min(...valores);
+                let maximo = Math.max(...valores);
+
+                const rango = maximo - minimo || maximo * 0.2 || 1;
+
+                minimo = Math.max(0, minimo - rango * 0.15);
+                maximo = maximo + rango * 0.15;
+
+                const x = i =>
+                    registros.length === 1
+                    ? izq + anchoUtil / 2
+                    : izq + i * anchoUtil /
+                        (registros.length - 1);
+
+                const y = valor =>
+                    arriba + altoUtil -
+                    ((valor - minimo) / (maximo - minimo)) *
+                    altoUtil;
+
+                const puntos = valores.map((v, i) =>
+                    `${x(i)},${y(v)}`
+                ).join(" ");
+
+                let lineas = "";
+
+                for (let i = 0; i <= 4; i++) {
+
+                    const valor =
+                        minimo + (maximo - minimo) * i / 4;
+
+                    const py = y(valor);
+
+                    lineas += `
+                        <line
+                            x1="${izq}" y1="${py}"
+                            x2="${ancho - der}" y2="${py}"
+                            stroke="#E5EAF0"
+                            stroke-dasharray="4 4"
+                        />
+
+                        <text
+                            x="${izq - 10}" y="${py + 4}"
+                            text-anchor="end"
+                            font-size="12"
+                            fill="#64748B"
+                        >${compacto(valor)}</text>
+                    `;
+                }
+
+                return `
+                    <div class="cc-chart-card">
+
+                        <h4>📈 Evolución de cartera total</h4>
+
+                        <div class="cc-chart-wrap">
+
+                            <svg
+                                viewBox="0 0 ${ancho} ${alto}"
+                                class="cc-chart-svg"
+                                role="img"
+                                aria-label="Evolución histórica de cartera total"
+                            >
+
+                                ${lineas}
+
+                                <polyline
+                                    points="${puntos}"
+                                    fill="none"
+                                    stroke="#123B63"
+                                    stroke-width="4"
+                                    stroke-linejoin="round"
+                                    stroke-linecap="round"
+                                />
+
+                                ${valores.map((v, i) => `
+                                    <circle
+                                        cx="${x(i)}"
+                                        cy="${y(v)}"
+                                        r="6"
+                                        fill="#159653"
+                                        stroke="#FFFFFF"
+                                        stroke-width="2"
+                                    >
+                                        <title>
+                                            ${registros[i].periodo}:
+                                            ${soles(v)}
+                                        </title>
+                                    </circle>
+                                `).join("")}
+
+                                ${registros.map((r, i) => `
+                                    <text
+                                        x="${x(i)}"
+                                        y="${alto - 20}"
+                                        text-anchor="middle"
+                                        font-size="12"
+                                        fill="#64748B"
+                                    >${etiquetaMes(r.periodo)}</text>
+                                `).join("")}
+
+                            </svg>
+
+                        </div>
+
+                    </div>
+                `;
+            }
+
+            // ==================================
+            // GRAFICO DE MOVIMIENTOS
+            // ==================================
+
+            function graficoMovimientos() {
+
+                const ancho = 900;
+                const alto = 290;
+
+                const izq = 85;
+                const der = 25;
+                const arriba = 25;
+                const abajo = 55;
+
+                const valores = registros.flatMap(r => [
+                    Number(r.desembolsos || 0),
+                    Number(r.amortizaciones || 0),
+                    Number(r.crecimientoNeto || 0)
+                ]);
+
+                let minimo = Math.min(0, ...valores);
+                let maximo = Math.max(0, ...valores);
+
+                if (minimo === maximo) maximo = 1;
+
+                const rango = maximo - minimo;
+
+                minimo -= rango * 0.12;
+                maximo += rango * 0.12;
+
+                const altoUtil = alto - arriba - abajo;
+                const anchoUtil = ancho - izq - der;
+
+                const y = valor =>
+                    arriba + altoUtil -
+                    ((valor - minimo) / (maximo - minimo)) *
+                    altoUtil;
+
+                const espacio = anchoUtil / registros.length;
+                const grupo = Math.min(espacio * 0.72, 65);
+                const barra = Math.min(18, grupo / 3.5);
+
+                const series = [
+                    { campo: "desembolsos", color: "#2563EB" },
+                    { campo: "amortizaciones", color: "#F59E0B" },
+                    { campo: "crecimientoNeto", color: "#16A34A" }
+                ];
+
+                let barras = "";
+
+                registros.forEach((r, i) => {
+
+                    const centro = izq + espacio * (i + 0.5);
+
+                    series.forEach((serie, j) => {
+
+                        const valor = Number(r[serie.campo] || 0);
+
+                        const py = y(valor);
+                        const cero = y(0);
+
+                        const x = centro -
+                            grupo / 2 +
+                            j * barra * 1.15;
+
+                        barras += `
+                            <rect
+                                x="${x}"
+                                y="${Math.min(py, cero)}"
+                                width="${barra}"
+                                height="${Math.max(2, Math.abs(cero - py))}"
+                                rx="3"
+                                fill="${serie.color}"
+                            >
+                                <title>
+                                    ${r.periodo} -
+                                    ${serie.campo}: ${soles(valor)}
+                                </title>
+                            </rect>
+                        `;
+                    });
+
+                    barras += `
+                        <text
+                            x="${centro}"
+                            y="${alto - 20}"
+                            text-anchor="middle"
+                            font-size="12"
+                            fill="#64748B"
+                        >${etiquetaMes(r.periodo)}</text>
+                    `;
+                });
+
+                let guias = "";
+
+                for (let i = 0; i <= 4; i++) {
+
+                    const valor =
+                        minimo + (maximo - minimo) * i / 4;
+
+                    const py = y(valor);
+
+                    guias += `
+                        <line
+                            x1="${izq}" y1="${py}"
+                            x2="${ancho - der}" y2="${py}"
+                            stroke="#E5EAF0"
+                            stroke-dasharray="4 4"
+                        />
+
+                        <text
+                            x="${izq - 10}" y="${py + 4}"
+                            text-anchor="end"
+                            font-size="12"
+                            fill="#64748B"
+                        >${compacto(valor)}</text>
+                    `;
+                }
+
+                return `
+                    <div class="cc-chart-card">
+
+                        <h4>📊 Desembolsos y amortizaciones</h4>
+
+                        <div class="cc-chart-leyenda">
+                            <span><i style="background:#2563EB"></i> Desembolsos</span>
+                            <span><i style="background:#F59E0B"></i> Amortizaciones</span>
+                            <span><i style="background:#16A34A"></i> Crecimiento neto</span>
+                        </div>
+
+                        <div class="cc-chart-wrap">
+
+                            <svg
+                                viewBox="0 0 ${ancho} ${alto}"
+                                class="cc-chart-svg"
+                                role="img"
+                                aria-label="Histórico de movimientos mensuales"
+                            >
+
+                                ${guias}
+                                ${barras}
+
+                            </svg>
+
+                        </div>
+
+                    </div>
+                `;
+            }
+
+            // ==================================
+            // MOSTRAR HISTORICO Y GRAFICOS
+            // ==================================
+
             contenedor.innerHTML = `
-                <h3>📚 Histórico de cierres</h3>
+
+                <h3>📚 Histórico de cierres de cartera</h3>
+
+                <div class="cc-historico-resumen">
+                    <strong>${registros.length}</strong>
+                    <span>cierres mensuales registrados</span>
+                </div>
+
+                ${graficoCartera()}
+
+                ${graficoMovimientos()}
+
+                <h4 class="cc-historico-subtitulo">
+                    📅 Detalle de cierres mensuales
+                </h4>
 
                 <div class="cc-historico-lista">
 
-                    ${registros.map(r => `
+                    ${[...registros].reverse().map(r => `
 
                         <div class="cc-historico-card">
 
@@ -970,11 +1288,15 @@ function cargarHistoricoCrecimientoCartera() {
 
         })
         .catch(error => {
+
             console.error("Error al recuperar histórico:", error);
+
             contenedor.innerHTML =
                 "No se pudo recuperar el histórico de cierres.";
+
         });
 }
+
 
 
 // ==========================================

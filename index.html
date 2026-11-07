@@ -2568,6 +2568,119 @@ getDoc
     }
 }
 
+
+  
+/* ==========================================
+   RESULTADOS CARTERA - COMPACTO MOVIL
+========================================== */
+
+@media screen and (max-width: 600px) {
+
+    /* TITULO RESULTADOS */
+
+    #resultadoCrecimientoCartera h3 {
+        font-size: 16px !important;
+        margin: 8px 0 !important;
+    }
+
+    /* CUADRICULA DE INDICADORES */
+
+    #resultadoCrecimientoCartera > div[style*="display:grid"] {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+        margin-top: 8px !important;
+    }
+
+    /* TARJETAS */
+
+    #resultadoCrecimientoCartera .card-resumen {
+        min-width: 0 !important;
+        min-height: 76px !important;
+        height: auto !important;
+        padding: 9px 6px !important;
+        margin: 0 !important;
+        border-radius: 10px !important;
+        box-shadow: 0 2px 6px rgba(0,0,0,.04) !important;
+        justify-content: center !important;
+        gap: 5px !important;
+    }
+
+    /* TITULOS DE TARJETAS */
+
+    #resultadoCrecimientoCartera .card-resumen div:first-child {
+        font-size: 10px !important;
+        line-height: 1.2 !important;
+        letter-spacing: 0 !important;
+    }
+
+    /* IMPORTES */
+
+    #resultadoCrecimientoCartera .card-resumen div:last-child {
+        font-size: 15px !important;
+        line-height: 1.15 !important;
+        margin-top: 3px !important;
+        overflow-wrap: anywhere !important;
+    }
+
+    /* SALDO DE MORA */
+
+    #resultadoCrecimientoCartera .card-resumen small {
+        font-size: 10px !important;
+        line-height: 1.2 !important;
+    }
+
+    /* TITULO EVOLUCION */
+
+    #resultadoCrecimientoCartera h3[style] {
+        font-size: 15px !important;
+        margin: 12px 0 8px !important;
+    }
+
+    /* TABLA DE MOVIMIENTOS */
+
+    #resultadoCrecimientoCartera table {
+        font-size: 10px !important;
+        min-width: 520px !important;
+    }
+
+    #resultadoCrecimientoCartera th,
+    #resultadoCrecimientoCartera td {
+        padding: 7px 5px !important;
+        white-space: nowrap !important;
+    }
+
+    /* EXPLICACION */
+
+    #resultadoCrecimientoCartera p {
+        font-size: 10px !important;
+        line-height: 1.4 !important;
+        padding: 9px !important;
+        margin-top: 8px !important;
+    }
+
+    /* COMPARATIVO */
+
+    #resultadoComparativoCartera h3 {
+        font-size: 16px !important;
+        margin: 12px 0 !important;
+    }
+
+    .cc-comparativo-grid {
+        gap: 8px !important;
+    }
+
+    .cc-comparativo-card {
+        padding: 10px !important;
+        border-radius: 10px !important;
+    }
+
+    .cc-comparativo-card strong {
+        font-size: 15px !important;
+        margin: 7px 0 !important;
+    }
+}
+
 </style>
   
 </head>

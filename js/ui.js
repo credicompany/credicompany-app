@@ -134,6 +134,13 @@ if(tarifario){
 }
 
     document.getElementById(p).style.display="block";
+  // Recuperar histórico al abrir Crecimiento de Cartera
+if (
+    p === "crecimientoCartera" &&
+    typeof cargarHistoricoCrecimientoCartera === "function"
+) {
+    cargarHistoricoCrecimientoCartera();
+}
 
     if(p==="kpi"){
         configurarPanelKPI();

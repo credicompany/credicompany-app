@@ -262,6 +262,7 @@ document.getElementById("excelCarteraCrecimiento")
         });
 
         datosCarteraCrecimiento = registros;
+        guardarEstadoCrecimientoCartera();
 
         document.getElementById("estadoExcelCartera").innerText =
             "Archivo cargado: " + registros.length + " registros válidos.";
@@ -317,6 +318,7 @@ document.getElementById("excelAmortizaciones")
         });
 
         datosAmortizaciones = registros;
+        guardarEstadoCrecimientoCartera();
 
         document.getElementById("estadoExcelAmortizaciones").innerText =
             "Archivo cargado: " + registros.length + " registros válidos.";
@@ -565,6 +567,8 @@ resultadoCierreCrecimiento = {
     `;
 
 document.getElementById("resultadoCrecimientoCartera").innerHTML = html;
+    // Guardar automáticamente el análisis provisional
+guardarEstadoCrecimientoCartera();
     // Consultar y mostrar el cierre del mes anterior
 obtenerCierreMesAnterior(periodoCierre)
     .then(anterior => {

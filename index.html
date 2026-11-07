@@ -3601,6 +3601,142 @@ foto.style.display = "block";
 
 }
 
+
+  
+function mostrarComparativoCrecimiento(actual, anterior) {
+
+    const contenedor = document.getElementById(
+        "resultadoComparativoCartera"
+    );
+
+    if (!contenedor) return;
+
+    const formatoSoles = valor =>
+        Number(valor || 0).toLocaleString("es-PE", {
+            style: "currency",
+            currency: "PEN"
+        });
+
+    const variacion = (actual, anterior) => {
+
+        if (!anterior) return "Sin histórico";
+
+        if (anterior === 0) return "N/A";
+
+        const porcentaje =
+            ((actual - anterior) / Math.abs(anterior)) * 100;
+
+        return (porcentaje > 0 ? "+" : "") +
+            porcentaje.toFixed(2) + "%";
+    };
+
+    const variacionPP = (actual, anterior) => {
+
+        if (!anterior) return "Sin histórico";
+
+        const diferencia = actual - anterior;
+
+        return (diferencia > 0 ? "+" : "") +
+            diferencia.toFixed(2) + " pp";
+    };
+
+    const filas = [
+        {
+            nombre: "Cartera total",
+            actual: formatoSoles(actual.carteraActual),
+            anterior: anterior
+                ? formatoSoles(anterior.carteraActual)
+                : "Sin histórico",
+            variacion: variacion(
+                actual.carteraActual,
+                anterior?.carteraActual
+            )
+        },
+        {
+            nombre: "Desembolsos",
+            actual: formatoSoles(actual.desembolsos),
+            anterior: anterior
+                ? formatoSoles(anterior.desembolsos)
+                : "Sin histórico",
+            variacion: variacion(
+                actual.desembolsos,
+                anterior?.desembolsos
+            )
+        },
+        {
+            nombre: "Amortizaciones",
+            actual: formatoSoles(actual.amortizaciones),
+            anterior: anterior
+                ? formatoSoles(anterior.amortizaciones)
+                : "Sin histórico",
+            variacion: variacion(
+                actual.amortizaciones,
+                anterior?.amortizaciones
+            )
+        },
+        {
+            nombre: "Crecimiento neto",
+            actual: formatoSoles(actual.crecimientoNeto),
+            anterior: anterior
+                ? formatoSoles(anterior.crecimientoNeto)
+                : "Sin histórico",
+            variacion: variacion(
+                actual.crecimientoNeto,
+                anterior?.crecimientoNeto
+            )
+        },
+        {
+            nombre: "Mora PAR > 30 días",
+            actual: actual.par30.toFixed(2) + "%",
+            anterior: anterior
+                ? anterior.par30.toFixed(2) + "%"
+                : "Sin histórico",
+            variacion: variacionPP(
+                actual.par30,
+                anterior?.par30
+            )
+        }
+    ];
+
+    contenedor.innerHTML = `
+        <h3>📊 Comparativo mensual de cartera</h3>
+
+        <div class="cc-comparativo-grid">
+
+            ${filas.map(fila => `
+                <div class="cc-comparativo-card">
+
+                    <small>${fila.nombre}</small>
+
+                    <strong>${fila.actual}</strong>
+
+                    <div style="
+                        font-size:12px;
+                        color:#64748B;
+                        margin-top:8px;
+                    ">
+                        Mes anterior: ${fila.anterior}
+                    </div>
+
+                    <div class="cc-variacion" style="
+                        color:${
+                            fila.variacion === "Sin histórico"
+                            ? "#64748B"
+                            : fila.variacion.startsWith("-")
+                                ? "#DC2626"
+                                : "#16A34A"
+                        };
+                    ">
+                        Variación: ${fila.variacion}
+                    </div>
+
+                </div>
+            `).join("")}
+
+        </div>
+    `;
+}
+
 /* 🔚 FIN */   
 </script>
 <script>

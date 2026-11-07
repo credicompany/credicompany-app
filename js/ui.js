@@ -142,6 +142,14 @@ if (
     cargarHistoricoCrecimientoCartera();
 }
 
+  // Restaurar último trabajo provisional
+if (
+    p === "crecimientoCartera" &&
+    typeof restaurarEstadoCrecimientoCartera === "function"
+) {
+    restaurarEstadoCrecimientoCartera();
+}
+
     if(p==="kpi"){
         configurarPanelKPI();
     }

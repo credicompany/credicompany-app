@@ -5,7 +5,46 @@
 
 let datosCarteraCrecimiento = [];
 let datosAmortizaciones = [];
+// ==========================================
+// GUARDAR ESTADO PROVISIONAL EN FIREBASE
+// ==========================================
 
+function guardarEstadoCrecimientoCartera() {
+
+    if (typeof db === "undefined") {
+        console.error("Firebase no está disponible.");
+        return;
+    }
+
+    const estado = {
+
+        datosCartera: datosCarteraCrecimiento.map(r => ({
+            fecha: r.fecha.toISOString(),
+            desembolso: r.desembolso,
+            saldo: r.saldo,
+            diasAtraso: r.diasAtraso
+        })),
+
+        datosAmortizaciones: datosAmortizaciones.map(r => ({
+            fecha: r.fecha.toISOString(),
+            capital: r.capital
+        })),
+
+        resultado: resultadoCierreCrecimiento,
+
+        fechaActualizacion: new Date().toISOString()
+
+    };
+
+    return db.ref("estadoCrecimientoCartera")
+        .set(estado)
+        .then(() => {
+            console.log("Estado provisional guardado en Firebase.");
+        })
+        .catch(error => {
+            console.error("Error guardando estado provisional:", error);
+        });
+}
 // Resultado pendiente de guardar como cierre mensual
 let resultadoCierreCrecimiento = null;
 
@@ -809,5 +848,60 @@ function cargarHistoricoCrecimientoCartera() {
             console.error("Error al recuperar histórico:", error);
             contenedor.innerHTML =
                 "No se pudo recuperar el histórico de cierres.";
+        });
+}
+
+// ==========================================
+// RESTAURAR ESTADO PROVISIONAL DESDE FIREBASE
+// ==========================================
+
+function restaurarEstadoCrecimientoCartera() {
+
+    if (typeof db === "undefined") return;
+
+    return db.ref("estadoCrecimientoCartera")
+        .once("value")
+        .then(snapshot => {
+
+            if (!snapshot.exists()) return;
+
+            const estado = snapshot.val();
+
+            datosCarteraCrecimiento =
+                (estado.datosCartera || []).map(r => ({
+                    ...r,
+                    fecha: new Date(r.fecha)
+                }));
+
+            datosAmortizaciones =
+                (estado.datosAmortizaciones || []).map(r => ({
+                    ...r,
+                    fecha: new Date(r.fecha)
+                }));
+
+            resultadoCierreCrecimiento = estado.resultado || null;
+
+            if (datosCarteraCrecimiento.length) {
+                document.getElementById("estadoExcelCartera").innerText =
+                    "Trabajo recuperado: " +
+                    datosCarteraCrecimiento.length + " registros.";
+            }
+
+            if (datosAmortizaciones.length) {
+                document.getElementById("estadoExcelAmortizaciones").innerText =
+                    "Trabajo recuperado: " +
+                    datosAmortizaciones.length + " registros.";
+            }
+
+            if (resultadoCierreCrecimiento) {
+
+                procesarCrecimientoCartera();
+
+                console.log("Trabajo provisional restaurado.");
+            }
+
+        })
+        .catch(error => {
+            console.error("Error restaurando trabajo:", error);
         });
 }

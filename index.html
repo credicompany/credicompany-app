@@ -2681,6 +2681,155 @@ getDoc
     }
 }
 
+
+  
+/* ==========================================
+   CREDICOMPANY - HISTORICO Y COMPARATIVO
+   DISEÑO UNIFORME MOVIL
+========================================== */
+
+#historicoCrecimientoCartera {
+    width: 100%;
+    min-width: 0;
+}
+
+.cc-historico-lista {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.cc-historico-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.04);
+    min-width: 0;
+}
+
+.cc-historico-titulo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid #E8EDF3;
+    color: #123B63;
+    font-size: 13px;
+}
+
+.cc-historico-titulo span {
+    color: #64748B;
+    font-size: 10px;
+}
+
+.cc-historico-datos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.cc-historico-datos > div {
+    min-width: 0;
+}
+
+.cc-historico-datos small {
+    display: block;
+    color: #64748B;
+    font-size: 10px;
+    margin-bottom: 4px;
+}
+
+.cc-historico-datos strong {
+    display: block;
+    color: #123B63;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.cc-historico-datos .cc-positivo {
+    color: #16A34A;
+}
+
+.cc-historico-datos .cc-negativo {
+    color: #DC2626;
+}
+
+.cc-historico-mora {
+    grid-column: 1 / -1;
+    border-top: 1px solid #E8EDF3;
+    padding-top: 8px;
+}
+
+/* AJUSTES PARA CELULAR */
+
+@media screen and (max-width: 600px) {
+
+    #historicoCrecimientoCartera h3,
+    #resultadoComparativoCartera h3 {
+        font-size: 15px !important;
+        margin: 10px 0 !important;
+    }
+
+    .cc-historico-lista {
+        grid-template-columns: 1fr;
+        gap: 7px;
+        margin-top: 8px;
+    }
+
+    .cc-historico-card {
+        padding: 9px 10px;
+        border-radius: 9px;
+    }
+
+    .cc-historico-titulo {
+        font-size: 12px;
+        padding-bottom: 7px;
+    }
+
+    .cc-historico-datos {
+        gap: 8px;
+        margin-top: 8px;
+    }
+
+    .cc-historico-datos small {
+        font-size: 9px;
+    }
+
+    .cc-historico-datos strong {
+        font-size: 11px;
+    }
+
+    .cc-comparativo-grid {
+        grid-template-columns: 1fr;
+        gap: 7px;
+    }
+
+    .cc-comparativo-card {
+        padding: 9px 11px !important;
+        border-radius: 9px !important;
+    }
+
+    .cc-comparativo-card strong {
+        font-size: 14px !important;
+        margin: 6px 0 !important;
+    }
+
+    .cc-comparativo-detalle {
+        font-size: 10px !important;
+        padding-top: 6px !important;
+        margin-top: 5px !important;
+    }
+
+    .cc-comparativo-variacion {
+        font-size: 11px !important;
+        margin-top: 7px !important;
+    }
+}
+
 </style>
   
 </head>
@@ -4032,7 +4181,7 @@ if ("serviceWorker" in navigator) {
 <script src="js/ui.js?v=20260930-1015"></script>
   <script src="js/whatsapp.js?v=1"></script>
 <script src="js/inicio.js?v=20260908"></script>
-  <script src="js/crecimientoCartera.js?v=20261108"></script>
+  <script src="js/crecimientoCartera.js?v=20261109"></script>
   
 </body>
   </html>

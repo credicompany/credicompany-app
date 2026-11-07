@@ -880,9 +880,6 @@ function mostrarComparativoCrecimiento(actual, anterior) {
     `;
 }
 
-// ==========================================
-// RECUPERAR HISTÓRICO DE CIERRES
-// ==========================================
 
 function cargarHistoricoCrecimientoCartera() {
 
@@ -907,7 +904,7 @@ function cargarHistoricoCrecimientoCartera() {
             }
 
             const registros = Object.values(snapshot.val())
-                .sort((a, b) => a.periodo.localeCompare(b.periodo));
+                .sort((a, b) => b.periodo.localeCompare(a.periodo));
 
             const soles = valor =>
                 Number(valor || 0).toLocaleString("es-PE", {
@@ -916,33 +913,58 @@ function cargarHistoricoCrecimientoCartera() {
                 });
 
             contenedor.innerHTML = `
-                <h3>📚 Histórico de cierres de cartera</h3>
+                <h3>📚 Histórico de cierres</h3>
 
-                <div style="overflow-x:auto;">
-                    <table style="width:100%;border-collapse:collapse;">
-                        <thead>
-                            <tr style="background:#123B63;color:white;">
-                                <th>Periodo</th>
-                                <th>Cartera total</th>
-                                <th>Desembolsos</th>
-                                <th>Amortizaciones</th>
-                                <th>Crecimiento neto</th>
-                                <th>PAR > 30</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${registros.map(r => `
-                                <tr style="border-bottom:1px solid #ddd;">
-                                    <td style="padding:10px;">${r.periodo}</td>
-                                    <td>${soles(r.carteraActual)}</td>
-                                    <td>${soles(r.desembolsos)}</td>
-                                    <td>${soles(r.amortizaciones)}</td>
-                                    <td>${soles(r.crecimientoNeto)}</td>
-                                    <td>${Number(r.par30 || 0).toFixed(2)}%</td>
-                                </tr>
-                            `).join("")}
-                        </tbody>
-                    </table>
+                <div class="cc-historico-lista">
+
+                    ${registros.map(r => `
+
+                        <div class="cc-historico-card">
+
+                            <div class="cc-historico-titulo">
+                                <strong>📅 ${r.periodo}</strong>
+                                <span>Cierre mensual</span>
+                            </div>
+
+                            <div class="cc-historico-datos">
+
+                                <div>
+                                    <small>Cartera total</small>
+                                    <strong>${soles(r.carteraActual)}</strong>
+                                </div>
+
+                                <div>
+                                    <small>Desembolsos</small>
+                                    <strong>${soles(r.desembolsos)}</strong>
+                                </div>
+
+                                <div>
+                                    <small>Amortizaciones</small>
+                                    <strong>${soles(r.amortizaciones)}</strong>
+                                </div>
+
+                                <div>
+                                    <small>Crecimiento neto</small>
+                                    <strong class="${
+                                        Number(r.crecimientoNeto) >= 0
+                                        ? "cc-positivo"
+                                        : "cc-negativo"
+                                    }">
+                                        ${soles(r.crecimientoNeto)}
+                                    </strong>
+                                </div>
+
+                                <div class="cc-historico-mora">
+                                    <small>Mora PAR > 30 días</small>
+                                    <strong>${Number(r.par30 || 0).toFixed(2)}%</strong>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    `).join("")}
+
                 </div>
             `;
 
@@ -953,6 +975,7 @@ function cargarHistoricoCrecimientoCartera() {
                 "No se pudo recuperar el histórico de cierres.";
         });
 }
+
 
 // ==========================================
 // RESTAURAR ESTADO PROVISIONAL DESDE FIREBASE

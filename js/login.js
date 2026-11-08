@@ -29,6 +29,10 @@ if(boxCrecimiento){
         user === "admin" ? "flex" : "none";
 }
 actualizarResumen();
+    if (!bienvenidaReproducida) {
+    bienvenidaReproducida = true;
+    hablarBienvenida(asesor);
+}
 
 return;
 }
@@ -89,6 +93,11 @@ if(asesor === "admin" || asesor === "operaciones"){
 }
 
     actualizarResumen();
+
+    if (!bienvenidaReproducida) {
+    bienvenidaReproducida = true;
+    hablarBienvenida(asesor);
+}
 
 }else{
 

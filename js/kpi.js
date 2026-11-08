@@ -1033,55 +1033,60 @@ margin-top:4px;
 
 
 /* ==========================================
-   KPI GERENCIAL - OPTIMIZACIÓN PARA CELULAR
+   KPI GERENCIAL - AJUSTE MOVIL CORREGIDO
    ========================================== */
 
 @media screen and (max-width: 768px) {
 
-    /* Título principal */
-    #kpiResumen > div:first-child > div:first-child > div:first-child {
-        font-size: 18px !important;
-        line-height: 1.2 !important;
+    /* Contenedor principal */
+    #kpiResumen > div[style*="margin-bottom"] {
+        margin-bottom: 10px !important;
     }
 
-    /* Fecha de actualización */
-    #kpiResumen > div:first-child > div:first-child > div:last-child {
+    /* Encabezado */
+    #kpiResumen > div[style*="margin-bottom"] > div:first-child {
+        margin-bottom: 10px !important;
+    }
+
+    /* Título */
+    #kpiResumen > div[style*="margin-bottom"] > div:first-child > div:first-child {
+        font-size: 17px !important;
+        line-height: 1.25 !important;
+    }
+
+    /* Fecha */
+    #kpiResumen > div[style*="margin-bottom"] > div:first-child > div:last-child {
         font-size: 10px !important;
     }
 
-    /* Cuadrícula de indicadores */
-    #kpiResumen > div:first-child > div:nth-child(2) {
+    /* Cuadrícula de tarjetas */
+    #kpiResumen div[style*="grid-template-columns"] {
+        display: grid !important;
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         gap: 7px !important;
     }
 
-    /* Tarjetas */
-    #kpiResumen > div:first-child > div:nth-child(2) > div {
-        padding: 9px 5px !important;
-        border-radius: 9px !important;
+    /* Cada tarjeta */
+    #kpiResumen div[style*="grid-template-columns"] > div {
         min-width: 0 !important;
+        padding: 8px 5px !important;
+        border-radius: 9px !important;
     }
 
-    /* Iconos */
-    #kpiResumen > div:first-child > div:nth-child(2) > div > div:first-child {
-        font-size: 17px !important;
-    }
-
-    /* Etiquetas */
-    #kpiResumen > div:first-child > div:nth-child(2) > div > div:nth-child(2) {
-        font-size: 10px !important;
+    /* Contenido de las tarjetas */
+    #kpiResumen div[style*="grid-template-columns"] > div > div {
+        font-size: 11px !important;
         line-height: 1.2 !important;
     }
 
-    /* Valores */
-    #kpiResumen > div:first-child > div:nth-child(2) > div > div:nth-child(3) {
+    /* Valores principales */
+    #kpiResumen div[style*="grid-template-columns"] > div > div:nth-child(3) {
         font-size: 17px !important;
-        line-height: 1.2 !important;
-        overflow-wrap: anywhere;
+        overflow-wrap: anywhere !important;
     }
 
     /* Barra de cumplimiento */
-    #kpiResumen > div:first-child > div:nth-child(3) {
+    #kpiResumen div[style*="background:#F6F8FA"] {
         padding: 9px !important;
         margin-top: 8px !important;
     }

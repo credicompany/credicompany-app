@@ -875,61 +875,8 @@ margin-top:4px;
 }
    resumen += `
 
-
-/* =====================================
-   RESUMEN GERENCIAL - CELULAR
-===================================== */
-
-@media (max-width: 600px) {
-
-    .kpi-resumen-gerencial {
-        margin-bottom: 12px !important;
-    }
-
-    .kpi-resumen-encabezado {
-        margin-bottom: 12px !important;
-    }
-
-    .kpi-resumen-encabezado div:first-child {
-        font-size: 17px !important;
-        line-height: 1.25 !important;
-    }
-
-    .kpi-resumen-encabezado div:last-child {
-        font-size: 10px !important;
-    }
-
-    .kpi-resumen-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 7px !important;
-    }
-
-    .kpi-resumen-card {
-        padding: 9px 5px !important;
-        border-radius: 9px !important;
-        min-width: 0 !important;
-    }
-
-    .kpi-resumen-card div:first-child {
-        font-size: 19px !important;
-    }
-
-    .kpi-resumen-card div:nth-child(2) {
-        font-size: 10px !important;
-        line-height: 1.2 !important;
-    }
-
-    .kpi-resumen-card div:nth-child(3) {
-        font-size: 19px !important;
-        overflow-wrap: anywhere;
-    }
-
-    .kpi-resumen-card div:nth-child(4) {
-        font-size: 9px !important;
-    }
-
-}
    <style>
+   
 /* KPI POR ASESOR - DISEÑO PROFESIONAL */
 
 .kpi-asesor-card {
@@ -1084,66 +1031,71 @@ margin-top:4px;
     background: #EAF1F6;
 }
 
-
-
 /* ==========================================
-   KPI GERENCIAL - AJUSTE MOVIL CORREGIDO
-   ========================================== */
+   KPI GERENCIAL - DISEÑO RESPONSIVE
+========================================== */
 
 @media screen and (max-width: 768px) {
 
-    /* Contenedor principal */
-    #kpiResumen > div[style*="margin-bottom"] {
+    #kpiResumen .kpi-resumen-gerencial {
+        margin-bottom: 10px !important;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #kpiResumen .kpi-resumen-encabezado {
         margin-bottom: 10px !important;
     }
 
-    /* Encabezado */
-    #kpiResumen > div[style*="margin-bottom"] > div:first-child {
-        margin-bottom: 10px !important;
-    }
-
-    /* Título */
-    #kpiResumen > div[style*="margin-bottom"] > div:first-child > div:first-child {
+    #kpiResumen .kpi-resumen-encabezado div:first-child {
         font-size: 17px !important;
         line-height: 1.25 !important;
     }
 
-    /* Fecha */
-    #kpiResumen > div[style*="margin-bottom"] > div:first-child > div:last-child {
+    #kpiResumen .kpi-resumen-encabezado div:last-child {
         font-size: 10px !important;
     }
 
-    /* Cuadrícula de tarjetas */
-    #kpiResumen div[style*="grid-template-columns"] {
+    /* Dos columnas en celular */
+    #kpiResumen .kpi-resumen-grid {
         display: grid !important;
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         gap: 7px !important;
+        width: 100%;
     }
 
-    /* Cada tarjeta */
-    #kpiResumen div[style*="grid-template-columns"] > div {
+    /* Tarjetas compactas */
+    #kpiResumen .kpi-resumen-card {
         min-width: 0 !important;
         padding: 8px 5px !important;
         border-radius: 9px !important;
+        box-sizing: border-box;
+        overflow: hidden;
     }
 
-    /* Contenido de las tarjetas */
-    #kpiResumen div[style*="grid-template-columns"] > div > div {
-        font-size: 11px !important;
+    /* Iconos */
+    #kpiResumen .kpi-resumen-card div:first-child {
+        font-size: 19px !important;
+    }
+
+    /* Nombres de indicadores */
+    #kpiResumen .kpi-resumen-card div:nth-child(2) {
+        font-size: 10px !important;
         line-height: 1.2 !important;
     }
 
     /* Valores principales */
-    #kpiResumen div[style*="grid-template-columns"] > div > div:nth-child(3) {
+    #kpiResumen .kpi-resumen-card div:nth-child(3) {
         font-size: 17px !important;
-        overflow-wrap: anywhere !important;
+        overflow-wrap: anywhere;
+        line-height: 1.2 !important;
     }
 
-    /* Barra de cumplimiento */
-    #kpiResumen div[style*="background:#F6F8FA"] {
-        padding: 9px !important;
-        margin-top: 8px !important;
+    /* Texto secundario */
+    #kpiResumen .kpi-resumen-card div:nth-child(4) {
+        font-size: 9px !important;
     }
+
 }
 
 </style>
@@ -1165,7 +1117,6 @@ margin-bottom:12px;
 
 <div style="
 display:${asesor === "admin" ? "flex" : "none"};
-console.log("USUARIO ACTUAL:", asesor);
 align-items:center;
 gap:8px;
 flex-wrap:wrap;

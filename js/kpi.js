@@ -416,14 +416,14 @@ let colorMeta =
 
 let resumen = `
 
-<div style="
+<div class="kpi-resumen-gerencial" style="
     margin-bottom:18px;
 ">
 
-    <div style="
-        text-align:center;
-        margin-bottom:18px;
-    ">
+    <div class="kpi-resumen-encabezado" style="
+    text-align:center;
+    margin-bottom:18px;
+">
 
         <div style="
             font-size:26px;
@@ -451,7 +451,7 @@ let resumen = `
     <!-- INDICADORES PRINCIPALES -->
     <!-- ================================= -->
 
-    <div style="
+    <div class="kpi-resumen-grid" style="
         display:grid;
         grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
         gap:10px;
@@ -460,7 +460,7 @@ let resumen = `
 
         <!-- CLIENTES -->
 
-        <div style="
+     <div class="kpi-resumen-card" style="
             background:#FFFFFF;
             border:1px solid #DCE4EC;
             border-top:4px solid #123F63;
@@ -494,7 +494,7 @@ let resumen = `
 
         <!-- COLOCACIÓN -->
 
-        <div style="
+       <div class="kpi-resumen-card" style="
             background:#FFFFFF;
             border:1px solid #DCE4EC;
             border-top:4px solid #159447;
@@ -534,7 +534,7 @@ let resumen = `
 
         <!-- OPERACIONES -->
 
-        <div style="
+        <div class="kpi-resumen-card" style="
             background:#FFFFFF;
             border:1px solid #DCE4EC;
             border-top:4px solid #2F6FDB;
@@ -566,7 +566,7 @@ let resumen = `
 
         <!-- TEM -->
 
-        <div style="
+        <div class="kpi-resumen-card" style="
             background:#FFFFFF;
             border:1px solid #DCE4EC;
             border-top:4px solid #6653B8;
@@ -598,7 +598,7 @@ let resumen = `
 
         <!-- CUMPLIMIENTO -->
 
-        <div style="
+        <div class="kpi-resumen-card" style="
             background:#FFFFFF;
             border:1px solid #DCE4EC;
             border-top:4px solid ${colorMeta};
@@ -875,6 +875,60 @@ margin-top:4px;
 }
    resumen += `
 
+
+/* =====================================
+   RESUMEN GERENCIAL - CELULAR
+===================================== */
+
+@media (max-width: 600px) {
+
+    .kpi-resumen-gerencial {
+        margin-bottom: 12px !important;
+    }
+
+    .kpi-resumen-encabezado {
+        margin-bottom: 12px !important;
+    }
+
+    .kpi-resumen-encabezado div:first-child {
+        font-size: 17px !important;
+        line-height: 1.25 !important;
+    }
+
+    .kpi-resumen-encabezado div:last-child {
+        font-size: 10px !important;
+    }
+
+    .kpi-resumen-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 7px !important;
+    }
+
+    .kpi-resumen-card {
+        padding: 9px 5px !important;
+        border-radius: 9px !important;
+        min-width: 0 !important;
+    }
+
+    .kpi-resumen-card div:first-child {
+        font-size: 19px !important;
+    }
+
+    .kpi-resumen-card div:nth-child(2) {
+        font-size: 10px !important;
+        line-height: 1.2 !important;
+    }
+
+    .kpi-resumen-card div:nth-child(3) {
+        font-size: 19px !important;
+        overflow-wrap: anywhere;
+    }
+
+    .kpi-resumen-card div:nth-child(4) {
+        font-size: 9px !important;
+    }
+
+}
    <style>
 /* KPI POR ASESOR - DISEÑO PROFESIONAL */
 

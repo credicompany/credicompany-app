@@ -4284,6 +4284,105 @@ function mostrarComparativoCrecimiento(actual, anterior) {
     `;
 }
 
+  
+// ==========================================
+// ASISTENTE DE BIENVENIDA POR VOZ
+// CREDICOMPANY
+// ==========================================
+
+let bienvenidaReproducida = false;
+
+function hablarBienvenida(usuario) {
+
+    if (!("speechSynthesis" in window)) {
+        console.log("Este navegador no admite voz.");
+        return;
+    }
+
+    const nombre =
+        document.getElementById("nombreCompletoAsesor")
+        ?.innerText?.trim() || usuario;
+
+    const hora = new Date().getHours();
+
+    let saludo = "Buenas noches";
+
+    if (hora < 12) {
+        saludo = "Buenos días";
+    } else if (hora < 19) {
+        saludo = "Buenas tardes";
+    }
+
+    const mensaje =
+        `${saludo}, ${nombre}. ` +
+        "Bienvenido a Credicompany. " +
+        "Empezamos una nueva jornada con energía, " +
+        "compromiso y enfoque en nuestros objetivos. " +
+        "¡Vamos por un excelente día! Crecemos juntos.";
+
+    window.speechSynthesis.cancel();
+
+    const voz = new SpeechSynthesisUtterance(mensaje);
+
+    voz.lang = "es-PE";
+    voz.rate = 0.95;
+    voz.pitch = 1;
+    voz.volume = 1;
+
+    const voces = window.speechSynthesis.getVoices();
+
+    const vozEspanol = voces.find(v =>
+        v.lang.toLowerCase().startsWith("es-pe")
+    ) || voces.find(v =>
+        v.lang.toLowerCase().startsWith("es")
+    );
+
+    if (vozEspanol) {
+        voz.voice = vozEspanol;
+    }
+
+    window.speechSynthesis.speak(voz);
+}
+
+function repetirBienvenida() {
+
+    const usuarioActual =
+        document.getElementById("nombreCompletoAsesor")
+        ?.innerText?.trim() || "asesor";
+
+    hablarBienvenida(usuarioActual);
+}
+
+function crearBotonBienvenida() {
+
+    const perfil = document.querySelector(".perfilCompacto");
+
+    if (!perfil) return;
+
+    if (document.getElementById("btnBienvenidaVoz")) return;
+
+    const boton = document.createElement("button");
+
+    boton.id = "btnBienvenidaVoz";
+    boton.type = "button";
+    boton.innerHTML = "🔊 Escuchar saludo";
+
+    boton.style.cssText = `
+        width:auto;
+        padding:9px 14px;
+        margin-top:10px;
+        background:#123B63;
+        color:white;
+        border-radius:10px;
+        font-size:12px;
+        box-shadow:none;
+    `;
+
+    boton.onclick = repetirBienvenida;
+
+    perfil.appendChild(boton);
+}
+
 /* 🔚 FIN */   
 </script>
 <script>

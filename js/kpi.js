@@ -1030,6 +1030,63 @@ margin-top:4px;
     background: #EAF1F6;
 }
 
+
+
+/* ==========================================
+   KPI GERENCIAL - OPTIMIZACIÓN PARA CELULAR
+   ========================================== */
+
+@media screen and (max-width: 768px) {
+
+    /* Título principal */
+    #kpiResumen > div:first-child > div:first-child > div:first-child {
+        font-size: 18px !important;
+        line-height: 1.2 !important;
+    }
+
+    /* Fecha de actualización */
+    #kpiResumen > div:first-child > div:first-child > div:last-child {
+        font-size: 10px !important;
+    }
+
+    /* Cuadrícula de indicadores */
+    #kpiResumen > div:first-child > div:nth-child(2) {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 7px !important;
+    }
+
+    /* Tarjetas */
+    #kpiResumen > div:first-child > div:nth-child(2) > div {
+        padding: 9px 5px !important;
+        border-radius: 9px !important;
+        min-width: 0 !important;
+    }
+
+    /* Iconos */
+    #kpiResumen > div:first-child > div:nth-child(2) > div > div:first-child {
+        font-size: 17px !important;
+    }
+
+    /* Etiquetas */
+    #kpiResumen > div:first-child > div:nth-child(2) > div > div:nth-child(2) {
+        font-size: 10px !important;
+        line-height: 1.2 !important;
+    }
+
+    /* Valores */
+    #kpiResumen > div:first-child > div:nth-child(2) > div > div:nth-child(3) {
+        font-size: 17px !important;
+        line-height: 1.2 !important;
+        overflow-wrap: anywhere;
+    }
+
+    /* Barra de cumplimiento */
+    #kpiResumen > div:first-child > div:nth-child(3) {
+        padding: 9px !important;
+        margin-top: 8px !important;
+    }
+}
+
 </style>
 
 <div class="card kpi-asesor-card">

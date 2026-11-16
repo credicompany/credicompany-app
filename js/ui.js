@@ -126,11 +126,11 @@ if(
     prepararInterfaz();
     ocultarPantallas();
 
-  // Ocultar tarifario dentro de Crecimiento de Cartera
+  // MOSTRAR TARIFARIO SOLO EN SIMULADOR
 const tarifario = document.getElementById("modalTarifario");
 
 if(tarifario){
-    tarifario.style.display = p === "crecimientoCartera" ? "none" : "";
+    tarifario.style.display = p === "simulador" ? "block" : "none";
 }
 
     document.getElementById(p).style.display="block";

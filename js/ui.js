@@ -61,22 +61,23 @@ function mostrarInicio(){
 
 }
 
-// =====================================
-// CONFIGURAR PANEL KPI
-// =====================================
-
 function configurarPanelKPI(){
 
+    const panel = document.getElementById("panelCargaKPI");
+
+    if(!panel) return;
+
+    // ADMINISTRADOR Y OPERACIONES PUEDEN CARGAR KPI
     if(
-        asesor !== "admin" &&
-        asesor !== "operaciones"
+        asesor === "admin" ||
+        asesor === "operaciones"
     ){
 
-        document.getElementById("panelCargaKPI").style.display = "none";
+        panel.style.setProperty("display","flex","important");
 
     }else{
 
-        document.getElementById("panelCargaKPI").style.display = "block";
+        panel.style.setProperty("display","none","important");
 
     }
 

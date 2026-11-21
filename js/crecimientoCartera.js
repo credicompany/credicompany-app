@@ -19,16 +19,21 @@ function guardarEstadoCrecimientoCartera() {
     const estado = {
 
         datosCartera: datosCarteraCrecimiento.map(r => ({
-            fecha: r.fecha.toISOString(),
-            desembolso: r.desembolso,
-            saldo: r.saldo,
-            diasAtraso: r.diasAtraso
-        })),
+    fecha: r.fecha.toISOString(),
+    desembolso: r.desembolso,
+    saldo: r.saldo,
+    diasAtraso: r.diasAtraso,
+    asesor: r.asesor || ""
+})),
 
-        datosAmortizaciones: datosAmortizaciones.map(r => ({
-            fecha: r.fecha.toISOString(),
-            capital: r.capital
-        })),
+       datosAmortizaciones: datosAmortizaciones.map(r => ({
+    fecha: r.fecha.toISOString(),
+    capital: r.capital,
+    asesor: r.asesor || "",
+    total: r.total || 0,
+    interes: r.interes || 0,
+    mora: r.mora || 0
+})),
 
         resultado: resultadoCierreCrecimiento,
 
@@ -214,15 +219,16 @@ document.getElementById("excelCarteraCrecimiento")
 
     leerExcelCC(archivo, function(filas) {
 
-        const estructura = buscarEncabezadosCC(
-            filas,
-            [
-    "Fecha Desembolso",
-    "Monto Otorgado",
-    "Saldo Capital",
-    "Dias de retraso"
-]
-        );
+       const estructura = buscarEncabezadosCC(
+    filas,
+    [
+        "Fecha Desembolso",
+        "Monto Otorgado",
+        "Saldo Capital",
+        "Dias de retraso",
+        "Asesor(a)"
+    ]
+);
 
         if (!estructura) {
             alert("No se encontraron las columnas requeridas en DATA GENERAL.");
@@ -250,13 +256,18 @@ document.getElementById("excelCarteraCrecimiento")
     fila[estructura.columnas["Dias de retraso"]]
 );
 
+            const asesor = String(
+    fila[estructura.columnas["Asesor(a)"]] || ""
+).trim();
+
         if (!fecha || desembolso < 0 || saldo < 0) return;
 
-            registros.push({
+           registros.push({
     fecha,
     desembolso,
     saldo,
-    diasAtraso
+    diasAtraso,
+    asesor
 });
 
         });
@@ -282,12 +293,16 @@ document.getElementById("excelAmortizaciones")
     leerExcelCC(archivo, function(filas) {
 
         const estructura = buscarEncabezadosCC(
-            filas,
-            [
-                "FECHA DE PAGO",
-                "CAPITAL"
-            ]
-        );
+    filas,
+    [
+        "FECHA DE PAGO",
+        "CAPITAL",
+        "ASESOR",
+        "TOTAL",
+        "INTERES",
+        "MORA REAL"
+    ]
+);
 
         if (!estructura) {
             alert("No se encontraron las columnas requeridas en INGRESO.");
@@ -305,15 +320,35 @@ document.getElementById("excelAmortizaciones")
             );
 
             const capital = numeroCC(
-                fila[estructura.columnas["CAPITAL"]]
-            );
+    fila[estructura.columnas["CAPITAL"]]
+);
 
-            if (!fecha || capital <= 0) return;
+const asesor = String(
+    fila[estructura.columnas["ASESOR"]] || ""
+).trim();
 
-            registros.push({
-                fecha,
-                capital
-            });
+const total = numeroCC(
+    fila[estructura.columnas["TOTAL"]]
+);
+
+const interes = numeroCC(
+    fila[estructura.columnas["INTERES"]]
+);
+
+const mora = numeroCC(
+    fila[estructura.columnas["MORA REAL"]]
+);
+
+if (!fecha || capital < 0) return;
+
+registros.push({
+    fecha,
+    capital,
+    asesor,
+    total,
+    interes,
+    mora
+});
 
         });
 

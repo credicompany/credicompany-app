@@ -1867,6 +1867,9 @@ S/${Math.round(totalMoraAgosto1Mas).toLocaleString("es-PE")}
     // CUADRO DE DESEMBOLSOS POR ASESOR
 resumen += generarCuadroDesembolsosAsesor(jsonGeneral);
 let rankingKPIHTML = "";
+
+const maxColocacion = Number(top[0]?.[1] || 0);
+
 top
 .filter(([asesor]) =>
     asesor.toUpperCase() !== "ADMIN"
@@ -1874,29 +1877,114 @@ top
 .slice(0,10)
 .forEach((r,index)=>{
 
-let medalla="🥉";
-if(index===0) medalla="🥇";
-if(index===1) medalla="🥈";
+    let medalla = "";
+    let color = "#64748B";
+    let fondo = "#FFFFFF";
 
-rankingKPIHTML += `
-<div style="
-font-size:11px;
-line-height:1.2;
-margin:2px 0;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
-">
+    if(index === 0){
+        medalla = "🥇";
+        color = "#16A34A";
+        fondo = "#F0FDF4";
+    }
 
-${medalla}
-${r[0].substring(0,8)}
-→ S/${Number(r[1]).toLocaleString("es-PE")}
+    if(index === 1){
+        medalla = "🥈";
+        color = "#64748B";
+        fondo = "#F8FAFC";
+    }
 
-</div>
-`;
+    if(index === 2){
+        medalla = "🥉";
+        color = "#B45309";
+        fondo = "#FFFBEB";
+    }
 
+    const monto = Number(r[1] || 0);
+
+    const porcentaje = maxColocacion > 0
+        ? (monto / maxColocacion) * 100
+        : 0;
+
+    rankingKPIHTML += `
+
+    <div style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:8px 10px;
+        margin:4px 0;
+        background:${fondo};
+        border-radius:10px;
+        border:1px solid #E2E8F0;
+        box-shadow:0 1px 3px rgba(0,0,0,.05);
+    ">
+
+        <div style="
+            min-width:30px;
+            text-align:center;
+            font-size:${index < 3 ? "20px" : "13px"};
+            font-weight:bold;
+        ">
+            ${medalla || (index + 1)}
+        </div>
+
+        <div style="
+            flex:1;
+            min-width:0;
+        ">
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:8px;
+                margin-bottom:5px;
+            ">
+
+                <strong style="
+                    font-size:12px;
+                    color:#123B63;
+                    overflow:hidden;
+                    text-overflow:ellipsis;
+                    white-space:nowrap;
+                ">
+                    ${r[0].substring(0,8)}
+                </strong>
+
+                <strong style="
+                    font-size:13px;
+                    color:${index === 0 ? "#16A34A" : "#123B63"};
+                    white-space:nowrap;
+                ">
+                    S/ ${monto.toLocaleString("es-PE")}
+                </strong>
+
+            </div>
+
+            <div style="
+                width:100%;
+                height:6px;
+                background:#E2E8F0;
+                border-radius:20px;
+                overflow:hidden;
+            ">
+
+                <div style="
+                    width:${Math.min(porcentaje,100)}%;
+                    height:100%;
+                    background:${color};
+                    border-radius:20px;
+                "></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    `;
 });
-
+    
 localStorage.setItem(
 "rankingKPIHTML",
 rankingKPIHTML

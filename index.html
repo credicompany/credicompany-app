@@ -2958,6 +2958,61 @@ getDoc
 }
 
 </style>
+
+
+  <style>
+
+/* =========================================
+   RANKING COLOCACIÓN - DISEÑO COMPACTO
+========================================= */
+
+#rankingKPI{
+    width:100%;
+    max-width:340px;
+    margin:12px auto !important;
+    box-sizing:border-box;
+}
+
+/* Compactar tarjetas */
+#rankingKPI > div{
+    box-sizing:border-box;
+}
+
+/* CELULAR */
+@media(max-width:600px){
+
+    #rankingKPI{
+        max-width:280px !important;
+        margin:8px auto !important;
+    }
+
+    #rankingKPI div{
+        font-size:12px !important;
+    }
+
+}
+
+/* LAPTOP */
+@media(min-width:601px){
+
+    #rankingKPI{
+        max-width:300px !important;
+        margin:8px auto !important;
+    }
+
+}
+
+/* Barras más compactas */
+#rankingKPI div div div{
+    max-height:8px;
+}
+
+/* Evitar desbordamientos */
+#rankingKPI{
+    overflow:hidden;
+}
+
+</style>
   
 </head>
 

@@ -1866,43 +1866,55 @@ S/${Math.round(totalMoraAgosto1Mas).toLocaleString("es-PE")}
 
     // CUADRO DE DESEMBOLSOS POR ASESOR
 resumen += generarCuadroDesembolsosAsesor(jsonGeneral);
+// =============================================
+// RANKING COLOCACIÓN - DISEÑO VISUAL
+// =============================================
+
 let rankingKPIHTML = "";
 
-const maxColocacion = Number(top[0]?.[1] || 0);
+const rankingAsesores = top
+    .filter(([asesor]) =>
+        asesor.toUpperCase() !== "ADMIN"
+    )
+    .slice(0, 10);
 
-top
-.filter(([asesor]) =>
-    asesor.toUpperCase() !== "ADMIN"
-)
-.slice(0,10)
-.forEach((r,index)=>{
+const maxColocacion = rankingAsesores.length > 0
+    ? Number(rankingAsesores[0][1]) || 0
+    : 0;
+
+rankingAsesores.forEach((r, index) => {
+
+    const nombre = String(r[0] || "").substring(0, 8);
+    const monto = Number(r[1]) || 0;
 
     let medalla = "";
-    let color = "#64748B";
+    let color = "#2563EB";
     let fondo = "#FFFFFF";
+    let numero = index + 1;
 
+    // PRIMER PUESTO
     if(index === 0){
         medalla = "🥇";
         color = "#16A34A";
         fondo = "#F0FDF4";
     }
 
-    if(index === 1){
+    // SEGUNDO PUESTO
+    else if(index === 1){
         medalla = "🥈";
         color = "#64748B";
         fondo = "#F8FAFC";
     }
 
-    if(index === 2){
+    // TERCER PUESTO
+    else if(index === 2){
         medalla = "🥉";
         color = "#B45309";
         fondo = "#FFFBEB";
     }
 
-    const monto = Number(r[1] || 0);
-
     const porcentaje = maxColocacion > 0
-        ? (monto / maxColocacion) * 100
+        ? Math.min((monto / maxColocacion) * 100, 100)
         : 0;
 
     rankingKPIHTML += `
@@ -1912,20 +1924,21 @@ top
         align-items:center;
         gap:10px;
         padding:8px 10px;
-        margin:4px 0;
+        margin:5px 0;
         background:${fondo};
-        border-radius:10px;
         border:1px solid #E2E8F0;
-        box-shadow:0 1px 3px rgba(0,0,0,.05);
+        border-radius:10px;
+        box-shadow:0 1px 3px rgba(0,0,0,.04);
     ">
 
         <div style="
+            width:30px;
             min-width:30px;
             text-align:center;
-            font-size:${index < 3 ? "20px" : "13px"};
-            font-weight:bold;
+            font-size:${index < 3 ? "19px" : "13px"};
+            font-weight:800;
         ">
-            ${medalla || (index + 1)}
+            ${medalla || numero}
         </div>
 
         <div style="
@@ -1944,19 +1957,19 @@ top
                 <strong style="
                     font-size:12px;
                     color:#123B63;
+                    white-space:nowrap;
                     overflow:hidden;
                     text-overflow:ellipsis;
-                    white-space:nowrap;
                 ">
-                    ${r[0].substring(0,8)}
+                    ${nombre}
                 </strong>
 
                 <strong style="
                     font-size:13px;
-                    color:${index === 0 ? "#16A34A" : "#123B63"};
+                    color:${index === 0 ? "#15803D" : "#123B63"};
                     white-space:nowrap;
                 ">
-                    S/ ${monto.toLocaleString("es-PE")}
+                    S/${monto.toLocaleString("es-PE")}
                 </strong>
 
             </div>
@@ -1970,7 +1983,7 @@ top
             ">
 
                 <div style="
-                    width:${Math.min(porcentaje,100)}%;
+                    width:${porcentaje}%;
                     height:100%;
                     background:${color};
                     border-radius:20px;
@@ -1984,7 +1997,6 @@ top
 
     `;
 });
-    
 localStorage.setItem(
 "rankingKPIHTML",
 rankingKPIHTML

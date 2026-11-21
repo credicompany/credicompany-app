@@ -1866,137 +1866,65 @@ S/${Math.round(totalMoraAgosto1Mas).toLocaleString("es-PE")}
 
     // CUADRO DE DESEMBOLSOS POR ASESOR
 resumen += generarCuadroDesembolsosAsesor(jsonGeneral);
-// =============================================
-// RANKING COLOCACIÓN - DISEÑO VISUAL
-// =============================================
+/* =========================================
+   RANKING COLOCACIÓN - FILAS HORIZONTALES
+========================================= */
 
-let rankingKPIHTML = "";
+#rankingKPI{
+    width:100%;
+    max-width:430px;
+    margin:8px auto !important;
+    padding:10px !important;
+    box-sizing:border-box;
+}
 
-const rankingAsesores = top
-    .filter(([asesor]) =>
-        asesor.toUpperCase() !== "ADMIN"
-    )
-    .slice(0, 10);
+/* TARJETA DE CADA ASESOR */
+#rankingKPI > div{
+    display:flex !important;
+    flex-direction:row !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    gap:8px !important;
+    padding:7px 10px !important;
+    margin:4px 0 !important;
+    min-height:35px !important;
+    box-sizing:border-box !important;
+}
 
-const maxColocacion = rankingAsesores.length > 0
-    ? Number(rankingAsesores[0][1]) || 0
-    : 0;
+/* CELULAR */
+@media(max-width:600px){
 
-rankingAsesores.forEach((r, index) => {
-
-    const nombre = String(r[0] || "").substring(0, 8);
-    const monto = Number(r[1]) || 0;
-
-    let medalla = "";
-    let color = "#2563EB";
-    let fondo = "#FFFFFF";
-    let numero = index + 1;
-
-    // PRIMER PUESTO
-    if(index === 0){
-        medalla = "🥇";
-        color = "#16A34A";
-        fondo = "#F0FDF4";
+    #rankingKPI{
+        max-width:350px !important;
+        padding:8px !important;
     }
 
-    // SEGUNDO PUESTO
-    else if(index === 1){
-        medalla = "🥈";
-        color = "#64748B";
-        fondo = "#F8FAFC";
+    #rankingKPI > div{
+        min-height:32px !important;
+        padding:5px 8px !important;
+        gap:5px !important;
     }
 
-    // TERCER PUESTO
-    else if(index === 2){
-        medalla = "🥉";
-        color = "#B45309";
-        fondo = "#FFFBEB";
+}
+
+/* LAPTOP */
+@media(min-width:601px){
+
+    #rankingKPI{
+        max-width:380px !important;
     }
 
-    const porcentaje = maxColocacion > 0
-        ? Math.min((monto / maxColocacion) * 100, 100)
-        : 0;
+}
 
-    rankingKPIHTML += `
+/* COMPACTAR TEXTO */
+#rankingKPI{
+    font-size:12px !important;
+}
 
-    <div style="
-        display:flex;
-        align-items:center;
-        gap:10px;
-        padding:8px 10px;
-        margin:5px 0;
-        background:${fondo};
-        border:1px solid #E2E8F0;
-        border-radius:10px;
-        box-shadow:0 1px 3px rgba(0,0,0,.04);
-    ">
-
-        <div style="
-            width:30px;
-            min-width:30px;
-            text-align:center;
-            font-size:${index < 3 ? "19px" : "13px"};
-            font-weight:800;
-        ">
-            ${medalla || numero}
-        </div>
-
-        <div style="
-            flex:1;
-            min-width:0;
-        ">
-
-            <div style="
-                display:flex;
-                justify-content:space-between;
-                align-items:center;
-                gap:8px;
-                margin-bottom:5px;
-            ">
-
-                <strong style="
-                    font-size:12px;
-                    color:#123B63;
-                    white-space:nowrap;
-                    overflow:hidden;
-                    text-overflow:ellipsis;
-                ">
-                    ${nombre}
-                </strong>
-
-                <strong style="
-                    font-size:13px;
-                    color:${index === 0 ? "#15803D" : "#123B63"};
-                    white-space:nowrap;
-                ">
-                    S/${monto.toLocaleString("es-PE")}
-                </strong>
-
-            </div>
-
-            <div style="
-                width:100%;
-                height:6px;
-                background:#E2E8F0;
-                border-radius:20px;
-                overflow:hidden;
-            ">
-
-                <div style="
-                    width:${porcentaje}%;
-                    height:100%;
-                    background:${color};
-                    border-radius:20px;
-                "></div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    `;
-});
+/* EVITAR DESBORDAMIENTO */
+#rankingKPI *{
+    box-sizing:border-box;
+}
 localStorage.setItem(
 "rankingKPIHTML",
 rankingKPIHTML

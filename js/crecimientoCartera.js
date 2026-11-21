@@ -582,11 +582,235 @@ resultadoCierreCrecimiento = {
 
     });
 
+// ==========================================
+// REPAGOS Y SALDO CAPITAL POR ASESOR
+// ==========================================
+
+const resumenAsesores = {};
+
+function normalizarAsesorCC(nombre){
+
+    return String(nombre || "")
+        .trim()
+        .toUpperCase();
+
+}
+
+// SALDO CAPITAL POR ASESOR - DATA GENERAL
+datosCarteraCrecimiento.forEach(registro => {
+
+    const nombre = normalizarAsesorCC(registro.asesor);
+
+    if(!nombre) return;
+
+    if(!resumenAsesores[nombre]){
+
+        resumenAsesores[nombre] = {
+            repagos: 0,
+            capital: 0,
+            interes: 0,
+            mora: 0,
+            saldoCapital: 0,
+            pagos: 0
+        };
+
+    }
+
+    resumenAsesores[nombre].saldoCapital +=
+        Number(registro.saldo || 0);
+
+});
+
+// REPAGOS DEL MES - ARCHIVO INGRESO
+datosAmortizaciones.forEach(registro => {
+
+    const periodoPago = obtenerMes(registro.fecha);
+
+    // Solo considerar el mes actual analizado
+    if(periodoPago !== periodoCierre) return;
+
+    const nombre = normalizarAsesorCC(registro.asesor);
+
+    if(!nombre) return;
+
+    if(!resumenAsesores[nombre]){
+
+        resumenAsesores[nombre] = {
+            repagos: 0,
+            capital: 0,
+            interes: 0,
+            mora: 0,
+            saldoCapital: 0,
+            pagos: 0
+        };
+
+    }
+
+    resumenAsesores[nombre].repagos +=
+        Number(registro.total || 0);
+
+    resumenAsesores[nombre].capital +=
+        Number(registro.capital || 0);
+
+    resumenAsesores[nombre].interes +=
+        Number(registro.interes || 0);
+
+    resumenAsesores[nombre].mora +=
+        Number(registro.mora || 0);
+
+    resumenAsesores[nombre].pagos++;
+
+});
+
+// FORMATO DE TABLA
+const asesoresOrdenados = Object.keys(resumenAsesores)
+    .sort((a,b) =>
+        resumenAsesores[b].repagos -
+        resumenAsesores[a].repagos
+    );
+
+let totalRepagosAsesores = 0;
+let totalCapitalAsesores = 0;
+let totalInteresAsesores = 0;
+let totalMoraAsesores = 0;
+let totalSaldoAsesores = 0;
+let totalPagosAsesores = 0;
+
+let tablaRepagosHTML = `
+
+<h3 style="margin-top:25px;">
+    💰 Repagos y saldo capital por asesor
+</h3>
+
+<div style="overflow-x:auto;">
+
+<table style="
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
+">
+
+<thead>
+
+<tr style="
+    background:#123B63;
+    color:white;
+">
+
+<th style="padding:10px;">ASESOR</th>
+<th>REPAGOS MES</th>
+<th>CAPITAL RECUPERADO</th>
+<th>INTERÉS</th>
+<th>MORA</th>
+<th>SALDO CAPITAL</th>
+<th>N° PAGOS</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+`;
+
+asesoresOrdenados.forEach(nombre => {
+
+    const dato = resumenAsesores[nombre];
+
+    totalRepagosAsesores += dato.repagos;
+    totalCapitalAsesores += dato.capital;
+    totalInteresAsesores += dato.interes;
+    totalMoraAsesores += dato.mora;
+    totalSaldoAsesores += dato.saldoCapital;
+    totalPagosAsesores += dato.pagos;
+
+    tablaRepagosHTML += `
+
+<tr style="border-bottom:1px solid #ddd;">
+
+<td style="padding:9px;font-weight:bold;">
+    ${nombre}
+</td>
+
+<td style="text-align:right;padding:9px;">
+    ${soles(dato.repagos)}
+</td>
+
+<td style="text-align:right;padding:9px;">
+    ${soles(dato.capital)}
+</td>
+
+<td style="text-align:right;padding:9px;">
+    ${soles(dato.interes)}
+</td>
+
+<td style="text-align:right;padding:9px;">
+    ${soles(dato.mora)}
+</td>
+
+<td style="text-align:right;padding:9px;">
+    ${soles(dato.saldoCapital)}
+</td>
+
+<td style="text-align:center;padding:9px;">
+    ${dato.pagos}
+</td>
+
+</tr>
+
+`;
+
+});
+
+tablaRepagosHTML += `
+
+<tr style="
+    background:#E8F0F7;
+    font-weight:bold;
+    border-top:2px solid #123B63;
+">
+
+<td style="padding:10px;">
+    TOTAL EMPRESA
+</td>
+
+<td style="text-align:right;">
+    ${soles(totalRepagosAsesores)}
+</td>
+
+<td style="text-align:right;">
+    ${soles(totalCapitalAsesores)}
+</td>
+
+<td style="text-align:right;">
+    ${soles(totalInteresAsesores)}
+</td>
+
+<td style="text-align:right;">
+    ${soles(totalMoraAsesores)}
+</td>
+
+<td style="text-align:right;">
+    ${soles(totalSaldoAsesores)}
+</td>
+
+<td style="text-align:center;">
+    ${totalPagosAsesores}
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+`;
     html += `
             </tbody>
         </table>
         </div>
-
+${tablaRepagosHTML}
         <p style="
             margin-top:15px;
             padding:12px;

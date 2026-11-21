@@ -1866,65 +1866,7 @@ S/${Math.round(totalMoraAgosto1Mas).toLocaleString("es-PE")}
 
     // CUADRO DE DESEMBOLSOS POR ASESOR
 resumen += generarCuadroDesembolsosAsesor(jsonGeneral);
-/* =========================================
-   RANKING COLOCACIÓN - FILAS HORIZONTALES
-========================================= */
-
-#rankingKPI{
-    width:100%;
-    max-width:430px;
-    margin:8px auto !important;
-    padding:10px !important;
-    box-sizing:border-box;
-}
-
-/* TARJETA DE CADA ASESOR */
-#rankingKPI > div{
-    display:flex !important;
-    flex-direction:row !important;
-    align-items:center !important;
-    justify-content:space-between !important;
-    gap:8px !important;
-    padding:7px 10px !important;
-    margin:4px 0 !important;
-    min-height:35px !important;
-    box-sizing:border-box !important;
-}
-
-/* CELULAR */
-@media(max-width:600px){
-
-    #rankingKPI{
-        max-width:350px !important;
-        padding:8px !important;
-    }
-
-    #rankingKPI > div{
-        min-height:32px !important;
-        padding:5px 8px !important;
-        gap:5px !important;
-    }
-
-}
-
-/* LAPTOP */
-@media(min-width:601px){
-
-    #rankingKPI{
-        max-width:380px !important;
-    }
-
-}
-
-/* COMPACTAR TEXTO */
-#rankingKPI{
-    font-size:12px !important;
-}
-
-/* EVITAR DESBORDAMIENTO */
-#rankingKPI *{
-    box-sizing:border-box;
-}
+    
 localStorage.setItem(
 "rankingKPIHTML",
 rankingKPIHTML

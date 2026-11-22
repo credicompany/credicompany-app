@@ -1879,92 +1879,159 @@ getDoc
 
 <style>
 
-@media (max-width: 600px){
+/* ==========================================
+   KPI GERENCIAL - COMPACTACIÓN EXTREMA MÓVIL
+========================================== */
 
-    #kpi{
-        padding:8px !important;
-        margin:0 !important;
-        width:100% !important;
-        box-sizing:border-box;
+@media (max-width: 600px) {
+
+    /* CONTENEDOR */
+    #kpi {
+        padding: 4px !important;
+        margin: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
 
-    #kpiResumen{
-        width:100%;
-        overflow:hidden;
+    #kpiResumen {
+        width: 100% !important;
+        overflow: hidden !important;
     }
 
-    #kpiResumen [style*="font-size:26px"]{
-        font-size:21px !important;
-        margin-bottom:8px !important;
+    /* TÍTULOS */
+    #kpiResumen h2,
+    #kpiResumen h3,
+    #kpiResumen h4 {
+        font-size: 13px !important;
+        margin: 4px 0 !important;
+        line-height: 1.15 !important;
     }
 
-    #kpiResumen [style*="font-size:13px"]{
-        font-size:11px !important;
+    /* BOTONES */
+    #kpi button {
+        min-height: 32px !important;
+        height: 32px !important;
+        padding: 4px 8px !important;
+        font-size: 10px !important;
+        margin: 3px 2px !important;
+        border-radius: 7px !important;
     }
 
-    #kpiResumen [style*="grid-template-columns"]{
-        grid-template-columns:repeat(2, minmax(0,1fr)) !important;
-        gap:7px !important;
+    /* BOTÓN INICIO */
+    #kpi .volver {
+        width: auto !important;
+        max-width: 150px !important;
     }
 
-    #kpiResumen [style*="border-top:4px"]{
-        padding:10px 6px !important;
-        min-height:92px !important;
-        border-radius:10px !important;
+    /* CARGAR METAS / PRODUCCIÓN */
+    #kpiResumen button {
+        min-height: 30px !important;
+        height: 30px !important;
+        padding: 3px 7px !important;
+        font-size: 9px !important;
     }
 
-    #kpiResumen [style*="border-top:4px"] div:first-child{
-        font-size:21px !important;
+    /* GRID DE TARJETAS */
+    #kpiResumen [style*="grid-template-columns"] {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 4px !important;
     }
 
-    #kpiResumen [style*="border-top:4px"] div{
-        font-size:10px !important;
-        line-height:1.15 !important;
+    /* TARJETAS INDICADORES */
+    #kpiResumen [style*="border-top:4px"] {
+        min-height: 65px !important;
+        height: auto !important;
+        padding: 5px 3px !important;
+        margin: 0 !important;
+        border-radius: 7px !important;
+        box-sizing: border-box !important;
     }
 
-    #kpiResumen [style*="border-top:4px"] div[style*="font-size:25px"]{
-        font-size:22px !important;
-        margin-top:2px !important;
+    /* ICONOS */
+    #kpiResumen [style*="border-top:4px"] div:first-child {
+        font-size: 15px !important;
+        margin: 0 !important;
     }
 
-    #kpiResumen [style*="background:#F8FAFC"]{
-        padding:10px !important;
-        margin-top:8px !important;
+    /* TEXTO TARJETAS */
+    #kpiResumen [style*="border-top:4px"] div {
+        font-size: 8px !important;
+        line-height: 1.05 !important;
+        margin: 1px 0 !important;
     }
 
-    #kpiResumen [style*="border-left:5px"]{
-        padding:10px !important;
-        margin-bottom:8px !important;
+    /* CIFRAS */
+    #kpiResumen [style*="font-size:25px"],
+    #kpiResumen [style*="font-size:26px"] {
+        font-size: 16px !important;
+        line-height: 1.05 !important;
+        margin: 2px 0 !important;
     }
 
-    #kpiResumen [style*="border-left:5px"] div{
-        font-size:14px !important;
+    /* META Y TEXTOS SECUNDARIOS */
+    #kpiResumen [style*="font-size:13px"] {
+        font-size: 8px !important;
     }
 
-    #kpiResumen table{
-        min-width:900px !important;
-        font-size:10px !important;
+    /* AVANCE COLOCACIÓN */
+    #kpiResumen [style*="background:#F8FAFC"] {
+        padding: 6px !important;
+        margin: 4px 0 !important;
+        border-radius: 7px !important;
     }
 
-    #kpiResumen table th,
-    #kpiResumen table td{
-        padding:7px 6px !important;
-        white-space:nowrap;
+    /* BARRA DE PROGRESO */
+    #kpiResumen [style*="height:12px"],
+    #kpiResumen [style*="height:10px"] {
+        height: 7px !important;
     }
-   #kpiResumen table th{
-    font-size:11px !important;
-    line-height:1.05 !important;
-    padding:6px 4px !important;
-    white-space:normal !important;
-    vertical-align:middle !important;
+
+    /* LÍDER DEL MES */
+    #kpiResumen [style*="border-left:5px"] {
+        padding: 6px !important;
+        margin: 4px 0 !important;
+        border-radius: 6px !important;
+    }
+
+    #kpiResumen [style*="border-left:5px"] div {
+        font-size: 11px !important;
+        margin: 2px 0 !important;
+        line-height: 1.1 !important;
+    }
+
+    /* TABLAS */
+    #kpiResumen table {
+        min-width: 850px !important;
+        width: max-content !important;
+        font-size: 8px !important;
+    }
+
+    #kpiResumen table th {
+        font-size: 7px !important;
+        padding: 3px 2px !important;
+        line-height: 1.05 !important;
+        white-space: normal !important;
+    }
+
+    #kpiResumen table td {
+        font-size: 8px !important;
+        padding: 3px 2px !important;
+        line-height: 1.05 !important;
+        white-space: nowrap !important;
+    }
+
+    /* REDUCIR ESPACIOS */
+    #kpiResumen [style*="margin-bottom:20px"],
+    #kpiResumen [style*="margin-bottom:15px"] {
+        margin-bottom: 4px !important;
+    }
+
+    #kpiResumen [style*="padding:20px"],
+    #kpiResumen [style*="padding:15px"] {
+        padding: 5px !important;
+    }
+
 }
-
-    #kpiResumen table td{
-        font-size:12px !important;
-        padding:7px 5px !important;
-    }
-}
-
   /* =====================================================
    RESULTADO MENSUAL — DISEÑO GERENCIAL COMPACTO
    ===================================================== */

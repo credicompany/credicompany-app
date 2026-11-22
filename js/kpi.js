@@ -1099,6 +1099,71 @@ margin-top:4px;
 
 }
 
+
+/* =========================================
+   KPI ASESOR - COMPACTO LAPTOP Y MÓVIL
+========================================= */
+
+.kpi-asesor-card {
+    padding: 6px !important;
+    margin-top: 5px !important;
+}
+
+.kpi-asesor-titulo {
+    margin-bottom: 5px !important;
+    font-size: 14px !important;
+}
+
+.kpi-asesor-scroll {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.kpi-asesor-scroll table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+}
+
+.kpi-asesor-scroll th,
+.kpi-asesor-scroll td {
+    padding: 4px 5px !important;
+    line-height: 1.15 !important;
+    white-space: nowrap;
+}
+
+.kpi-asesor-scroll th {
+    font-size: 9px !important;
+}
+
+.kpi-asesor-scroll td {
+    font-size: 10px !important;
+}
+
+/* Laptop */
+@media (min-width: 768px) {
+    .kpi-asesor-scroll th,
+    .kpi-asesor-scroll td {
+        padding: 4px 4px !important;
+    }
+}
+
+/* Celular */
+@media (max-width: 600px) {
+    .kpi-asesor-card {
+        padding: 4px !important;
+    }
+
+    .kpi-asesor-scroll th,
+    .kpi-asesor-scroll td {
+        padding: 3px 3px !important;
+        font-size: 8px !important;
+        line-height: 1.1 !important;
+    }
+
+    .kpi-asesor-titulo {
+        font-size: 12px !important;
+    }
+}
 </style>
 
 <div class="card kpi-asesor-card">

@@ -2029,6 +2029,38 @@ getDoc
         padding: 5px !important;
     }
 
+  /* KPI GERENCIAL: 3 TARJETAS POR FILA */
+
+#kpiResumen .kpi-resumen-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 5px !important;
+}
+
+#kpiResumen .kpi-resumen-card {
+    padding: 5px 2px !important;
+    min-height: 65px !important;
+    height: auto !important;
+    margin: 0 !important;
+    border-radius: 7px !important;
+    box-sizing: border-box !important;
+}
+
+#kpiResumen .kpi-resumen-card div {
+    line-height: 1.1 !important;
+}
+
+#kpiResumen .kpi-resumen-card div:first-child {
+    font-size: 15px !important;
+}
+
+#kpiResumen .kpi-resumen-card div:nth-child(2) {
+    font-size: 8px !important;
+}
+
+#kpiResumen .kpi-resumen-card div:nth-child(3) {
+    font-size: 16px !important;
+}
+  
 }
   /* =====================================================
    RESULTADO MENSUAL — DISEÑO GERENCIAL COMPACTO

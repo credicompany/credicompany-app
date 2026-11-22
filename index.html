@@ -3254,6 +3254,51 @@ getDoc
 
 }
 
+
+    /* ==========================================
+   FIX DEFINITIVO - KPI GERENCIAL MOBILE
+========================================== */
+
+@media screen and (max-width: 768px) {
+
+    #kpiResumen .kpi-resumen-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 5px !important;
+        width: 100% !important;
+    }
+
+    #kpiResumen .kpi-resumen-card {
+        min-width: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: 65px !important;
+        height: auto !important;
+        padding: 5px 2px !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+    }
+
+    #kpiResumen .kpi-resumen-card div {
+        margin: 1px 0 !important;
+        line-height: 1.1 !important;
+        overflow-wrap: anywhere !important;
+    }
+
+    #kpiResumen .kpi-resumen-card div:nth-child(1) {
+        font-size: 15px !important;
+    }
+
+    #kpiResumen .kpi-resumen-card div:nth-child(2) {
+        font-size: 8px !important;
+    }
+
+    #kpiResumen .kpi-resumen-card div:nth-child(3) {
+        font-size: 16px !important;
+    }
+
+}
 </style>
   
 </head>

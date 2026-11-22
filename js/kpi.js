@@ -1164,6 +1164,36 @@ margin-top:4px;
         font-size: 12px !important;
     }
 }
+
+/* =========================================
+   COMPACTAR COLUMNAS KPI
+   TEM - VARIACIÓN - MORA
+========================================= */
+
+@media (max-width: 768px) {
+
+    .kpi-asesor-scroll th,
+    .kpi-asesor-scroll td {
+        padding: 2px !important;
+        font-size: 7px !important;
+    }
+
+    .kpi-asesor-scroll th {
+        font-size: 7px !important;
+        line-height: 1 !important;
+    }
+
+    .kpi-asesor-scroll td {
+        line-height: 1.05 !important;
+    }
+
+    .kpi-asesor-scroll table {
+        width: max-content !important;
+        min-width: 100% !important;
+    }
+
+}
+
 </style>
 
 <div class="card kpi-asesor-card">

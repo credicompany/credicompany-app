@@ -1931,27 +1931,25 @@ getDoc
         font-size: 9px !important;
     }
 
-    /* GRID DE TARJETAS */
-    #kpiResumen [style*="grid-template-columns"] {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 4px !important;
-    }
+    /* 3 TARJETAS POR FILA EN CELULAR */
+#kpiResumen [style*="grid-template-columns"]{
+    grid-template-columns:repeat(3, minmax(0,1fr)) !important;
+    gap:4px !important;
+}
+    /* TARJETAS KPI ULTRA COMPACTAS */
+#kpiResumen [style*="border-top:4px"]{
+    padding:4px 2px !important;
+    min-height:65px !important;
+    height:auto !important;
+    border-radius:7px !important;
+    margin:0 !important;
+    box-sizing:border-box !important;
+}
 
-    /* TARJETAS INDICADORES */
-    #kpiResumen [style*="border-top:4px"] {
-        min-height: 65px !important;
-        height: auto !important;
-        padding: 5px 3px !important;
-        margin: 0 !important;
-        border-radius: 7px !important;
-        box-sizing: border-box !important;
-    }
-
-    /* ICONOS */
-    #kpiResumen [style*="border-top:4px"] div:first-child {
-        font-size: 15px !important;
-        margin: 0 !important;
-    }
+    #kpiResumen [style*="border-top:4px"] div:first-child{
+    font-size:15px !important;
+    margin:0 !important;
+}
 
     /* TEXTO TARJETAS */
     #kpiResumen [style*="border-top:4px"] div {

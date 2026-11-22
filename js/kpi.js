@@ -17,6 +17,7 @@
 // KPI GERENCIAL
 // ======================================================
 function generarKPI(json){
+    let rankingKPIHTML = localStorage.getItem("rankingKPIHTML") || "";
 
     let totalClientesActual = 0;
     let totalClientesSiguiente = 0;

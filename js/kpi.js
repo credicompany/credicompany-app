@@ -5043,24 +5043,37 @@ const bonoTotal = bonoConstancia + bonoProduccion;
         totalBonoProduccion += bonoProduccion;
         totalBonosSemana += bonoTotal;
 
-// MENSAJE MOTIVACIONAL
+// ======================================
+// MENSAJE MOTIVACIONAL DINÁMICO
+// ======================================
 let mensajeBono = "";
 
-if (diasCumplidos === 6 && sumaSemanal >= 25000) {
-    mensajeBono = "🏆 ¡EXCELENCIA! GANASTE S/170";
-} else if (diasCumplidos === 6) {
-    mensajeBono = "🔥 ¡CONSTANCIA COMPLETA! GANASTE S/50";
+if (bonoTotal > 0) {
+
+    mensajeBono = `🏆 ¡GANASTE S/ ${bonoTotal}!`;
+
 } else if (diasCumplidos === 5) {
-    mensajeBono = "💪 ¡A UN DÍA DE GANAR TU BONO!";
+
+    mensajeBono = "🔥 ¡A UN DÍA DE GANAR S/50!";
+
+} else if (diasCumplidos === 4) {
+
+    mensajeBono = "💪 ¡SOLO FALTAN 2 DÍAS!";
+
 } else if (diasCumplidos >= 3) {
+
     mensajeBono = "🚀 ¡VAS POR BUEN CAMINO!";
+
+} else if (diasCumplidos >= 1) {
+
+    mensajeBono = "⚡ ¡CADA DÍA CUENTA!";
+
 } else {
-    mensajeBono = "⚡ ¡VAMOS, CADA DÍA CUENTA!";
+
+    mensajeBono = "📈 ¡EMPIEZA TU RACHA!";
 }
 
         g.dias.forEach((n, i) => totalGeneralDias[i] += n);
-
- 
 
         html += `
 

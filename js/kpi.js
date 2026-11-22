@@ -1194,6 +1194,73 @@ margin-top:4px;
 
 }
 
+/* ==========================================
+   COMPACTACIÓN EXTREMA KPI EN CELULAR
+========================================== */
+
+@media (max-width: 600px) {
+
+    /* Tarjeta KPI */
+    .kpi-asesor-card {
+        padding: 5px !important;
+        margin: 4px !important;
+        border-radius: 8px !important;
+    }
+
+    /* Título */
+    .kpi-asesor-titulo {
+        font-size: 12px !important;
+        margin: 3px 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Botones */
+    .kpi-asesor-card button {
+        min-height: 32px !important;
+        height: 32px !important;
+        padding: 4px 8px !important;
+        font-size: 11px !important;
+        margin: 3px 0 !important;
+        border-radius: 6px !important;
+    }
+
+    /* Selector histórico */
+    .kpi-asesor-card select {
+        min-height: 32px !important;
+        height: 32px !important;
+        padding: 4px 8px !important;
+        font-size: 11px !important;
+        margin: 3px 0 !important;
+    }
+
+    /* Tabla */
+    .kpi-asesor-scroll th,
+    .kpi-asesor-scroll td {
+        padding: 2px 3px !important;
+        font-size: 7px !important;
+        line-height: 1 !important;
+    }
+
+    /* Encabezados */
+    .kpi-asesor-scroll th {
+        font-size: 6.5px !important;
+        padding: 3px 2px !important;
+    }
+
+    /* Filas */
+    .kpi-asesor-scroll tr {
+        height: auto !important;
+    }
+
+    /* Total empresa */
+    .kpi-asesor-scroll tfoot td,
+    .kpi-asesor-scroll tr:last-child td {
+        padding: 3px !important;
+        font-size: 8px !important;
+    }
+
+}
+
 </style>
 
 <div class="card kpi-asesor-card">

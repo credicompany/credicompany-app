@@ -4704,7 +4704,8 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
                 operaciones: 0,
 
-                dias: [0, 0, 0, 0, 0, 0]
+               dias: [0, 0, 0, 0, 0, 0],
+                operacionesDias: [0, 0, 0, 0, 0, 0]
 
             });
 
@@ -4722,11 +4723,10 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
         const indiceDia = Math.round((r.fecha - inicioSemana) / 86400000);
 
-        if (indiceDia >= 0 && indiceDia <= 5) {
-
-            grupo.dias[indiceDia] += r.monto;
-
-        }
+       if (indiceDia >= 0 && indiceDia <= 5) {
+    grupo.dias[indiceDia] += r.monto;
+    grupo.operacionesDias[indiceDia] += 1;
+}
 
     });
 
@@ -4987,8 +4987,12 @@ function generarCuadroDesembolsosAsesor(produccion) {
                         ${dias.map((d, i) => `<th>${nombresDias[i]}<br>${fechaCorta(d)}</th>`).join("")}
 
                         <th>TOTAL SEMANAL</th>
-
-                        <th>OPERACIONES</th>
+                          <th>OPERACIONES</th>
+                            <th>DÍAS</th>
+                            <th>BONO CONSTANCIA</th>
+                            <th>BONO PRODUCCIÓN</th>
+                            <th>TOTAL BONO</th>
+                            <th>MENSAJE</th>
 
                     </tr>
 
@@ -4997,7 +5001,9 @@ function generarCuadroDesembolsosAsesor(produccion) {
                 <tbody>`;
 
  
-
+let totalBonoConstancia = 0;
+let totalBonoProduccion = 0;
+let totalBonosSemana = 0;
     gruposOrdenados.forEach(g => {
 
         const cantidadClientes = g.clientes.size;
@@ -5009,6 +5015,48 @@ function generarCuadroDesembolsosAsesor(produccion) {
  
 
         const sumaSemanal = g.dias.reduce((s, n) => s + n, 0);
+
+        // ======================================
+// BONOS SEMANALES CREDICOMPANY
+// ======================================
+
+const diasCumplidos = g.operacionesDias.filter(n => n > 0).length;
+
+// BONO 1: CONSTANCIA
+const bonoConstancia = diasCumplidos === 6 ? 50 : 0;
+
+// BONO 2: PRODUCCIÓN
+let bonoProduccion = 0;
+
+if (sumaSemanal >= 25000) {
+    bonoProduccion = 120;
+} else if (sumaSemanal >= 20000) {
+    bonoProduccion = 80;
+} else if (sumaSemanal >= 15000) {
+    bonoProduccion = 50;
+} else if (sumaSemanal >= 10000) {
+    bonoProduccion = 30;
+}
+
+const bonoTotal = bonoConstancia + bonoProduccion;
+        totalBonoConstancia += bonoConstancia;
+        totalBonoProduccion += bonoProduccion;
+        totalBonosSemana += bonoTotal;
+
+// MENSAJE MOTIVACIONAL
+let mensajeBono = "";
+
+if (diasCumplidos === 6 && sumaSemanal >= 25000) {
+    mensajeBono = "🏆 ¡EXCELENCIA! GANASTE S/170";
+} else if (diasCumplidos === 6) {
+    mensajeBono = "🔥 ¡CONSTANCIA COMPLETA! GANASTE S/50";
+} else if (diasCumplidos === 5) {
+    mensajeBono = "💪 ¡A UN DÍA DE GANAR TU BONO!";
+} else if (diasCumplidos >= 3) {
+    mensajeBono = "🚀 ¡VAS POR BUEN CAMINO!";
+} else {
+    mensajeBono = "⚡ ¡VAMOS, CADA DÍA CUENTA!";
+}
 
         g.dias.forEach((n, i) => totalGeneralDias[i] += n);
 
@@ -5025,8 +5073,32 @@ function generarCuadroDesembolsosAsesor(produccion) {
                 ${g.dias.map(n => `<td class="monto">${formatoSoles(n)}</td>`).join("")}
 
                 <td class="monto total-semana">${formatoSoles(sumaSemanal)}</td>
+<td class="operaciones">${g.operaciones}</td>
 
-                <td class="operaciones">${g.operaciones}</td>
+<td class="operaciones">
+${diasCumplidos}/6
+</td>
+
+<td class="monto">
+S/ ${formatoSoles(bonoConstancia)}
+</td>
+
+<td class="monto">
+S/ ${formatoSoles(bonoProduccion)}
+</td>
+
+<td class="monto total-semana">
+S/ ${formatoSoles(bonoTotal)}
+</td>
+
+<td style="
+    text-align:center;
+    font-weight:800;
+    color:#123B63;
+    white-space:nowrap;
+">
+${mensajeBono}
+</td>
 
             </tr>`;
 
@@ -5054,7 +5126,25 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
                         <td class="monto">${formatoSoles(totalGeneral)}</td>
 
-                        <td class="operaciones">${totalOperaciones}</td>
+                       <td class="operaciones">${totalOperaciones}</td>
+
+<td class="operaciones">—</td>
+
+<td class="monto">
+S/ ${formatoSoles(totalBonoConstancia)}
+</td>
+
+<td class="monto">
+S/ ${formatoSoles(totalBonoProduccion)}
+</td>
+
+<td class="monto total-semana">
+S/ ${formatoSoles(totalBonosSemana)}
+</td>
+
+<td class="operaciones">
+🏆 BONOS
+</td>
 
                     </tr>
 

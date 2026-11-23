@@ -3351,20 +3351,28 @@ getDoc
     border-radius: 8px !important;
 }
 
-/* ASESORES */
+/* ASESORES - MEJOR VISUALIZACIÓN EN CELULAR */
 #panelAsesores {
     display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 4px !important;
-    margin: 4px 0 !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+    margin: 5px 0 !important;
+    width: 100% !important;
 }
 
 #panelAsesores button {
-    min-height: 30px !important;
-    padding: 4px 2px !important;
-    font-size: 10px !important;
-    border-radius: 7px !important;
-    line-height: 1.1 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 48px !important;
+    height: auto !important;
+    padding: 7px 5px !important;
+    font-size: 12px !important;
+    border-radius: 9px !important;
+    line-height: 1.2 !important;
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: anywhere !important;
+    text-align: center !important;
 }
 
 /* FILTROS DE MORA */

@@ -3444,85 +3444,156 @@ getDoc
 
 }
 
-/* ======================================
-   FICHA CLIENTE - ULTRA COMPACTA CELULAR
-====================================== */
+/* ==========================================
+   COBRANZAS - FICHA CLIENTE COMPACTA V2
+   CREDICOMPANY - CELULAR
+========================================== */
 
 @media screen and (max-width: 600px) {
 
-/* TARJETA PRINCIPAL */
-#clientes .item {
-    padding: 6px !important;
-    margin: 5px 0 !important;
-    border-radius: 9px !important;
-}
+    /* CONTENEDOR GENERAL */
+    #clientes {
+        padding: 5px !important;
+        margin: 4px !important;
+    }
 
-/* NOMBRE DEL CLIENTE */
-#clientes .item h3,
-#clientes .item h4 {
-    font-size: 13px !important;
-    margin: 3px 0 5px !important;
-}
+    #listaClientes {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
 
-/* BOTONES WHATSAPP - LLAMAR - GESTIÓN */
-#clientes .item button {
-    min-height: 34px !important;
-    height: 36px !important;
-    padding: 4px !important;
-    font-size: 11px !important;
-    border-radius: 7px !important;
-}
+    /* TARJETA DEL CLIENTE */
+    #listaClientes .item {
+        padding: 6px !important;
+        margin: 5px 0 !important;
+        border-radius: 10px !important;
+        box-shadow: none !important;
+        line-height: 1.15 !important;
+        width: 100% !important;
+    }
 
-/* CUADROS DE INFORMACIÓN */
-#clientes .item div[style*="grid-template-columns"] {
-    gap: 4px !important;
-}
+    /* NOMBRE */
+    #listaClientes .item div[onclick^="verHistorialCliente"] {
+        font-size: 12px !important;
+        line-height: 1.15 !important;
+        margin: 0 0 5px 0 !important;
+        padding: 0 !important;
+    }
 
-#clientes .item div[style*="grid-template-columns"] > div {
-    padding: 5px !important;
-    min-height: 0 !important;
-    margin: 0 !important;
-}
+    /* BOTONES WHATSAPP - LLAMAR - GESTIÓN */
+    #listaClientes .item button {
+        height: 31px !important;
+        min-height: 31px !important;
+        padding: 2px !important;
+        margin: 2px 0 !important;
+        font-size: 10px !important;
+        border-radius: 6px !important;
+        box-shadow: none !important;
+    }
 
-/* TEXTOS Y VALORES */
-#clientes .item p {
-    margin: 2px 0 !important;
-    line-height: 1.15 !important;
-}
+    /* CUOTA MORA Y DESEMBOLSO */
+    #listaClientes .item div[style*="grid-template-columns"] {
+        gap: 4px !important;
+        margin: 4px 0 !important;
+    }
 
-#clientes .item span {
-    line-height: 1.15 !important;
-}
+    /* CUADROS */
+    #listaClientes .item div[style*="border-radius"] {
+        padding: 4px !important;
+        margin: 2px 0 !important;
+        border-radius: 7px !important;
+    }
 
-/* FECHA DE DESEMBOLSO */
-#clientes .item div {
-    margin-top: 4px !important;
-    margin-bottom: 4px !important;
-}
+    /* TITULOS */
+    #listaClientes .item div[style*="text-transform:uppercase"] {
+        font-size: 8px !important;
+        line-height: 1 !important;
+        margin: 0 0 2px 0 !important;
+    }
 
-/* DÍAS - VENCIDAS - POR PAGAR */
-#clientes .item div[style*="grid-template-columns"] {
-    gap: 4px !important;
-}
+    /* VALORES */
+    #listaClientes .item strong,
+    #listaClientes .item b {
+        font-size: 11px !important;
+        line-height: 1.1 !important;
+    }
 
-/* EVIDENCIAS */
-#clientes .item img {
-    max-height: 115px !important;
-    height: 115px !important;
-    width: 100% !important;
-    object-fit: cover !important;
-    border-radius: 7px !important;
-}
+    /* FECHA DE DESEMBOLSO */
+    #listaClientes .item div[style*="06/"],
+    #listaClientes .item div[style*="2025"],
+    #listaClientes .item div[style*="2026"] {
+        padding: 4px !important;
+        margin: 3px 0 !important;
+    }
 
-/* BOTONES CAMBIAR FOTO */
-#clientes .item button {
-    min-height: 32px !important;
-}
+    /* DÍAS - VENCIDAS - POR PAGAR */
+    #listaClientes .item div[style*="font-size:20px"] {
+        font-size: 14px !important;
+        line-height: 1 !important;
+    }
 
-/* REDUCIR ESPACIOS ENTRE SECCIONES */
-#clientes .item * {
-    box-sizing: border-box !important;
-}
+    /* ASESOR - CELULAR - DNI - PRODUCTO */
+    #listaClientes .item div[style*="grid-template-columns"] > div {
+        min-height: 0 !important;
+        padding: 4px !important;
+        margin: 0 !important;
+    }
+
+    /* DIRECCIÓN */
+    #listaClientes .item div[style*="PAS"] {
+        font-size: 10px !important;
+        line-height: 1.15 !important;
+        padding: 4px !important;
+    }
+
+    /* DISTRITO */
+    #listaClientes .item div[style*="BARRANCA"] {
+        padding: 4px !important;
+        margin: 2px 0 !important;
+    }
+
+    /* EVIDENCIAS - CASA Y NEGOCIO */
+    #listaClientes .item img {
+        height: 70px !important;
+        min-height: 70px !important;
+        max-height: 70px !important;
+        width: 100% !important;
+        object-fit: cover !important;
+        border-radius: 6px !important;
+    }
+
+    /* CONTENEDOR DE FOTOS */
+    #listaClientes .item div[style*="minmax(280px"] {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 5px !important;
+        margin-top: 5px !important;
+    }
+
+    /* TARJETA CASA / NEGOCIO */
+    #listaClientes .item div[style*="border:1px solid"] {
+        padding: 4px !important;
+        margin: 2px 0 !important;
+        border-radius: 7px !important;
+    }
+
+    /* BOTONES CAMBIAR FOTO */
+    #listaClientes .item .btnCambiarFoto {
+        height: 27px !important;
+        min-height: 27px !important;
+        padding: 2px !important;
+        margin-top: 3px !important;
+        font-size: 9px !important;
+        border-radius: 5px !important;
+    }
+
+    /* REDUCIR ESPACIOS DE LOS ELEMENTOS */
+    #listaClientes .item p {
+        margin: 2px 0 !important;
+    }
+
+    #listaClientes .item hr {
+        margin: 4px 0 !important;
+    }
 
 }
 </style>

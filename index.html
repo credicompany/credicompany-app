@@ -3443,6 +3443,88 @@ getDoc
 }
 
 }
+
+/* ======================================
+   FICHA CLIENTE - ULTRA COMPACTA CELULAR
+====================================== */
+
+@media screen and (max-width: 600px) {
+
+/* TARJETA PRINCIPAL */
+#clientes .item {
+    padding: 6px !important;
+    margin: 5px 0 !important;
+    border-radius: 9px !important;
+}
+
+/* NOMBRE DEL CLIENTE */
+#clientes .item h3,
+#clientes .item h4 {
+    font-size: 13px !important;
+    margin: 3px 0 5px !important;
+}
+
+/* BOTONES WHATSAPP - LLAMAR - GESTIÓN */
+#clientes .item button {
+    min-height: 34px !important;
+    height: 36px !important;
+    padding: 4px !important;
+    font-size: 11px !important;
+    border-radius: 7px !important;
+}
+
+/* CUADROS DE INFORMACIÓN */
+#clientes .item div[style*="grid-template-columns"] {
+    gap: 4px !important;
+}
+
+#clientes .item div[style*="grid-template-columns"] > div {
+    padding: 5px !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+}
+
+/* TEXTOS Y VALORES */
+#clientes .item p {
+    margin: 2px 0 !important;
+    line-height: 1.15 !important;
+}
+
+#clientes .item span {
+    line-height: 1.15 !important;
+}
+
+/* FECHA DE DESEMBOLSO */
+#clientes .item div {
+    margin-top: 4px !important;
+    margin-bottom: 4px !important;
+}
+
+/* DÍAS - VENCIDAS - POR PAGAR */
+#clientes .item div[style*="grid-template-columns"] {
+    gap: 4px !important;
+}
+
+/* EVIDENCIAS */
+#clientes .item img {
+    max-height: 115px !important;
+    height: 115px !important;
+    width: 100% !important;
+    object-fit: cover !important;
+    border-radius: 7px !important;
+}
+
+/* BOTONES CAMBIAR FOTO */
+#clientes .item button {
+    min-height: 32px !important;
+}
+
+/* REDUCIR ESPACIOS ENTRE SECCIONES */
+#clientes .item * {
+    box-sizing: border-box !important;
+}
+
+}
 </style>
   
 </head>

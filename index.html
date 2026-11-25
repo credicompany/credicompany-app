@@ -3596,6 +3596,35 @@ getDoc
     }
 
 }
+
+/* ANALISIS FINANCIERO - COMPACTO CELULAR */
+@media screen and (max-width: 600px) {
+
+    #boxKpiFinanciero {
+        padding: 5px !important;
+        margin: 4px 0 !important;
+        min-height: 0 !important;
+        height: auto !important;
+        border-radius: 10px !important;
+        box-shadow: none !important;
+    }
+
+    #boxKpiFinanciero > div {
+        padding: 2px 0 !important;
+        margin: 0 !important;
+    }
+
+    #boxKpiFinanciero > div:first-child {
+        font-size: 20px !important;
+    }
+
+    #boxKpiFinanciero > div:nth-child(2) {
+        font-size: 12px !important;
+        line-height: 1.1 !important;
+    }
+
+}
+    
 </style>
   
 </head>
@@ -3698,9 +3727,10 @@ class="box"
 style="display:none"
 onclick="mostrar('kpiFinanciero')">
 
-<div style="font-size:28px;">🏦</div>
-
-<div>Análisis Financiero</div>
+<div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:5px 0;">
+    <span style="font-size:20px;">🏦</span>
+    <span style="font-size:13px;font-weight:600;">Análisis Financiero</span>
+</div>
 </div>
   <div
 id="boxResultadoMensual"

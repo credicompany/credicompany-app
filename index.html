@@ -3597,30 +3597,108 @@ getDoc
 
 }
 
-/* ANALISIS FINANCIERO - COMPACTO CELULAR */
+/* ==========================================
+   CREDICOMPANY - RESUMEN FINANCIERO COMPACTO
+   OPTIMIZADO PARA CELULAR
+========================================== */
+
 @media screen and (max-width: 600px) {
 
-    #boxKpiFinanciero {
-        padding: 5px !important;
+    /* CONTENEDOR COMPLETO */
+    #resumenFinanciero {
+        padding: 3px !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        font-size: 12px !important;
+        line-height: 1.2 !important;
+    }
+
+    /* TODOS LOS CUADROS Y TARJETAS */
+    #resumenFinanciero > div,
+    #resumenFinanciero div[style*="border"],
+    #resumenFinanciero .card,
+    #resumenFinanciero .box {
+        padding: 7px !important;
         margin: 4px 0 !important;
+        border-radius: 8px !important;
         min-height: 0 !important;
-        height: auto !important;
-        border-radius: 10px !important;
+        box-sizing: border-box !important;
         box-shadow: none !important;
     }
 
-    #boxKpiFinanciero > div {
-        padding: 2px 0 !important;
-        margin: 0 !important;
+    /* TODOS LOS TITULOS */
+    #resumenFinanciero h1,
+    #resumenFinanciero h2,
+    #resumenFinanciero h3,
+    #resumenFinanciero h4 {
+        font-size: 15px !important;
+        line-height: 1.15 !important;
+        margin: 5px 0 !important;
+        padding: 0 !important;
     }
 
-    #boxKpiFinanciero > div:first-child {
-        font-size: 20px !important;
-    }
-
-    #boxKpiFinanciero > div:nth-child(2) {
+    /* TEXTOS GENERALES */
+    #resumenFinanciero p,
+    #resumenFinanciero span,
+    #resumenFinanciero label {
         font-size: 12px !important;
-        line-height: 1.1 !important;
+        line-height: 1.2 !important;
+    }
+
+    /* CIFRAS E IMPORTES */
+    #resumenFinanciero strong,
+    #resumenFinanciero b {
+        font-size: 12px !important;
+        line-height: 1.15 !important;
+    }
+
+    /* ENCABEZADOS GRANDES */
+    #resumenFinanciero h1 {
+        font-size: 17px !important;
+    }
+
+    /* SEPARACIONES */
+    #resumenFinanciero hr {
+        margin: 5px 0 !important;
+    }
+
+    #resumenFinanciero p {
+        margin: 2px 0 !important;
+    }
+
+    /* TABLAS */
+    #resumenFinanciero table {
+        width: 100% !important;
+        font-size: 10px !important;
+        border-spacing: 0 !important;
+    }
+
+    #resumenFinanciero th,
+    #resumenFinanciero td {
+        padding: 4px 3px !important;
+        font-size: 10px !important;
+        line-height: 1.15 !important;
+    }
+
+    /* GRÁFICOS */
+    #resumenFinanciero canvas {
+        max-height: 220px !important;
+    }
+
+    /* BOTONES */
+    #resumenFinanciero button {
+        min-height: 28px !important;
+        height: auto !important;
+        padding: 4px 7px !important;
+        font-size: 10px !important;
+        border-radius: 6px !important;
+    }
+
+    /* FILAS Y COLUMNAS */
+    #resumenFinanciero div[style*="gap"] {
+        gap: 4px !important;
     }
 
 }

@@ -2318,13 +2318,14 @@ return `
 
 /* ==========================================
    KPI COBRANZA - CREDICOMPANY
+   DISEÑO COMPACTO
 ========================================== */
 
 #kpiCobranzaCompacto{
-    margin-top:12px !important;
-    padding:12px !important;
-    border-radius:14px !important;
-    box-shadow:0 2px 6px rgba(0,0,0,.04) !important;
+    margin-top:6px !important;
+    padding:8px !important;
+    border-radius:10px !important;
+    box-shadow:0 1px 4px rgba(0,0,0,.04) !important;
     box-sizing:border-box !important;
     width:100% !important;
 }
@@ -2336,29 +2337,31 @@ return `
     justify-content:space-between;
     align-items:center;
     flex-wrap:wrap;
-    gap:8px;
-    margin-bottom:12px;
+    gap:5px;
+    margin-bottom:8px !important;
 }
 
 #kpiCobranzaCompacto .cob-titulo{
-    margin:0;
+    margin:0 !important;
     color:#123F63;
-    font-size:16px;
+    font-size:13px !important;
     font-weight:700;
+    line-height:1.2 !important;
 }
 
 #kpiCobranzaCompacto .cob-subtitulo{
-    margin-top:3px;
+    margin-top:2px !important;
     color:#64748B;
-    font-size:11px;
+    font-size:9px !important;
+    line-height:1.2 !important;
 }
 
 #kpiCobranzaCompacto .cob-badge{
     background:#FEE2E2;
     color:#991B1B;
-    padding:5px 9px;
+    padding:3px 6px !important;
     border-radius:20px;
-    font-size:10px;
+    font-size:8px !important;
     font-weight:bold;
     white-space:nowrap;
 }
@@ -2367,51 +2370,56 @@ return `
 
 #kpiCobranzaCompacto .cob-grid{
     display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:8px;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:5px !important;
 }
 
 #kpiCobranzaCompacto .cob-card{
-    min-width:0;
-    padding:9px;
-    border-radius:10px;
-    box-sizing:border-box;
-    overflow:hidden;
+    min-width:0 !important;
+    width:100% !important;
+    padding:6px !important;
+    border-radius:7px !important;
+    box-sizing:border-box !important;
+    overflow:hidden !important;
 }
 
 #kpiCobranzaCompacto .cob-label{
-    font-size:10px;
-    line-height:1.3;
+    font-size:8px !important;
+    line-height:1.15 !important;
     color:#64748B;
+    margin:0 !important;
 }
 
 #kpiCobranzaCompacto .cob-value{
-    font-size:13px !important;
-    font-weight:700;
-    line-height:1.2;
-    margin-top:4px;
-    white-space:nowrap;
-    letter-spacing:-0.3px;
+    font-size:11px !important;
+    font-weight:700 !important;
+    line-height:1.15 !important;
+    margin-top:2px !important;
+    letter-spacing:-0.3px !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    display:block !important;
+    max-width:100% !important;
 }
 
 /* PROGRESO */
 
 #kpiCobranzaCompacto .cob-progreso{
-    margin-top:12px;
+    margin-top:7px !important;
 }
 
 #kpiCobranzaCompacto .cob-progreso-titulo{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    gap:6px;
-    font-size:11px;
+    gap:4px !important;
+    font-size:8px !important;
     font-weight:600;
-    margin-bottom:5px;
+    margin-bottom:3px !important;
 }
 
 #kpiCobranzaCompacto .cob-barra{
-    height:7px;
+    height:4px !important;
     background:#E5E7EB;
     border-radius:20px;
     overflow:hidden;
@@ -2426,116 +2434,87 @@ return `
 /* BASE INICIAL */
 
 #kpiCobranzaCompacto .cob-base{
-    margin-top:12px;
-    padding:9px;
+    margin-top:7px !important;
+    padding:6px !important;
     background:#F8FAFC;
-    border-radius:9px;
+    border-radius:7px !important;
     color:#64748B;
-    font-size:10px;
-    line-height:1.4;
+    font-size:8px !important;
+    line-height:1.25 !important;
 }
 
 /* ==========================================
-   CELULAR - KPI COBRANZA ULTRA COMPACTO
+   CELULAR
 ========================================== */
 
 @media(max-width:600px){
 
     #kpiCobranzaCompacto{
-        margin-top:6px !important;
+        margin:4px 0 !important;
         padding:6px !important;
-        border-radius:10px !important;
-        width:100% !important;
-        box-sizing:border-box !important;
+        border-radius:8px !important;
     }
 
-    /* ENCABEZADO */
-
     #kpiCobranzaCompacto .cob-header{
-        margin-bottom:7px !important;
-        gap:4px !important;
+        margin-bottom:5px !important;
+        gap:3px !important;
     }
 
     #kpiCobranzaCompacto .cob-titulo{
         font-size:12px !important;
-        line-height:1.2 !important;
     }
 
     #kpiCobranzaCompacto .cob-subtitulo{
         font-size:8px !important;
-        line-height:1.2 !important;
     }
 
     #kpiCobranzaCompacto .cob-badge{
-        font-size:8px !important;
-        padding:3px 5px !important;
+        font-size:7px !important;
+        padding:2px 5px !important;
     }
-
-    /* CUADROS */
 
     #kpiCobranzaCompacto .cob-grid{
         grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-        gap:5px !important;
+        gap:4px !important;
     }
 
     #kpiCobranzaCompacto .cob-card{
         padding:5px !important;
-        border-radius:7px !important;
-        min-width:0 !important;
-        width:100% !important;
-        box-sizing:border-box !important;
+        border-radius:6px !important;
     }
-
-    /* TEXTO DE LOS CUADROS */
 
     #kpiCobranzaCompacto .cob-label{
-        font-size:8px !important;
-        line-height:1.15 !important;
-        margin:0 !important;
+        font-size:7px !important;
+        line-height:1.1 !important;
     }
-
-    /* NÚMEROS - REDUCCIÓN FORZADA */
 
     #kpiCobranzaCompacto .cob-value{
-        font-size:9px !important;
-        font-weight:700 !important;
-        line-height:1.1 !important;
+        font-size:10px !important;
         margin-top:2px !important;
-        letter-spacing:-0.5px !important;
-        white-space:nowrap !important;
-        overflow:hidden !important;
-        text-overflow:clip !important;
-        display:block !important;
-        max-width:100% !important;
+        line-height:1.1 !important;
     }
 
-    /* BARRAS */
-
     #kpiCobranzaCompacto .cob-progreso{
-        margin-top:7px !important;
+        margin-top:5px !important;
     }
 
     #kpiCobranzaCompacto .cob-progreso-titulo{
-        font-size:8px !important;
-        margin-bottom:3px !important;
-        gap:3px !important;
+        font-size:7px !important;
+        margin-bottom:2px !important;
     }
 
     #kpiCobranzaCompacto .cob-barra{
-        height:4px !important;
+        height:3px !important;
     }
 
-    /* BASE INICIAL */
-
     #kpiCobranzaCompacto .cob-base{
-        margin-top:7px !important;
-        padding:6px !important;
-        font-size:8px !important;
-        line-height:1.25 !important;
+        margin-top:5px !important;
+        padding:5px !important;
+        font-size:7px !important;
+        line-height:1.2 !important;
     }
 
 }
-
 </style>
 
 

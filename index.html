@@ -1883,7 +1883,7 @@ getDoc
    KPI GERENCIAL - COMPACTACIÓN EXTREMA MÓVIL
 ========================================== */
 
-@media (max-width: 600px) {
+@media screen and (max-width: 600px), screen and (max-device-width: 600px) {
 
     /* CONTENEDOR */
     #kpi {
@@ -3255,51 +3255,69 @@ getDoc
 }
 
 
-    /* ==========================================
-   FIX DEFINITIVO - KPI GERENCIAL MOBILE
+   /* ==========================================
+   KPI GERENCIAL - COMPACTO
 ========================================== */
 
 @media screen and (max-width: 768px) {
 
+    #kpiResumen .kpi-resumen-gerencial {
+        margin-bottom: 5px !important;
+        width: 100% !important;
+        padding: 5px !important;
+        box-sizing: border-box !important;
+    }
+
+    #kpiResumen .kpi-resumen-encabezado {
+        margin-bottom: 5px !important;
+    }
+
+    #kpiResumen .kpi-resumen-encabezado div:first-child {
+        font-size: 13px !important;
+        line-height: 1.15 !important;
+    }
+
+    #kpiResumen .kpi-resumen-encabezado div:last-child {
+        font-size: 8px !important;
+    }
+
     #kpiResumen .kpi-resumen-grid {
         display: grid !important;
-        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         gap: 5px !important;
         width: 100% !important;
     }
 
     #kpiResumen .kpi-resumen-card {
         min-width: 0 !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        min-height: 65px !important;
-        height: auto !important;
-        padding: 5px 2px !important;
-        margin: 0 !important;
+        padding: 5px !important;
+        border-radius: 7px !important;
         box-sizing: border-box !important;
         overflow: hidden !important;
     }
 
-    #kpiResumen .kpi-resumen-card div {
-        margin: 1px 0 !important;
-        line-height: 1.1 !important;
-        overflow-wrap: anywhere !important;
-    }
-
-    #kpiResumen .kpi-resumen-card div:nth-child(1) {
-        font-size: 15px !important;
+    #kpiResumen .kpi-resumen-card div:first-child {
+        font-size: 14px !important;
+        margin-bottom: 1px !important;
     }
 
     #kpiResumen .kpi-resumen-card div:nth-child(2) {
         font-size: 8px !important;
+        line-height: 1.1 !important;
     }
 
     #kpiResumen .kpi-resumen-card div:nth-child(3) {
-        font-size: 16px !important;
+        font-size: 12px !important;
+        line-height: 1.1 !important;
+        overflow-wrap: anywhere !important;
+    }
+
+    #kpiResumen .kpi-resumen-card div:nth-child(4) {
+        font-size: 7px !important;
+        line-height: 1.1 !important;
     }
 
 }
-
 /* ==========================================
    CREDICOMPANY - COBRANZAS ULTRA COMPACTO
    SOLO CELULAR

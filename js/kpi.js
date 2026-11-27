@@ -2048,9 +2048,14 @@ resumen += generarCuadroDesembolsosAsesor(jsonGeneral);
 
 // ======================================================
 // KPI DE COBRANZA SLOPEZ
+// BLOQUE INDEPENDIENTE
 // ======================================================
 
-resumen += generarKpiCobranza();
+resumen += `
+<div id="kpiCobranzaWrapper">
+    ${generarKpiCobranza()}
+</div>
+`;
     
 localStorage.setItem(
 "rankingKPIHTML",
@@ -2084,22 +2089,37 @@ guardarGerencialFirebase(
 
 function generarKpiCobranza(){
 
-    // ==================================================
-    // CONFIGURACIÓN DE META
-    // ==================================================
+    // ==========================================
+// CONFIGURACIÓN DE COBRANZA
+// ==========================================
 
-    const USUARIO_COBRANZA = "SLOPEZ";
+const USUARIO_COBRANZA = "SLOPEZ";
 
-    const META_REDUCCION_SALDO = 3000;
+// LEER METAS DESDE EXCEL DE COBRANZA
+const metasCobranza = JSON.parse(
+    localStorage.getItem("metasCobranza") || "[]"
+);
 
-    const META_REDUCCION_OPERACIONES = 5;
+const metaUsuario = metasCobranza.find(m =>
+    String(m["Usuario"] || "")
+        .trim()
+        .toUpperCase() === USUARIO_COBRANZA
+);
 
-    // BASE INICIAL DE OCTUBRE
+// METAS
+const META_REDUCCION_SALDO =
+    Number(metaUsuario?.["Meta Reduccion Saldo"]) || 3000;
 
-    const SALDO_INICIAL = 88245;
+const META_REDUCCION_OPERACIONES =
+    Number(metaUsuario?.["Meta Reduccion Operaciones"]) || 5;
 
-    const OPERACIONES_INICIALES = 70;
+// BASE INICIAL
+const SALDO_INICIAL =
+    Number(metaUsuario?.["Saldo Inicial"]) || 88245;
 
+const OPERACIONES_INICIALES =
+    Number(metaUsuario?.["Operaciones Iniciales"]) || 70;
+    
 
     // ==================================================
     // LEER DATA GENERAL
@@ -5214,8 +5234,8 @@ if (
 }
 
 // ======================================================
-// CARGAR METAS DE COBRANZA - LECTURA DIRECTA
-// EXCEL CREDICOMPANY
+// CARGAR METAS DE COBRANZA
+// ACTUALIZA EXCLUSIVAMENTE KPI COBRANZA SLOPEZ
 // ======================================================
 
 function cargarMetasCobranza(){
@@ -5242,7 +5262,7 @@ function cargarMetasCobranza(){
 
             const hoja = wb.Sheets[wb.SheetNames[0]];
 
-            const filas = XLSX.utils.sheet_to_json(
+            const matriz = XLSX.utils.sheet_to_json(
                 hoja,
                 {
                     header:1,
@@ -5252,29 +5272,144 @@ function cargarMetasCobranza(){
             );
 
             // ==========================================
-            // EXCEL REAL:
-            // COLUMNA B = COBRADOR
-            // C = REDUCCIÓN SALDO
-            // D = REDUCCIÓN OPERACIONES
-            // E = MORA OCTUBRE
-            // F = CLIENTES OCTUBRE
+            // NORMALIZAR ENCABEZADOS
             // ==========================================
+
+            const normalizar = texto => {
+
+                return String(texto || "")
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g,"")
+                    .replace(/\s+/g," ")
+                    .trim()
+                    .toUpperCase();
+
+            };
+
+            // ==========================================
+            // BUSCAR FILA DE ENCABEZADOS
+            // ==========================================
+
+            let filaEncabezado = -1;
+
+            for(let i = 0; i < Math.min(matriz.length,30); i++){
+
+                const fila = matriz[i].map(normalizar);
+
+                const tieneUsuario =
+                    fila.some(v =>
+                        v === "USUARIO" ||
+                        v === "COBRADOR" ||
+                        v === "ASESOR"
+                    );
+
+                const tieneMetaSaldo =
+                    fila.some(v =>
+                        v.includes("META REDUCCION SALDO")
+                    );
+
+                const tieneMetaOperaciones =
+                    fila.some(v =>
+                        v.includes("META REDUCCION OPERACIONES")
+                    );
+
+                const tieneSaldoInicial =
+                    fila.some(v =>
+                        v.includes("SALDO INICIAL")
+                    );
+
+                const tieneOperacionesIniciales =
+                    fila.some(v =>
+                        v.includes("OPERACIONES INICIALES")
+                    );
+
+                if(
+                    tieneUsuario &&
+                    tieneMetaSaldo &&
+                    tieneMetaOperaciones &&
+                    tieneSaldoInicial &&
+                    tieneOperacionesIniciales
+                ){
+
+                    filaEncabezado = i;
+                    break;
+
+                }
+
+            }
+
+            if(filaEncabezado === -1){
+
+                alert(
+                    "❌ El Excel no tiene el formato correcto de metas de cobranza.\n\n" +
+                    "Debe contener:\n" +
+                    "Usuario\n" +
+                    "Meta Reduccion Saldo\n" +
+                    "Meta Reduccion Operaciones\n" +
+                    "Saldo Inicial\n" +
+                    "Operaciones Iniciales"
+                );
+
+                console.error(
+                    "ENCABEZADOS DETECTADOS:",
+                    matriz
+                );
+
+                return;
+
+            }
+
+            // ==========================================
+            // LEER EXCEL POR ENCABEZADOS
+            // ==========================================
+
+            const filas = XLSX.utils.sheet_to_json(
+                hoja,
+                {
+                    range:filaEncabezado,
+                    defval:"",
+                    raw:true
+                }
+            );
 
             const metas = [];
 
-            for(let i = 1; i < filas.length; i++){
+            filas.forEach(fila => {
 
-                const fila = filas[i];
+                const claves = Object.keys(fila);
 
-                const usuario = String(
-                    fila[1] || ""
-                )
-                .trim()
-                .toUpperCase();
+                const buscarClave = textoBuscado => {
 
-                if(!usuario){
-                    continue;
-                }
+                    return claves.find(clave =>
+                        normalizar(clave).includes(
+                            normalizar(textoBuscado)
+                        )
+                    );
+
+                };
+
+                const claveUsuario =
+                    claves.find(clave => {
+                        const n = normalizar(clave);
+
+                        return (
+                            n === "USUARIO" ||
+                            n === "COBRADOR" ||
+                            n === "ASESOR"
+                        );
+                    });
+
+                const claveMetaSaldo =
+                    buscarClave("META REDUCCION SALDO");
+
+                const claveMetaOperaciones =
+                    buscarClave("META REDUCCION OPERACIONES");
+
+                const claveSaldoInicial =
+                    buscarClave("SALDO INICIAL");
+
+                const claveOperacionesIniciales =
+                    buscarClave("OPERACIONES INICIALES");
 
                 const numero = valor => {
 
@@ -5284,53 +5419,65 @@ function cargarMetasCobranza(){
 
                     return Number(
                         String(valor)
-                        .replace(/,/g,"")
-                        .replace(/S\/?/gi,"")
-                        .trim()
+                            .replace(/,/g,"")
+                            .replace(/S\/?/gi,"")
+                            .trim()
                     ) || 0;
 
                 };
 
+                const usuario = String(
+                    fila[claveUsuario] || ""
+                )
+                .trim()
+                .toUpperCase();
+
+                if(!usuario){
+                    return;
+                }
+
                 metas.push({
 
-                    "Usuario": usuario,
+                    "Usuario":usuario,
 
                     "Meta Reduccion Saldo":
-                        numero(fila[2]),
+                        numero(fila[claveMetaSaldo]),
 
                     "Meta Reduccion Operaciones":
-                        numero(fila[3]),
+                        numero(fila[claveMetaOperaciones]),
 
                     "Saldo Inicial":
-                        numero(fila[4]),
+                        numero(fila[claveSaldoInicial]),
 
                     "Operaciones Iniciales":
-                        numero(fila[5]),
-
-                    "Dias Mora": 31
+                        numero(fila[claveOperacionesIniciales])
 
                 });
 
-            }
+            });
 
             // ==========================================
-            // VALIDAR INFORMACIÓN
+            // VALIDAR USUARIO SLOPEZ
             // ==========================================
 
-            if(metas.length === 0){
+            const metaSLOPEZ = metas.find(m =>
+                m["Usuario"] === "SLOPEZ"
+            );
+
+            if(!metaSLOPEZ){
 
                 alert(
-                    "❌ No se encontraron cobradores en el Excel."
+                    "❌ El archivo no contiene metas para SLOPEZ."
                 );
 
-                console.log("FILAS LEÍDAS:", filas);
+                console.error("METAS LEÍDAS:",metas);
 
                 return;
 
             }
 
             // ==========================================
-            // GUARDAR METAS
+            // GUARDAR METAS DE COBRANZA
             // ==========================================
 
             localStorage.setItem(
@@ -5349,29 +5496,49 @@ function cargarMetasCobranza(){
             );
 
             // ==========================================
-            // CONFIRMAR CARGA
+            // ACTUALIZAR SOLO KPI COBRANZA
             // ==========================================
 
+            const contenedor =
+                document.getElementById("kpiCobranzaWrapper");
+
+            if(contenedor){
+
+                contenedor.innerHTML =
+                    generarKpiCobranza();
+
+            }else{
+
+                console.warn(
+                    "No se encontró kpiCobranzaWrapper. " +
+                    "Primero cargue o actualice el KPI."
+                );
+
+            }
+
+            // ==========================================
+            // CONFIRMAR
+            // ==========================================
+
+            alert(
+                "✅ METAS DE COBRANZA CARGADAS\n\n" +
+                "Usuario: " + metaSLOPEZ["Usuario"] +
+                "\nMeta reducción saldo: S/ " +
+                metaSLOPEZ["Meta Reduccion Saldo"].toLocaleString("es-PE") +
+                "\nMeta reducción operaciones: " +
+                metaSLOPEZ["Meta Reduccion Operaciones"] +
+                "\nSaldo inicial: S/ " +
+                metaSLOPEZ["Saldo Inicial"].toLocaleString("es-PE") +
+                "\nOperaciones iniciales: " +
+                metaSLOPEZ["Operaciones Iniciales"] +
+                "\n\n📉 Solo se actualizó el KPI de Cobranza."
+            );
+
             console.log(
-                "📉 METAS DE COBRANZA:",
+                "✅ METAS DE COBRANZA:",
                 metas
             );
 
-            alert(
-                "✅ METAS DE COBRANZA CARGADAS CORRECTAMENTE\n\n" +
-                "Cobradores detectados: " + metas.length +
-                "\n\nUsuario: " + metas[0]["Usuario"] +
-                "\nMeta reducción saldo: S/ " +
-                metas[0]["Meta Reduccion Saldo"].toLocaleString("es-PE") +
-                "\nMeta reducción operaciones: " +
-                metas[0]["Meta Reduccion Operaciones"] +
-                "\nSaldo inicial: S/ " +
-                metas[0]["Saldo Inicial"].toLocaleString("es-PE") +
-                "\nOperaciones iniciales: " +
-                metas[0]["Operaciones Iniciales"]
-            );
-
-            // LIMPIAR INPUT
             input.value = "";
 
         }catch(error){
@@ -5382,7 +5549,7 @@ function cargarMetasCobranza(){
             );
 
             alert(
-                "❌ Error al procesar el Excel de metas de cobranza.\n\n" +
+                "❌ Error al procesar las metas de cobranza.\n\n" +
                 error.message
             );
 

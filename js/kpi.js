@@ -1852,10 +1852,12 @@ const mora1a8 = Number(mora1a8Asesor[asesor] || 0);
         totalMetaClientes += metaClientes;
         totalClientesHistorico += clientesHistoricoMes;
         totalClientesSiguiente += clientesMesActualAsesor;
-        totalMoraJulio += moraAnterior;
-        totalMoraAgosto += moraActual;
-        totalMoraAgosto31Mas += mora31Mas;
-        totalMoraAgosto1Mas += mora1Mas;
+       totalMoraJulio += moraAnterior;
+
+// Totales separados por rango
+totalMoraAgosto += mora9a30;
+totalMoraAgosto31Mas += mora31Mas;
+totalMoraAgosto1Mas += mora1a8;
 
         if(Number(temAnterior) > 0){
             sumaTemJulio += Number(temAnterior);

@@ -1354,8 +1354,8 @@ cursor:pointer;
 <th>VARIACIÓN TEM</th>
 <th>MORA ${mesAnterior.toUpperCase()}</th>
 <th>MORA ${mesActual.toUpperCase()} 31+</th>
-<th>MORA ${mesActual.toUpperCase()} 9+</th>
-<th>MORA ${mesActual.toUpperCase()} 1+</th>
+<th>MORA ${mesActual.toUpperCase()} 9-30</th>
+<th>MORA ${mesActual.toUpperCase()} 1-8</th>
 <th>🚦</th>
 
 </tr>
@@ -1366,9 +1366,9 @@ cursor:pointer;
 // MORA ACTUAL (TODA LA CARTERA)
 // ==========================
 
-let moraActualAsesor = {};
+let mora9a30Asesor = {};
 let mora31MasAsesor = {};
-let mora1MasAsesor = {};
+let mora1a8Asesor = {};
 // ==========================================
 // CLIENTES: HISTÓRICO VS SIGUIENTE PERÍODO
 // ==========================================
@@ -1493,32 +1493,46 @@ jsonGeneral.forEach(c=>{
     let saldo =
     parseFloat(c["Saldo Capital"] || 0) || 0;
 
-  if(!moraActualAsesor[asesor]){
-    moraActualAsesor[asesor] = 0;
+ // ==========================================
+// INICIALIZAR MORA POR RANGO
+// ==========================================
+
+if(!mora9a30Asesor[asesor]){
+    mora9a30Asesor[asesor] = 0;
 }
 
 if(!mora31MasAsesor[asesor]){
     mora31MasAsesor[asesor] = 0;
 }
 
-if(!mora1MasAsesor[asesor]){
-    mora1MasAsesor[asesor] = 0;
+if(!mora1a8Asesor[asesor]){
+    mora1a8Asesor[asesor] = 0;
 }
 
-// Mora de 9 días o más
-if(atraso >= 9){
-    moraActualAsesor[asesor] += saldo;
+// ==========================================
+// MORA DE 1 A 8 DÍAS
+// ==========================================
+
+if(atraso >= 1 && atraso <= 8){
+    mora1a8Asesor[asesor] += saldo;
 }
 
-// Mora de 31 días o más
-if(atraso > 30){
+// ==========================================
+// MORA DE 9 A 30 DÍAS
+// ==========================================
+
+if(atraso >= 9 && atraso <= 30){
+    mora9a30Asesor[asesor] += saldo;
+}
+
+// ==========================================
+// MORA DE 31 DÍAS A MÁS
+// ==========================================
+
+if(atraso >= 31){
     mora31MasAsesor[asesor] += saldo;
 }
-
-// Mora de 1 día o más
-if(atraso >= 1){
-    mora1MasAsesor[asesor] += saldo;
-}
+    
 });   
  // =========================================
 // TOTALES EMPRESA
@@ -1754,10 +1768,9 @@ const colorVariacionTEM =
         }
 
         // Mora actual desde la cartera/producción actual.
-        const moraActual = Number(moraActualAsesor[asesor] || 0);
-        const mora31Mas = Number(mora31MasAsesor[asesor] || 0);
-        const mora1Mas = Number(mora1MasAsesor[asesor] || 0);
-
+        const mora9a30 = Number(mora9a30Asesor[asesor] || 0);
+const mora31Mas = Number(mora31MasAsesor[asesor] || 0);
+const mora1a8 = Number(mora1a8Asesor[asesor] || 0);
         // Metas.
         const metaDesembolso =
             Number(
@@ -1825,8 +1838,8 @@ const colorVariacionTEM =
 </td>
 <td>S/${Math.round(moraAnterior).toLocaleString("es-PE")}</td>
 <td style="font-weight:bold;color:#991B1B;">S/${Math.round(mora31Mas).toLocaleString("es-PE")}</td>
-<td style="font-weight:bold;color:#C43D3D;">S/${Math.round(moraActual).toLocaleString("es-PE")}</td>
-<td style="font-weight:bold;color:#C43D3D;">S/${Math.round(mora1Mas).toLocaleString("es-PE")}</td>
+<td style="font-weight:bold;color:#C43D3D;">S/${Math.round(mora9a30).toLocaleString("es-PE")}</td>
+<td style="font-weight:bold;color:#D97706;">S/${Math.round(mora1a8).toLocaleString("es-PE")}</td>
 <td>${colorEstado}</td>
 </tr>
 `;

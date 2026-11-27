@@ -5180,15 +5180,15 @@ function cargarMetasCobranza(){
                     v.includes("ASESOR")
                 );
 
-                const tieneMetaSaldo = fila.some(v =>
-                    v.includes("META") &&
-                    v.includes("SALDO")
-                );
+               const tieneMetaSaldo = fila.some(v =>
+    v.includes("REDUCCION") &&
+    v.includes("SALDO")
+);
 
-                const tieneMetaOperaciones = fila.some(v =>
-                    v.includes("META") &&
-                    v.includes("OPERACIONES")
-                );
+const tieneMetaOperaciones = fila.some(v =>
+    v.includes("REDUCCION") &&
+    v.includes("OPERACIONES")
+);
 
                 if(
                     tieneUsuario &&

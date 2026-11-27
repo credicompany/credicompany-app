@@ -5289,92 +5289,126 @@ function cargarMetasCobranza(){
             };
 
             // ==========================================
-            // BUSCAR FILA DE ENCABEZADOS
-            // ==========================================
+// DETECTAR ENCABEZADOS DEL EXCEL REAL
+// ==========================================
 
-            let filaEncabezado = -1;
+let filaEncabezado = -1;
 
-            for(let i = 0; i < Math.min(matriz.length,30); i++){
+let columnas = {};
 
-                const fila = matriz[i].map(normalizar);
+for(let i = 0; i < Math.min(matriz.length,30); i++){
 
-                const tieneUsuario =
-                    fila.some(v =>
-                        v === "USUARIO" ||
-                        v === "COBRADOR" ||
-                        v === "ASESOR"
-                    );
+    const fila = matriz[i].map(normalizar);
 
-                const tieneMetaSaldo =
-                    fila.some(v =>
-                        v.includes("META REDUCCION SALDO")
-                    );
+    const idxUsuario = fila.findIndex(v =>
+        v.includes("COBRADOR") ||
+        v === "USUARIO" ||
+        v === "ASESOR"
+    );
 
-                const tieneMetaOperaciones =
-                    fila.some(v =>
-                        v.includes("META REDUCCION OPERACIONES")
-                    );
+    const idxMetaSaldo = fila.findIndex(v =>
+        v.includes("REDUCCION SALDO VENCIDO") ||
+        v.includes("META REDUCCION SALDO")
+    );
 
-                const tieneSaldoInicial =
-                    fila.some(v =>
-                        v.includes("SALDO INICIAL")
-                    );
+    const idxMetaOperaciones = fila.findIndex(v =>
+        v.includes("REDUCCION OPERACIONES VENCIDAS") ||
+        v.includes("META REDUCCION OPERACIONES")
+    );
 
-                const tieneOperacionesIniciales =
-                    fila.some(v =>
-                        v.includes("OPERACIONES INICIALES")
-                    );
+    const idxSaldoInicial = fila.findIndex(v =>
+        v.includes("MORA OCTUBRE") ||
+        v.includes("SALDO INICIAL")
+    );
 
-                if(
-                    tieneUsuario &&
-                    tieneMetaSaldo &&
-                    tieneMetaOperaciones &&
-                    tieneSaldoInicial &&
-                    tieneOperacionesIniciales
-                ){
+    const idxOperacionesIniciales = fila.findIndex(v =>
+        v.includes("CLIENTES OCTUBRE") ||
+        v.includes("OPERACIONES INICIALES")
+    );
 
-                    filaEncabezado = i;
-                    break;
+    if(
+        idxUsuario !== -1 &&
+        idxMetaSaldo !== -1 &&
+        idxMetaOperaciones !== -1 &&
+        idxSaldoInicial !== -1 &&
+        idxOperacionesIniciales !== -1
+    ){
 
-                }
+        filaEncabezado = i;
 
-            }
+        columnas = {
+            usuario:idxUsuario,
+            metaSaldo:idxMetaSaldo,
+            metaOperaciones:idxMetaOperaciones,
+            saldoInicial:idxSaldoInicial,
+            operacionesIniciales:idxOperacionesIniciales
+        };
 
-            if(filaEncabezado === -1){
+        break;
+    }
+}
 
-                alert(
-                    "❌ El Excel no tiene el formato correcto de metas de cobranza.\n\n" +
-                    "Debe contener:\n" +
-                    "Usuario\n" +
-                    "Meta Reduccion Saldo\n" +
-                    "Meta Reduccion Operaciones\n" +
-                    "Saldo Inicial\n" +
-                    "Operaciones Iniciales"
-                );
+if(filaEncabezado === -1){
 
-                console.error(
-                    "ENCABEZADOS DETECTADOS:",
-                    matriz
-                );
+    alert(
+        "❌ No se reconocieron los encabezados del Excel de metas de cobranza."
+    );
 
-                return;
+    console.error("ENCABEZADOS:",matriz);
 
-            }
+    return;
+}
 
-            // ==========================================
-            // LEER EXCEL POR ENCABEZADOS
-            // ==========================================
+// ==========================================
+// LEER FILAS DIRECTAMENTE POR POSICIÓN
+// ==========================================
 
-            const filas = XLSX.utils.sheet_to_json(
-                hoja,
-                {
-                    range:filaEncabezado,
-                    defval:"",
-                    raw:true
-                }
-            );
+const metas = [];
 
-            const metas = [];
+for(let i = filaEncabezado + 1; i < matriz.length; i++){
+
+    const fila = matriz[i];
+
+    const usuario = String(
+        fila[columnas.usuario] || ""
+    ).trim().toUpperCase();
+
+    if(!usuario){
+        continue;
+    }
+
+    const numero = valor => {
+
+        if(valor == null || valor === ""){
+            return 0;
+        }
+
+        return Number(
+            String(valor)
+                .replace(/,/g,"")
+                .replace(/S\/?/gi,"")
+                .trim()
+        ) || 0;
+    };
+
+    metas.push({
+
+        "Usuario":usuario,
+
+        "Meta Reduccion Saldo":
+            numero(fila[columnas.metaSaldo]),
+
+        "Meta Reduccion Operaciones":
+            numero(fila[columnas.metaOperaciones]),
+
+        "Saldo Inicial":
+            numero(fila[columnas.saldoInicial]),
+
+        "Operaciones Iniciales":
+            numero(fila[columnas.operacionesIniciales])
+
+    });
+}
 
             filas.forEach(fila => {
 

@@ -2386,11 +2386,12 @@ return `
 }
 
 #kpiCobranzaCompacto .cob-value{
-    font-size:16px;
+    font-size:13px !important;
     font-weight:700;
     line-height:1.2;
     margin-top:4px;
-    overflow-wrap:anywhere;
+    white-space:nowrap;
+    letter-spacing:-0.3px;
 }
 
 /* PROGRESO */
@@ -2467,9 +2468,12 @@ return `
     }
 
     #kpiCobranzaCompacto .cob-value{
-        font-size:14px;
-        margin-top:4px;
-    }
+    font-size:clamp(10px, 3.2vw, 12px) !important;
+    margin-top:3px !important;
+    white-space:nowrap !important;
+    letter-spacing:-0.5px !important;
+    line-height:1.15 !important;
+}
 
     #kpiCobranzaCompacto .cob-titulo{
         font-size:14px;

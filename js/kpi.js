@@ -3902,9 +3902,9 @@ document.getElementById(
 }
 
 .bono-avatar {
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
     border-radius: 50%;
     overflow: hidden;
     background: #24547b;
@@ -3912,7 +3912,7 @@ document.getElementById(
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 800;
 }
 
@@ -3929,7 +3929,7 @@ document.getElementById(
 }
 
 .bono-nombre {
-    font-size: 9px;
+    font-size: 8px;
     font-weight: 800;
     color: #123B63;
     white-space: nowrap;
@@ -3938,7 +3938,7 @@ document.getElementById(
 }
 
 .bono-monto {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 900;
     color: #64748b;
     margin-top: 2px;
@@ -3950,7 +3950,7 @@ document.getElementById(
 }
 
 .bono-etiqueta {
-    font-size: 8px;
+    font-size: 7px;
     color: #64748b;
     margin-top: 1px;
 }
@@ -3969,17 +3969,17 @@ document.getElementById(
     }
 
     .bono-avatar {
-        width: 30px;
-        height: 30px;
-        min-width: 30px;
-    }
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+}
 
     .bono-nombre {
-        font-size: 8px;
+        font-size: 7px;
     }
 
     .bono-monto {
-        font-size: 12px;
+        font-size: 11px;
     }
 
     .bono-etiqueta {

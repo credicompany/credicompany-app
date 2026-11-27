@@ -5120,6 +5120,310 @@ if (
     lector.readAsArrayBuffer(archivo);
 
 }
+
+// ======================================================
+// CARGAR METAS DE COBRANZA
+// ======================================================
+
+function cargarMetasCobranza(){
+
+    const archivo = document.getElementById(
+        "excelMetasCobranza"
+    ).files[0];
+
+    if(!archivo){
+        alert("Seleccione el archivo de metas de cobranza.");
+        return;
+    }
+
+    const lector = new FileReader();
+
+    lector.onload = function(e){
+
+        try{
+
+            const data = new Uint8Array(e.target.result);
+
+            const wb = XLSX.read(data,{
+                type:"array"
+            });
+
+            const hoja = wb.Sheets[wb.SheetNames[0]];
+
+            const matriz = XLSX.utils.sheet_to_json(
+                hoja,
+                {
+                    header:1,
+                    defval:"",
+                    raw:true
+                }
+            );
+
+            // NORMALIZAR TEXTO
+            const normalizar = texto =>
+                String(texto || "")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g,"")
+                .replace(/\s+/g," ")
+                .trim()
+                .toUpperCase();
+
+            // DETECTAR ENCABEZADOS
+            let filaEncabezado = -1;
+
+            for(let i = 0; i < Math.min(matriz.length,30); i++){
+
+                const fila = matriz[i].map(normalizar);
+
+                const tieneUsuario = fila.some(v =>
+                    v.includes("USUARIO") ||
+                    v.includes("ASESOR")
+                );
+
+                const tieneMetaSaldo = fila.some(v =>
+                    v.includes("META") &&
+                    v.includes("SALDO")
+                );
+
+                const tieneMetaOperaciones = fila.some(v =>
+                    v.includes("META") &&
+                    v.includes("OPERACIONES")
+                );
+
+                if(
+                    tieneUsuario &&
+                    tieneMetaSaldo &&
+                    tieneMetaOperaciones
+                ){
+
+                    filaEncabezado = i;
+                    break;
+
+                }
+
+            }
+
+            if(filaEncabezado === -1){
+
+                alert(
+                    "❌ No se encontraron los encabezados de metas de cobranza."
+                );
+
+                console.error(
+                    "CONTENIDO DEL EXCEL:",
+                    matriz.slice(0,20)
+                );
+
+                return;
+
+            }
+
+            // LEER INFORMACIÓN DEL EXCEL
+            const filasExcel = XLSX.utils.sheet_to_json(
+                hoja,
+                {
+                    range:filaEncabezado,
+                    defval:"",
+                    raw:true
+                }
+            );
+
+            // BUSCAR COLUMNAS
+            const buscarClave = (claves, patrones) => {
+
+                return claves.find(clave => {
+
+                    const nombre = normalizar(clave);
+
+                    return patrones.some(patron =>
+                        nombre.includes(patron)
+                    );
+
+                });
+
+            };
+
+            // CONVERTIR NÚMEROS
+            const convertirNumero = valor => {
+
+                if(valor === null || valor === undefined || valor === ""){
+                    return 0;
+                }
+
+                return Number(
+                    String(valor)
+                    .replace(/,/g,"")
+                    .replace(/S\/?/gi,"")
+                    .trim()
+                ) || 0;
+
+            };
+
+            // PROCESAR METAS
+            const metas = filasExcel.map(fila => {
+
+                const claves = Object.keys(fila);
+
+                const claveUsuario = buscarClave(
+                    claves,
+                    ["USUARIO","ASESOR"]
+                );
+
+                const claveMetaSaldo = buscarClave(
+                    claves,
+                    ["META REDUCCION SALDO","REDUCCION SALDO"]
+                );
+
+                const claveMetaOperaciones = buscarClave(
+                    claves,
+                    ["META REDUCCION OPERACIONES","REDUCCION OPERACIONES"]
+                );
+
+                const claveSaldoInicial = buscarClave(
+                    claves,
+                    ["SALDO INICIAL"]
+                );
+
+                const claveOperacionesIniciales = buscarClave(
+                    claves,
+                    ["OPERACIONES INICIALES"]
+                );
+
+                const claveDiasMora = buscarClave(
+                    claves,
+                    ["DIAS MORA","DIAS DE MORA","DIAS ATRASO"]
+                );
+
+                return {
+
+                    "Usuario":
+                        String(
+                            fila[claveUsuario] || ""
+                        )
+                        .trim()
+                        .toUpperCase(),
+
+                    "Meta Reduccion Saldo":
+                        convertirNumero(
+                            fila[claveMetaSaldo]
+                        ),
+
+                    "Meta Reduccion Operaciones":
+                        convertirNumero(
+                            fila[claveMetaOperaciones]
+                        ),
+
+                    "Saldo Inicial":
+                        convertirNumero(
+                            fila[claveSaldoInicial]
+                        ),
+
+                    "Operaciones Iniciales":
+                        convertirNumero(
+                            fila[claveOperacionesIniciales]
+                        ),
+
+                    "Dias Mora":
+                        convertirNumero(
+                            fila[claveDiasMora]
+                        ) || 31
+
+                };
+
+            }).filter(m => m["Usuario"] !== "");
+
+            // VALIDAR DATA
+            if(!metas.length){
+
+                alert(
+                    "❌ El Excel no contiene usuarios válidos."
+                );
+
+                return;
+
+            }
+
+            // GUARDAR METAS DE COBRANZA
+            localStorage.setItem(
+                "metasCobranza",
+                JSON.stringify(metas)
+            );
+
+            localStorage.setItem(
+                "nombreMetaCobranza",
+                archivo.name
+            );
+
+            localStorage.setItem(
+                "fechaMetaCobranza",
+                new Date().toLocaleString("es-PE")
+            );
+
+            // ACTUALIZAR KPI SI EXISTE PRODUCCIÓN
+            const produccionGuardada = JSON.parse(
+                localStorage.getItem("produccionKPI") || "[]"
+            );
+
+            if(
+                produccionGuardada.length > 0 &&
+                typeof generarKPI === "function"
+            ){
+
+                generarKPI(produccionGuardada);
+
+            }
+
+            // INFORMACIÓN EN CONSOLA
+            console.log(
+                "======================================"
+            );
+
+            console.log(
+                "📉 METAS DE COBRANZA CARGADAS"
+            );
+
+            console.log(
+                metas
+            );
+
+            console.log(
+                "📁 Archivo:",
+                archivo.name
+            );
+
+            console.log(
+                "📅 Fecha:",
+                new Date().toLocaleString("es-PE")
+            );
+
+            console.log(
+                "======================================"
+            );
+
+            alert(
+                "✅ METAS DE COBRANZA CARGADAS CORRECTAMENTE\n\n" +
+                "Usuarios detectados: " + metas.length +
+                "\nArchivo: " + archivo.name
+            );
+
+        }catch(error){
+
+            console.error(
+                "❌ ERROR CARGANDO METAS DE COBRANZA:",
+                error
+            );
+
+            alert(
+                "❌ Error al procesar el Excel de metas de cobranza."
+            );
+
+        }
+
+    };
+
+    lector.readAsArrayBuffer(archivo);
+
+}
 // ==========================================
 // CARGAR PRODUCCIÓN KPI
 // ==========================================

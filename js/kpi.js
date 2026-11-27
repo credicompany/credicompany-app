@@ -5468,7 +5468,10 @@ S/ ${formatoSoles(totalBonosSemana)}
  // ======================================
 // GENERAR TARJETAS COMPACTAS DE BONOS
 // ======================================
-
+// OBTENER USUARIOS Y SUS FOTOGRAFÍAS
+const usuariosBonos = JSON.parse(
+    localStorage.getItem("usuarios")
+) || [];
 const tarjetasBonosHTML = tarjetasBonos
     .slice()
     .sort((a, b) => b.bonoTotal - a.bonoTotal)
@@ -5476,21 +5479,37 @@ const tarjetasBonosHTML = tarjetasBonos
 
         const nombre = String(item.asesor || "").trim();
 
-        const iniciales = nombre
-            .split(/\s+/)
-            .map(p => p.charAt(0))
-            .join("")
-            .substring(0, 2)
-            .toUpperCase();
+// BUSCAR PERFIL DEL COLABORADOR
+const usuarioPerfil = usuariosBonos.find(u =>
+    String(u.user || u.usuario || u.nombre || "")
+        .trim()
+        .toUpperCase() === nombre.toUpperCase()
+);
 
-        const tieneBono = item.bonoTotal > 0;
+// OBTENER FOTO DEL PERFIL
+const foto = usuarioPerfil?.foto || "";
+
+// INICIALES SI NO TIENE FOTO
+const iniciales = nombre
+    .split(/\s+/)
+    .map(p => p.charAt(0))
+    .join("")
+    .substring(0, 2)
+    .toUpperCase();
+
+const tieneBono = item.bonoTotal > 0;
 
         return `
             <div class="bono-card-compacta ${tieneBono ? "ganado" : ""}">
 
-                <div class="bono-avatar">
-                    ${iniciales}
-                </div>
+               <div class="bono-avatar">
+    ${
+        foto
+        ? `<img src="${foto}" alt="${nombre}"
+             onerror="this.style.display='none'">`
+        : iniciales
+    }
+</div>
 
                 <div class="bono-info">
 

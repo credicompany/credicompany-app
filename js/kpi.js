@@ -1837,9 +1837,47 @@ const mora1a8 = Number(mora1a8Asesor[asesor] || 0);
     ${variacionTEM > 0 ? "+" : ""}${variacionTEM.toFixed(1)}
 </td>
 <td>S/${Math.round(moraAnterior).toLocaleString("es-PE")}</td>
-<td style="font-weight:bold;color:#991B1B;">S/${Math.round(mora31Mas).toLocaleString("es-PE")}</td>
-<td style="font-weight:bold;color:#C43D3D;">S/${Math.round(mora9a30).toLocaleString("es-PE")}</td>
-<td style="font-weight:bold;color:#D97706;">S/${Math.round(mora1a8).toLocaleString("es-PE")}</td>
+<td
+    style="
+        font-weight:bold;
+        color:#991B1B;
+        cursor:pointer;
+        text-decoration:underline;
+        text-underline-offset:3px;
+    "
+    title="Ver clientes con mora de 31 días a más"
+    onclick="mostrarMorososKPI('${asesor.replace(/'/g, "\\'")}', '31+')"
+>
+    S/${Math.round(mora31Mas).toLocaleString("es-PE")}
+</td>
+
+<td
+    style="
+        font-weight:bold;
+        color:#C43D3D;
+        cursor:pointer;
+        text-decoration:underline;
+        text-underline-offset:3px;
+    "
+    title="Ver clientes con mora de 9 a 30 días"
+    onclick="mostrarMorososKPI('${asesor.replace(/'/g, "\\'")}', '9-30')"
+>
+    S/${Math.round(mora9a30).toLocaleString("es-PE")}
+</td>
+
+<td
+    style="
+        font-weight:bold;
+        color:#D97706;
+        cursor:pointer;
+        text-decoration:underline;
+        text-underline-offset:3px;
+    "
+    title="Ver clientes con mora de 1 a 8 días"
+    onclick="mostrarMorososKPI('${asesor.replace(/'/g, "\\'")}', '1-8')"
+>
+    S/${Math.round(mora1a8).toLocaleString("es-PE")}
+</td>
 <td>${colorEstado}</td>
 </tr>
 `;
@@ -2084,6 +2122,288 @@ guardarGerencialFirebase(
 
 }
 
+// ======================================================
+// DETALLE DE CLIENTES MOROSOS - KPI GERENCIAL
+// SOLO MUESTRA NOMBRES Y APELLIDOS
+// ======================================================
+
+function mostrarMorososKPI(asesorSeleccionado, rango){
+
+    // ==========================================
+    // LEER DATA GENERAL
+    // ==========================================
+
+    const data = JSON.parse(
+        localStorage.getItem("financiero") || "[]"
+    );
+
+    // ==========================================
+    // NORMALIZAR
+    // ==========================================
+
+    const normalizar = valor => {
+
+        return String(valor || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g,"")
+            .trim()
+            .toUpperCase();
+
+    };
+
+    // ==========================================
+    // ESCAPAR HTML
+    // ==========================================
+
+    const escaparHTML = texto => {
+
+        return String(texto || "")
+            .replace(/&/g,"&amp;")
+            .replace(/</g,"&lt;")
+            .replace(/>/g,"&gt;")
+            .replace(/"/g,"&quot;")
+            .replace(/'/g,"&#039;");
+
+    };
+
+    // ==========================================
+    // FILTRAR CLIENTES POR ASESOR Y MORA
+    // ==========================================
+
+    const clientes = new Set();
+
+    data.forEach(c => {
+
+        const asesor = normalizar(
+            c["Asesor(a)"] || c["Asesor"]
+        );
+
+        const atraso = Number(
+            c["Dias de retraso"] || 0
+        );
+
+        // ======================================
+        // VALIDAR ASESOR
+        // ======================================
+
+        if(
+            asesor !== normalizar(asesorSeleccionado)
+        ){
+            return;
+        }
+
+        // ======================================
+        // VALIDAR RANGO DE MORA
+        // ======================================
+
+        let perteneceRango = false;
+
+        if(rango === "31+"){
+            perteneceRango = atraso >= 31;
+        }
+
+        if(rango === "9-30"){
+            perteneceRango =
+                atraso >= 9 && atraso <= 30;
+        }
+
+        if(rango === "1-8"){
+            perteneceRango =
+                atraso >= 1 && atraso <= 8;
+        }
+
+        if(!perteneceRango){
+            return;
+        }
+
+        // ======================================
+        // OBTENER NOMBRE DEL CLIENTE
+        // ======================================
+
+        const nombre = String(
+            c["Cliente"] ||
+            c["Apellidos y Nombres"] ||
+            c["Nombre Cliente"] ||
+            c["Nombres y Apellidos"] ||
+            c["Nombre Completo"] ||
+            c["Cliente (Nombre)"] ||
+            ""
+        ).trim();
+
+        if(nombre){
+            clientes.add(nombre);
+        }
+
+    });
+
+    // ==========================================
+    // ORDENAR ALFABÉTICAMENTE
+    // ==========================================
+
+    const lista = [...clientes].sort(
+        (a,b) => a.localeCompare(b,"es")
+    );
+
+    // ==========================================
+    // TITULO SEGÚN RANGO
+    // ==========================================
+
+    let tituloRango = "";
+
+    if(rango === "31+"){
+        tituloRango = "31 DÍAS A MÁS";
+    }
+
+    if(rango === "9-30"){
+        tituloRango = "9 A 30 DÍAS";
+    }
+
+    if(rango === "1-8"){
+        tituloRango = "1 A 8 DÍAS";
+    }
+
+    // ==========================================
+    // CREAR VENTANA
+    // ==========================================
+
+    let modal = document.getElementById(
+        "modalMorososKPI"
+    );
+
+    if(!modal){
+
+        modal = document.createElement("div");
+
+        modal.id = "modalMorososKPI";
+
+        modal.style.cssText = `
+            position:fixed;
+            inset:0;
+            z-index:99999;
+            background:rgba(0,0,0,.55);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:12px;
+        `;
+
+        document.body.appendChild(modal);
+
+    }
+
+    // ==========================================
+    // LISTADO DE NOMBRES
+    // ==========================================
+
+    const listado = lista.length
+
+        ? lista.map((nombre,i) => `
+            <div style="
+                padding:10px 12px;
+                border-bottom:1px solid #E5E7EB;
+                font-size:14px;
+                font-weight:600;
+                color:#1F2937;
+            ">
+                ${i+1}. ${escaparHTML(nombre)}
+            </div>
+        `).join("")
+
+        : `
+            <div style="
+                padding:20px;
+                text-align:center;
+                color:#64748B;
+            ">
+                No se encontraron clientes en este rango.
+            </div>
+        `;
+
+    // ==========================================
+    // CONTENIDO DEL MODAL
+    // ==========================================
+
+    modal.innerHTML = `
+
+        <div style="
+            width:100%;
+            max-width:450px;
+            max-height:85vh;
+            background:white;
+            border-radius:14px;
+            overflow:hidden;
+            box-shadow:0 15px 40px rgba(0,0,0,.3);
+            display:flex;
+            flex-direction:column;
+        ">
+
+            <div style="
+                background:#153F63;
+                color:white;
+                padding:16px;
+            ">
+
+                <div style="
+                    font-size:16px;
+                    font-weight:800;
+                ">
+                    📋 CLIENTES MOROSOS
+                </div>
+
+                <div style="
+                    font-size:12px;
+                    margin-top:5px;
+                    opacity:.9;
+                ">
+                    ${escaparHTML(asesorSeleccionado)}
+                    · ${tituloRango}
+                </div>
+
+            </div>
+
+            <div style="
+                overflow-y:auto;
+                flex:1;
+            ">
+
+                ${listado}
+
+            </div>
+
+            <div style="
+                padding:12px;
+                background:#F1F5F9;
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+            ">
+
+                <strong>
+                    CLIENTES: ${lista.length}
+                </strong>
+
+                <button
+                    onclick="document.getElementById('modalMorososKPI').remove()"
+                    style="
+                        background:#153F63;
+                        color:white;
+                        border:none;
+                        padding:9px 18px;
+                        border-radius:8px;
+                        font-weight:bold;
+                        cursor:pointer;
+                    "
+                >
+                    CERRAR
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
 // ======================================================
 // KPI DE COBRANZA - SLOPEZ
 // SOLO CARTERA CON 31 DÍAS DE ATRASO A MÁS

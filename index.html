@@ -4276,7 +4276,23 @@ font-weight:bold;
     >
         📂 Cargar Producción
     </button>
+<!-- CARGAR METAS DE COBRANZA -->
+<input
+    type="file"
+    id="excelMetasCobranza"
+    accept=".xlsx,.xls"
+    style="display:none"
+    onchange="cargarMetasCobranza()"
+>
 
+<button
+    type="button"
+    class="btn-verde"
+    onclick="document.getElementById('excelMetasCobranza').click()"
+>
+    📉 Cargar Metas de Cobranza
+</button>
+  
 </div>
 <div id="kpiResumen"></div>
 </div>

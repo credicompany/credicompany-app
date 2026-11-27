@@ -2186,28 +2186,21 @@ function generarKpiCobranza(){
 
     });
 
+   // ==========================================
+// SUMAR SALDO CAPITAL DE CARTERA 31+
+// ==========================================
 
-    // ==================================================
-    // CALCULAR SALDO VENCIDO ACTUAL
-    // ==================================================
+let saldoActual = 0;
 
-    let saldoActual = 0;
-
-    cartera.forEach(c => {
-
-        saldoActual += numero(
-            c["Mora Calculada"]
-        );
-
-    });
-
+cartera.forEach(c => {
+    saldoActual += numero(c["Saldo Capital"]);
+});
 
     // ==================================================
     // CONTAR OPERACIONES ÚNICAS
     // ==================================================
 
     const operacionesUnicas = new Set();
-
     cartera.forEach(c => {
 
         const prestamo = String(
@@ -2222,18 +2215,14 @@ function generarKpiCobranza(){
 
     });
 
-
     const operacionesActuales =
         operacionesUnicas.size;
-
-
     // ==================================================
     // CALCULAR REDUCCIÓN
     // ==================================================
 
     const reduccionSaldo =
         SALDO_INICIAL - saldoActual;
-
 
     const reduccionOperaciones =
         OPERACIONES_INICIALES - operacionesActuales;

@@ -2027,8 +2027,17 @@ S/${Math.round(totalMoraAgosto1Mas).toLocaleString("es-PE")}
 </div>
 `;
 
-    // CUADRO DE DESEMBOLSOS POR ASESOR
+    // ======================================================
+// CUADRO DE DESEMBOLSOS POR ASESOR
+// ======================================================
+
 resumen += generarCuadroDesembolsosAsesor(jsonGeneral);
+
+// ======================================================
+// KPI DE COBRANZA SLOPEZ
+// ======================================================
+
+resumen += generarKpiCobranza();
     
 localStorage.setItem(
 "rankingKPIHTML",
@@ -2055,6 +2064,628 @@ guardarGerencialFirebase(
 
 }
 
+// ======================================================
+// KPI DE COBRANZA - SLOPEZ
+// SOLO CARTERA CON 31 DÍAS DE ATRASO A MÁS
+// ======================================================
+
+function generarKpiCobranza(){
+
+    // ==================================================
+    // CONFIGURACIÓN DE META
+    // ==================================================
+
+    const USUARIO_COBRANZA = "SLOPEZ";
+
+    const META_REDUCCION_SALDO = 3000;
+
+    const META_REDUCCION_OPERACIONES = 5;
+
+    // BASE INICIAL DE OCTUBRE
+
+    const SALDO_INICIAL = 88245;
+
+    const OPERACIONES_INICIALES = 70;
+
+
+    // ==================================================
+    // LEER DATA GENERAL
+    // ==================================================
+
+    const data = JSON.parse(
+        localStorage.getItem("financiero")
+    ) || [];
+
+
+    // ==================================================
+    // NORMALIZAR TEXTO
+    // ==================================================
+
+    const normalizar = valor => {
+
+        return String(valor || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim()
+            .toUpperCase();
+
+    };
+
+
+    // ==================================================
+    // CONVERTIR NUMEROS
+    // ==================================================
+
+    const numero = valor => {
+
+        if(valor == null || valor === ""){
+            return 0;
+        }
+
+        return Number(
+            String(valor)
+                .replace(/,/g,"")
+                .replace(/S\/?/gi,"")
+                .trim()
+        ) || 0;
+
+    };
+
+
+    // ==================================================
+    // SI NO EXISTE DATA GENERAL
+    // ==================================================
+
+    if(!data.length){
+
+        return `
+        <div style="
+            margin-top:18px;
+            padding:16px;
+            border-radius:14px;
+            background:#FFF7ED;
+            border:1px solid #FED7AA;
+            color:#9A3412;
+        ">
+
+            <h3 style="
+                margin:0 0 8px;
+                font-size:17px;
+            ">
+                📉 KPI DE COBRANZA - SLOPEZ
+            </h3>
+
+            <p style="margin:0">
+                Cargue la Data General para actualizar
+                los indicadores de cobranza.
+            </p>
+
+        </div>
+        `;
+
+    }
+
+
+    // ==================================================
+    // FILTRAR CARTERA SLOPEZ
+    // 31 DÍAS A MÁS
+    // ==================================================
+
+    const cartera = data.filter(c => {
+
+        const usuario = normalizar(
+            c["Asesor(a)"]
+        );
+
+        const atraso = numero(
+            c["Dias de retraso"]
+        );
+
+        return usuario === USUARIO_COBRANZA
+            && atraso >= 31;
+
+    });
+
+
+    // ==================================================
+    // CALCULAR SALDO VENCIDO ACTUAL
+    // ==================================================
+
+    let saldoActual = 0;
+
+    cartera.forEach(c => {
+
+        saldoActual += numero(
+            c["Mora Calculada"]
+        );
+
+    });
+
+
+    // ==================================================
+    // CONTAR OPERACIONES ÚNICAS
+    // ==================================================
+
+    const operacionesUnicas = new Set();
+
+    cartera.forEach(c => {
+
+        const prestamo = String(
+            c["Prestamo"] || ""
+        ).trim();
+
+        if(prestamo){
+
+            operacionesUnicas.add(prestamo);
+
+        }
+
+    });
+
+
+    const operacionesActuales =
+        operacionesUnicas.size;
+
+
+    // ==================================================
+    // CALCULAR REDUCCIÓN
+    // ==================================================
+
+    const reduccionSaldo =
+        SALDO_INICIAL - saldoActual;
+
+
+    const reduccionOperaciones =
+        OPERACIONES_INICIALES - operacionesActuales;
+
+
+    // ==================================================
+    // CUMPLIMIENTO DE META
+    // ==================================================
+
+    const cumplimientoSaldo =
+
+        META_REDUCCION_SALDO > 0
+
+        ? Math.max(
+            0,
+            (reduccionSaldo / META_REDUCCION_SALDO) * 100
+        )
+
+        : 0;
+
+
+    const cumplimientoOperaciones =
+
+        META_REDUCCION_OPERACIONES > 0
+
+        ? Math.max(
+            0,
+            (reduccionOperaciones /
+            META_REDUCCION_OPERACIONES) * 100
+        )
+
+        : 0;
+
+
+    // ==================================================
+    // BARRAS DE PROGRESO
+    // ==================================================
+
+    const progresoSaldo = Math.min(
+        100,
+        Math.max(0,cumplimientoSaldo)
+    );
+
+
+    const progresoOperaciones = Math.min(
+        100,
+        Math.max(0,cumplimientoOperaciones)
+    );
+
+
+    // ==================================================
+    // FORMATO MONETARIO
+    // ==================================================
+
+    const moneda = valor => {
+
+        return "S/ " + Number(valor || 0)
+            .toLocaleString("es-PE",{
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+            });
+
+    };
+
+
+    // ==================================================
+    // ESTADO
+    // ==================================================
+
+    const colorSaldo =
+        cumplimientoSaldo >= 100
+        ? "#16A34A"
+        : cumplimientoSaldo >= 80
+        ? "#F59E0B"
+        : "#DC2626";
+
+
+    const colorOperaciones =
+        cumplimientoOperaciones >= 100
+        ? "#16A34A"
+        : cumplimientoOperaciones >= 80
+        ? "#F59E0B"
+        : "#DC2626";
+
+
+    // ==================================================
+    // HTML KPI
+    // ==================================================
+
+    return `
+
+    <div style="
+        margin-top:20px;
+        background:#FFFFFF;
+        border:1px solid #DCE5ED;
+        border-radius:16px;
+        padding:16px;
+        box-shadow:0 3px 10px rgba(0,0,0,.05);
+    ">
+
+        <!-- ENCABEZADO -->
+
+        <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            flex-wrap:wrap;
+            gap:8px;
+            margin-bottom:15px;
+        ">
+
+            <div>
+
+                <h2 style="
+                    margin:0;
+                    color:#123F63;
+                    font-size:19px;
+                ">
+                    📉 KPI DE COBRANZA
+                </h2>
+
+                <div style="
+                    margin-top:4px;
+                    color:#64748B;
+                    font-size:13px;
+                ">
+                    Usuario: <b>SLOPEZ</b>
+                    · Cartera de 31 días a más
+                </div>
+
+            </div>
+
+            <div style="
+                background:#FEE2E2;
+                color:#991B1B;
+                padding:7px 12px;
+                border-radius:20px;
+                font-size:12px;
+                font-weight:bold;
+            ">
+                🔴 COBRANZA PESADA
+            </div>
+
+        </div>
+
+
+        <!-- TARJETAS -->
+
+        <div style="
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+            gap:10px;
+        ">
+
+
+            <!-- META SALDO -->
+
+            <div style="
+                background:#EFF6FF;
+                border:1px solid #DBEAFE;
+                border-radius:12px;
+                padding:12px;
+            ">
+
+                <div style="
+                    font-size:12px;
+                    color:#64748B;
+                ">
+                    🎯 Meta reducción saldo
+                </div>
+
+                <div style="
+                    font-size:21px;
+                    font-weight:bold;
+                    color:#1D4ED8;
+                    margin-top:5px;
+                ">
+                    ${moneda(META_REDUCCION_SALDO)}
+                </div>
+
+            </div>
+
+
+            <!-- REDUCCION ACTUAL -->
+
+            <div style="
+                background:#F0FDF4;
+                border:1px solid #DCFCE7;
+                border-radius:12px;
+                padding:12px;
+            ">
+
+                <div style="
+                    font-size:12px;
+                    color:#64748B;
+                ">
+                    📉 Reducción saldo
+                </div>
+
+                <div style="
+                    font-size:21px;
+                    font-weight:bold;
+                    color:${colorSaldo};
+                    margin-top:5px;
+                ">
+                    ${moneda(reduccionSaldo)}
+                </div>
+
+            </div>
+
+
+            <!-- SALDO ACTUAL -->
+
+            <div style="
+                background:#FFF7ED;
+                border:1px solid #FED7AA;
+                border-radius:12px;
+                padding:12px;
+            ">
+
+                <div style="
+                    font-size:12px;
+                    color:#64748B;
+                ">
+                    🔴 Saldo actual 31+
+                </div>
+
+                <div style="
+                    font-size:21px;
+                    font-weight:bold;
+                    color:#C2410C;
+                    margin-top:5px;
+                ">
+                    ${moneda(saldoActual)}
+                </div>
+
+            </div>
+
+
+            <!-- META OPERACIONES -->
+
+            <div style="
+                background:#F5F3FF;
+                border:1px solid #DDD6FE;
+                border-radius:12px;
+                padding:12px;
+            ">
+
+                <div style="
+                    font-size:12px;
+                    color:#64748B;
+                ">
+                    🎯 Meta reducción operaciones
+                </div>
+
+                <div style="
+                    font-size:21px;
+                    font-weight:bold;
+                    color:#6D28D9;
+                    margin-top:5px;
+                ">
+                    ${META_REDUCCION_OPERACIONES}
+                </div>
+
+            </div>
+
+
+            <!-- REDUCCION OPERACIONES -->
+
+            <div style="
+                background:#F0FDF4;
+                border:1px solid #DCFCE7;
+                border-radius:12px;
+                padding:12px;
+            ">
+
+                <div style="
+                    font-size:12px;
+                    color:#64748B;
+                ">
+                    ✅ Reducción operaciones
+                </div>
+
+                <div style="
+                    font-size:21px;
+                    font-weight:bold;
+                    color:${colorOperaciones};
+                    margin-top:5px;
+                ">
+                    ${reduccionOperaciones}
+                </div>
+
+            </div>
+
+
+            <!-- OPERACIONES ACTUALES -->
+
+            <div style="
+                background:#FEF2F2;
+                border:1px solid #FECACA;
+                border-radius:12px;
+                padding:12px;
+            ">
+
+                <div style="
+                    font-size:12px;
+                    color:#64748B;
+                ">
+                    📋 Operaciones actuales
+                </div>
+
+                <div style="
+                    font-size:21px;
+                    font-weight:bold;
+                    color:#B91C1C;
+                    margin-top:5px;
+                ">
+                    ${operacionesActuales}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PROGRESO SALDO -->
+
+        <div style="
+            margin-top:18px;
+        ">
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                font-size:13px;
+                font-weight:bold;
+                margin-bottom:6px;
+            ">
+
+                <span>
+                    📉 Cumplimiento reducción saldo
+                </span>
+
+                <span style="color:${colorSaldo}">
+                    ${cumplimientoSaldo.toFixed(1)}%
+                </span>
+
+            </div>
+
+            <div style="
+                height:12px;
+                background:#E5E7EB;
+                border-radius:20px;
+                overflow:hidden;
+            ">
+
+                <div style="
+                    width:${progresoSaldo}%;
+                    height:100%;
+                    background:${colorSaldo};
+                    border-radius:20px;
+                    transition:width .3s;
+                "></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PROGRESO OPERACIONES -->
+
+        <div style="
+            margin-top:14px;
+        ">
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                font-size:13px;
+                font-weight:bold;
+                margin-bottom:6px;
+            ">
+
+                <span>
+                    🎯 Cumplimiento reducción operaciones
+                </span>
+
+                <span style="color:${colorOperaciones}">
+                    ${cumplimientoOperaciones.toFixed(1)}%
+                </span>
+
+            </div>
+
+            <div style="
+                height:12px;
+                background:#E5E7EB;
+                border-radius:20px;
+                overflow:hidden;
+            ">
+
+                <div style="
+                    width:${progresoOperaciones}%;
+                    height:100%;
+                    background:${colorOperaciones};
+                    border-radius:20px;
+                    transition:width .3s;
+                "></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- BASE INICIAL -->
+
+        <div style="
+            margin-top:16px;
+            padding:12px;
+            background:#F8FAFC;
+            border-radius:10px;
+            font-size:12px;
+            color:#64748B;
+        ">
+
+            <b>📌 Base inicial de octubre:</b>
+
+            <br>
+
+            Saldo inicial:
+            ${moneda(SALDO_INICIAL)}
+
+            <br>
+
+            Operaciones iniciales:
+            ${OPERACIONES_INICIALES}
+
+            <br>
+
+            <br>
+
+            <b>📌 Filtro aplicado:</b>
+
+            Usuario SLOPEZ ·
+            31 días de atraso a más
+
+        </div>
+
+    </div>
+
+    `;
+
+}
 // ======================================================
 // HISTÓRICO MENSUAL KPI CREDICOMPANY
 // ======================================================

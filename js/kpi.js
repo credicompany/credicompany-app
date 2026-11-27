@@ -2308,371 +2308,451 @@ cartera.forEach(c => {
         : "#DC2626";
 
 
-    // ==================================================
-    // HTML KPI
-    // ==================================================
+  // ==================================================
+// HTML KPI - COMPACTO Y PROFESIONAL
+// ==================================================
 
-    return `
+return `
 
-    <div style="
-        margin-top:20px;
-        background:#FFFFFF;
-        border:1px solid #DCE5ED;
-        border-radius:16px;
-        padding:16px;
-        box-shadow:0 3px 10px rgba(0,0,0,.05);
-    ">
+<style>
 
-        <!-- ENCABEZADO -->
+/* ==========================================
+   KPI COBRANZA - CREDICOMPANY
+========================================== */
 
-        <div style="
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            flex-wrap:wrap;
-            gap:8px;
-            margin-bottom:15px;
-        ">
+#kpiCobranzaCompacto{
+    margin-top:12px !important;
+    padding:12px !important;
+    border-radius:14px !important;
+    box-shadow:0 2px 6px rgba(0,0,0,.04) !important;
+    box-sizing:border-box !important;
+    width:100% !important;
+}
 
-            <div>
+/* ENCABEZADO */
 
-                <h2 style="
-                    margin:0;
-                    color:#123F63;
-                    font-size:19px;
-                ">
-                    📉 KPI DE COBRANZA
-                </h2>
+#kpiCobranzaCompacto .cob-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:12px;
+}
 
-                <div style="
-                    margin-top:4px;
-                    color:#64748B;
-                    font-size:13px;
-                ">
-                    Usuario: <b>SLOPEZ</b>
-                    · Cartera de 31 días a más
-                </div>
+#kpiCobranzaCompacto .cob-titulo{
+    margin:0;
+    color:#123F63;
+    font-size:16px;
+    font-weight:700;
+}
 
+#kpiCobranzaCompacto .cob-subtitulo{
+    margin-top:3px;
+    color:#64748B;
+    font-size:11px;
+}
+
+#kpiCobranzaCompacto .cob-badge{
+    background:#FEE2E2;
+    color:#991B1B;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:bold;
+    white-space:nowrap;
+}
+
+/* TARJETAS */
+
+#kpiCobranzaCompacto .cob-grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:8px;
+}
+
+#kpiCobranzaCompacto .cob-card{
+    min-width:0;
+    padding:9px;
+    border-radius:10px;
+    box-sizing:border-box;
+    overflow:hidden;
+}
+
+#kpiCobranzaCompacto .cob-label{
+    font-size:10px;
+    line-height:1.3;
+    color:#64748B;
+}
+
+#kpiCobranzaCompacto .cob-value{
+    font-size:16px;
+    font-weight:700;
+    line-height:1.2;
+    margin-top:4px;
+    overflow-wrap:anywhere;
+}
+
+/* PROGRESO */
+
+#kpiCobranzaCompacto .cob-progreso{
+    margin-top:12px;
+}
+
+#kpiCobranzaCompacto .cob-progreso-titulo{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:6px;
+    font-size:11px;
+    font-weight:600;
+    margin-bottom:5px;
+}
+
+#kpiCobranzaCompacto .cob-barra{
+    height:7px;
+    background:#E5E7EB;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+#kpiCobranzaCompacto .cob-barra-interna{
+    height:100%;
+    border-radius:20px;
+    transition:width .3s;
+}
+
+/* BASE INICIAL */
+
+#kpiCobranzaCompacto .cob-base{
+    margin-top:12px;
+    padding:9px;
+    background:#F8FAFC;
+    border-radius:9px;
+    color:#64748B;
+    font-size:10px;
+    line-height:1.4;
+}
+
+/* ==========================================
+   CELULAR
+========================================== */
+
+@media(max-width:600px){
+
+    #kpiCobranzaCompacto{
+        margin-top:8px !important;
+        padding:9px !important;
+        border-radius:12px !important;
+    }
+
+    #kpiCobranzaCompacto .cob-header{
+        margin-bottom:9px;
+        gap:5px;
+    }
+
+    #kpiCobranzaCompacto .cob-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:6px;
+    }
+
+    #kpiCobranzaCompacto .cob-card{
+        padding:8px;
+        border-radius:9px;
+    }
+
+    #kpiCobranzaCompacto .cob-label{
+        font-size:9px;
+        line-height:1.2;
+    }
+
+    #kpiCobranzaCompacto .cob-value{
+        font-size:14px;
+        margin-top:4px;
+    }
+
+    #kpiCobranzaCompacto .cob-titulo{
+        font-size:14px;
+    }
+
+    #kpiCobranzaCompacto .cob-subtitulo{
+        font-size:9px;
+    }
+
+    #kpiCobranzaCompacto .cob-badge{
+        font-size:9px;
+        padding:4px 7px;
+    }
+
+    #kpiCobranzaCompacto .cob-progreso{
+        margin-top:9px;
+    }
+
+    #kpiCobranzaCompacto .cob-progreso-titulo{
+        font-size:10px;
+        margin-bottom:4px;
+    }
+
+    #kpiCobranzaCompacto .cob-barra{
+        height:6px;
+    }
+
+    #kpiCobranzaCompacto .cob-base{
+        margin-top:9px;
+        padding:8px;
+        font-size:9px;
+    }
+
+}
+
+</style>
+
+
+<div id="kpiCobranzaCompacto" style="
+    background:#FFFFFF;
+    border:1px solid #DCE5ED;
+">
+
+
+    <!-- ENCABEZADO -->
+
+    <div class="cob-header">
+
+        <div>
+
+            <h2 class="cob-titulo">
+                📉 KPI DE COBRANZA
+            </h2>
+
+            <div class="cob-subtitulo">
+                Usuario: <b>SLOPEZ</b>
+                · Cartera de 31 días a más
             </div>
 
-            <div style="
-                background:#FEE2E2;
-                color:#991B1B;
-                padding:7px 12px;
-                border-radius:20px;
-                font-size:12px;
-                font-weight:bold;
+        </div>
+
+        <div class="cob-badge">
+            🔴 COBRANZA PESADA
+        </div>
+
+    </div>
+
+
+    <!-- TARJETAS -->
+
+    <div class="cob-grid">
+
+
+        <!-- META SALDO -->
+
+        <div class="cob-card" style="
+            background:#EFF6FF;
+            border:1px solid #DBEAFE;
+        ">
+
+            <div class="cob-label">
+                🎯 Meta reducción saldo
+            </div>
+
+            <div class="cob-value" style="
+                color:#1D4ED8;
             ">
-                🔴 COBRANZA PESADA
+                ${moneda(META_REDUCCION_SALDO)}
             </div>
 
         </div>
 
 
-        <!-- TARJETAS -->
+        <!-- REDUCCIÓN SALDO -->
 
-        <div style="
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-            gap:10px;
+        <div class="cob-card" style="
+            background:#F0FDF4;
+            border:1px solid #DCFCE7;
         ">
 
-
-            <!-- META SALDO -->
-
-            <div style="
-                background:#EFF6FF;
-                border:1px solid #DBEAFE;
-                border-radius:12px;
-                padding:12px;
-            ">
-
-                <div style="
-                    font-size:12px;
-                    color:#64748B;
-                ">
-                    🎯 Meta reducción saldo
-                </div>
-
-                <div style="
-                    font-size:21px;
-                    font-weight:bold;
-                    color:#1D4ED8;
-                    margin-top:5px;
-                ">
-                    ${moneda(META_REDUCCION_SALDO)}
-                </div>
-
+            <div class="cob-label">
+                📉 Reducción saldo
             </div>
 
-
-            <!-- REDUCCION ACTUAL -->
-
-            <div style="
-                background:#F0FDF4;
-                border:1px solid #DCFCE7;
-                border-radius:12px;
-                padding:12px;
+            <div class="cob-value" style="
+                color:${colorSaldo};
             ">
-
-                <div style="
-                    font-size:12px;
-                    color:#64748B;
-                ">
-                    📉 Reducción saldo
-                </div>
-
-                <div style="
-                    font-size:21px;
-                    font-weight:bold;
-                    color:${colorSaldo};
-                    margin-top:5px;
-                ">
-                    ${moneda(reduccionSaldo)}
-                </div>
-
-            </div>
-
-
-            <!-- SALDO ACTUAL -->
-
-            <div style="
-                background:#FFF7ED;
-                border:1px solid #FED7AA;
-                border-radius:12px;
-                padding:12px;
-            ">
-
-                <div style="
-                    font-size:12px;
-                    color:#64748B;
-                ">
-                    🔴 Saldo actual 31+
-                </div>
-
-                <div style="
-                    font-size:21px;
-                    font-weight:bold;
-                    color:#C2410C;
-                    margin-top:5px;
-                ">
-                    ${moneda(saldoActual)}
-                </div>
-
-            </div>
-
-
-            <!-- META OPERACIONES -->
-
-            <div style="
-                background:#F5F3FF;
-                border:1px solid #DDD6FE;
-                border-radius:12px;
-                padding:12px;
-            ">
-
-                <div style="
-                    font-size:12px;
-                    color:#64748B;
-                ">
-                    🎯 Meta reducción operaciones
-                </div>
-
-                <div style="
-                    font-size:21px;
-                    font-weight:bold;
-                    color:#6D28D9;
-                    margin-top:5px;
-                ">
-                    ${META_REDUCCION_OPERACIONES}
-                </div>
-
-            </div>
-
-
-            <!-- REDUCCION OPERACIONES -->
-
-            <div style="
-                background:#F0FDF4;
-                border:1px solid #DCFCE7;
-                border-radius:12px;
-                padding:12px;
-            ">
-
-                <div style="
-                    font-size:12px;
-                    color:#64748B;
-                ">
-                    ✅ Reducción operaciones
-                </div>
-
-                <div style="
-                    font-size:21px;
-                    font-weight:bold;
-                    color:${colorOperaciones};
-                    margin-top:5px;
-                ">
-                    ${reduccionOperaciones}
-                </div>
-
-            </div>
-
-
-            <!-- OPERACIONES ACTUALES -->
-
-            <div style="
-                background:#FEF2F2;
-                border:1px solid #FECACA;
-                border-radius:12px;
-                padding:12px;
-            ">
-
-                <div style="
-                    font-size:12px;
-                    color:#64748B;
-                ">
-                    📋 Operaciones actuales
-                </div>
-
-                <div style="
-                    font-size:21px;
-                    font-weight:bold;
-                    color:#B91C1C;
-                    margin-top:5px;
-                ">
-                    ${operacionesActuales}
-                </div>
-
+                ${moneda(reduccionSaldo)}
             </div>
 
         </div>
 
 
-        <!-- PROGRESO SALDO -->
+        <!-- SALDO ACTUAL -->
 
-        <div style="
-            margin-top:18px;
+        <div class="cob-card" style="
+            background:#FFF7ED;
+            border:1px solid #FED7AA;
         ">
 
-            <div style="
-                display:flex;
-                justify-content:space-between;
-                font-size:13px;
-                font-weight:bold;
-                margin-bottom:6px;
-            ">
-
-                <span>
-                    📉 Cumplimiento reducción saldo
-                </span>
-
-                <span style="color:${colorSaldo}">
-                    ${cumplimientoSaldo.toFixed(1)}%
-                </span>
-
+            <div class="cob-label">
+                🔴 Saldo actual 31+
             </div>
 
-            <div style="
-                height:12px;
-                background:#E5E7EB;
-                border-radius:20px;
-                overflow:hidden;
+            <div class="cob-value" style="
+                color:#C2410C;
             ">
-
-                <div style="
-                    width:${progresoSaldo}%;
-                    height:100%;
-                    background:${colorSaldo};
-                    border-radius:20px;
-                    transition:width .3s;
-                "></div>
-
+                ${moneda(saldoActual)}
             </div>
 
         </div>
 
 
-        <!-- PROGRESO OPERACIONES -->
+        <!-- META OPERACIONES -->
 
-        <div style="
-            margin-top:14px;
+        <div class="cob-card" style="
+            background:#F5F3FF;
+            border:1px solid #DDD6FE;
         ">
 
-            <div style="
-                display:flex;
-                justify-content:space-between;
-                font-size:13px;
-                font-weight:bold;
-                margin-bottom:6px;
-            ">
-
-                <span>
-                    🎯 Cumplimiento reducción operaciones
-                </span>
-
-                <span style="color:${colorOperaciones}">
-                    ${cumplimientoOperaciones.toFixed(1)}%
-                </span>
-
+            <div class="cob-label">
+                🎯 Meta reducción operaciones
             </div>
 
-            <div style="
-                height:12px;
-                background:#E5E7EB;
-                border-radius:20px;
-                overflow:hidden;
+            <div class="cob-value" style="
+                color:#6D28D9;
             ">
-
-                <div style="
-                    width:${progresoOperaciones}%;
-                    height:100%;
-                    background:${colorOperaciones};
-                    border-radius:20px;
-                    transition:width .3s;
-                "></div>
-
+                ${META_REDUCCION_OPERACIONES}
             </div>
 
         </div>
 
 
-        <!-- BASE INICIAL -->
+        <!-- REDUCCIÓN OPERACIONES -->
 
-        <div style="
-            margin-top:16px;
-            padding:12px;
-            background:#F8FAFC;
-            border-radius:10px;
-            font-size:12px;
-            color:#64748B;
+        <div class="cob-card" style="
+            background:#F0FDF4;
+            border:1px solid #DCFCE7;
         ">
 
-            <b>📌 Base inicial de octubre:</b>
+            <div class="cob-label">
+                ✅ Reducción operaciones
+            </div>
 
-            <br>
+            <div class="cob-value" style="
+                color:${colorOperaciones};
+            ">
+                ${reduccionOperaciones}
+            </div>
 
-            Saldo inicial:
-            ${moneda(SALDO_INICIAL)}
+        </div>
 
-            <br>
 
-            Operaciones iniciales:
-            ${OPERACIONES_INICIALES}
+        <!-- OPERACIONES ACTUALES -->
 
-            <br>
+        <div class="cob-card" style="
+            background:#FEF2F2;
+            border:1px solid #FECACA;
+        ">
 
-            <br>
+            <div class="cob-label">
+                📋 Operaciones actuales
+            </div>
 
-            <b>📌 Filtro aplicado:</b>
+            <div class="cob-value" style="
+                color:#B91C1C;
+            ">
+                ${operacionesActuales}
+            </div>
 
-            Usuario SLOPEZ ·
-            31 días de atraso a más
+        </div>
+
+
+    </div>
+
+
+    <!-- PROGRESO SALDO -->
+
+    <div class="cob-progreso">
+
+        <div class="cob-progreso-titulo">
+
+            <span>
+                📉 Cumplimiento reducción saldo
+            </span>
+
+            <span style="color:${colorSaldo}">
+                ${cumplimientoSaldo.toFixed(1)}%
+            </span>
+
+        </div>
+
+        <div class="cob-barra">
+
+            <div class="cob-barra-interna" style="
+                width:${progresoSaldo}%;
+                background:${colorSaldo};
+            "></div>
 
         </div>
 
     </div>
 
-    `;
+
+    <!-- PROGRESO OPERACIONES -->
+
+    <div class="cob-progreso">
+
+        <div class="cob-progreso-titulo">
+
+            <span>
+                🎯 Cumplimiento reducción operaciones
+            </span>
+
+            <span style="color:${colorOperaciones}">
+                ${cumplimientoOperaciones.toFixed(1)}%
+            </span>
+
+        </div>
+
+        <div class="cob-barra">
+
+            <div class="cob-barra-interna" style="
+                width:${progresoOperaciones}%;
+                background:${colorOperaciones};
+            "></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- BASE INICIAL -->
+
+    <div class="cob-base">
+
+        <b>📌 Base inicial de octubre</b>
+
+        <br>
+
+        Saldo inicial:
+        ${moneda(SALDO_INICIAL)}
+
+        <br>
+
+        Operaciones iniciales:
+        ${OPERACIONES_INICIALES}
+
+        <br><br>
+
+        <b>📌 Filtro aplicado:</b>
+
+        <br>
+
+        Usuario SLOPEZ ·
+        31 días de atraso a más
+
+    </div>
+
+
+</div>
+
+`;
 
 }
 // ======================================================

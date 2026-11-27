@@ -3872,6 +3872,121 @@ document.getElementById(
         padding: 8px 5px !important;
     }
 }
+
+/* =====================================
+   TARJETAS COMPACTAS DE BONOS
+===================================== */
+
+#bonosTarjetasCompactas {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+    margin: 7px 0 9px;
+}
+
+.bono-card-compacta {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px;
+    border: 1px solid #dbe4ee;
+    border-radius: 8px;
+    background: #f8fafc;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.bono-card-compacta.ganado {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+}
+
+.bono-avatar {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #24547b;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.bono-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.bono-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.bono-nombre {
+    font-size: 9px;
+    font-weight: 800;
+    color: #123B63;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bono-monto {
+    font-size: 13px;
+    font-weight: 900;
+    color: #64748b;
+    margin-top: 2px;
+    white-space: nowrap;
+}
+
+.bono-card-compacta.ganado .bono-monto {
+    color: #15803d;
+}
+
+.bono-etiqueta {
+    font-size: 8px;
+    color: #64748b;
+    margin-top: 1px;
+}
+
+/* CELULAR */
+@media screen and (max-width: 600px) {
+
+    #bonosTarjetasCompactas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 5px;
+    }
+
+    .bono-card-compacta {
+        padding: 5px;
+        gap: 5px;
+    }
+
+    .bono-avatar {
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
+    }
+
+    .bono-nombre {
+        font-size: 8px;
+    }
+
+    .bono-monto {
+        font-size: 12px;
+    }
+
+    .bono-etiqueta {
+        font-size: 7px;
+    }
+}
+
 </style>
 
 <div style="
@@ -5127,15 +5242,18 @@ function generarCuadroDesembolsosAsesor(produccion) {
 
     </style>
 
- 
-
     <section id="cuadroDesembolsosAsesor" class="desembolsos-panel">
 
         <h3>CUADRO DE DESEMBOLSOS POR ASESOR · LUNES A SÁBADO</h3>
 
         <p class="meta">Semana: <b>${rangoTexto}</b> · Asesores: ${gruposOrdenados.length}</p>
 
-        <div class="scroll">
+<!-- TARJETAS COMPACTAS DE BONOS -->
+<div id="bonosTarjetasCompactas">
+    <!--BONOS_CARDS-->
+</div>
+
+<div class="scroll">
 
             <table>
 
@@ -5167,6 +5285,10 @@ function generarCuadroDesembolsosAsesor(produccion) {
 let totalBonoConstancia = 0;
 let totalBonoProduccion = 0;
 let totalBonosSemana = 0;
+
+// DATOS PARA LAS TARJETAS COMPACTAS DE BONOS
+const tarjetasBonos = [];
+    
     gruposOrdenados.forEach(g => {
 
         const cantidadClientes = g.clientes.size;
@@ -5202,6 +5324,17 @@ if (sumaSemanal >= 25000) {
 }
 
 const bonoTotal = bonoConstancia + bonoProduccion;
+
+        // REGISTRAR BONOS PARA LAS TARJETAS VISUALES
+tarjetasBonos.push({
+    asesor: g.asesor,
+    bonoConstancia: bonoConstancia,
+    bonoProduccion: bonoProduccion,
+    bonoTotal: bonoTotal,
+    sumaSemanal: sumaSemanal,
+    diasCumplidos: diasCumplidos
+});
+        
         totalBonoConstancia += bonoConstancia;
         totalBonoProduccion += bonoProduccion;
         totalBonosSemana += bonoTotal;
@@ -5332,7 +5465,60 @@ S/ ${formatoSoles(totalBonosSemana)}
 
     </section>`;
 
- 
+ // ======================================
+// GENERAR TARJETAS COMPACTAS DE BONOS
+// ======================================
+
+const tarjetasBonosHTML = tarjetasBonos
+    .slice()
+    .sort((a, b) => b.bonoTotal - a.bonoTotal)
+    .map(item => {
+
+        const nombre = String(item.asesor || "").trim();
+
+        const iniciales = nombre
+            .split(/\s+/)
+            .map(p => p.charAt(0))
+            .join("")
+            .substring(0, 2)
+            .toUpperCase();
+
+        const tieneBono = item.bonoTotal > 0;
+
+        return `
+            <div class="bono-card-compacta ${tieneBono ? "ganado" : ""}">
+
+                <div class="bono-avatar">
+                    ${iniciales}
+                </div>
+
+                <div class="bono-info">
+
+                    <div class="bono-nombre">
+                        ${escapar(nombre)}
+                    </div>
+
+                    <div class="bono-monto">
+                        S/ ${formatoSoles(item.bonoTotal)}
+                    </div>
+
+                    <div class="bono-etiqueta">
+                        ${tieneBono ? "🏆 BONO GANADO" : "BONO EN PROGRESO"}
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+    })
+    .join("");
+
+// Insertar tarjetas en el espacio reservado
+
+html = html.replace(
+    "<!--BONOS_CARDS-->",
+    tarjetasBonosHTML
+);
 
     return html;
 

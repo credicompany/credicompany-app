@@ -2220,15 +2220,15 @@ function mostrarMorososKPI(asesorSeleccionado, rango){
         // OBTENER NOMBRE DEL CLIENTE
         // ======================================
 
-        const nombre = String(
-            c["Cliente"] ||
-            c["Apellidos y Nombres"] ||
-            c["Nombre Cliente"] ||
-            c["Nombres y Apellidos"] ||
-            c["Nombre Completo"] ||
-            c["Cliente (Nombre)"] ||
-            ""
-        ).trim();
+       const nombre = [
+    c["Apellido Paterno"] || "",
+    c["Apellido Materno"] || "",
+    c["Nombre"] || ""
+]
+.map(valor => String(valor).trim())
+.filter(Boolean)
+.join(" ")
+.trim();
 
         if(nombre){
             clientes.add(nombre);

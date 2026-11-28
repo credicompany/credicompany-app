@@ -281,19 +281,6 @@ db.ref("cartera")
 
 });
  
-.catch(err=>{
-
-    console.error(
-        "❌ Error Firebase:",
-        err
-    );
-
-    alert(
-        "❌ Error Firebase: " +
-        err.message
-    );
-
-});
 localStorage.setItem("cartera", JSON.stringify(json));
 localStorage.setItem("cartera_backup", JSON.stringify(json));
  // ==========================================

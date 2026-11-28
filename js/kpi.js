@@ -6923,18 +6923,12 @@ const diasCumplidos = g.operacionesDias.filter(n => n > 0).length;
 // BONO 1: CONSTANCIA
 const bonoConstancia = diasCumplidos === 6 ? 50 : 0;
 
-// BONO 2: PRODUCCIÓN
-let bonoProduccion = 0;
+// BONO 2: PRODUCCIÓN ACUMULATIVO
+// CADA S/10,000 GENERA S/30 ADICIONALES
 
-if (sumaSemanal >= 25000) {
-    bonoProduccion = 120;
-} else if (sumaSemanal >= 20000) {
-    bonoProduccion = 80;
-} else if (sumaSemanal >= 15000) {
-    bonoProduccion = 50;
-} else if (sumaSemanal >= 10000) {
-    bonoProduccion = 30;
-}
+const tramosProduccion = Math.floor(sumaSemanal / 10000);
+
+const bonoProduccion = tramosProduccion * 30;
 
 const bonoTotal = bonoConstancia + bonoProduccion;
 

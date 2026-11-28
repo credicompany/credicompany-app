@@ -1353,7 +1353,7 @@ cursor:pointer;
 <th>VARIACIÓN TEM</th>
 <th>MORA ${mesAnterior.toUpperCase()}</th>
 <th>MORA ${mesActual.toUpperCase()} 31+</th>
-<th>MORA ${mesActual.toUpperCase()} 9-30</th>
+<th>MORA ${mesActual.toUpperCase()} 9+</th>
 <th>MORA ${mesActual.toUpperCase()} 1-8</th>
 <th>🚦</th>
 
@@ -1530,11 +1530,10 @@ if(atraso >= 1 && atraso <= 8){
     mora1a8Asesor[asesor] += saldo;
 }
 
-// ==========================================
-// MORA DE 9 A 30 DÍAS
-// ==========================================
+// MORA DE 9 DÍAS A MÁS
+// INCLUYE TAMBIÉN LA MORA DE 31+
 
-if(atraso >= 9 && atraso <= 30){
+if(atraso >= 9){
     mora9a30Asesor[asesor] += saldo;
 }
 
@@ -1875,7 +1874,7 @@ const mora1a8 = Number(mora1a8Asesor[asesor] || 0);
 </td>
 
 <td
-    data-mora-kpi="9-30"
+ data-mora-kpi="9+"
     data-asesor-kpi="${asesor}"
     style="
         font-weight:bold;
@@ -1884,8 +1883,8 @@ const mora1a8 = Number(mora1a8Asesor[asesor] || 0);
         text-decoration:underline;
         text-underline-offset:3px;
     "
-    title="Ver clientes con mora de 9 a 30 días"
-    onclick="mostrarMorososKPI('${asesor.replace(/'/g, "\\'")}', '9-30')"
+    title="Ver clientes con mora de 9 días a más"
+onclick="mostrarMorososKPI('${asesor.replace(/'/g, "\\'")}', '9+')"
 >
     S/${Math.round(mora9a30).toLocaleString("es-PE")}
 </td>
@@ -2085,7 +2084,7 @@ S/${Math.round(totalMoraJulio).toLocaleString("es-PE")}
 S/${Math.round(totalMoraAgosto31Mas).toLocaleString("es-PE")}
 </td>
 
-<td data-mora-total-kpi="9-30">
+<td data-mora-total-kpi="9+">
 S/${Math.round(totalMoraAgosto).toLocaleString("es-PE")}
 </td>
 
@@ -2265,7 +2264,7 @@ window.addEventListener("carteraActualizadaKPI", function(){
 
             moraPorAsesor[asesor] = {
                 "31+": 0,
-                "9-30": 0,
+               "9+": 0,
                 "1-8": 0
             };
 
@@ -2287,13 +2286,10 @@ window.addEventListener("carteraActualizadaKPI", function(){
         // MORA 9 A 30 DÍAS
         // ======================================
 
-        if(atraso >= 9 && atraso <= 30){
-
-            moraPorAsesor[asesor]["9-30"] += saldo;
-
-            total9a30 += saldo;
-
-        }
+       if(atraso >= 9){
+    moraPorAsesor[asesor]["9+"] += saldo;
+    total9a30 += saldo;
+}
 
         // ======================================
         // MORA 1 A 8 DÍAS
@@ -2353,7 +2349,7 @@ window.addEventListener("carteraActualizadaKPI", function(){
             monto = total31Mas;
         }
 
-        if(tramo === "9-30"){
+        if(tramo === "9+"){
             monto = total9a30;
         }
 
@@ -2459,10 +2455,9 @@ function mostrarMorososKPI(asesorSeleccionado, rango){
             perteneceRango = atraso >= 31;
         }
 
-        if(rango === "9-30"){
-            perteneceRango =
-                atraso >= 9 && atraso <= 30;
-        }
+       if(rango === "9+"){
+    perteneceRango = atraso >= 9;
+}
 
         if(rango === "1-8"){
             perteneceRango =
@@ -2511,9 +2506,9 @@ function mostrarMorososKPI(asesorSeleccionado, rango){
         tituloRango = "31 DÍAS A MÁS";
     }
 
-    if(rango === "9-30"){
-        tituloRango = "9 A 30 DÍAS";
-    }
+   if(rango === "9+"){
+    tituloRango = "9 DÍAS A MÁS";
+}
 
     if(rango === "1-8"){
         tituloRango = "1 A 8 DÍAS";

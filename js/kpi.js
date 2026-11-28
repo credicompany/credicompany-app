@@ -43,7 +43,6 @@ jsonGeneral.forEach(c=>{
     let fechaExcel = c["Fecha Desembolso"];
 
 let fecha;
-
 if(fechaExcel instanceof Date){
 
     fecha = fechaExcel;

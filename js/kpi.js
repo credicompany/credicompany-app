@@ -1859,6 +1859,16 @@ const mora1a8 = Number(mora1a8Asesor[asesor] || 0);
         text-decoration:underline;
         text-underline-offset:3px;
     "
+   <td
+    data-mora-kpi="31+"
+    data-asesor-kpi="${asesor}"
+    style="
+        font-weight:bold;
+        color:#991B1B;
+        cursor:pointer;
+        text-decoration:underline;
+        text-underline-offset:3px;
+    "
     title="Ver clientes con mora de 31 días a más"
     onclick="mostrarMorososKPI('${asesor.replace(/'/g, "\\'")}', '31+')"
 >
@@ -1866,6 +1876,8 @@ const mora1a8 = Number(mora1a8Asesor[asesor] || 0);
 </td>
 
 <td
+    data-mora-kpi="9-30"
+    data-asesor-kpi="${asesor}"
     style="
         font-weight:bold;
         color:#C43D3D;
@@ -1880,6 +1892,8 @@ const mora1a8 = Number(mora1a8Asesor[asesor] || 0);
 </td>
 
 <td
+    data-mora-kpi="1-8"
+    data-asesor-kpi="${asesor}"
     style="
         font-weight:bold;
         color:#D97706;
@@ -2068,15 +2082,15 @@ ${temTotalAgosto}%
 S/${Math.round(totalMoraJulio).toLocaleString("es-PE")}
 </td>
 
-<td>
+<td data-mora-total-kpi="31+">
 S/${Math.round(totalMoraAgosto31Mas).toLocaleString("es-PE")}
 </td>
 
-<td>
+<td data-mora-total-kpi="9-30">
 S/${Math.round(totalMoraAgosto).toLocaleString("es-PE")}
 </td>
 
-<td>
+<td data-mora-total-kpi="1-8">
 S/${Math.round(totalMoraAgosto1Mas).toLocaleString("es-PE")}
 </td>
 
@@ -2135,6 +2149,236 @@ guardarGerencialFirebase(
 
 
 }
+
+// ======================================================
+// RECEPTOR: ACTUALIZACIÓN AUTOMÁTICA DE MORA DESDE CARTERA
+// ACTUALIZA ÚNICAMENTE LOS 3 TRAMOS DE MORA DEL KPI
+// ======================================================
+
+window.addEventListener("carteraActualizadaKPI", function(){
+
+    console.log("🔄 Cartera actualizada: recalculando mora KPI");
+
+    // ==========================================
+    // LEER CARTERA ACTUALIZADA
+    // ==========================================
+
+    const cartera = JSON.parse(
+        localStorage.getItem("cartera") || "[]"
+    );
+
+    if(!Array.isArray(cartera) || cartera.length === 0){
+
+        console.warn("⚠️ No hay cartera disponible para actualizar mora");
+
+        return;
+    }
+
+    // ==========================================
+    // NORMALIZAR ASESOR
+    // ==========================================
+
+    function normalizarAsesorMora(valor){
+
+        let nombre = String(valor || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g,"")
+            .toLowerCase()
+            .replace(/\s+/g,"")
+            .trim();
+
+        if(nombre.includes("benites")){
+            return "ebenites";
+        }
+
+        if(nombre.includes("leon")){
+            return "tleon";
+        }
+
+        if(nombre.includes("huerta")){
+            return "bhuerta";
+        }
+
+        if(nombre.includes("lopez")){
+            return "slopez";
+        }
+
+        return nombre;
+    }
+
+    // ==========================================
+    // CONVERTIR SALDOS A NÚMERO
+    // ==========================================
+
+    function convertirSaldoMora(valor){
+
+        if(typeof valor === "number"){
+            return valor;
+        }
+
+        return Number(
+            String(valor || "0")
+                .replace(/S\/?/gi,"")
+                .replace(/,/g,"")
+                .trim()
+        ) || 0;
+    }
+
+    // ==========================================
+    // INICIALIZAR TRAMOS
+    // ==========================================
+
+    const moraPorAsesor = {};
+
+    let total31Mas = 0;
+    let total9a30 = 0;
+    let total1a8 = 0;
+
+    // ==========================================
+    // RECALCULAR MORA DESDE CARTERA
+    // ==========================================
+
+    cartera.forEach(c => {
+
+        const asesor = normalizarAsesorMora(
+            c.asesor ||
+            c["Asesor(a)"] ||
+            c["Asesor"]
+        );
+
+        const atraso = Number(
+            c.retraso ||
+            c["Dias de retraso"] ||
+            0
+        ) || 0;
+
+        const saldo = convertirSaldoMora(
+            c.saldoCapital ||
+            c["Saldo Capital"] ||
+            0
+        );
+
+        if(!asesor || saldo <= 0){
+            return;
+        }
+
+        if(!moraPorAsesor[asesor]){
+
+            moraPorAsesor[asesor] = {
+                "31+": 0,
+                "9-30": 0,
+                "1-8": 0
+            };
+
+        }
+
+        // ======================================
+        // MORA 31 DÍAS A MÁS
+        // ======================================
+
+        if(atraso >= 31){
+
+            moraPorAsesor[asesor]["31+"] += saldo;
+
+            total31Mas += saldo;
+
+        }
+
+        // ======================================
+        // MORA 9 A 30 DÍAS
+        // ======================================
+
+        if(atraso >= 9 && atraso <= 30){
+
+            moraPorAsesor[asesor]["9-30"] += saldo;
+
+            total9a30 += saldo;
+
+        }
+
+        // ======================================
+        // MORA 1 A 8 DÍAS
+        // ======================================
+
+        if(atraso >= 1 && atraso <= 8){
+
+            moraPorAsesor[asesor]["1-8"] += saldo;
+
+            total1a8 += saldo;
+
+        }
+
+    });
+
+    // ==========================================
+    // FORMATO DE MONEDA
+    // ==========================================
+
+    function formatoMoraKPI(valor){
+
+        return "S/" +
+            Math.round(valor).toLocaleString("es-PE");
+
+    }
+
+    // ==========================================
+    // ACTUALIZAR MORA POR ASESOR
+    // ==========================================
+
+    document.querySelectorAll("[data-mora-kpi]").forEach(td => {
+
+        const tramo = td.dataset.moraKpi;
+
+        const asesor = normalizarAsesorMora(
+            td.dataset.asesorKpi
+        );
+
+        const monto =
+            moraPorAsesor[asesor]?.[tramo] || 0;
+
+        td.textContent = formatoMoraKPI(monto);
+
+    });
+
+    // ==========================================
+    // ACTUALIZAR TOTAL EMPRESA
+    // ==========================================
+
+    document.querySelectorAll("[data-mora-total-kpi]").forEach(td => {
+
+        const tramo = td.dataset.moraTotalKpi;
+
+        let monto = 0;
+
+        if(tramo === "31+"){
+            monto = total31Mas;
+        }
+
+        if(tramo === "9-30"){
+            monto = total9a30;
+        }
+
+        if(tramo === "1-8"){
+            monto = total1a8;
+        }
+
+        td.textContent = formatoMoraKPI(monto);
+
+    });
+
+    // ==========================================
+    // REGISTRO EN CONSOLA
+    // ==========================================
+
+    console.log("✅ KPI de mora actualizado desde cartera");
+
+    console.log("Mora 31+: S/", total31Mas);
+
+    console.log("Mora 9-30: S/", total9a30);
+
+    console.log("Mora 1-8: S/", total1a8);
+
+});
 
 // ======================================================
 // DETALLE DE CLIENTES MOROSOS - KPI GERENCIAL

@@ -249,7 +249,22 @@ db.ref("cartera")
 
     console.log("✅ Cartera enviada a Firebase");
 
-    alert("✅ Cartera enviada a Firebase");
+    // ==========================================
+    // SINCRONIZAR MORA DEL KPI
+    // ==========================================
+
+    window.dispatchEvent(
+        new CustomEvent("carteraActualizadaKPI", {
+            detail: {
+                totalRegistros: json.length,
+                fechaActualizacion: new Date().toISOString()
+            }
+        })
+    );
+
+    console.log("🔄 Aviso enviado al KPI de mora");
+
+    alert("✅ Cartera cargada y sincronizada");
 
 })
 .catch(err=>{
@@ -265,8 +280,34 @@ db.ref("cartera")
     );
 
 });
+ 
+.catch(err=>{
+
+    console.error(
+        "❌ Error Firebase:",
+        err
+    );
+
+    alert(
+        "❌ Error Firebase: " +
+        err.message
+    );
+
+});
 localStorage.setItem("cartera", JSON.stringify(json));
 localStorage.setItem("cartera_backup", JSON.stringify(json));
+ // ==========================================
+// AVISAR ACTUALIZACIÓN DE CARTERA PARA KPI MORA
+// ==========================================
+
+window.dispatchEvent(
+    new CustomEvent("carteraActualizadaKPI", {
+        detail: {
+            totalRegistros: json.length,
+            fechaActualizacion: new Date().toISOString()
+        }
+    })
+);
 // 🔥 RESET DIARIO (LÍNEA 357)
 let dataReset = JSON.parse(localStorage.getItem("cartera")) || [];
 

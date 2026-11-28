@@ -2557,11 +2557,12 @@ function mostrarMorososKPI(asesorSeleccionado, rango){
 
         ? lista.map((nombre,i) => `
             <div style="
-                padding:10px 12px;
-                border-bottom:1px solid #E5E7EB;
-                font-size:14px;
-                font-weight:600;
-                color:#1F2937;
+                padding:8px 12px;
+border-bottom:1px solid #E5E7EB;
+font-size:15px;
+font-weight:600;
+color:#1F2937;
+line-height:1.3;
             ">
                 ${i+1}. ${escaparHTML(nombre)}
             </div>
@@ -2578,88 +2579,97 @@ function mostrarMorososKPI(asesorSeleccionado, rango){
         `;
 
     // ==========================================
-    // CONTENIDO DEL MODAL
-    // ==========================================
+// CONTENIDO DEL MODAL - DISEÑO COMPACTO
+// ==========================================
 
-    modal.innerHTML = `
+modal.innerHTML = `
 
+    <div style="
+        width:100%;
+        max-width:520px;
+        max-height:72vh;
+        background:white;
+        border-radius:12px;
+        overflow:hidden;
+        box-shadow:0 12px 35px rgba(0,0,0,.25);
+        display:flex;
+        flex-direction:column;
+    ">
+
+        <!-- ENCABEZADO -->
         <div style="
-            width:100%;
-            max-width:450px;
-            max-height:85vh;
-            background:white;
-            border-radius:14px;
-            overflow:hidden;
-            box-shadow:0 15px 40px rgba(0,0,0,.3);
-            display:flex;
-            flex-direction:column;
+            background:#153F63;
+            color:white;
+            padding:12px 16px;
         ">
 
             <div style="
-                background:#153F63;
-                color:white;
-                padding:16px;
+                font-size:16px;
+                font-weight:800;
             ">
-
-                <div style="
-                    font-size:16px;
-                    font-weight:800;
-                ">
-                    📋 CLIENTES MOROSOS
-                </div>
-
-                <div style="
-                    font-size:12px;
-                    margin-top:5px;
-                    opacity:.9;
-                ">
-                    ${escaparHTML(asesorSeleccionado)}
-                    · ${tituloRango}
-                </div>
-
+                📋 CLIENTES MOROSOS
             </div>
 
             <div style="
-                overflow-y:auto;
-                flex:1;
+                font-size:12px;
+                margin-top:4px;
+                opacity:.9;
             ">
-
-                ${listado}
-
-            </div>
-
-            <div style="
-                padding:12px;
-                background:#F1F5F9;
-                display:flex;
-                justify-content:space-between;
-                align-items:center;
-            ">
-
-                <strong>
-                    CLIENTES: ${lista.length}
-                </strong>
-
-                <button
-                    onclick="document.getElementById('modalMorososKPI').remove()"
-                    style="
-                        background:#153F63;
-                        color:white;
-                        border:none;
-                        padding:9px 18px;
-                        border-radius:8px;
-                        font-weight:bold;
-                        cursor:pointer;
-                    "
-                >
-                    CERRAR
-                </button>
-
+                ${escaparHTML(asesorSeleccionado)}
+                · ${tituloRango}
             </div>
 
         </div>
 
-    `;
+        <!-- LISTADO -->
+        <div style="
+            overflow-y:auto;
+            flex:1;
+            min-height:0;
+        ">
+
+            ${listado}
+
+        </div>
+
+        <!-- PIE -->
+        <div style="
+            padding:9px 12px;
+            background:#F1F5F9;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:10px;
+        ">
+
+            <strong style="
+                font-size:14px;
+                color:#1E293B;
+            ">
+                CLIENTES: ${lista.length}
+            </strong>
+
+            <button
+                onclick="document.getElementById('modalMorososKPI').remove()"
+                style="
+                    background:#153F63;
+                    color:white;
+                    border:none;
+                    padding:8px 20px;
+                    border-radius:7px;
+                    font-size:14px;
+                    font-weight:bold;
+                    cursor:pointer;
+                "
+            >
+                CERRAR
+            </button>
+
+        </div>
+
+    </div>
+
+`;
 
 }
 // ======================================================

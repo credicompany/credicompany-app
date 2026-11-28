@@ -1479,19 +1479,33 @@ console.log(
         )
 );
     
-jsonGeneral.forEach(c=>{
+// ==========================================
+// FUENTE INDEPENDIENTE PARA MORA DEL KPI
+// ==========================================
 
-    let asesor =
-    (c["Asesor(a)"] || "")
-    .toString()
+const dataMoraKPI = JSON.parse(
+    localStorage.getItem("financiero") || "[]"
+);
+
+// ==========================================
+// CALCULAR MORA POR ASESOR Y TRAMO
+// ==========================================
+
+dataMoraKPI.forEach(c => {
+
+    const asesor = String(
+        c["Asesor(a)"] || ""
+    )
     .trim()
     .toUpperCase();
 
-    let atraso =
-    parseFloat(c["Dias de retraso"] || 0) || 0;
+    const atraso = Number(
+        c["Dias de retraso"] || 0
+    ) || 0;
 
-    let saldo =
-    parseFloat(c["Saldo Capital"] || 0) || 0;
+    const saldo = Number(
+        c["Saldo Capital"] || 0
+    ) || 0;
 
  // ==========================================
 // INICIALIZAR MORA POR RANGO
